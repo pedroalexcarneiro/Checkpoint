@@ -1,0 +1,6 @@
+Checkpoint 0.1.2 — saves por jogo
+28 testes passaram em 8,51 s.
+Inclui teste real de encerramento de sessão com backup em worker pela interface headless.
+Executável: smoke com saída 0, seis páginas, biblioteca legada isolada preservada e SQLite íntegro.
+Integração de backups com Drive: pendente.
+Perfis reais de emuladores e saves pessoais: não validados.

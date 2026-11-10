@@ -1,0 +1,5 @@
+Checkpoint 0.1.1
+23 testes passaram em 2,65 s.
+Smoke do fonte: seis páginas, integridade ok.
+Smoke do executável: saída 0, biblioteca legada isolada preservada, integridade ok.
+Captura do início inspecionada: nome Checkpoint e frases promocionais removidas.
