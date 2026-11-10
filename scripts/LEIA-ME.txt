@@ -1,4 +1,4 @@
-CHECKPOINT 0.1.4 — VERSÃO DE DESENVOLVIMENTO
+CHECKPOINT 0.1.5 — VERSÃO DE DESENVOLVIMENTO
 
 Extraia a pasta Checkpoint inteira e abra Checkpoint.exe.
 Não remova a pasta _internal. Não é necessário instalar Python.
