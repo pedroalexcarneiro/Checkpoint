@@ -1,4 +1,4 @@
-CHECKPOINT 0.1.2 — VERSÃO DE DESENVOLVIMENTO
+CHECKPOINT 0.1.3 — VERSÃO DE DESENVOLVIMENTO
 
 Extraia a pasta Checkpoint inteira e abra Checkpoint.exe.
 Não remova a pasta _internal. Não é necessário instalar Python.
@@ -11,3 +11,7 @@ Steam, RetroAchievements, preços automáticos e backup de saves no Drive
 continuam pendentes. O projeto completo não está concluído.
 
 Consulte PROJECT_STATUS.md, SETUP.md e INTEGRATIONS.md incluídos.
+
+Atualizações: Configurações > Atualizações do Checkpoint. Repositório privado exige
+token restrito ao Checkpoint com Contents: leitura, salvo no cofre do Windows.
+Mantenha a subpasta CheckpointUpdater inteira na pasta Checkpoint.
