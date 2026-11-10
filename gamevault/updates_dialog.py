@@ -52,12 +52,13 @@ class UpdatesDialog(QDialog):
         installation=Path(sys.executable).resolve().parent
         if installation.name!='Checkpoint' or self.data_directory==installation or installation in self.data_directory.parents:
             self.state.setText('Use a pasta portátil Checkpoint e mantenha o diretório de dados fora da instalação.'); return
-        helper=installation/'CheckpointUpdater.exe'
+        helper=installation/'CheckpointUpdater'/'CheckpointUpdater.exe'
         if not helper.is_file(): self.state.setText('Atualizador auxiliar ausente nesta instalação.'); return
         if QMessageBox.question(self,'Atualizar','Aplicar a versão verificada e reiniciar o Checkpoint?')!=QMessageBox.Yes: return
         try:
             directory=Path(self.staged).parent.parent
-            copied=directory/('updater-'+uuid4().hex+'.exe'); shutil.copy2(helper,copied)
+            helper_directory=directory/('updater-'+uuid4().hex); shutil.copytree(helper.parent,helper_directory)
+            copied=helper_directory/'CheckpointUpdater.exe'
             plan=directory/'install.json'; plan.write_text(json.dumps({'pid':os.getpid(),'installation':str(installation),'staged':self.staged,'data_directory':str(self.data_directory)}),encoding='utf-8')
             subprocess.Popen([str(copied),'--plan',str(plan)],shell=False,creationflags=subprocess.CREATE_NO_WINDOW)
             self.approved=True; self.accept()
