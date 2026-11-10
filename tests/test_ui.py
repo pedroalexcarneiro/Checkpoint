@@ -69,10 +69,19 @@ def test_session_end_triggers_background_game_backup(app,library,folder):
     window.launcher.active[session][0].wait(timeout=10)
     window.end_session(session,game)
     assert game in window.save_jobs
-    for _ in range(100):
-        QTest.qWait(50)
-        if not window.save_jobs: break
+    from PySide6.QtCore import QEventLoop,QTimer
+    loop=QEventLoop(); timeout=QTimer(); timeout.setSingleShot(True)
+    timeout.timeout.connect(loop.quit)
+    window.save_jobs[game].finished.connect(loop.quit)
+    timeout.start(15000); loop.exec(); timeout.stop()
     assert not window.save_jobs
     assert len(GameSaveBackups(library).history(game))==1
     assert library.stats()['sessions']==1
     window.close()
+
+def test_updates_dialog_starts_without_network_or_credentials(app,folder):
+    from gamevault.updates_dialog import UpdatesDialog
+    dialog=UpdatesDialog(folder)
+    assert not dialog.download.isEnabled() and not dialog.install.isEnabled()
+    assert dialog.token.text()==''
+    dialog.reject()
