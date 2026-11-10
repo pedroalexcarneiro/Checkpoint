@@ -1,6 +1,6 @@
 # Estado do projeto — Checkpoint
 
-Atualizado em 10/11/2026. Versão 0.1.2 de desenvolvimento. **O projeto completo não está concluído.** O ponto de continuidade é este diretório, com código real, documentação e testes.
+Atualizado em 10/11/2026. Versão 0.1.3 de desenvolvimento. **O projeto completo não está concluído.** O ponto de continuidade é este diretório, com código real, documentação e testes.
 
 ## Implementado e utilizável localmente
 
@@ -85,3 +85,32 @@ Configure o diretório de backups em Configurações; depois, na página do jogo
 Validação: 28 testes passaram (8,51 s), incluindo histórico preservado ao mudar perfil, restauração com cópia anterior, rejeição de backup de outro jogo, saves em alteração e encerramento de sessão disparando backup real em worker pela interface headless. Testes com emuladores reais e saves pessoais continuam pendentes. O backup manual antigo das Configurações continua síncrono; os novos fluxos por jogo usam workers.
 
 Pacote 0.1.2 gerado. O executável passou pelo smoke com saída 0 e preservou a biblioteca legada isolada; SQLite íntegro. Evidência em evidence/checkpoint-012-validation.txt.
+
+## Publicação no GitHub
+
+Repositório privado criado e código/documentação/testes/scripts enviados pelo navegador autenticado: https://github.com/pedroalexcarneiro/Checkpoint
+
+Release de desenvolvimento v0.1.2 publicada: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.2
+Commit remoto da tag: 474167e06c2d4211d3adb8c3c03f35840971d7ff. Os arquivos Windows, fonte, checksums e informações de build aparecem nos Assets. SHA-256 do ZIP Windows exibido pelo GitHub confere com o arquivo local: 576eb0211ecc628d5c2dcbcfcd2e9a1c6bd65b6837dfaf4e0344fd286714318a.
+
+A publicação foi feita pela interface web, sem instalar GitHub Desktop nem obter tokens. O histórico remoto foi criado pela web e difere do histórico Git local: antes de um futuro push autenticado, reconciliar os históricos em checkout separado, sem force-push. Os marcadores .gitkeep adicionais do remoto apenas criam diretórios para upload. A tag publicada antecede esta anotação local de estado.
+
+O aplicativo ainda não tem atualizador automático. Próxima tarefa para eliminar ZIPs manuais: implementar atualização pelo aplicativo com integridade e rollback; por ser um repositório privado, definir acesso seguro às releases sem embutir credenciais no executável.
+
+
+## Checkpoint 0.1.3 — atualizações pelo aplicativo
+
+Configurações > Atualizações do Checkpoint permite salvar uma credencial de leitura no Windows Credential Manager, consultar as 100 releases mais recentes do repositório pedroalexcarneiro/Checkpoint, baixar uma versão mais nova e aplicar/reiniciar. O repositório é privado: use um fine-grained personal access token restrito ao repositório Checkpoint, com Contents: Read-only. O login feito no navegador para publicar o código não autentica automaticamente o aplicativo. Nenhuma chave real foi criada, coletada ou incluída no código. A opção de incluir pré-releases vem marcada porque o projeto está em desenvolvimento.
+
+O cliente usa a API oficial do GitHub. O pacote precisa ter SHA-256 fornecido na release e tamanho compatível. O token é enviado somente a api.github.com; o download redirecionado para CDN confiável ocorre sem o token. Erros de acesso/rede são apresentados sem URLs assinadas ou credenciais. Referência: https://docs.github.com/en/rest/releases/assets e https://docs.github.com/en/rest/releases/releases .
+
+O ZIP é extraído em área separada após verificar integridade. São rejeitados caminhos externos, streams alternativos, nomes reservados, links, duplicatas e pacotes acima dos limites de tamanho. O processo auxiliar CheckpointUpdater.exe é copiado para fora da instalação, aguarda o Checkpoint fechar e preserva a instalação anterior numa pasta Checkpoint.previous-<id> ao lado da instalação. Falha de cópia provoca recuperação do nome original; cópias incompletas são preservadas para diagnóstico. O diretório de dados precisa ficar fora da instalação. Não há elevação administrativa, alteração de política PowerShell ou exclusão da biblioteca.
+
+Antes de aplicar, encerre sessões e aguarde backups. A pasta portátil deve se chamar Checkpoint e ter permissão de escrita no seu diretório pai. A primeira adoção do atualizador exige usar o novo pacote 0.1.3, porque o 0.1.2 não contém o auxiliar. Atualizações posteriores poderão ser aplicadas pelos botões do aplicativo após configurar a credencial.
+
+Limitações: não há consulta periódica, cancelamento de downloads, assinatura digital do executável nem detecção automática de falha tardia ao iniciar a nova versão. SHA-256 confirma correspondência ao arquivo da release, não substitui assinatura do fornecedor. Queda de energia entre a renomeação e a cópia pode exigir restaurar manualmente a pasta Checkpoint.previous-<id>. A atualização tem resultados em updates/<id>/install.result.json no diretório de dados; falha antes do reinício pode exigir reabrir a versão anterior manualmente. A origem não é atualizada por esses botões, apenas o pacote Windows empacotado.
+
+Validação de domínio/rede controlada: 39 testes passaram em 5,74 s. Sem credencial de API real, consulta e download privados ainda não foram validados contra a conta GitHub. Testes com respostas controladas não equivalem a validação autenticada. O auxiliar one-dir recompilado foi executado fora da instalação: aguardou o processo de teste, aplicou a troca em uma pasta isolada e preservou a versão anterior. O executável principal retornou saída 0 e preservou a biblioteca legada isolada. O primeiro ensaio one-file falhou ao extrair uma DLL no temporário deste host e foi substituído por one-dir; esse arquivo com falha não integra a entrega.
+
+
+Estado atual: Checkpoint 0.1.3 validado localmente com 39 testes e smoke dos dois executáveis. Consulta e download reais da API privada ainda dependem de uma credencial de leitura configurada pelo usuário. Publicação GitHub em andamento; a tag 0.1.2 continua disponível.

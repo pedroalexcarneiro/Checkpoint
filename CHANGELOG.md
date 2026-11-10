@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.3 — Atualizações
+
+- Consulta de releases GitHub privadas com credencial no cofre Windows.
+- Download com SHA-256/tamanho, extração validada e auxiliar de instalação.
+- Preservação da versão anterior e recuperação em falhas de cópia.
+- 39 testes passaram; integração autenticada real continua pendente.
+
+
 ## 0.1.2 — Saves por jogo
 
 - Perfis persistentes de saves tradicionais por jogo.
