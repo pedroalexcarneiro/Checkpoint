@@ -22,3 +22,15 @@ def library(folder):
     db=Database(folder/'library.sqlite')
     yield Library(db)
     db.close()
+
+
+@pytest.fixture(scope='session')
+def app():
+    from PySide6.QtWidgets import QApplication
+    from PySide6.QtGui import QFontDatabase
+    from gamevault.theme import DARK
+    application=QApplication.instance() or QApplication([])
+    font=Path('C:/Windows/Fonts/segoeui.ttf')
+    if font.exists(): QFontDatabase.addApplicationFont(str(font))
+    application.setStyle('Fusion'); application.setStyleSheet(DARK)
+    yield application

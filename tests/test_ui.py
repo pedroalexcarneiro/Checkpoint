@@ -11,13 +11,6 @@ from gamevault.theme import DARK
 from gamevault.integrations.images import ImageCache
 from gamevault.integrations import IntegrationError
 
-@pytest.fixture(scope='session')
-def app():
-    application=QApplication.instance() or QApplication([])
-    font=Path('C:/Windows/Fonts/segoeui.ttf')
-    if font.exists(): QFontDatabase.addApplicationFont(str(font))
-    application.setStyle('Fusion'); application.setStyleSheet(DARK)
-    yield application
 
 def test_navigate_and_game_detail_with_real_database(app,library,folder):
     window=MainWindow(library); window.show(); app.processEvents()
