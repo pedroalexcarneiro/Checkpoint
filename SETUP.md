@@ -92,3 +92,12 @@ Agora erros de proxy, certificado HTTPS, timeout, conexão e JSON inválido têm
 A interface exige salvar uma credencial digitada antes de consultar e informa quando não há credencial no cofre. O campo é limpo ao salvar com sucesso. Nenhum token real do usuário foi lido, copiado ou enviado por esta sessão. Consulta autenticada ao repositório privado continua pendente de validação no aplicativo pelo usuário.
 
 Validação: 46 testes passaram em 5,77 s; incluem regressão com gzip real do urllib3/Requests, mensagens de erros de rede sem vazamento de segredos e bloqueio de consulta com token não salvo. Consulta pública real sem autenticação retornou com sucesso, sem atualizações compatíveis. O 0.1.3 pode precisar de substituição manual caso a consulta antiga impeça baixar esta correção.
+
+
+## Checkpoint 0.1.5 — paletas de cores
+
+Adicionadas dez paletas: Azul, Verde, Amarelo, Vermelho, Preto, Branco, Roxo, Rosa, Laranja e Ciano. Nove usam superfícies escuras com acentos dessaturados; Branco é claro, com fundos quentes e texto escuro. A preferência fica em Configurações > Aparência > Tema, é aplicada imediatamente e persiste no SQLite em appearance.theme. Verde continua como padrão para bibliotecas sem preferência; valores antigos/desconhecidos usam esse padrão.
+
+As paletas alteram fundos, painéis, campos, textos, botões, seleção, foco, progresso, navegação, diálogos e cores de capas ausentes. A aplicação também define QPalette para controles do Qt. As artes e capturas originais não são recoloridas. Estados desabilitados recebem tratamento próprio. A moldura externa da janela e diálogos nativos de arquivos podem seguir as preferências do Windows.
+
+Validação: 58 testes passaram em 12,82 s, incluindo contraste mínimo 4,5:1 dos pares de texto normal verificados nas dez paletas, troca imediata, navegação nas seis áreas em cada tema e reabertura do banco preservando a escolha. Isso não é uma auditoria completa de acessibilidade. Foram renderizadas as dez telas iniciais, e a comparação de paletas e o tema Branco foram inspecionados visualmente. Preferências e controles reais de DPI ainda precisam de validação humana no Windows.

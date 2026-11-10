@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.5 — Paletas
+
+- Dez temas coesos e discretos, incluindo Branco claro e Preto neutro.
+- Seletor em Configurações, aplicação imediata e preferência persistente.
+- Controles, diálogos e capas ausentes acompanham o tema escolhido.
+- 58 testes passaram, incluindo contraste de texto e persistência.
+
+
 ## 0.1.4 — Consulta de atualizações
 
 - Corrigida resposta gzip da API GitHub.

@@ -6,6 +6,7 @@ O escopo completo solicitado permanece como objetivo. As fases abaixo indicam en
 
 - [x] Projeto modular, SQLite com duas migrações, configurações, logs e trava de instância.
 - [x] Seis áreas de navegação, estados vazios, tema escuro.
+- [x] Dez paletas discretas, tema branco claro e preferência persistente (0.1.5).
 - [x] CRUD manual, recuperação de removidos, galeria/lista, pesquisa, filtros, favoritos e ordenação.
 - [x] Cadastro de campos pessoais, artes, categoria e página individual.
 - [ ] Migração para plataformas/gêneros/categorias normalizados, gerenciamento dedicado de categorias.
@@ -65,6 +66,7 @@ O escopo completo solicitado permanece como objetivo. As fases abaixo indicam en
 - [x] Suíte automatizada e modo smoke, documentação e receita PyInstaller.
 - [ ] Instalação limpa Windows 10/11, certificados, assinatura, licenças de terceiros e instalador.
 - [ ] Testes de carga, falhas de disco/rede, múltiplos monitores, DPI, Unicode e processos reais.
-- [ ] Atualização segura, migrações com backup automático e distribuição pública.
+- [x] Consulta de releases, download verificado e auxiliar Windows com recuperação de falha de cópia (0.1.3/0.1.4; testes locais e API pública).
+- [ ] Validar atualização autenticada no repositório privado; migrações com backup automático e distribuição pública.
 
 Próxima prioridade: validar credenciais em biblioteca isolada; robustecer scanner e sessões; implementar automação e Drive para saves; conectar preços com fonte regional validada. Não iniciar novas fontes antes de estabilizar os fluxos existentes.

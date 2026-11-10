@@ -1,10 +1,10 @@
 # Estado do projeto — Checkpoint
 
-Atualizado em 10/11/2026. Versão 0.1.4 de desenvolvimento. **O projeto completo não está concluído.** O ponto de continuidade é este diretório, com código real, documentação e testes.
+Atualizado em 10/11/2026. Versão 0.1.5 de desenvolvimento. **O projeto completo não está concluído.** O ponto de continuidade é este diretório, com código real, documentação e testes.
 
 ## Implementado e utilizável localmente
 
-- Python/PySide6, tema escuro editorial, navegação persistente e estados vazios.
+- Python/PySide6, dez paletas discretas (incluindo Branco claro), navegação persistente e estados vazios.
 - Banco SQLite local com WAL, FKs, transações, duas migrações, trava de instância, logs rotativos e backup consistente.
 - Biblioteca: cadastro/edição de campos pessoais, capas/banner/logo por arquivo, filtro de título/plataforma/gênero/status, ordenação, favoritos, categorias em texto, galeria 3:4 e lista.
 - Remoção recuperável em lixeira; não apaga ROMs, saves, mídias ou arquivos Drive.
@@ -27,7 +27,7 @@ Credenciais necessárias: OAuth Google Cloud Desktop JSON e consentimento; chave
 
 ## Validação já executada
 
-- 23 testes automatizados passaram na execução final: domínio, SQLite/migração, saves/ZIP, clientes com respostas controladas, DAT, subprocesso real e UI headless.
+- 58 testes automatizados passaram na versão 0.1.5: domínio, SQLite/migração, saves/ZIP, clientes controlados, DAT, subprocessos, UI e regressões do atualizador. Consulta pública real à API GitHub passou sem credenciais; acesso privado autenticado ainda aguarda validação do usuário após a correção.
 - Smoke pelo código fonte abriu as seis páginas e retornou integridade SQLite `ok`.
 - Captura headless do início vazio foi inspecionada visualmente; tema/estado vazio legíveis.
 - Executável PyInstaller x64 recompilado a partir do código final: smoke headless com saída 0, seis páginas abertas, schema 2, integridade SQLite `ok`, 0 jogos iniciais e log sem erros.
@@ -37,18 +37,18 @@ Credenciais necessárias: OAuth Google Cloud Desktop JSON e consentimento; chave
 ## Pendências principais
 
 1. Validar integrações reais e scanner em coleção grande; progresso/cancelamento, 410, shared drives, ordem complexa de alterações e retomada de downloads.
-2. Saves por jogo/emulador com perfis tradicionais validados, backup automático pós-sessão e sincronização/versionamento/conflitos no Drive. Backup local por jogo já possui disparo opcional ao término do registro de sessão; envio ao Drive continua pendente.
+2. Validar perfis tradicionais de emuladores e implementar sincronização/versionamento/conflitos de saves no Drive. Backup local por jogo já possui disparo opcional ao término do registro de sessão; envio ao Drive continua pendente.
 3. Steam: biblioteca, privacidade, horas e conquistas oficiais; RetroAchievements real; IGDB.
 4. Preços automáticos regionais, histórico, menor preço, scheduler, limites e alertas. Atualmente só wishlist e meta local.
 5. Launchers externos, processos filhos, detecção específica de encerramento de ROM e suspensão/pausa.
 6. Editores completos de diário, anexos por entrada, galeria visual, conquistas e progresso estruturados.
 7. Entidades normalizadas para plataformas/gêneros/categorias, repositórios dedicados e virtualização/paginação.
-8. Assinatura, instalador/atualizador, licenças de terceiros e testes limpos Windows 10/11.
+8. Validar atualizador com API privada real; assinatura, instalador, licenças de terceiros e testes limpos Windows 10/11.
 
 ## Problemas/limitações conhecidos
 
 - Nenhum perfil de emulador/save real foi validado. Lista de extensões de save state bloqueadas não é universal; padrões devem selecionar somente saves tradicionais.
-- Backup local e alguns cálculos/leitura de listas são síncronos; podem travar a UI temporariamente em coleções grandes. Varredura/rede usa workers.
+- O backup manual antigo das Configurações e alguns cálculos/leitura de listas são síncronos. Backups e restauração por jogo, varredura e rede usam workers.
 - Restauração é atômica por arquivo, não por conjunto; versão anterior é preservada para recuperação manual.
 - Sessão por processo direto pode terminar cedo quando um launcher abre outro processo. Emuladores usam término manual. Sem detecção de inatividade/standby.
 - Artes manuais e mídia são caminhos referenciados; mover o original quebra o vínculo. Artes baixadas são cacheadas.
@@ -62,7 +62,7 @@ Credenciais necessárias: OAuth Google Cloud Desktop JSON e consentimento; chave
 
 ## Próxima tarefa recomendada
 
-Revisar evidências e manter os testes verdes. Depois validar OAuth/RAWG/SteamGridDB em diretório de dados isolado com credenciais autorizadas. A próxima implementação prioritária é o ciclo de saves tradicionais configurado por jogo, com workers, perfis validados e autorização Drive separada de escrita. O ROADMAP.md preserva todo o escopo solicitado.
+Validar a consulta privada do atualizador 0.1.4 após o usuário salvar a credencial no aplicativo; não acessar o token pelo chat. Depois validar OAuth/RAWG/SteamGridDB em biblioteca isolada. A próxima implementação principal é o backup de saves no Drive com autorização separada, histórico remoto, integridade e conflitos. O ciclo local por jogo com workers já existe e o usuário confirmou backup/restauração. O ROADMAP.md preserva o escopo completo.
 
 ## Atualização 0.1.1 — Checkpoint
 
@@ -129,3 +129,17 @@ A interface exige salvar uma credencial digitada antes de consultar e informa qu
 Validação: 46 testes passaram em 5,77 s; incluem regressão com gzip real do urllib3/Requests, mensagens de erros de rede sem vazamento de segredos e bloqueio de consulta com token não salvo. Consulta pública real sem autenticação retornou com sucesso, sem atualizações compatíveis. O 0.1.3 pode precisar de substituição manual caso a consulta antiga impeça baixar esta correção.
 
 Executável 0.1.4 validado após recompilação: smoke com saída 0, biblioteca legada isolada preservada e integridade SQLite ok. Auxiliar de atualização executado fora da instalação, com troca isolada e preservação da versão anterior. Arquivos serão publicados como v0.1.4; o acesso autenticado com a credencial real do usuário não foi testado por esta sessão.
+
+v0.1.4 publicada e verificada: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.4 . Commit remoto 51d41d0fd1b6a00cb5f517091f5cc9d9924f26e7. SHA-256 do ZIP Windows exibido pelo GitHub confere com o arquivo local: 2869711edd9e9ee4a476110093b5c81e6f3aa75530fe658d368840fb35522946. Comprovante em outputs/github-checkpoint-014.png. Próxima validação: usuário salvar a credencial no aplicativo atualizado e repetir a consulta; a mensagem anterior não permite afirmar uma causa única. Esta anotação local é posterior à tag publicada.
+
+
+## Checkpoint 0.1.5 — paletas de cores
+
+Adicionadas dez paletas: Azul, Verde, Amarelo, Vermelho, Preto, Branco, Roxo, Rosa, Laranja e Ciano. Nove usam superfícies escuras com acentos dessaturados; Branco é claro, com fundos quentes e texto escuro. A preferência fica em Configurações > Aparência > Tema, é aplicada imediatamente e persiste no SQLite em appearance.theme. Verde continua como padrão para bibliotecas sem preferência; valores antigos/desconhecidos usam esse padrão.
+
+As paletas alteram fundos, painéis, campos, textos, botões, seleção, foco, progresso, navegação, diálogos e cores de capas ausentes. A aplicação também define QPalette para controles do Qt. As artes e capturas originais não são recoloridas. Estados desabilitados recebem tratamento próprio. A moldura externa da janela e diálogos nativos de arquivos podem seguir as preferências do Windows.
+
+Validação: 58 testes passaram em 12,82 s, incluindo contraste mínimo 4,5:1 dos pares de texto normal verificados nas dez paletas, troca imediata, navegação nas seis áreas em cada tema e reabertura do banco preservando a escolha. Isso não é uma auditoria completa de acessibilidade. Foram renderizadas as dez telas iniciais, e a comparação de paletas e o tema Branco foram inspecionados visualmente. Preferências e controles reais de DPI ainda precisam de validação humana no Windows.
+
+
+Executável 0.1.5: smoke com preferência Branco previamente salva carregou a paleta clara e gerou captura com a cor de fundo esperada; saída 0 e preferência preservada. O auxiliar de atualização continuou passando no teste isolado de troca e preservação da versão anterior.

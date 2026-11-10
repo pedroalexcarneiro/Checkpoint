@@ -1,6 +1,6 @@
 # Checkpoint
 
-Biblioteca pessoal de jogos para Windows, desenvolvida do zero em Python 3.12, PySide6 e SQLite. Versão **0.1.4 de desenvolvimento**, com dados locais e interface em português. Não é ainda a implementação completa da visão do produto.
+Biblioteca pessoal de jogos para Windows, desenvolvida do zero em Python 3.12, PySide6 e SQLite. Versão **0.1.5 de desenvolvimento**, com dados locais e interface em português. Não é ainda a implementação completa da visão do produto.
 
 Já oferece biblioteca manual persistente, galeria 3:4 e lista, pesquisa e filtros, favoritos, edição, lixeira recuperável, páginas de jogos, diário, mídia referenciada, conquistas pessoais, estatísticas de sessões confirmadas, metas de compra e backup/restauração local de saves explicitamente selecionados.
 
@@ -34,6 +34,12 @@ O primeiro início é vazio. Dados de testes ficam em diretórios isolados e nã
 
 ![Início vazio do GameVault](preview.png)
 
-## Atualização 0.1.4 — Checkpoint
+## Atualização 0.1.5 — Checkpoint
 
 Nome visível e executável alterados para Checkpoint. Removidos slogans da navegação, do início e dos estados vazios. Os dados, a trava de instância e o cofre continuam usando os identificadores internos GameVault para abrir a biblioteca existente sem migração. O pacote Python e a pasta de fontes também permanecem com seus nomes internos. O usuário confirmou que os fluxos locais solicitados no teste anterior funcionaram; isso não valida integrações autenticadas.
+
+## Temas de cores
+
+Escolha entre Azul, Verde, Amarelo, Vermelho, Preto, Branco, Roxo, Rosa, Laranja e Ciano em Configurações > Aparência > Tema. A preferência é salva e aplicada imediatamente.
+
+![Comparação das paletas](palettes.png)
