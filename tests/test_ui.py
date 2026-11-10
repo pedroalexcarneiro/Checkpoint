@@ -85,3 +85,11 @@ def test_updates_dialog_starts_without_network_or_credentials(app,folder):
     assert not dialog.download.isEnabled() and not dialog.install.isEnabled()
     assert dialog.token.text()==''
     dialog.reject()
+
+def test_updates_require_saving_typed_credential_before_network(app,folder):
+    from gamevault.updates_dialog import UpdatesDialog
+    dialog=UpdatesDialog(folder); dialog.token.setText('test-not-saved')
+    dialog.check_updates()
+    assert not dialog.jobs
+    assert 'Salvar credencial' in dialog.state.text()
+    dialog.reject()

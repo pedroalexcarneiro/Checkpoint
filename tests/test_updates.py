@@ -75,3 +75,30 @@ def test_corrupt_download_never_extracts(folder,monkeypatch):
     with pytest.raises(UpdateError): GitHubUpdates().prepare({'asset_id':1,'size':3,'sha256':'a'*64},folder/'updates')
     assert not list((folder/'updates').rglob('Checkpoint.exe'))
     assert not list((folder/'updates').rglob('*.partial'))
+
+def test_check_decodes_gzip_response_before_json(monkeypatch):
+    import gzip,json,requests
+    from urllib3.response import HTTPResponse
+    import gamevault.updates as module
+    response=requests.Response(); response.status_code=200
+    payload=json.dumps([asset_release()]).encode()
+    response.raw=HTTPResponse(body=io.BytesIO(gzip.compress(payload)),headers={'Content-Encoding':'gzip'},preload_content=False,decode_content=False)
+    monkeypatch.setattr(module.requests,'get',lambda *a,**k:response)
+    assert GitHubUpdates('test-token').check('0.1.3')['tag']=='v0.1.4'
+
+@pytest.mark.parametrize('error,expected',[
+    ('ProxyError','proxy'),('SSLError','certificado'),('Timeout','demorou'),('ConnectionError','firewall')])
+def test_connection_errors_are_specific_and_hide_secrets(monkeypatch,error,expected):
+    import requests
+    import gamevault.updates as module
+    def fail(*a,**k): raise getattr(requests.exceptions,error)('https://secret-token@example.invalid')
+    monkeypatch.setattr(module.requests,'get',fail)
+    with pytest.raises(UpdateError) as caught: GitHubUpdates('test-token').check('0.1.3')
+    assert expected in str(caught.value)
+    assert 'secret-token' not in str(caught.value)
+
+
+def test_invalid_json_reports_response_not_network(monkeypatch):
+    import gamevault.updates as module
+    monkeypatch.setattr(module.requests,'get',lambda *a,**k:Response(200,b'<html>invalid</html>'))
+    with pytest.raises(UpdateError,match='conteúdo inválido'): GitHubUpdates().check('0.1.3')
