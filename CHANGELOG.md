@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.4 — Consulta de atualizações
+
+- Corrigida resposta gzip da API GitHub.
+- Mensagens distintas para proxy, TLS, timeout e conteúdo inválido.
+- Consulta exige salvar a credencial digitada antes de continuar.
+- 46 testes passaram e consulta pública real foi validada sem token.
+
+
 ## 0.1.3 — Atualizações
 
 - Consulta de releases GitHub privadas com credencial no cofre Windows.

@@ -1,6 +1,6 @@
 # Estado do projeto — Checkpoint
 
-Atualizado em 10/11/2026. Versão 0.1.3 de desenvolvimento. **O projeto completo não está concluído.** O ponto de continuidade é este diretório, com código real, documentação e testes.
+Atualizado em 10/11/2026. Versão 0.1.4 de desenvolvimento. **O projeto completo não está concluído.** O ponto de continuidade é este diretório, com código real, documentação e testes.
 
 ## Implementado e utilizável localmente
 
@@ -114,3 +114,18 @@ Validação de domínio/rede controlada: 39 testes passaram em 5,74 s. Sem crede
 
 
 Estado atual: Checkpoint 0.1.3 validado localmente com 39 testes e smoke dos dois executáveis. Consulta e download reais da API privada ainda dependem de uma credencial de leitura configurada pelo usuário. Publicação GitHub em andamento; a tag 0.1.2 continua disponível.
+
+Publicação 0.1.3 concluída: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.3 . Tag aponta ao commit remoto f929fa206947fe709024f19989783b5960b0891e. Os quatro anexos estão disponíveis; SHA-256 exibido pelo GitHub para o ZIP Windows confere com o local: 80a2a552715e3b276dd98dcaf3d671eec777368021910df8541db9210fb264fe. Código e documentação sincronizados pela interface web antes da criação da tag. Esta anotação local é posterior à tag. Captura da release em outputs/github-checkpoint-013.png. Próximo passo de validação: configurar uma credencial restrita de leitura no aplicativo e testar a API privada; não foi criada credencial nem feito teste autenticado.
+
+
+## Checkpoint 0.1.4 — correção da consulta de atualizações
+
+Corrigida a leitura da lista de versões: o GitHub pode retornar gzip e o leitor anterior usava o corpo bruto sem descompactar. A falha foi reproduzida com resposta HTTP gzip controlada e na API pública github/docs sem credenciais; a consulta pública passou após usar iter_content com limite de 8 MB descompactados. Isso confirma o defeito do leitor, mas não prova que a mensagem de conexão do usuário tinha exatamente essa causa.
+
+Agora erros de proxy, certificado HTTPS, timeout, conexão e JSON inválido têm mensagens distintas, sem exibir URLs ou segredos. Não foi desativada a validação TLS nem contornada a configuração de proxy. O teste público de rede no ambiente Codex exigiu permissão explícita de rede; sem ela o proxy restrito do ambiente recusava a conexão.
+
+A interface exige salvar uma credencial digitada antes de consultar e informa quando não há credencial no cofre. O campo é limpo ao salvar com sucesso. Nenhum token real do usuário foi lido, copiado ou enviado por esta sessão. Consulta autenticada ao repositório privado continua pendente de validação no aplicativo pelo usuário.
+
+Validação: 46 testes passaram em 5,77 s; incluem regressão com gzip real do urllib3/Requests, mensagens de erros de rede sem vazamento de segredos e bloqueio de consulta com token não salvo. Consulta pública real sem autenticação retornou com sucesso, sem atualizações compatíveis. O 0.1.3 pode precisar de substituição manual caso a consulta antiga impeça baixar esta correção.
+
+Executável 0.1.4 validado após recompilação: smoke com saída 0, biblioteca legada isolada preservada e integridade SQLite ok. Auxiliar de atualização executado fora da instalação, com troca isolada e preservação da versão anterior. Arquivos serão publicados como v0.1.4; o acesso autenticado com a credencial real do usuário não foi testado por esta sessão.
