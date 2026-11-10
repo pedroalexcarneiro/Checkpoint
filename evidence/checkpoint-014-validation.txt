@@ -1,0 +1,7 @@
+Checkpoint 0.1.4
+46 tests passed in 5.77s
+Gzip regression failed before the fix and passed after it.
+Public GitHub API check without credentials: reproduced decode failure before fix; succeeded after fix.
+Private authenticated API check: pending user validation; no user token accessed.
+Frozen application: exit 0; legacy library preserved; integrity ok.
+Relocated updater helper: check exit 0; isolated replacement and previous-version preservation passed.
