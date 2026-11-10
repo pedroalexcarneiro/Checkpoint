@@ -28,6 +28,9 @@ def button(text,callback,primary=False):
 class MainWindow(QMainWindow):
     def __init__(self,library):
         super().__init__(); self.library = library; self.launcher = Launcher(library)
+        from PySide6.QtWidgets import QApplication
+        from .theme import apply_theme,DEFAULT_THEME
+        self.theme=apply_theme(QApplication.instance(),library.setting('appearance.theme',DEFAULT_THEME))
         self.setWindowTitle('Checkpoint'); self.resize(1380,900); self.setMinimumSize(1000,700)
         self.current_page = 0; self.current_game = None; self.last_deleted = None; self.save_jobs = {}
         root = QWidget(); root.setObjectName('root'); self.setCentralWidget(root)
@@ -149,7 +152,7 @@ class MainWindow(QMainWindow):
             if pix.isNull():
                 pix = QPixmap(174,232); pix.fill(Qt.GlobalColor.darkCyan)
                 from PySide6.QtGui import QPainter,QColor,QFont
-                painter = QPainter(pix); painter.fillRect(pix.rect(),QColor('#24382e')); painter.setPen(QColor('#a9e9be'))
+                painter = QPainter(pix); painter.fillRect(pix.rect(),QColor(self.theme.colors['selected'])); painter.setPen(QColor(self.theme.colors['accent']))
                 painter.setFont(QFont('Segoe UI',42)); painter.drawText(pix.rect(),Qt.AlignCenter,game['title'][:2].upper()); painter.end()
             else:
                 pix = pix.scaled(174,232,Qt.KeepAspectRatioByExpanding,Qt.SmoothTransformation)
@@ -332,6 +335,14 @@ class MainWindow(QMainWindow):
 
     def settings(self):
         layout = self.clear_page(5); scroll = QScrollArea(); scroll.setWidgetResizable(True); body = QWidget(); form = QVBoxLayout(body)
+        form.addWidget(label('APARÊNCIA','eyebrow'))
+        from .theme import THEMES
+        theme_row=QHBoxLayout(); theme_row.addWidget(label('Tema'))
+        self.theme_selector=QComboBox(); self.theme_selector.setObjectName('themeSelector')
+        for key,theme in THEMES.items(): self.theme_selector.addItem(theme.name,key)
+        self.theme_selector.setCurrentIndex(self.theme_selector.findData(self.theme.key))
+        self.theme_selector.currentIndexChanged.connect(lambda index:self.set_theme(self.theme_selector.itemData(index)))
+        theme_row.addWidget(self.theme_selector,1); form.addLayout(theme_row)
         form.addWidget(button('Atualizações do Checkpoint',self.updates))
         form.addWidget(label('DADOS LOCAIS','eyebrow')); form.addWidget(label(str(self.library.db.path),'muted'))
         form.addWidget(button('Criar cópia de segurança do banco',self.backup_database))
@@ -353,6 +364,13 @@ class MainWindow(QMainWindow):
         for game in self.library.sql.execute('SELECT id,title FROM games WHERE deleted_at IS NOT NULL'):
             form.addWidget(button('Restaurar '+game['title'],lambda checked=False,g=game['id']:self.restore_game(g)))
         form.addWidget(button('Revisar sessões interrompidas',self.recover_sessions)); form.addStretch(); scroll.setWidget(body); layout.addWidget(scroll)
+
+    def set_theme(self,key):
+        from PySide6.QtWidgets import QApplication
+        from .theme import apply_theme
+        self.library.set_setting('appearance.theme',key)
+        self.theme=apply_theme(QApplication.instance(),key)
+        self.refresh_library()
 
     def updates(self):
         if self.launcher.active or self.save_jobs:

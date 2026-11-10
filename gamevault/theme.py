@@ -1,27 +1,92 @@
-DARK = """
-* { font-family: 'Segoe UI'; font-size: 14px; }
-QMainWindow, QDialog, QWidget#root { background: #101318; color: #e9edf2; }
-QWidget { color: #e9edf2; }
-QWidget#sidebar { background: #151a21; border-right: 1px solid #252d37; }
-QLabel#brand { font-size: 25px; font-weight: 800; color: #a9e9be; padding: 22px 12px; }
-QLabel#eyebrow { color: #99acaa; font-size: 11px; letter-spacing: 2px; }
-QLabel#title { font-size: 32px; font-weight: 700; }
-QLabel#muted { color: #9ba6b4; }
-QLabel#error { color: #ffaca5; }
-QPushButton { background: #222b35; border: 1px solid #34404c; border-radius: 7px; padding: 10px 16px; }
-QPushButton:hover { background: #303e48; border-color: #81c7a1; }
-QPushButton#primary { background: #a9e9be; color: #102218; border: none; font-weight: 700; }
-QPushButton#nav { text-align: left; background: transparent; border: none; padding: 13px 20px; color: #a5b0bc; }
-QPushButton#nav:checked { background: #24382e; color: #b8f1ca; border-left: 3px solid #a9e9be; border-radius: 0; }
-QLineEdit, QTextEdit, QComboBox, QSpinBox, QListWidget, QTableWidget { background: #181f27; border: 1px solid #34404c; border-radius: 6px; padding: 9px; selection-background-color: #385c49; }
-QComboBox QAbstractItemView { background: #222b35; color: #e9edf2; }
-QScrollArea, QScrollArea > QWidget > QWidget { background: transparent; border: none; }
-QHeaderView::section { background: #222b35; color: #9ba6b4; padding: 10px; border: none; }
-QTableWidget { gridline-color: #29323c; }
-QFrame#panel { background: #191f27; border: 1px solid #2a343f; border-radius: 10px; }
-QProgressBar { background: #222b35; border: none; border-radius: 4px; min-height: 10px; }
-QProgressBar::chunk { background: #a9e9be; border-radius: 4px; }
-QCheckBox { padding: 5px; }
-QToolTip { background: #24382e; color: #ffffff; border: 1px solid #81c7a1; }
-QStatusBar { color: #9ba6b4; background: #101318; }
+"""Paletas discretas e completas para as superfícies e estados do aplicativo."""
+from dataclasses import dataclass
+from PySide6.QtGui import QColor,QPalette
+
+@dataclass(frozen=True)
+class Theme:
+    key: str
+    name: str
+    colors: dict
+
+def blend(base,tint,amount):
+    values=[round(int(base[i:i+2],16)*(1-amount)+int(tint[i:i+2],16)*amount) for i in (1,3,5)]
+    return '#'+''.join(f'{v:02x}' for v in values)
+
+def dark_theme(key,name,accent):
+    return Theme(key,name,{
+        'background':blend('#101216',accent,.035),'sidebar':blend('#16191d',accent,.045),
+        'panel':blend('#1c2025',accent,.05),'input':blend('#171b20',accent,.04),
+        'button':blend('#272d34',accent,.06),'hover':blend('#303841',accent,.12),
+        'border':blend('#3c454f',accent,.10),'text':'#e8eaed','muted':'#abb3bd',
+        'accent':accent,'on_accent':'#152027','selected':blend('#242b32',accent,.16),
+        'error':'#e2b3ad','disabled':'#7c858f'})
+
+THEMES={theme.key:theme for theme in [
+    dark_theme('blue','Azul','#a3b8cf'),
+    dark_theme('green','Verde','#a3bfae'),
+    dark_theme('yellow','Amarelo','#c7ba91'),
+    dark_theme('red','Vermelho','#cba3a0'),
+    dark_theme('black','Preto','#b6b8bc'),
+    Theme('white','Branco',{'background':'#f4f3f0','sidebar':'#eaeae6','panel':'#ffffff',
+        'input':'#ffffff','button':'#e4e7e7','hover':'#d5dddf','border':'#b9c0c3',
+        'text':'#252c31','muted':'#58646b','accent':'#465e69','on_accent':'#ffffff',
+        'selected':'#d9e3e7','error':'#9b3636','disabled':'#697279'}),
+    dark_theme('purple','Roxo','#b7a9ca'),
+    dark_theme('pink','Rosa','#c6a8b9'),
+    dark_theme('orange','Laranja','#cbb195'),
+    dark_theme('cyan','Ciano','#9cbfc3'),
+]}
+DEFAULT_THEME='green'
+
+def get_theme(key): return THEMES.get(key,THEMES[DEFAULT_THEME]) if isinstance(key,str) else THEMES[DEFAULT_THEME]
+
+def stylesheet(key):
+    c=get_theme(key).colors
+    return f"""
+* {{ font-family: 'Segoe UI'; font-size: 14px; }}
+QMainWindow, QDialog, QWidget#root {{ background: {c['background']}; color: {c['text']}; }}
+QWidget {{ color: {c['text']}; }}
+QWidget#sidebar {{ background: {c['sidebar']}; border-right: 1px solid {c['border']}; }}
+QLabel#brand {{ font-size: 25px; font-weight: 800; color: {c['accent']}; padding: 22px 12px; }}
+QLabel#eyebrow {{ color: {c['muted']}; font-size: 11px; letter-spacing: 2px; }}
+QLabel#title {{ font-size: 32px; font-weight: 700; }}
+QLabel#muted {{ color: {c['muted']}; }}
+QLabel#error {{ color: {c['error']}; }}
+QPushButton {{ background: {c['button']}; border: 1px solid {c['border']}; border-radius: 7px; padding: 10px 16px; }}
+QPushButton:hover {{ background: {c['hover']}; border-color: {c['accent']}; }}
+QPushButton:focus, QLineEdit:focus, QTextEdit:focus, QComboBox:focus, QSpinBox:focus {{ border: 2px solid {c['accent']}; }}
+QPushButton#primary {{ background: {c['accent']}; color: {c['on_accent']}; border: none; font-weight: 700; }}
+QPushButton#primary:hover {{ background: {blend(c['accent'],c['text'],.12)}; }}
+QPushButton:disabled, QPushButton#primary:disabled {{ background: {c['button']}; color: {c['disabled']}; border: 1px solid {c['border']}; }}
+QPushButton#nav {{ text-align: left; background: transparent; border: none; padding: 13px 20px; color: {c['muted']}; }}
+QPushButton#nav:hover {{ background: {c['hover']}; color: {c['text']}; }}
+QPushButton#nav:checked {{ background: {c['selected']}; color: {c['text']}; border-left: 3px solid {c['accent']}; border-radius: 0; }}
+QLineEdit, QTextEdit, QComboBox, QSpinBox, QListWidget, QTableWidget {{ background: {c['input']}; border: 1px solid {c['border']}; border-radius: 6px; padding: 9px; selection-background-color: {c['accent']}; selection-color: {c['on_accent']}; }}
+QComboBox QAbstractItemView {{ background: {c['panel']}; color: {c['text']}; selection-background-color: {c['accent']}; selection-color: {c['on_accent']}; }}
+QScrollArea, QScrollArea > QWidget > QWidget {{ background: transparent; border: none; }}
+QHeaderView::section {{ background: {c['button']}; color: {c['muted']}; padding: 10px; border: none; }}
+QTableWidget {{ gridline-color: {c['border']}; }}
+QFrame#panel {{ background: {c['panel']}; border: 1px solid {c['border']}; border-radius: 10px; }}
+QProgressBar {{ background: {c['button']}; border: none; border-radius: 4px; min-height: 10px; }}
+QProgressBar::chunk {{ background: {c['accent']}; border-radius: 4px; }}
+QCheckBox {{ padding: 5px; }}
+QCheckBox:disabled, QComboBox:disabled {{ color: {c['disabled']}; }}
+QCheckBox::indicator {{ width: 14px; height: 14px; border: 1px solid {c['muted']}; border-radius: 3px; background: {c['input']}; }}
+QCheckBox::indicator:checked {{ background: {c['accent']}; border: 2px solid {c['on_accent']}; }}
+QToolTip {{ background: {c['selected']}; color: {c['text']}; border: 1px solid {c['border']}; }}
+QStatusBar {{ color: {c['muted']}; background: {c['background']}; }}
 """
+
+def apply_theme(application,key):
+    theme=get_theme(key); c=theme.colors; palette=QPalette()
+    roles={'Window':'background','WindowText':'text','Base':'input','AlternateBase':'selected',
+           'Text':'text','Button':'button','ButtonText':'text','Highlight':'accent','HighlightedText':'on_accent',
+           'ToolTipBase':'panel','ToolTipText':'text','PlaceholderText':'muted','Link':'accent'}
+    for role,color in roles.items(): palette.setColor(getattr(QPalette.ColorRole,role),QColor(c[color]))
+    for role in [QPalette.ColorRole.Text,QPalette.ColorRole.ButtonText,QPalette.ColorRole.WindowText]:
+        palette.setColor(QPalette.ColorGroup.Disabled,role,QColor(c['disabled']))
+    application.setPalette(palette); application.setStyleSheet(stylesheet(theme.key)); application.setProperty('checkpointTheme',theme.key)
+    return theme
+
+# Compatibilidade com ferramentas e testes que importavam o tema padrão.
+DARK=stylesheet(DEFAULT_THEME)
