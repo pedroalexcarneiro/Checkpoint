@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+dist/
+build/
+*.db*
+*.log
+credentials*.json
+token*.json
+
+.test-data/
+/work/
+*.sqlite*
+*.partial
+client_secret*.json
