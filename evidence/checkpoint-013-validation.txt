@@ -1,0 +1,7 @@
+Checkpoint 0.1.3
+39 tests passed in 5.74s
+Frozen application: exit 0; schema 2; SQLite integrity ok; legacy library preserved.
+Relocated one-dir updater: check exit 0; waited for a real test process; installed isolated replacement; previous version preserved.
+Frozen application code inspected: final update dialog included.
+First one-file helper failed to extract a DLL; replaced by the validated one-dir helper.
+Authenticated GitHub API check/download: not validated; requires read credential.
