@@ -33,6 +33,13 @@ def select_update(releases,current,previews=False):
         choices.append((number,{'tag':release['tag_name'],'asset_id':asset['id'],'size':int(asset['size']),'sha256':asset['digest'][7:]}))
     return max(choices,key=lambda c:c[0])[1] if choices else None
 
+def network_message(error):
+    if isinstance(error,requests.exceptions.ProxyError): return 'Falha na conexão com o proxy. Verifique as configurações de proxy do ambiente.'
+    if isinstance(error,requests.exceptions.SSLError): return 'Falha na validação do certificado HTTPS. Verifique os certificados e a data do Windows.'
+    if isinstance(error,requests.exceptions.Timeout): return 'O GitHub demorou demais para responder. Tente novamente.'
+    if isinstance(error,requests.exceptions.ConnectionError): return 'Não foi possível conectar ao GitHub. Verifique a rede e o firewall.'
+    return 'A transferência com o GitHub falhou. Tente novamente.'
+
 class GitHubUpdates:
     def __init__(self,token=None): self.token=token
     def headers(self,binary=False):
@@ -45,12 +52,16 @@ class GitHubUpdates:
             with requests.get(url,headers=self.headers(),timeout=(10,30),allow_redirects=False,stream=True) as response:
                 if response.status_code in {401,403,404}: raise UpdateError('Acesso ao repositório recusado. Verifique o token e a permissão Contents: read.')
                 if response.status_code!=200: raise UpdateError('O GitHub não respondeu à consulta. Tente novamente mais tarde.')
-                raw=response.raw.read(8_000_001)
-                if len(raw)>8_000_000: raise UpdateError('Resposta de versões excedeu o limite.')
+                raw=bytearray()
+                for block in response.iter_content(64*1024):
+                    if len(raw)+len(block)>8_000_000: raise UpdateError('Resposta de versões excedeu o limite.')
+                    raw.extend(block)
                 releases=json.loads(raw)
                 if not isinstance(releases,list): raise UpdateError('Resposta de versões inválida.')
                 return select_update(releases,current,previews)
-        except (requests.RequestException,OSError,json.JSONDecodeError): raise UpdateError('Falha ao consultar versões. Verifique a conexão.') from None
+        except requests.RequestException as error: raise UpdateError(network_message(error)) from None
+        except (json.JSONDecodeError,UnicodeDecodeError): raise UpdateError('O servidor retornou um conteúdo inválido em vez da lista de versões.') from None
+        except OSError: raise UpdateError('Falha de rede ao consultar versões. Tente novamente.') from None
     def prepare(self,update,directory):
         directory=Path(directory).resolve()/uuid4().hex; directory.mkdir(parents=True)
         target=directory/'package.zip'; partial=directory/'package.partial'
@@ -73,7 +84,7 @@ class GitHubUpdates:
             if count!=update['size'] or checksum.hexdigest()!=update['sha256']: raise UpdateError('Falha na integridade do pacote. A instalação foi preservada.')
             partial.rename(target)
             return str(extract_package(target,directory/'staged'))
-        except requests.RequestException: raise UpdateError('Download interrompido. Tente novamente; a versão instalada foi preservada.') from None
+        except requests.RequestException as error: raise UpdateError(network_message(error)+' A versão instalada foi preservada.') from None
         finally:
             if response is not None: response.close()
             partial.unlink(missing_ok=True)

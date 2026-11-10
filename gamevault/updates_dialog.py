@@ -9,7 +9,7 @@ from PySide6.QtWidgets import QDialog,QVBoxLayout,QLabel,QPushButton,QLineEdit,Q
 from . import __version__
 from .credentials import CredentialVault
 from .jobs import Job
-from .updates import GitHubUpdates
+from .updates import GitHubUpdates,UpdateError
 
 class UpdatesDialog(QDialog):
     def __init__(self,data_directory,parent=None):
@@ -23,7 +23,10 @@ class UpdatesDialog(QDialog):
         self.download=QPushButton('Baixar e verificar'); self.download.setEnabled(False); self.download.clicked.connect(self.prepare); layout.addWidget(self.download)
         self.install=QPushButton('Aplicar atualização e reiniciar'); self.install.setEnabled(False); self.install.clicked.connect(self.install_update); layout.addWidget(self.install)
         self.state=QLabel('A credencial é necessária para o repositório privado. Permissão mínima: Contents, somente leitura.'); self.state.setWordWrap(True); layout.addWidget(self.state)
-    def client(self): return GitHubUpdates(CredentialVault().get('github-updates'))
+    def client(self):
+        token=CredentialVault().get('github-updates')
+        if not token: raise UpdateError('Nenhuma credencial salva. Cole o token e clique em Salvar credencial antes de verificar.')
+        return GitHubUpdates(token)
     def save_token(self):
         if not self.token.text().strip(): return
         try:
@@ -38,6 +41,8 @@ class UpdatesDialog(QDialog):
         self.save.setEnabled(True); self.check.setEnabled(True); self.preview.setEnabled(True)
         self.download.setEnabled(self.update is not None); self.install.setEnabled(self.staged is not None and getattr(sys,'frozen',False))
     def check_updates(self):
+        if self.token.text().strip():
+            self.state.setText('Clique em Salvar credencial antes de verificar atualizações.'); return
         self.update=None; self.staged=None; previews=self.preview.isChecked(); self.state.setText('Consultando versões…')
         self.run(lambda:self.client().check(__version__,previews),self.checked)
     def checked(self,update):
