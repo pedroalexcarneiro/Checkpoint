@@ -332,6 +332,7 @@ class MainWindow(QMainWindow):
 
     def settings(self):
         layout = self.clear_page(5); scroll = QScrollArea(); scroll.setWidgetResizable(True); body = QWidget(); form = QVBoxLayout(body)
+        form.addWidget(button('Atualizações do Checkpoint',self.updates))
         form.addWidget(label('DADOS LOCAIS','eyebrow')); form.addWidget(label(str(self.library.db.path),'muted'))
         form.addWidget(button('Criar cópia de segurança do banco',self.backup_database))
         form.addWidget(button('Configurar perfis de emuladores',self.emulators))
@@ -352,6 +353,14 @@ class MainWindow(QMainWindow):
         for game in self.library.sql.execute('SELECT id,title FROM games WHERE deleted_at IS NOT NULL'):
             form.addWidget(button('Restaurar '+game['title'],lambda checked=False,g=game['id']:self.restore_game(g)))
         form.addWidget(button('Revisar sessões interrompidas',self.recover_sessions)); form.addStretch(); scroll.setWidget(body); layout.addWidget(scroll)
+
+    def updates(self):
+        if self.launcher.active or self.save_jobs:
+            QMessageBox.information(self,'Atualizações','Encerre as sessões e aguarde os backups antes de atualizar.'); return
+        from .updates_dialog import UpdatesDialog
+        dialog=UpdatesDialog(self.library.db.path.parent,self)
+        dialog.exec()
+        if dialog.approved: self.close()
 
     def emulators(self):
         from .emulator_dialog import EmulatorDialog
