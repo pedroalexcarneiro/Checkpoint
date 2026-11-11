@@ -59,6 +59,13 @@ CREATE INDEX rom_catalog_md5 ON rom_catalog(md5);
 CREATE INDEX rom_catalog_sha1 ON rom_catalog(sha1);
 CREATE INDEX rom_catalog_crc32 ON rom_catalog(crc32);
 """,
+"""
+CREATE TABLE artwork_assets (
+ game_id INTEGER NOT NULL REFERENCES games(id), kind TEXT NOT NULL CHECK(kind IN ('cover','banner','logo')),
+ provider TEXT NOT NULL, external_id TEXT NOT NULL, source_url TEXT NOT NULL,
+ local_path TEXT NOT NULL, sha256 TEXT NOT NULL, fetched_at TEXT NOT NULL,
+ PRIMARY KEY(game_id,kind));
+""",
 ]
 
 class Database:
@@ -74,6 +81,11 @@ class Database:
         if version > len(MIGRATIONS):
             self.connection.close()
             raise RuntimeError('Banco criado por uma versão mais recente do Checkpoint.')
+        if 0 < version < len(MIGRATIONS):
+            from uuid import uuid4
+            directory=path.parent/'backups'; directory.mkdir(exist_ok=True)
+            with closing(sqlite3.connect(directory/f'before-migration-v{version}-to-v{len(MIGRATIONS)}-{uuid4().hex}.sqlite')) as backup:
+                self.connection.backup(backup)
         for index in range(version, len(MIGRATIONS)):
             try:
                 self.connection.executescript('BEGIN IMMEDIATE;\n' + MIGRATIONS[index] + f'\nPRAGMA user_version={index+1};\nCOMMIT;')

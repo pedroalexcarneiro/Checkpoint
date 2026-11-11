@@ -2,15 +2,25 @@ from pathlib import Path
 from PySide6.QtCore import Qt, QSize, QUrl
 from PySide6.QtGui import QPixmap, QDesktopServices
 from PySide6.QtWidgets import (QDialog,QDialogButtonBox,QFormLayout,QLineEdit,QTextEdit,QComboBox,
-    QSpinBox,QCheckBox,QPushButton,QHBoxLayout,QVBoxLayout,QFileDialog,QLabel,QScrollArea,QWidget)
+    QSpinBox,QCheckBox,QPushButton,QHBoxLayout,QVBoxLayout,QFileDialog,QLabel,QScrollArea,QWidget,QListWidget,QGroupBox,QMessageBox)
 from .library import STATUSES
 
 class GameDialog(QDialog):
-    def __init__(self, parent=None, game=None):
+    def __init__(self, parent=None, game=None, library=None):
         super().__init__(parent)
         self.setWindowTitle('Editar jogo' if game else 'Adicionar à biblioteca')
-        self.resize(620,720)
+        self.resize(720,760)
+        self.library=library;self.drive_file_id=None;self.catalog_result=None;self.drive_results=[]
         outer = QVBoxLayout(self)
+        if library is not None and game is None:
+            group=QGroupBox('Adicionar do Google Drive');drive=QVBoxLayout(group)
+            self.drive_query=QLineEdit();self.drive_query.setObjectName('addDriveSearch');self.drive_query.setPlaceholderText('Pesquisar ROM no índice do Drive por nome ou pasta')
+            drive.addWidget(self.drive_query);self.drive_list=QListWidget();self.drive_list.setMaximumHeight(115);drive.addWidget(self.drive_list)
+            row=QHBoxLayout();use=QPushButton('Usar ROM selecionada');use.clicked.connect(self.choose_drive);row.addWidget(use)
+            manage=QPushButton('Atualizar índice do Drive');manage.clicked.connect(self.manage_drive);row.addWidget(manage);drive.addLayout(row)
+            self.drive_info=QLabel('Pesquisa local. Se a pasta for nova, atualize o índice primeiro.');self.drive_info.setWordWrap(True);drive.addWidget(self.drive_info)
+            self.drive_query.textChanged.connect(self.search_drive);outer.addWidget(group)
+            lookup=QPushButton('Confirmar título original e completar dados no catálogo');lookup.clicked.connect(self.lookup_catalog);outer.addWidget(lookup)
         scroll = QScrollArea(); scroll.setWidgetResizable(True)
         body = QWidget(); form = QFormLayout(body); form.setSpacing(14)
         self.fields = {}
@@ -32,6 +42,7 @@ class GameDialog(QDialog):
         scroll.setWidget(body); outer.addWidget(scroll)
         self.error = QLabel(); self.error.setObjectName('error'); outer.addWidget(self.error)
         buttons = QDialogButtonBox(QDialogButtonBox.Save|QDialogButtonBox.Cancel)
+        buttons.button(QDialogButtonBox.Save).setText('Salvar');buttons.button(QDialogButtonBox.Cancel).setText('Cancelar')
         buttons.accepted.connect(self.validate); buttons.rejected.connect(self.reject); outer.addWidget(buttons)
         if game:
             for key, widget in self.fields.items():
@@ -42,6 +53,54 @@ class GameDialog(QDialog):
                 elif isinstance(widget,QTextEdit): widget.setPlainText(value or '')
                 else: widget.setText(value or '')
 
+    def search_drive(self,text):
+        import unicodedata
+        def fold(value):return ''.join(c for c in unicodedata.normalize('NFKD',value.casefold()) if not unicodedata.combining(c))
+        query=fold(text.strip());self.drive_list.clear();self.drive_results=[]
+        if not query:self.drive_info.setText('Digite o nome do jogo para pesquisar as ROMs já indexadas.');return
+        rows=self.library.sql.execute('SELECT f.*,g.title FROM game_files f LEFT JOIN games g ON f.game_id=g.id WHERE f.drive_id IS NOT NULL ORDER BY f.original_name')
+        self.drive_results=[dict(row) for row in rows if any(query in fold(row[key] or '') for key in ('original_name','title','folder_path'))]
+        for row in self.drive_results:self.drive_list.addItem(row['original_name']+' · '+(row['platform'] or 'Revisar plataforma'))
+        self.drive_info.setText(f'{len(self.drive_results)} ROMs encontradas. Selecione a versão desejada.')
+    def choose_drive(self):
+        index=self.drive_list.currentRow()
+        if index<0:self.drive_info.setText('Selecione uma ROM.');return
+        self.load_drive_file(self.drive_results[index])
+    def load_drive_file(self,file):
+        from .integrations.drive import normalize_rom_name
+        self.drive_file_id=file['id'];self.catalog_result=None
+        for key in ('genre','developer','publisher','release_date','description','cover','banner','logo','executable'):
+            widget=self.fields[key]
+            if isinstance(widget,QTextEdit):widget.clear()
+            else:widget.clear()
+        self.fields['title'].setText(normalize_rom_name(file['original_name']))
+        self.fields['platform'].setText(file['platform'] or '')
+        self.fields['source'].setText('Google Drive')
+        if file['game_id']:
+            existing=self.library.get(file['game_id'])
+            if existing:
+                self.fields['title'].setText(existing['title'])
+                for key in ('genre','developer','publisher','release_date','description'):
+                    widget=self.fields[key]
+                    if isinstance(widget,QTextEdit):widget.setPlainText(existing[key] or '')
+                    else:widget.setText(existing[key] or '')
+        self.drive_info.setText('ROM escolhida: '+file['original_name']+'. Confirme o título no catálogo para padronizar o nome exibido. Arquivo não será baixado.')
+    def manage_drive(self):
+        from .drive_dialog import DriveDialog
+        DriveDialog(self.library,self).exec();self.search_drive(self.drive_query.text())
+    def lookup_catalog(self):
+        from .catalog_picker import CatalogPicker
+        dialog=CatalogPicker(self.fields['title'].text(),self)
+        if dialog.exec()==QDialog.Accepted:self.apply_catalog(dialog.selected_result)
+    def apply_catalog(self,result):
+        self.catalog_result=result
+        values={'title':result.title,'description':result.description,'genre':', '.join(result.genres),'developer':result.developer,'publisher':result.publisher,'release_date':result.release_date}
+        for key,value in values.items():
+            if value:
+                widget=self.fields[key]
+                if isinstance(widget,QTextEdit):widget.setPlainText(value)
+                else:widget.setText(value)
+        if hasattr(self,'drive_info'):self.drive_info.setText('Título confirmado: '+result.title+'. A plataforma e o nome original da ROM foram preservados.')
     def choose(self,key):
         filters = 'Executáveis (*.exe);;Todos (*)' if key=='executable' else 'Imagens (*.png *.jpg *.jpeg *.webp)'
         path,_ = QFileDialog.getOpenFileName(self,'Selecionar arquivo','',filters)

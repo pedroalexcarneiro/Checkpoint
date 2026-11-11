@@ -131,7 +131,7 @@ class MainWindow(QMainWindow):
         self.gallery.setMovement(QListWidget.Static); self.gallery.setIconSize(QSize(174,232)); self.gallery.setGridSize(QSize(208,300))
         self.gallery.setSpacing(8); self.gallery.setWordWrap(True)
         self.gallery.itemActivated.connect(lambda item:self.detail(item.data(Qt.UserRole)))
-        self.table = QTableWidget(0,5); self.table.setHorizontalHeaderLabels(['Jogo','Plataforma','Status','Gênero','Nota'])
+        self.table = QTableWidget(0,5); self.table.setIconSize(QSize(42,56)); self.table.setHorizontalHeaderLabels(['Jogo','Plataforma','Status','Gênero','Nota'])
         self.table.horizontalHeader().setStretchLastSection(True); self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.table.cellDoubleClicked.connect(lambda row,col:self.detail(self.table.item(row,0).data(Qt.UserRole)))
@@ -155,12 +155,15 @@ class MainWindow(QMainWindow):
                 painter = QPainter(pix); painter.fillRect(pix.rect(),QColor(self.theme.colors['selected'])); painter.setPen(QColor(self.theme.colors['accent']))
                 painter.setFont(QFont('Segoe UI',42)); painter.drawText(pix.rect(),Qt.AlignCenter,game['title'][:2].upper()); painter.end()
             else:
-                pix = pix.scaled(174,232,Qt.KeepAspectRatioByExpanding,Qt.SmoothTransformation)
-                pix = pix.copy((pix.width()-174)//2,(pix.height()-232)//2,174,232)
+                from .artwork_render import fit_artwork
+                pix = fit_artwork(pix,174,232,self.theme.colors['selected'])
             item = QListWidgetItem(QIcon(pix),('★ ' if game['favorite'] else '')+game['title']+'\n'+game['platform'])
             item.setData(Qt.UserRole,game['id']); self.gallery.addItem(item)
             for col,key in enumerate(['title','platform','status','genre','rating']):
-                cell = QTableWidgetItem(str(game[key]) if game[key] is not None else '—'); cell.setData(Qt.UserRole,game['id']); self.table.setItem(row,col,cell)
+                cell = QTableWidgetItem(str(game[key]) if game[key] is not None else '—'); cell.setData(Qt.UserRole,game['id']);
+                if col==0: cell.setIcon(QIcon(pix))
+                self.table.setItem(row,col,cell)
+            self.table.setRowHeight(row,64)
         self.table.resizeColumnsToContents(); self.gallery.setVisible(self.view.currentIndex()==0); self.table.setVisible(self.view.currentIndex()==1)
 
     def open_selected(self):
@@ -171,10 +174,14 @@ class MainWindow(QMainWindow):
         if item: self.detail(item.data(Qt.UserRole))
 
     def add_game(self):
-        dialog = GameDialog(self)
+        dialog = GameDialog(self,library=self.library)
         if dialog.exec()==QDialog.Accepted:
             def save():
-                game_id = self.library.save_game(dialog.data()); self.refresh_library(); self.detail(game_id)
+                from .game_import import save_import
+                from .artwork_progress import ArtworkProgress
+                game_id=save_import(self.library,dialog.data(),dialog.drive_file_id,dialog.catalog_result)
+                progress=ArtworkProgress(self.library,game_id,self);progress.exec()
+                self.refresh_library();self.detail(game_id);self.statusBar().showMessage(progress.message)
             self.guard(save)
 
     def edit_game(self,game_id):
@@ -201,10 +208,14 @@ class MainWindow(QMainWindow):
             if game[key]:
                 art = QPixmap(game[key])
                 if not art.isNull():
-                    art = art.scaled(width,height,Qt.KeepAspectRatioByExpanding,Qt.SmoothTransformation)
-                    art = art.copy((art.width()-width)//2,(art.height()-height)//2,width,height)
+                    from .artwork_render import fit_artwork
+                    art = fit_artwork(art,width,height,self.theme.colors['selected'])
                     image = label(''); image.setPixmap(art); hero.addWidget(image)
         if hero.count(): layout.addLayout(hero)
+        if game['logo']:
+            logo=QPixmap(game['logo'])
+            if not logo.isNull():
+                logo_widget=QLabel();logo_widget.setPixmap(logo.scaled(320,96,Qt.KeepAspectRatio,Qt.SmoothTransformation));layout.addWidget(logo_widget)
         layout.addWidget(label(game['platform']+'   /   '+game['genre']+'   /   '+game['status'],'eyebrow'))
         layout.addWidget(label(game['description'] or 'Adicione uma descrição para este jogo.','muted'))
         layout.addWidget(label(f"Desenvolvedora: {game['developer'] or '—'}  ·  Publicadora: {game['publisher'] or '—'}\nLançamento: {game['release_date'] or '—'}  ·  Nota: {game['rating'] if game['rating'] is not None else 'Sem nota'}\nCategoria: {game['category'] or '—'}  ·  Origem: {game['source']}"))
@@ -425,7 +436,7 @@ class MainWindow(QMainWindow):
 
     def drive(self):
         from .drive_dialog import DriveDialog
-        DriveDialog(self.library,self).exec()
+        DriveDialog(self.library,self).exec(); self.refresh_library()
 
     def integration_status(self,provider):
         key = {'Google Drive':'drive-readonly','RAWG':'rawg','SteamGridDB':'steamgriddb'}.get(provider)

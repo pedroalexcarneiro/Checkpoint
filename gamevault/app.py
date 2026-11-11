@@ -15,12 +15,20 @@ def main():
     parser = argparse.ArgumentParser(description='Checkpoint desktop')
     parser.add_argument('--data-dir',type=Path,help='Diretório de dados isolado')
     parser.add_argument('--smoke-test',action='store_true',help='Abre todas as páginas e encerra em ambiente isolado')
+    parser.add_argument('--network-test', action='store_true', help='Testa HTTPS público sem autenticação e salva network-test.txt no diretório de dados')
     args = parser.parse_args()
     # Preserve o armazenamento e a trava legados para manter bibliotecas existentes.
     directory = args.data_dir or Path(os.environ.get('LOCALAPPDATA',str(Path.home()/'.local/share')))/'GameVault'
     directory.mkdir(parents=True,exist_ok=True)
+    if args.network_test:
+        from .integrations.network import probe_google_connection
+        result = probe_google_connection()
+        (directory/'network-test.txt').write_text(result,encoding='utf-8')
+        return 0
     handler = RotatingFileHandler(directory/'gamevault.log',maxBytes=2_000_000,backupCount=3,encoding='utf-8')
     logging.basicConfig(level=logging.INFO,handlers=[handler],format='%(asctime)s %(levelname)s %(message)s')
+    # O callback OAuth e o URL de autorização incluem códigos e estado privados.
+    logging.getLogger('google_auth_oauthlib.flow').setLevel(logging.WARNING)
     if args.smoke_test: os.environ['QT_QPA_PLATFORM'] = 'offscreen'
     app = QApplication(sys.argv[:1]); app.setApplicationName('Checkpoint'); app.setStyle('Fusion'); app.setStyleSheet(DARK)
     lock = QLockFile(str(directory/'gamevault.lock'))

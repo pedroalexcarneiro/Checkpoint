@@ -1,5 +1,8 @@
 from pathlib import Path
-from PySide6.QtWidgets import QDialog,QVBoxLayout,QHBoxLayout,QLabel,QLineEdit,QPushButton,QListWidget,QMessageBox,QFileDialog,QInputDialog
+import unicodedata
+from PySide6.QtGui import QIcon
+from PySide6.QtCore import QSize
+from PySide6.QtWidgets import QDialog,QVBoxLayout,QHBoxLayout,QLabel,QLineEdit,QPushButton,QListWidget,QListWidgetItem,QComboBox,QMessageBox,QFileDialog,QInputDialog
 from .jobs import Job
 from .database import Database
 from .library import Library
@@ -16,26 +19,56 @@ class DriveDialog(QDialog):
         state=library.setting('drive_scan',{}); self.root.setText(state.get('root','')); layout.addWidget(self.root)
         self.controls=[]
         actions=QHBoxLayout()
-        for title,callback in [('Autenticar',self.authenticate),('Varredura inicial',lambda:self.scan(False)),('Atualizar alterações',lambda:self.scan(True))]:
+        for title,callback in [('Testar conexão',self.test_connection),('Autenticar',self.authenticate),('Varredura inicial',lambda:self.scan(False)),('Atualizar alterações',lambda:self.scan(True))]:
             item=QPushButton(title); item.clicked.connect(callback); actions.addWidget(item); self.controls.append(item)
         layout.addLayout(actions)
-        self.list=QListWidget(); layout.addWidget(self.list)
+        filters=QHBoxLayout()
+        self.search=QLineEdit();self.search.setObjectName('romSearch');self.search.setPlaceholderText('Pesquisar ROM, jogo associado ou pasta');self.search.setClearButtonEnabled(True)
+        self.platform_filter=QComboBox();self.platform_filter.setObjectName('romPlatformFilter')
+        filters.addWidget(self.search,2);filters.addWidget(self.platform_filter,1);layout.addLayout(filters)
+        self.result_count=QLabel();layout.addWidget(self.result_count)
+        self.search.textChanged.connect(lambda text:self.refresh())
+        self.platform_filter.currentIndexChanged.connect(lambda index:self.refresh())
+        self.list=QListWidget(); self.list.setIconSize(QSize(42,56)); layout.addWidget(self.list)
         actions=QHBoxLayout()
         for title,callback in [('Associar a um jogo',self.associate),('Baixar versão selecionada',self.download)]:
             item=QPushButton(title); item.clicked.connect(callback); actions.addWidget(item); self.controls.append(item)
         layout.addLayout(actions)
+        more=QHBoxLayout()
+        for title,callback in [('Pastas e plataformas',self.folder_platforms),('Criar jogo desta ROM',self.create_game),('Capa do jogo',self.game_art)]:
+            item=QPushButton(title);item.clicked.connect(callback);more.addWidget(item);self.controls.append(item)
+        layout.addLayout(more)
         catalog=QHBoxLayout()
-        for title,callback in [('Importar catálogo DAT',self.import_dat),('Consultar MD5 no catálogo',self.check_catalog)]:
+        for title,callback in [('Reconhecer plataformas',self.recognize_platforms),('Importar catálogo DAT',self.import_dat),('Consultar MD5 no catálogo',self.check_catalog)]:
             item=QPushButton(title); item.clicked.connect(callback); catalog.addWidget(item); self.controls.append(item)
         layout.addLayout(catalog)
         self.state=QLabel('Não autenticado nesta janela. Credenciais são mantidas no cofre do Windows.'); self.state.setWordWrap(True); layout.addWidget(self.state)
         self.refresh()
 
     def refresh(self):
-        self.files=[dict(r) for r in self.library.sql.execute('SELECT f.*,g.title FROM game_files f LEFT JOIN games g ON g.id=f.game_id ORDER BY f.original_name')]
+        selected=self.selected()
+        selected_id=selected['id'] if selected else None
+        files=[dict(r) for r in self.library.sql.execute('SELECT f.*,g.title,g.cover FROM game_files f LEFT JOIN games g ON g.id=f.game_id WHERE f.drive_id IS NOT NULL ORDER BY f.original_name')]
+        chosen=self.platform_filter.currentData() if self.platform_filter.count() else ''
+        self.platform_filter.blockSignals(True);self.platform_filter.clear();self.platform_filter.addItem('Todas as plataformas','')
+        for platform in sorted({file['platform'] for file in files if file['platform']}): self.platform_filter.addItem(platform,platform)
+        self.platform_filter.addItem('Plataforma não identificada',None)
+        index=self.platform_filter.findData(chosen)
+        self.platform_filter.setCurrentIndex(max(0,index));self.platform_filter.blockSignals(False)
+        platform=self.platform_filter.currentData()
+        def fold(value):
+            return ''.join(char for char in unicodedata.normalize('NFKD',value.casefold()) if not unicodedata.combining(char))
+        query=fold(self.search.text().strip())
+        self.files=[file for file in files
+                    if (platform=='' or (not file['platform'] if platform is None else file['platform']==platform))
+                    and (not query or any(query in fold(file.get(key) or '') for key in ('original_name','title','folder_path')))]
         self.list.clear()
-        for file in self.files:
-            self.list.addItem(file['original_name']+' · '+(file['platform'] or 'Revisar plataforma')+' · '+(file['title'] or 'Sem associação')+' · '+file['review_state'])
+        for index,file in enumerate(self.files):
+            item=QListWidgetItem(file['original_name']+' · '+(file['platform'] or 'Revisar plataforma')+' · '+(file['title'] or 'Sem associação')+' · '+file['review_state'])
+            if file['cover']: item.setIcon(QIcon(file['cover']))
+            self.list.addItem(item)
+            if file['id']==selected_id: self.list.setCurrentRow(index)
+        self.result_count.setText(f'{len(self.files)} de {len(files)} ROMs' if self.files else f'Nenhuma ROM encontrada · {len(files)} no índice. Limpe a pesquisa ou ajuste a plataforma.')
 
     def run(self,operation):
         path=self.library.db.path
@@ -54,6 +87,9 @@ class DriveDialog(QDialog):
         for control in self.controls: control.setEnabled(True)
     def client(self,interactive=False,client_json=None):
         return GoogleDriveClient.authenticate(client_json,CredentialVault(),interactive)
+    def test_connection(self):
+        from .integrations.network import probe_google_connection
+        self.run(lambda lib: probe_google_connection())
     def authenticate(self):
         path,_=QFileDialog.getOpenFileName(self,'OAuth Desktop client do Google Cloud','','JSON (*.json)')
         if path: self.run(lambda lib: 'Autenticado. Pronto para varrer.' if self.client(True,path) else '')
@@ -68,21 +104,57 @@ class DriveDialog(QDialog):
         self.run(operation)
     def selected(self):
         index=self.list.currentRow()
-        return self.files[index] if index>=0 else None
+        return self.files[index] if 0<=index<len(self.files) else None
+    def folder_platforms(self):
+        from .folder_platform_dialog import FolderPlatformDialog
+        FolderPlatformDialog(self.library,self).exec();self.refresh()
+    def create_game(self):
+        file=self.selected()
+        if not file:self.state.setText('Selecione uma ROM primeiro.');return
+        from .dialogs import GameDialog
+        from .game_import import save_import
+        from .artwork_progress import ArtworkProgress
+        dialog=GameDialog(self,library=self.library);dialog.load_drive_file(file)
+        if dialog.exec()==QDialog.Accepted:
+            try:
+                game_id=save_import(self.library,dialog.data(),dialog.drive_file_id,dialog.catalog_result)
+                progress=ArtworkProgress(self.library,game_id,self);progress.exec()
+                self.refresh();self.state.setText('Jogo salvo. '+progress.message)
+            except ValueError as error:self.state.setText(str(error))
+    def game_art(self):
+        file=self.selected()
+        if not file or not file['game_id']:
+            self.state.setText('Crie ou associe o jogo primeiro para selecionar sua capa.');return
+        from .artwork_dialog import ArtworkDialog
+        ArtworkDialog(self.library,self.library.get(file['game_id']),self).exec();self.refresh()
     def associate(self):
         file=self.selected(); games=self.library.games()
-        if not file or not games: return
+        if not file: self.state.setText('Selecione uma ROM primeiro.'); return
+        if not games: self.state.setText('Crie o primeiro jogo usando Criar jogo desta ROM.'); return
         choices=[str(g['id'])+' · '+g['title'] for g in games]
         choice,ok=QInputDialog.getItem(self,'Revisão manual','Associar este arquivo ao jogo:',choices,0,False)
         if ok:
-            DriveScanner(self.library,None).associate(file['id'],games[choices.index(choice)]['id']); self.refresh()
+            game_id=games[choices.index(choice)]['id']
+            DriveScanner(self.library,None).associate(file['id'],game_id); self.refresh()
+            self.queue_artwork(game_id,'ROM associada ao jogo.')
+    def queue_artwork(self,game_id,message):
+        from .auto_artwork import obtain_artwork
+        self.run(lambda lib: message+' '+obtain_artwork(lib,game_id))
     def download(self):
         file=self.selected()
         if not file: return
         directory=self.library.setting('downloads')
         if not directory:
             QMessageBox.information(self,'Downloads','Configure a pasta de downloads primeiro.'); return
-        self.run(lambda lib:str(DriveScanner(lib,self.client()).download(file['id'],directory)))
+        def download(lib):
+            path=DriveScanner(lib,self.client()).download(file['id'],directory)
+            if file['game_id']:
+                from .auto_artwork import obtain_artwork
+                return 'ROM baixada. '+obtain_artwork(lib,file['game_id'])
+            return 'ROM baixada. Associe ao jogo correto para obter as artes.'
+        self.run(download)
+    def recognize_platforms(self):
+        self.run(lambda lib: f'{DriveScanner(lib,None).recognize_platforms()} plataformas reconhecidas. Nenhuma ROM foi baixada.')
     def import_dat(self):
         path,_=QFileDialog.getOpenFileName(self,'Catálogo DAT Logiqx','','DAT/XML (*.dat *.xml)')
         if not path: return

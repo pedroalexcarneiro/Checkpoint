@@ -10,20 +10,24 @@ FIELDS = ('title','description','developer','publisher','release_date','platform
 def now():
     return datetime.now(timezone.utc).isoformat()
 
+def clean_game_data(data):
+    clean = {key: data[key] for key in FIELDS if key in data}
+    if not clean.get('title', '').strip():
+        raise ValueError('Informe o nome do jogo.')
+    clean['title'] = clean['title'].strip()
+    if clean.get('status', STATUSES[0]) not in STATUSES:
+        raise ValueError('Status inválido.')
+    if clean.get('rating') is not None and not 0 <= int(clean['rating']) <= 10:
+        raise ValueError('A nota deve estar entre 0 e 10.')
+    return clean
+
 class Library:
     def __init__(self, database):
         self.db = database
         self.sql = database.connection
 
     def save_game(self, data, game_id=None):
-        clean = {key: data[key] for key in FIELDS if key in data}
-        if not clean.get('title', '').strip():
-            raise ValueError('Informe o nome do jogo.')
-        clean['title'] = clean['title'].strip()
-        if clean.get('status', STATUSES[0]) not in STATUSES:
-            raise ValueError('Status inválido.')
-        if clean.get('rating') is not None and not 0 <= int(clean['rating']) <= 10:
-            raise ValueError('A nota deve estar entre 0 e 10.')
+        clean = clean_game_data(data)
         with self.sql:
             if game_id is None:
                 if clean.get('status') == 'Concluído': clean['completed_at'] = now()
