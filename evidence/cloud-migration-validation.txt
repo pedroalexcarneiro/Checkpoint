@@ -1,0 +1,13 @@
+Checkpoint 0.1.13 — preparação de continuidade, 2026-11-11
+
+Host: Windows; Python do venv de desenvolvimento existente.
+Comando: python -m pytest tests -q -p no:cacheprovider
+Resultado: 120 passed in 29.33s; PYTEST_RESULT 0; exit 0.
+git diff --check: sem erros (somente aviso de normalização CRLF).
+Verificação de padrões comuns de credenciais: 80 arquivos fonte/documentação, zero ocorrências.
+Essa verificação não constitui auditoria completa de segurança.
+
+Publicação pelo site autenticado GitHub; não foram criados PATs ou credenciais Git.
+Branch main preserva histórico remoto anterior; tags/release 0.1.13 não foram alteradas.
+Código, documentação e contexto são separados de banco pessoal, ROMs, saves, mídia e cofre.
+Nenhum teste Linux/Cloud autenticado foi executado nesta preparação local.
