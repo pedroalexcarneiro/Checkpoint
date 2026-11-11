@@ -11,7 +11,12 @@ New-Item -ItemType Directory -Force $buildPath | Out-Null
 $env:PYINSTALLER_CONFIG_DIR = Join-Path $buildPath 'cache'
 Push-Location $projectDirectory
 try {
-    & $Python -m PyInstaller --noconfirm --windowed --onedir --name Checkpoint --distpath $distributionDirectory --workpath $buildPath --specpath $buildPath --hidden-import keyring.backends.Windows --copy-metadata keyring run_gamevault.py
+    # Preserve dados adicionais exigidos pelo runtime SSL utilizado no build.
+    # Não altera nem desativa a política TLS do Python fornecido pelo ambiente.
+    $runtimeTlsData = & $Python -c "import ssl,pathlib; p=pathlib.Path(ssl.__file__).parent/'codex-rejected-cas.pem'; print(str(p) if p.is_file() else '')"
+    $runtimeTlsArgs = @()
+    if ($runtimeTlsData) { $runtimeTlsArgs = @('--add-data', "$($runtimeTlsData);.") }
+    & $Python -m PyInstaller @runtimeTlsArgs --noconfirm --windowed --onedir --name Checkpoint --distpath $distributionDirectory --workpath $buildPath --specpath $buildPath --hidden-import keyring.backends.Windows --copy-metadata keyring run_gamevault.py
     if ($LASTEXITCODE -ne 0) { throw 'Falha no empacotamento.' }
     $portable = Join-Path $distributionDirectory 'Checkpoint'
     & $Python -m PyInstaller --noconfirm --onedir --console --name CheckpointUpdater --distpath (Join-Path $buildPath 'helper-dist') --workpath (Join-Path $buildPath 'helper-build') --specpath $buildPath run_updater.py
