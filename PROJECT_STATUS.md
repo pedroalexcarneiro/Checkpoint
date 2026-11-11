@@ -12,11 +12,14 @@ O cadastro oferece pesquisa Drive, título do catálogo confirmado e artes sem r
 
 Preparação para independência do PC: adicionados `CONTINUITY.md`, `PRODUCT_VISION.md`,
 `AGENTS.md` e `CLOUD_SETUP.md`, com requisitos, decisões, limitações e passos de preparação.
-GitHub `main` será atualizado com os arquivos fonte 0.1.13, pois estava em 0.1.5 apesar
-das Releases mais recentes. Não altera tags existentes nem envia biblioteca/credenciais.
-Nesta conta, a listagem de ambientes Cloud retornou vazia. Codex web pediu login;
-nenhum ambiente/chat Cloud foi criado até esta atualização. Instruções Linux ainda não
-executadas; não confundir preparação documental com migração Cloud validada.
+GitHub `main` atualizado pelo site autenticado com fonte 0.1.13, integrações, testes,
+scripts Windows e documentação; estava em 0.1.5 apesar das Releases mais recentes.
+Histórico remoto e tags existentes preservados; biblioteca e credenciais não foram enviadas.
+Suíte repetida nesta preparação: 120 testes em 29,33 s, pytest result/exit 0.
+Verificação de padrões comuns de segredos: zero ocorrências em 80 arquivos; não é auditoria completa.
+Nesta conta, a listagem de ambientes Cloud retornou vazia. Login no Codex web concluído;
+conector GitHub aguarda autorização. Nenhum ambiente/chat Cloud foi criado até esta
+atualização. Instruções Linux ainda não executadas; preparação não é migração Cloud validada.
 
 ## Implementado e utilizável localmente
 

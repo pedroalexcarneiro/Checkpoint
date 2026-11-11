@@ -129,6 +129,11 @@ um projeto de terceiros. A visão original e prioridades estão em `PRODUCT_VISI
 
 ## Prompt para o novo chat Cloud
 
+Publicação de continuidade em 11/11/2026: os arquivos fonte 0.1.13 foram enviados
+diretamente ao `main` pelo site GitHub, preservando o histórico remoto. A suíte local
+foi repetida: 120 aprovados, exit 0. Login Codex web concluído; conexão GitHub/ambiente
+Cloud ainda precisam ser finalizados e validados. Consulte o resumo atual de status.
+
 Continue o projeto Checkpoint no repositório pedroalexcarneiro/Checkpoint. Leia AGENTS.md,
 CONTINUITY.md, PRODUCT_VISION.md e PROJECT_STATUS.md antes de editar. Confira a versão
 0.1.13 e execute os testes em ambiente isolado conforme CLOUD_SETUP.md. Preserve as
