@@ -1,10 +1,14 @@
 # Checkpoint
 
-Biblioteca pessoal de jogos para Windows, desenvolvida do zero em Python 3.12, PySide6 e SQLite. Versão **0.1.5 de desenvolvimento**, com dados locais e interface em português. Não é ainda a implementação completa da visão do produto.
+Biblioteca pessoal de jogos para Windows, desenvolvida do zero em Python 3.12, PySide6 e SQLite. Versão **0.1.13 de desenvolvimento**, com dados locais e interface em português. Não é ainda a implementação completa da visão do produto.
 
 Já oferece biblioteca manual persistente, galeria 3:4 e lista, pesquisa e filtros, favoritos, edição, lixeira recuperável, páginas de jogos, diário, mídia referenciada, conquistas pessoais, estatísticas de sessões confirmadas, metas de compra e backup/restauração local de saves explicitamente selecionados.
 
-Há fluxos de integração implementados para pesquisa RAWG, seleção de artes SteamGridDB e ROMs no Google Drive. Eles exigem credenciais próprias e **não foram validados com contas reais**. O scanner não baixa ROMs; downloads acontecem apenas por solicitação. Nenhuma função remove arquivos no Drive.
+Há fluxos de integração implementados para pesquisa RAWG, artes SteamGridDB e ROMs no Google Drive. OAuth e leitura real do Drive, pesquisa/títulos e obtenção dos três tipos de arte SteamGridDB foram validados. RAWG autenticado permanece pendente. O scanner não baixa ROMs; downloads acontecem apenas por solicitação. Nenhuma função remove arquivos no Drive.
+
+Para continuar o desenvolvimento em outro dispositivo, leia [Continuidade](CONTINUITY.md),
+[Visão do produto](PRODUCT_VISION.md) e [Codex Cloud](CLOUD_SETUP.md). Código e documentação
+no branch padrão permitem reconstruir o ambiente; dados pessoais e credenciais ficam separados.
 
 ## Executar
 

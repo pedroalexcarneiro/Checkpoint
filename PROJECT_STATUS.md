@@ -1,11 +1,27 @@
 # Estado do projeto — Checkpoint
 
-Atualizado em 10/11/2026. Versão 0.1.5 de desenvolvimento. **O projeto completo não está concluído.** O ponto de continuidade é este diretório, com código real, documentação e testes.
+Atualizado em 11/11/2026. Versão 0.1.13 de desenvolvimento. **O projeto completo não está concluído.**
+
+## Resumo atual para continuidade
+
+Leia `CONTINUITY.md` e `AGENTS.md` antes de retomar. Esta seção e a seção 0.1.13
+prevalecem sobre notas históricas abaixo. Schema atual: 3; suíte da release: 120 testes.
+OAuth/leitura real Drive e SteamGridDB com três tipos de arte foram validados; RAWG
+autenticado, importação Steam, RA, preços automáticos e upload de saves permanecem pendentes.
+O cadastro oferece pesquisa Drive, título do catálogo confirmado e artes sem recorte.
+
+Preparação para independência do PC: adicionados `CONTINUITY.md`, `PRODUCT_VISION.md`,
+`AGENTS.md` e `CLOUD_SETUP.md`, com requisitos, decisões, limitações e passos de preparação.
+GitHub `main` será atualizado com os arquivos fonte 0.1.13, pois estava em 0.1.5 apesar
+das Releases mais recentes. Não altera tags existentes nem envia biblioteca/credenciais.
+Nesta conta, a listagem de ambientes Cloud retornou vazia. Codex web pediu login;
+nenhum ambiente/chat Cloud foi criado até esta atualização. Instruções Linux ainda não
+executadas; não confundir preparação documental com migração Cloud validada.
 
 ## Implementado e utilizável localmente
 
 - Python/PySide6, dez paletas discretas (incluindo Branco claro), navegação persistente e estados vazios.
-- Banco SQLite local com WAL, FKs, transações, duas migrações, trava de instância, logs rotativos e backup consistente.
+- Banco SQLite local com WAL, FKs, transações, três migrações, trava de instância, logs rotativos e backup consistente.
 - Biblioteca: cadastro/edição de campos pessoais, capas/banner/logo por arquivo, filtro de título/plataforma/gênero/status, ordenação, favoritos, categorias em texto, galeria 3:4 e lista.
 - Remoção recuperável em lixeira; não apaga ROMs, saves, mídias ou arquivos Drive.
 - Página individual com artes, descrição, diário, marcos pessoais, referências de captura/vídeo, sessões e versões de arquivos.
@@ -143,3 +159,107 @@ Validação: 58 testes passaram em 12,82 s, incluindo contraste mínimo 4,5:1 do
 
 
 Executável 0.1.5: smoke com preferência Branco previamente salva carregou a paleta clara e gerou captura com a cor de fundo esperada; saída 0 e preferência preservada. O auxiliar de atualização continuou passando no teste isolado de troca e preservação da versão anterior.
+
+v0.1.5 publicada: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.5 . Commit remoto 48a69c1bd6cd7250ea80a70342c1d7606302f775. Sete Assets disponíveis (pacote Windows, fonte, checksums, informações de build, prévia e arquivos automáticos do GitHub). SHA-256 dos ZIPs exibidos pelo GitHub conferem com os arquivos locais. Pacote Windows: 8c4a3385488e40e5eba293ecedbb7180c57b548e3a1eb563829d4e255f7a22d8. A prévia comparativa está em outputs/Checkpoint-paletas.png e a confirmação da publicação em outputs/github-checkpoint-015.png. Esta anotação local é posterior à tag publicada.
+
+
+## Diagnóstico de autenticação Drive — 10/11/2026
+
+- Usuário configurou OAuth Desktop e conta de teste, e recebeu callback localhost real; o aplicativo 0.1.5 apresentou erro genérico após autorização. A conexão NÃO está validada.
+- Log disponível confirma callback HTTP 200, mas não contém a exceção; causa ainda indeterminada. Não atribuir a pasta vazia, firewall ou cofre sem evidência.
+- Código fonte agora distingue leitura de credencial, troca/renovação de token, gravação no cofre e inicialização do cliente; registra somente etapa e classe da exceção. Suprime URLs OAuth no logger da biblioteca e altera mensagem do navegador para não anunciar conexão antes da troca do token.
+- Próximo passo: distribuir build com diagnóstico e repetir autenticação; não alterar permissões Google ou recriar JSON sem necessidade. Esta alteração ainda não está no executável 0.1.5 instalado pelo usuário.
+
+Validação do diagnóstico: 61 testes automatizados passaram. OAuth real ainda depende de repetir o teste com esta versão.
+
+Release 0.1.6 publicada em https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.6 como pre-release. Pacote Windows SHA256 286c184ed9e25f50bd6fc969969d7ab9aefff0859fb2a84121f114384a713c31; código fonte desta versão está no asset Checkpoint-0.1.6-source.zip (o tag remoto ainda aponta para o histórico anterior do envio pelo site). Smoke do executável exit 0, schema 2, integrity_check ok. Próximo passo: usuário atualizar e repetir autenticação para identificar a etapa de falha real.
+
+
+## 0.1.7 — diagnóstico de rede Drive (11/11/2026)
+
+- Classificação segura da cadeia de exceções: proxy, TLS, DNS, timeout, conexão recusada/interrompida e causa não informada. Não imprime mensagens, URLs privadas ou tokens.
+- Botão Testar conexão faz GET HTTPS ao endpoint público de token sem código OAuth, JSON ou token; uma resposta HTTP não prova autenticação nem sucesso de POST OAuth.
+- Troca inicial do código por token tem timeout de conexão 10 s e leitura 30 s; não repete automaticamente um código de uso único.
+- Mantém verificação HTTPS e configurações de proxy do ambiente. Não desativa firewall nem altera certificados.
+- 73 testes automatizados passaram. Teste público no ambiente de execução resultou em categoria proxy; o ambiente do aplicativo instalado pode usar configuração diferente. OAuth real segue pendente, sem afirmar correção da causa original.
+
+Executável 0.1.7 final: smoke das seis páginas exit 0; banco isolado com integrity_check ok e schema 2.
+
+Publicada 0.1.7: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.7 . Hash Windows conferido no GitHub: c54983d5287cecf96cfb607f48206a09767a8f61a53cfa10f91c929dff9986c3. Próximo passo: usuário executar Google Drive > Testar conexão na versão 0.1.7 e informar categoria; OAuth ainda não validado. Código completo está no asset source.zip; tag remoto mantém histórico anterior.
+
+
+## 0.1.8 — transporte HTTPS (11/11/2026)
+- Mensagens incluem cadeia de classes e códigos numéricos de erro, sem texto bruto de exceções ou URLs privadas. Identifica também acesso de rede recusado pelo sistema e encerramento sem resposta HTTP.
+- Modo --network-test verifica endpoint público sem tokens e salva network-test.txt em --data-dir para comparar o executável ao Python. Não altera firewall ou certificados.
+- Python com acesso de rede autorizado recebeu HTTP 404 do endpoint de token. Isso valida alcance HTTPS, não OAuth nem equivalência com a rede usada pelo usuário.
+
+
+### Correção confirmada do pacote TLS — 0.1.8
+O runtime Python do ambiente modifica SSLContext.__new__ para carregar codex-rejected-cas.pem. O empacotamento anterior omitia esse dado, causando ConnectionError > ProtocolError > FileNotFoundError(errno=2) em ssl.py:440. O build agora inclui o arquivo do próprio runtime, quando presente, em _internal. Não altera a política TLS nem desativa verificação. No executável local, incluir o arquivo mudou a falha reproduzida para resposta HTTPS HTTP 404 do endpoint público de token. Autenticação real com conta do usuário continua pendente. A versão corrige uma causa concreta de falha do transporte; outras restrições de rede podem existir.
+
+Validação final 0.1.8: executável recompilado com dado TLS incluído automaticamente respondeu HTTPS HTTP 404 (network-test exit 0); smoke das seis páginas exit 0, schema 2 e integrity_check ok. 75 testes passaram; OAuth real aguarda usuário.
+
+Publicada correção 0.1.8: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.8 . Windows SHA256 c353638a98904eeeceb542219f07f1039bc41b2d6c2fb0df163e45453fd206bc. Próximo passo: usuário atualizar (talvez download manual se o atualizador também falhar por HTTPS), Testar conexão e Autenticar com mesmo JSON. Não foi necessário alterar credenciais nem permissões.
+
+
+## Validação real do Drive — 11/11/2026
+
+- Usuário confirmou OAuth autenticado na interface 0.1.8 após correção do dado TLS do empacotamento.
+- Executada varredura inicial autorizada na raiz fornecida pelo usuário: 2.147 ROMs registradas, zero downloads; integrity_check do banco real retornou ok.
+- Criada cópia consistente do SQLite antes da operação na pasta backups dos dados locais.
+- Controle Windows localizou a janela, mas captura/input falharam; operação realizada pelo mesmo serviço DriveScanner do código fonte, com token já salvo no cofre e sem ler/exibir seu conteúdo.
+- Cursor de alterações e raiz persistidos. A lista da janela já aberta precisa ser recarregada fechando e reabrindo Google Drive.
+- Download, associação a jogos e atualização incremental na coleção real seguem sem validação. Nenhum arquivo foi associado automaticamente a um jogo e nenhuma ROM foi baixada.
+
+
+## 0.1.9 — reconhecimento de plataformas (11/11/2026)
+Aliases explícitos para Nintendo Game Boy Advanced, Super Nintendo (SNES), Switch e variantes comuns, normalizando espaços e separadores. Não usa extensão compartilhada nem correspondência parcial; caminhos com plataformas contraditórias ficam para revisão. Botão Reconhecer plataformas preenche somente campos vazios usando caminhos locais, sem rede, downloads ou alteração de associações.
+Validação: 85 testes passaram. Aplicado ao banco real após cópia consistente: 2.102 registros corrigidos; integridade ok; IDs, nomes originais, associações e disponibilidade preservados. Totais: GBA 1.098, SNES 986, DS 24, Switch 18, 3DS 15, PSP 3; três arquivos em Temas permanecem sem plataforma.
+
+Usuário esclareceu que Temas contém temas de emulador, não jogos. A pasta raiz Temas agora é ignorada pelo scanner, incluindo ZIPs. Três registros sem associação/disponibilidade foram retirados do índice local após backup; nenhum arquivo Drive foi alterado. Coleção real: 2.144 ROMs, todas com plataforma identificada.
+
+Publicada 0.1.9: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.9 . 86 testes passaram; executável final smoke exit 0; SQLite isolado integrity ok/schema 2; ZIPs íntegros. Banco real: 2.144 ROMs classificadas, Temas removido somente do índice. Atualizar app antes de próximas varreduras; fechar/reabrir Drive para recarregar lista já corrigida.
+
+
+## 0.1.10 — pastas personalizadas e capas (11/11/2026)
+- Aliases PS1/PSX, PS2, PS3, GameCube/NGC, Wii, N64, NES, Game Boy/Color, Mega Drive, Saturn e Dreamcast.
+- Pastas e plataformas: associação por ID de pasta indexada, plataforma livre ou conhecida, herança por subpastas e prioridade da regra mais específica. Salvar/remover reclassifica o ramo existente, sem alterar jogos associados, nomes ou arquivos. Atualize o Drive para descobrir pastas novas; pastas vazias sem regra reconhecível permanecem para revisão. Regras persistem no SQLite; não são credenciais.
+- Criar jogo desta ROM exige título confirmado e vincula a versão; outras versões podem ser associadas ao jogo existente. Não cria milhares de jogos nem mescla títulos automaticamente.
+- Capa do jogo acessível pela lista Drive após associação; imagem local é validada e copiada ao cache sem chave. Busca SteamGridDB exige chave própria e confirmação do jogo/arte. Lista da biblioteca agora exibe miniaturas; lista Drive mostra capas de jogos associados.
+- Scanner não fornece capas nem identifica títulos sozinho. Não houve download ou atribuição automática de artes na coleção real. Não foi necessário alterar credenciais.
+- 97 testes passaram antes do ajuste final de atualização da galeria após fechar Drive; testes cobrem herança, regra específica, persistência, renomeação por ID, limites de ramo, validação, criação de jogo sem duplicar arquivo e ícone de capa na tabela.
+
+
+## 0.1.11 — pesquisa no índice Drive (11/11/2026)
+Pesquisa local por nome original, título do jogo associado e pasta; ignora caixa e acentos. Filtro de plataforma combinado, contador visível e estado vazio. Consulta caracteres como % e _ literalmente, sem transformar texto em SQL. Preserva a seleção pelo ID enquanto o arquivo permanecer visível; ações operam sobre a lista filtrada. Não consulta APIs nem baixa arquivos. Inclui todas as funções de pastas e capas da 0.1.10, publicada antes deste pedido.
+
+Publicadas 0.1.10 (pastas/capas) e 0.1.11 (pesquisa): https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.11 . Executável 0.1.11 smoke exit 0; schema 2/integrity ok; ZIPs íntegros. Suíte exibiu 98 testes aprovados; teste focado de busca confirmou resultado 0. Busca conferida em leitura da coleção real: 2.144 itens, 27 resultados para pokemon, cerca de 245 ms para inicialização+primeira busca no ambiente. Nenhum dado real foi modificado no teste de busca. Estado de janela Drive e mapeamento renderizados e inspecionados. Próximo passo: usuário atualizar e testar busca, regras personalizadas e criação/associação/capa de jogo. Busca SteamGridDB com credencial real permanece pendente.
+
+
+## 0.1.12 — artes por identidade confirmada (11/11/2026)
+Fonte principal: SteamGridDB API v2 (https://www.steamgriddb.com/api/v2), categorias grids/capa, heroes/banner e logos. O provedor fornece artes da comunidade; não há garantia de que todas sejam oficiais. A biblioteca continua recortando capas para 3:4 sem deformar o original.
+- Confirmar jogo selecionado persiste o ID do SteamGridDB e obtém capa/banner/logo faltantes; nomes de ROM não são associados automaticamente por suposição. AppID Steam pode ser resolvido pelo provedor e confirmado na interface, sem busca textual. Isso não implementa importação de conta Steam.
+- AutoArtwork executa após criar/associar jogo a ROM e após download no gerenciador Drive, se houver identidade confirmada e chave configurada. Sem identidade ou chave, mostra pendência; não desfaz cadastro nem download. Não é preciso baixar a ROM para obter arte.
+- Artes existentes preservadas; atualização condicional impede substituir escolha feita durante consulta. Cache validado por imagem e SHA-256; migração 3 adiciona artwork_assets com tipo, ID externo, URL, caminho e data da última arte obtida automaticamente. Esse registro descreve o download, não garante que a arte ainda seja a escolha atual após edição manual.
+- Até três alternativas estáticas por tipo, excluindo conteúdo marcado NSFW/humor. Ordem por pontuação do provedor. Consulta automática tem intervalo mínimo de uma hora por jogo; botão Obter artes faltantes permite nova tentativa. Preferência pode desativar automação.
+- Banco anterior é copiado consistentemente para backups antes de migrar; migração transacional. Não atualizar banco real com a versão antiga aberta.
+- Validação: 111 testes passaram (pytest result 0), com provedores/transferências substituídos em testes. Tela renderizada e inspecionada. Consulta real SteamGridDB e artes reais NÃO validadas: não há chave configurada no cofre desta sessão. Nenhuma arte foi atribuída à coleção real nesta implementação.
+- Configurar chave em Configurações > Configurar chave SteamGridDB (não compartilhar chave no chat nem versionar). Em um jogo: Selecionar artes > Pesquisar > selecionar resultado > Confirmar jogo selecionado e obter capa, banner e logo. Para Steam: Identificar pelo AppID Steam > confirmar resultado. Downloads/associações futuros reutilizam o ID salvo.
+Referência primária do provedor: https://github.com/SteamGridDB/java-steamgriddb . Os termos do serviço e as licenças dos autores continuam aplicáveis às imagens.
+
+Publicada 0.1.12: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.12 . Executável final: smoke com banco novo e migração v2→v3 exit 0; integridade ok, capa personalizada preservada e backup v2 verificado. ZIPs íntegros. 111 testes passaram com pytest result 0. Banco real não foi migrado por esta sessão; migração ocorrerá ao atualizar e abrir a nova versão. Próximo passo: configurar chave SteamGridDB no aplicativo e validar consulta/seleção real de um jogo e os três tipos de arte. Nenhuma chave real SteamGridDB disponível; não declarar integração autenticada validada.
+
+
+## 0.1.13 — cadastro pelo Drive, títulos e enquadramento (11/11/2026)
+- Adicionar jogo contém pesquisa local nas ROMs indexadas (nome/pasta), seleção da versão e preenchimento de nome sugerido, plataforma e origem. Atualizar índice abre o gerenciador diretamente; não é necessário passar por Configurações. O cadastro manual permanece disponível.
+- Confirmar título original e completar dados abre escolha explícita no catálogo: SteamGridDB fornece título/identidade/artes com a chave já existente; RAWG fornece ficha detalhada com chave própria. Nome/plataforma vêm do Drive; gênero, descrição, desenvolvedora, publicadora e lançamento somente são preenchidos quando retornados pela fonte escolhida. Não há associação automática por semelhança.
+- Salvar usa transação única para jogo, identidade e versão da ROM. Identidade já cadastrada reutiliza o jogo, preservando notas, status e capas; vínculos conflitantes/lixeira exigem revisão. Metadados confirmados podem padronizar o título exibido; original_name nunca é alterado. Artes são obtidas em worker com banco próprio após salvar, sem baixar ROM.
+- Criar jogo desta ROM no gerenciador usa o mesmo formulário. Ao confirmar identidade pelo seletor de artes, o título do catálogo também passa a ser usado.
+- Galeria e página individual agora mostram capa/banner inteiros, centralizados em quadros fixos, com preenchimento discreto. Não há recorte de logos/texto/personagens nem deformação. Fonte de imagem e cache originais preservados.
+- Validação: 120 testes passaram com pytest result 0. Incluem preservação das bordas da arte, título canônico separado do arquivo, preenchimento, troca de ROM limpando metadados antigos, reutilização de versão, rollback sem órfãos e fechamento do progresso/catálogo. Telas renderizadas e inspecionadas em cópia local do banco.
+- Busca real SteamGridDB por Zelda - the Minish Cap retornou The Legend of Zelda: The Minish Cap entre as opções. Quatro títulos reais foram padronizados pelos IDs SteamGridDB previamente confirmados, após backup consistente; IDs, original_name, vínculos e integridade do banco verificados. Nenhuma ROM ou arte foi baixada nessa padronização.
+- RAWG continua sem validação autenticada nesta sessão; não promete ficha completa usando somente a chave SteamGridDB. Verificar em Windows: novo cadastro pelo Drive, escolha da edição correta, obtenção automática de artes e navegação após salvar.
+
+Validação autenticada adicional 0.1.13, em biblioteca isolada: ID SteamGridDB já confirmado para The Legend of Zelda: The Minish Cap; formulário preenchido com ROM de teste, título do catálogo aplicado, cadastro/identidade/versão salvos e ArtworkProgress concluído. API real retornou e cacheou cover, banner e logo (3 sucessos, zero falhas). Nome original preservado e integrity_check ok. Não adicionou jogo/ROM à coleção real. RAWG real continua pendente.
+
+Publicada 0.1.13: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.13 . Executável final smoke exit 0; SQLite integrity ok/schema 3; ZIPs íntegros. 120 testes passaram com pytest result 0. Fonte completa no asset source.zip; tag remoto ainda aponta ao histórico anterior do upload pelo site. Próximo teste do usuário: Adicionar jogo > pesquisar ROM > Usar ROM selecionada > confirmar título no catálogo > Salvar. Capas/banners preservam imagem completa em quadros uniformes. Quatro títulos reais já padronizados com backup e IDs confirmados. RAWG autenticado permanece pendente.

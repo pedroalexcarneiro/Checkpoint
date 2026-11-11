@@ -14,3 +14,8 @@ token*.json
 *.sqlite*
 *.partial
 client_secret*.json
+.cloud-smoke/
+.env
+.env.*
+!.env.example
+pytest-cache-files-*/

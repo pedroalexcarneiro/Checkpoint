@@ -1,0 +1,136 @@
+# Continuidade do Checkpoint
+
+Estado de referência: 11/11/2026, aplicativo 0.1.13, schema SQLite 3.
+Este documento transfere o contexto de trabalho; não é uma cópia integral do chat.
+Não contém credenciais, dados pessoais da biblioteca ou autorizações para novos acessos.
+
+## Objetivo e forma de trabalhar
+
+Construir uma central pessoal de jogos Windows 10/11, funcional e offline: biblioteca
+de PC/Steam/outros launchers e emuladores, ROMs no Drive, execução, sessões, estatísticas,
+diário, capturas/vídeos, conquistas, desejos/preços e backup de saves tradicionais.
+O usuário quer continuar o desenvolvimento de qualquer dispositivo pelo Codex Cloud,
+sem manter este computador ligado. O aplicativo continua sendo desktop, não um site.
+Não reduzir o produto a protótipo ou anunciar funcionalidades não implementadas.
+
+O usuário prefere ação, testes autônomos e comunicação direta em português brasileiro.
+Não quer instalações de ferramentas pessoais para simplesmente enviar mudanças ao GitHub.
+O projeto começou do zero; reaproveite seu próprio código existente, não substitua por
+um projeto de terceiros. A visão original e prioridades estão em `PRODUCT_VISION.md`.
+
+## Decisões aceitas
+
+- Nome público Checkpoint (antes GameVault). Não renomear pacote/cofre/base legados sem
+  migração explícita, pois a biblioteca existente precisa continuar abrindo.
+- Python >=3.12, PySide6 6.8.3, SQLite direto com migrações e transações. Sem SQLAlchemy
+  por enquanto. Banco local, serviços modulares e APIs por provedores.
+- Visual editorial, minimalista, escuro por padrão; sem frases promocionais sob títulos.
+  Dez temas discretos: azul, verde, amarelo, vermelho, preto, branco, roxo, rosa, laranja e ciano.
+- Capas uniformes em 3:4, imagem inteira centralizada e margens discretas. Banners também
+  mostram a arte inteira. Nunca deformar nem cortar logos/textos; cache preserva o original.
+- Título exibido deve ser o título original do catálogo confirmado; o nome do arquivo
+  ROM deve ser preservado separadamente. Edições/regiões são versões do mesmo jogo,
+  sem duplicar automaticamente a biblioteca ou fundir resultados ambíguos.
+- Pastas do Drive identificam plataformas, inclusive regras próprias por ID e herança.
+  Pasta `Temas` da coleção de referência contém temas de emulador mobile e é ignorada.
+- Adicionar jogo deve permitir pesquisar ROMs do índice Drive diretamente, selecionar
+  versão, confirmar resultado do catálogo e preencher os campos disponíveis na fonte.
+  Não exigir navegar primeiro por Configurações.
+
+## Implementação disponível
+
+- Biblioteca CRUD com exclusão recuperável, busca/filtros, favoritos, lista/galeria,
+  categorias e página individual; navegação Início/Biblioteca/Desejos/Memórias/Estatísticas/Configurações.
+- SQLite WAL, chaves estrangeiras, migrações até 3, backup antes da migração, configurações,
+  logs rotativos e bloqueio de instância. Sem valores demonstrativos na biblioteca.
+- Diário textual, mídia referenciada com imagens ampliadas e vídeo no player do sistema,
+  conquistas pessoais, desejos com meta BRL e estatísticas de sessões confirmadas.
+- Launcher sem shell, executáveis diretos e perfis de argumentos JSON com `{rom}` para
+  emuladores. Sessões diretas monitoradas pelo processo; emuladores encerrados manualmente
+  no registro, pois processo aberto não prova ROM ativa. Recuperação de sessões interrompidas.
+- Backups locais versionados e verificados de saves configurados por jogo, restauração
+  preservando versão anterior e opção de backup após sessão. Não há envio desses saves ao Drive.
+- Drive OAuth Desktop somente leitura com cofre Windows; scanner BFS paginado, índice de
+  arquivos/pastas, cursor de alterações incremental, aliases/regras de plataformas, busca
+  local sem acentos, filtro/contador, associação manual e download por ID com tamanho/MD5.
+  Scanner não baixa a coleção. Catálogo DAT para revisão por MD5/tamanho/plataforma.
+- RAWG implementado para busca e ficha de metadados com chave própria. Seleção explícita.
+  SteamGridDB implementado para identidade, título e cover/banner/logo; também resolve
+  AppID Steam, o que não é importação de conta Steam.
+- Artes automáticas somente após identidade confirmada, preservando artes existentes.
+  Cache validado com SHA-256 e proveniência em `artwork_assets`; worker com conexão própria,
+  intervalo automático por jogo e tentativa manual. Falha de arte não desfaz cadastro/ROM.
+- Cadastro Drive e identidade/versão salvos em transação única; reutiliza identidade existente,
+  preserva dados pessoais e rejeita vínculos conflitantes/lixeira sem criar órfãos.
+- Atualizador para Releases privadas com token de leitura, opção de prerelease, hash SHA-256,
+  staging, helper Windows e rollback de falha de cópia. Sem assinatura nem instalador.
+
+## O que foi efetivamente validado
+
+- Release 0.1.13: 120 testes automatizados aprovados, pytest result 0; smoke do executável
+  Windows nas seis páginas exit 0, SQLite schema 3 e integrity_check ok; ZIPs íntegros.
+- OAuth real Drive e leitura da coleção foram confirmados. Após excluir somente do índice
+  três arquivos de Temas, eram 2.144 ROMs classificadas em seis plataformas. Não há garantia
+  de que esses números permaneçam atuais; não usar como dados embutidos do aplicativo.
+- Chave SteamGridDB configurada pelo usuário no Windows, API real consultada; fluxo isolado
+  de cadastro confirmou título e obteve os três tipos de arte, preservando nome da ROM.
+- Quatro títulos da biblioteca pessoal foram padronizados por IDs previamente confirmados,
+  após cópia consistente da base. Esses dados pessoais não fazem parte do repositório.
+- RAWG autenticado, importação Steam, RetroAchievements, preços e upload de saves ao Drive
+  não foram validados/implementados conforme as distinções abaixo. Não confundir testes
+  com respostas substituídas e conexão HTTPS com autenticação real.
+
+## Próximas prioridades
+
+1. Consolidar código 0.1.13 e contexto no branch padrão, criar ambiente Cloud e executar
+   os testes num checkout limpo. Registrar o que Linux consegue testar e o que exige Windows.
+2. Revisar cadastro Drive/catálogo e preenchimento: ficha completa depende da fonte, pois
+   SteamGridDB fornece principalmente identidade/artes, não toda a ficha RAWG/IGDB.
+3. Implementar importação oficial Steam e tempo/conquistas, respeitando privacidade.
+4. Evoluir downloads/scanner para progresso, cancelamento/retomada, coleções grandes,
+   Shared Drives e jogos multiarquivo CUE/BIN sem adivinhar associações.
+5. Integrar saves tradicionais ao Drive com OAuth separado e escopo de escrita mínimo,
+   versionamento, detecção de conflitos e restauração segura. Não ampliar o token somente
+   leitura de ROMs silenciosamente.
+6. Implementar provedores IGDB/RetroAchievements e preços BRL com acesso permitido,
+   agendamento, limites, histórico e alertas. Steam/Epic/GOG/Nuuvem/GG.deals/ITAD devem ser
+   avaliados; não existe atualmente monitoramento automático de preços.
+7. Melhorar detecção da sessão real de ROM por emulador, edição de memórias/mídia,
+   desempenho, DPI, instalação/assinatura e validação limpa em Windows 10/11.
+
+## Arquivos importantes
+
+- `gamevault/app.py`, `window.py`, `dialogs.py`: entrada, navegação e cadastro.
+- `database.py`, `library.py`: migrações e operações locais.
+- `drive_dialog.py`, `folder_platform_dialog.py`, `integrations/drive.py`, `rom_catalog.py`.
+- `game_import.py`, `catalog_picker.py`, `auto_artwork.py`, `artwork_progress.py`,
+  `artwork_dialog.py`, `artwork_render.py`, `integrations/metadata.py`.
+- `launcher.py`, `game_saves.py`, `save_profiles.py`, `saves.py`, `updates*.py`.
+- `scripts/build.ps1`: build Windows PyInstaller e helper do atualizador.
+- `tests/`: suíte isolada; `CLOUD_SETUP.md`: instalação/testes sem dados pessoais.
+
+## Limitações e armadilhas conhecidas
+
+- O cofre `CredentialVault` é Windows-only. Não substituir por arquivo em texto claro para
+  fazer Linux funcionar. Fluxos sem autenticação e provedores substituídos podem ser testados.
+- Diretório legado de dados: `%LOCALAPPDATA%/GameVault`. Banco/configurações/ROMs locais,
+  mídias, saves e tokens não são transportados por GitHub ou pelo histórico de chat.
+- A atualização 0.1.8 corrigiu dado TLS omitido por um runtime específico do Codex:
+  `codex-rejected-cas.pem`, quando existente junto a ssl.py, deve ser incluído pelo build.
+  Não desativar validação de certificados para resolver falhas de rede.
+- Há diretório temporário antigo inacessível na máquina original. Sempre limitar pytest
+  a `tests` e desabilitar cache; nunca incluir diretórios de build/teste no upload.
+- Não sobrescrever `QDialog.done` nem o sinal `finished` com handlers de workers.
+- Antes desta migração, `main` remoto estava em 0.1.5 e as versões novas só estavam nos
+  assets de Releases. A publicação atual deve atualizar os arquivos diretamente no branch.
+  Não mover tags antigas nem force-push para tentar unir históricos independentes.
+- Linux Cloud não gera um executável Windows validado. Build/testes específicos permanecem
+  em Windows; o usuário não deve precisar manter este PC online para desenvolvimento comum.
+
+## Prompt para o novo chat Cloud
+
+Continue o projeto Checkpoint no repositório pedroalexcarneiro/Checkpoint. Leia AGENTS.md,
+CONTINUITY.md, PRODUCT_VISION.md e PROJECT_STATUS.md antes de editar. Confira a versão
+0.1.13 e execute os testes em ambiente isolado conforme CLOUD_SETUP.md. Preserve as
+decisões do usuário e reporte o resultado real. Primeiro valide a continuidade na nuvem;
+depois avance na próxima prioridade viável, sem inventar credenciais nem resultados.
