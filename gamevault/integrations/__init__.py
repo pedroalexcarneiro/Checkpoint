@@ -12,6 +12,8 @@ class MetadataResult:
     genres: tuple[str,...] = ()
     platforms: tuple[str,...] = ()
     images: dict[str,str] = field(default_factory=dict)
+    developer: str = ''
+    publisher: str = ''
 
 class MetadataProvider(Protocol):
     def search(self,title:str) -> list[MetadataResult]: ...
