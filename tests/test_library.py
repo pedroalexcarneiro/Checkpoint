@@ -1,7 +1,7 @@
 import sqlite3
 from contextlib import closing
 import pytest
-from gamevault.database import Database
+from gamevault.database import Database,MIGRATIONS
 from gamevault.library import STATUSES
 
 def test_crud_persistence_filters_and_recovery(library):
@@ -15,7 +15,7 @@ def test_crud_persistence_filters_and_recovery(library):
     library.restore(game)
     assert len(library.games())==1
     reopened=Database(library.db.path)
-    assert reopened.connection.execute('PRAGMA user_version').fetchone()[0]==2
+    assert reopened.connection.execute('PRAGMA user_version').fetchone()[0]==len(MIGRATIONS)
     assert reopened.connection.execute('SELECT count(*) FROM games').fetchone()[0]==1
     reopened.close()
 
