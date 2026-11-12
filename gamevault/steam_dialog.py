@@ -1,5 +1,6 @@
 """Consulta assíncrona e importação explícita de jogos Steam."""
-from PySide6.QtCore import Qt
+from threading import Event
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QAbstractItemView, QDialog, QHBoxLayout, QInputDialog, QLabel, QLineEdit,
     QPushButton, QTableWidget, QTableWidgetItem, QVBoxLayout,
@@ -12,6 +13,7 @@ from .steam_library import import_games, save_achievements
 
 
 class SteamDialog(QDialog):
+    enrichment_progress = Signal(str)
     def __init__(self, library, parent=None):
         super().__init__(parent)
         self.library = library
@@ -70,6 +72,12 @@ class SteamDialog(QDialog):
         self.state.setTextFormat(Qt.PlainText)
         self.state.setWordWrap(True)
         layout.addWidget(self.state)
+        self.enrichment_progress.connect(self.state.setText)
+        self.enrichment_stop = Event()
+        self.stop_button = QPushButton('Parar preenchimento após o jogo atual')
+        self.stop_button.clicked.connect(self.enrichment_stop.set)
+        self.stop_button.hide()
+        layout.addWidget(self.stop_button)
         self.account.textChanged.connect(self.invalidate)
         self.selection_changed()
 
@@ -116,6 +124,7 @@ class SteamDialog(QDialog):
         self.job = None
         for control in self.controls():
             control.setEnabled(True)
+        self.stop_button.hide()
         self.selection_changed()
 
     def fetch(self):
@@ -206,7 +215,28 @@ class SteamDialog(QDialog):
         self.changed = True
         for index, game in enumerate(self.games):
             self.table.item(index, 3).setText(self.destination(game))
-        self.state.setText(f'{created} jogos criados; {updated} atualizados/associados. Dados pessoais e sessões locais foram preservados.')
+        summary=f'{created} jogos criados; {updated} atualizados/associados. Dados pessoais e sessões locais foram preservados.'
+        ids=[self.library.sql.execute("SELECT game_id FROM external_identifiers WHERE provider='steam' AND external_id=?",(game.app_id,)).fetchone()[0] for game in selected]
+        path=self.library.db.path
+        self.enrichment_stop.clear();self.stop_button.show()
+        def complete():
+            from .database import Database
+            from .library import Library
+            from .auto_artwork import obtain_artwork
+            db=Database(path)
+            try:
+                lib=Library(db);messages=[]
+                for index,identity in enumerate(ids):
+                    if self.enrichment_stop.is_set():
+                        messages.append('Preenchimento interrompido. Jogos importados preservados.');break
+                    game=lib.get(identity)
+                    title=game['title'] if game else 'Jogo indisponível'
+                    self.enrichment_progress.emit(f'{index+1}/{len(ids)} · '+title+' · buscando ficha e imagens…')
+                    messages.append(title+': '+obtain_artwork(lib,identity))
+                return '\n'.join(messages)
+            finally:db.close()
+        self.state.setText(summary+' Buscando fichas e imagens…')
+        self.run_job(complete,lambda message:self.state.setText(summary+'\n'+message))
 
     def fetch_achievements(self):
         index = self.table.currentRow()

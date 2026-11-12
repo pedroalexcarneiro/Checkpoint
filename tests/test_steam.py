@@ -171,6 +171,7 @@ def test_dialog_async_query_selection_import_achievements_and_account_change(app
         def achievements(self, account, identity):
             assert threading.get_ident() != main_thread
             return [SteamAchievement('A', 'Marco Steam', '')]
+    monkeypatch.setattr('gamevault.auto_artwork.obtain_artwork', lambda lib, identity: 'Ficha e imagens verificadas')
     monkeypatch.setattr(module, 'CredentialVault', Vault)
     monkeypatch.setattr(module, 'SteamProvider', Provider)
     monkeypatch.setattr(module.QInputDialog, 'getItem', lambda *args: (args[3][0], True))
@@ -196,6 +197,8 @@ def test_dialog_async_query_selection_import_achievements_and_account_change(app
         dialog.table.item(0, 0).setCheckState(Qt.Checked)
         assert dialog.import_button.isEnabled()
         dialog.import_selected()
+        wait_job()
+        assert "Ficha e imagens verificadas" in dialog.state.text()
         assert [game['title'] for game in library.games()] == ['Meu cadastro']
         assert library.get(original)['notes'] == 'Preservar'
         dialog.table.setCurrentCell(0, 1)

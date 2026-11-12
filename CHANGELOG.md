@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.15 — ficha e imagens no cadastro (desenvolvimento)
+
+- Importação Steam completa dados e imagens por AppID, em worker com progresso.
+- Cadastro manual/ROM pede identificação no catálogo ao salvar; modo offline mantido.
+- Ação para completar fichas e imagens faltantes da biblioteca já identificada.
+- Campos pessoais e artes existentes preservados; cancelamento após o jogo atual.
+- Provedor público da loja Steam sem chave adicional; RAWG fornece capa/banner.
+- 146 testes aprovados e smoke isolado OK em Linux. Rede Steam bloqueada pelo proxy;
+  download real e Windows não validados. Sem publicação da 0.1.15; schema permanece 4.
+
 ## 0.1.14 — Importação Steam (desenvolvimento)
 
 - Corrigido encerramento nativo do formulário sem pai: seletores de arquivo usam

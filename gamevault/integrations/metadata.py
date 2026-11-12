@@ -22,7 +22,7 @@ class RawgProvider:
         return MetadataResult('rawg',str(row['id']),row['name'],description=row.get('description_raw',''),
             release_date=row.get('released') or '',genres=tuple(g['name'] for g in row.get('genres',[])),
             platforms=tuple(p['platform']['name'] for p in row.get('platforms') or []),
-            images={'banner':row['background_image']} if row.get('background_image') else {},
+            images={'cover':row['background_image'],'banner':row['background_image']} if row.get('background_image') else {},
             developer=', '.join(item['name'] for item in (row.get('developers') or [])),
             publisher=', '.join(item['name'] for item in (row.get('publishers') or [])))
 

@@ -30,7 +30,9 @@ class ImageCache:
 
     def download(self,url):
         parsed = urlsplit(url)
-        allowed = {'media.rawg.io','cdn2.steamgriddb.com','cdn.steamgriddb.com','images.igdb.com'}
+        allowed = {'media.rawg.io','cdn2.steamgriddb.com','cdn.steamgriddb.com','images.igdb.com','cdn.akamai.steamstatic.com',
+                   'shared.akamai.steamstatic.com','shared.fastly.steamstatic.com',
+                   'cdn.cloudflare.steamstatic.com'}
         if parsed.scheme!='https' or parsed.hostname not in allowed:
             raise IntegrationError('Origem de imagem não autorizada.')
         try:

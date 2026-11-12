@@ -1,9 +1,9 @@
 # Desenvolvimento independente deste computador
 
-O desenvolvimento 0.1.14 está na branch `codex/steam-library-import` de
+O desenvolvimento 0.1.15 está na branch `codex/steam-library-import` de
 `pedroalexcarneiro/Checkpoint`, ainda não incorporado à `main`. Use o checkout
 existente ou essa branch ao retomar esta implementação; não use somente o ZIP de
-uma release anterior. Confira `pyproject.toml` (0.1.14)
+uma release anterior. Confira `pyproject.toml` (0.1.15)
 e a presença de `AGENTS.md`, `CONTINUITY.md` e `gamevault/game_import.py`.
 
 O ambiente Linux foi preparado e validado nesta nuvem. Na 0.1.14, 29 testes focados

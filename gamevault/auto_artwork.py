@@ -45,7 +45,7 @@ class AutoArtwork:
         self.library.set_setting(f'artwork.checked.{game_id}',self.clock())
         if identity is None:
             try:
-                resolved=provider.game_from_steam(steam[0]);self.confirm_identity(game_id,resolved.external_id,resolved.title)
+                resolved=provider.game_from_steam(steam[0]);self.confirm_identity(game_id,resolved.external_id)
                 identity=self.identity(game_id)
             except (IntegrationError,ValueError): return 'Não foi possível resolver o AppID Steam no provedor de artes.'
         external_id=identity[0];saved=[];unavailable=[]
@@ -75,5 +75,12 @@ class AutoArtwork:
 
 def obtain_artwork(library,game_id,force=False):
     # Falha de arte nunca desfaz cadastro, associação ou download de ROM.
-    try: return AutoArtwork(library).obtain(game_id,force)
-    except Exception: return 'Arte pendente: não foi possível consultar o provedor ou o cofre. Jogo e arquivos preservados.'
+    metadata=''
+    try:
+        from .enrichment import complete_game
+        if not force and not library.setting('artwork.auto',True):
+            return 'Ficha e artes automáticas desativadas.'
+        metadata=complete_game(library,game_id)
+        artwork=AutoArtwork(library).obtain(game_id,force)
+        return metadata+' '+artwork
+    except Exception: return metadata+' Arte pendente: não foi possível consultar o provedor ou o cofre. Jogo e arquivos preservados.'

@@ -185,9 +185,24 @@ class MainWindow(QMainWindow):
             self.guard(save)
 
     def edit_game(self,game_id):
-        dialog = GameDialog(self,self.library.get(game_id))
+        dialog = GameDialog(self,self.library.get(game_id),library=self.library)
         if dialog.exec()==QDialog.Accepted:
-            self.guard(lambda:self.library.save_game(dialog.data(),game_id)); self.refresh_library(); self.detail(game_id)
+            def save():
+                from .artwork_progress import ArtworkProgress
+                result=dialog.catalog_result
+                if result:
+                    with self.library.sql:
+                        existing=self.library.sql.execute('SELECT game_id FROM external_identifiers WHERE provider=? AND external_id=?',(result.provider,result.external_id)).fetchone()
+                        previous=self.library.sql.execute('SELECT external_id FROM external_identifiers WHERE game_id=? AND provider=?',(game_id,result.provider)).fetchone()
+                        if existing and existing[0]!=game_id:raise ValueError('Este jogo do catálogo já pertence a outro cadastro.')
+                        if previous and previous[0]!=result.external_id:raise ValueError('Este cadastro já tem outra identidade confirmada.')
+                        self.library.sql.execute('INSERT OR IGNORE INTO external_identifiers VALUES(?,?,?)',(game_id,result.provider,result.external_id))
+                self.library.save_game(dialog.data(),game_id)
+                if result:
+                    progress=ArtworkProgress(self.library,game_id,self,force=True);progress.exec()
+                    self.statusBar().showMessage(progress.message)
+                self.refresh_library();self.detail(game_id)
+            self.guard(save)
 
     def detail(self,game_id):
         game = self.library.get(game_id)
@@ -381,6 +396,7 @@ class MainWindow(QMainWindow):
         form.addWidget(label('INTEGRAÇÕES','eyebrow'))
         form.addWidget(button('Google Drive · autenticar e gerenciar ROMs',self.drive))
         form.addWidget(button('Steam · importar biblioteca e consultar conquistas',self.steam))
+        form.addWidget(button('Completar fichas e imagens faltantes da biblioteca',self.complete_library))
         form.addWidget(button('Configurar chave RAWG',lambda:self.configure_key('rawg')))
         form.addWidget(button('Configurar chave SteamGridDB',lambda:self.configure_key('steamgriddb')))
         for provider in ['Google Drive','Steam','IGDB','SteamGridDB','RAWG','RetroAchievements','IsThereAnyDeal']:
@@ -393,6 +409,15 @@ class MainWindow(QMainWindow):
         for game in self.library.sql.execute('SELECT id,title FROM games WHERE deleted_at IS NOT NULL'):
             form.addWidget(button('Restaurar '+game['title'],lambda checked=False,g=game['id']:self.restore_game(g)))
         form.addWidget(button('Revisar sessões interrompidas',self.recover_sessions)); form.addStretch(); scroll.setWidget(body); layout.addWidget(scroll)
+
+    def complete_library(self):
+        from .artwork_progress import ArtworkProgress
+        ids=[row[0] for row in self.library.sql.execute('SELECT id FROM games WHERE deleted_at IS NULL')]
+        if not ids:
+            self.statusBar().showMessage('Nenhum jogo cadastrado.');return
+        progress=ArtworkProgress(self.library,ids,self,force=True);progress.exec()
+        QMessageBox.information(self,'Fichas e imagens',progress.message)
+        self.refresh_library()
 
     def set_theme(self,key):
         from PySide6.QtWidgets import QApplication

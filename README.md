@@ -1,6 +1,8 @@
 # Checkpoint
 
-Biblioteca pessoal de jogos para Windows, desenvolvida do zero em Python 3.12, PySide6 e SQLite. Versão **0.1.14 de desenvolvimento**, com dados locais e interface em português. Não é ainda a implementação completa da visão do produto.
+Ficha e imagens: importação Steam completa campos vazios por AppID. Cadastro manual e ROM pedem confirmação no catálogo ao salvar. Em Configurações, use **Completar fichas e imagens faltantes da biblioteca** para jogos já identificados. Disponibilidade depende da fonte; consulte INTEGRATIONS.md. Versão 0.1.15 ainda sem pacote Windows publicado.
+
+Biblioteca pessoal de jogos para Windows, desenvolvida do zero em Python 3.12, PySide6 e SQLite. Versão **0.1.15 de desenvolvimento**, com dados locais e interface em português. Não é ainda a implementação completa da visão do produto.
 
 Já oferece biblioteca manual persistente, galeria 3:4 e lista, pesquisa e filtros, favoritos, edição, lixeira recuperável, páginas de jogos, diário, mídia referenciada, conquistas pessoais, estatísticas de sessões confirmadas, metas de compra e backup/restauração local de saves explicitamente selecionados.
 

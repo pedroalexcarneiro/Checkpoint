@@ -84,7 +84,7 @@ def test_artwork_progress_finishes_and_closes(library,app,monkeypatch):
     dialog=ArtworkProgress(library,game)
     QTimer.singleShot(5000,lambda:dialog.accept() if dialog.isVisible() else None)
     assert dialog.exec()==QDialog.Accepted
-    assert dialog.job is None and dialog.message=='done safely'
+    assert dialog.job is None and dialog.message=='Test: done safely'
 
 
 def test_catalog_selection_closes_with_confirmed_result(app):

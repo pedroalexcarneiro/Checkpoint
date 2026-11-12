@@ -119,5 +119,5 @@ jobs:
           fi
           gh release create "$RELEASE_TAG" release-assets/* \
             --verify-tag --prerelease \
-            --title "Checkpoint ${RELEASE_TAG#v} · Steam e correção do Qt" \
+            --title "Checkpoint ${RELEASE_TAG#v} · Ficha e imagens no cadastro" \
             --notes-file .github/release-notes.md

@@ -21,6 +21,11 @@ class GameDialog(QDialog):
             self.drive_info=QLabel('Pesquisa local. Se a pasta for nova, atualize o índice primeiro.');self.drive_info.setWordWrap(True);drive.addWidget(self.drive_info)
             self.drive_query.textChanged.connect(self.search_drive);outer.addWidget(group)
             lookup=QPushButton('Confirmar título original e completar dados no catálogo');lookup.clicked.connect(self.lookup_catalog);outer.addWidget(lookup)
+        if library is not None and game is not None:
+            lookup=QPushButton('Identificar e completar ficha e imagens');lookup.clicked.connect(self.lookup_catalog);outer.addWidget(lookup)
+        if library is not None and game is None:
+            self.complete_on_save=QCheckBox('Buscar ficha e imagens no catálogo ao salvar')
+            self.complete_on_save.setChecked(True);outer.addWidget(self.complete_on_save)
         scroll = QScrollArea(); scroll.setWidgetResizable(True)
         body = QWidget(); form = QFormLayout(body); form.setSpacing(14)
         self.fields = {}
@@ -94,6 +99,10 @@ class GameDialog(QDialog):
     def lookup_catalog(self):
         from .catalog_picker import CatalogPicker
         dialog=CatalogPicker(self.fields['title'].text(),self)
+        if self.drive_file_id is not None:
+            dialog.provider.setCurrentIndex(dialog.provider.findData('rawg'))
+        from PySide6.QtCore import QTimer
+        QTimer.singleShot(0,dialog.lookup)
         if dialog.exec()==QDialog.Accepted:self.apply_catalog(dialog.selected_result)
     def apply_catalog(self,result):
         self.catalog_result=result
@@ -138,6 +147,10 @@ class GameDialog(QDialog):
                 self.error.setText('Arquivo não encontrado: '+key); return
             if value and key!='executable' and QPixmap(value).isNull():
                 self.error.setText('Imagem inválida: '+key); return
+        if hasattr(self,'complete_on_save') and self.complete_on_save.isChecked() and self.catalog_result is None:
+            self.lookup_catalog()
+            if self.catalog_result is None:
+                self.error.setText('Confirme o jogo no catálogo ou desmarque a busca para salvar manualmente.');return
         self.accept()
 
 class ImageDialog(QDialog):

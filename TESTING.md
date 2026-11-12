@@ -1,5 +1,24 @@
 # Validação
 
+## 0.1.15 — preenchimento de ficha e imagens
+
+Validação Linux desta mudança: suíte completa **146 aprovados em 14,99 s, exit 0**;
+52 testes focados passaram anteriormente em 3,10 s. Smoke em diretório novo:
+seis páginas, exit 0, SQLite integrity=ok, schema 4, zero jogos.
+Probes à loja Steam e CDN foram bloqueados pelo proxy (CONNECT HTTP 403);
+contratos testados com respostas controladas, sem validar download real, Windows
+ou autenticação. Nenhuma credencial foi lida ou exposta pela sessão.
+
+```sh
+QT_QPA_PLATFORM=offscreen XDG_CACHE_HOME=/workspace/work/qt-cache .venv/bin/python -m pytest tests -q -p no:cacheprovider
+QT_QPA_PLATFORM=offscreen XDG_CACHE_HOME=/workspace/work/qt-cache .venv/bin/python -m gamevault.app --smoke-test --data-dir /workspace/work/checkpoint-0115-smoke-CrnYuU
+```
+
+Dez regressões novas cobrem parsing da ficha pública por AppID, identidade errada,
+preenchimento de vazios, preservação de dados pessoais e edições concorrentes,
+falha de download, catálogo RAWG para ROM, identificação ao salvar e cancelamento.
+Testes existentes de importação Steam verificam também o preenchimento assíncrono.
+
 ## 0.1.14 — encerramento Qt corrigido
 
 Reprodução original: test_add_form_drive_search_and_metadata_prefill passava na

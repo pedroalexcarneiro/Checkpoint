@@ -8,7 +8,7 @@ def save_import(library,data,file_id=None,result=None):
     if file_id is not None and file is None: raise ValueError('A ROM selecionada não está mais no índice.')
     existing=None
     if result:
-        if result.provider not in {'rawg','steamgriddb'} or not str(result.external_id).isdigit(): raise ValueError('Identidade de catálogo inválida.')
+        if result.provider not in {'rawg','steamgriddb','steam'} or not str(result.external_id).isdigit(): raise ValueError('Identidade de catálogo inválida.')
         row=library.sql.execute('SELECT game_id FROM external_identifiers WHERE provider=? AND external_id=?',(result.provider,result.external_id)).fetchone()
         existing=row[0] if row else None
     if file and file['game_id']:

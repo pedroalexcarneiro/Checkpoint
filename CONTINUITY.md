@@ -1,6 +1,29 @@
 # Continuidade do Checkpoint
 
-Estado de referência: aplicativo 0.1.14 de desenvolvimento, schema SQLite 4.
+## 0.1.15 — ficha e imagens no cadastro (desenvolvimento)
+
+Steam inicia preenchimento assíncrono por AppID após importar. Cadastro manual e
+ROM abrem identificação no catálogo ao salvar; a opção vem marcada e pode ser
+desativada para cadastrar offline. Campos e artes existentes são preservados pelo
+preenchimento automático. Status, categoria, nota e observações são pessoais.
+Configurações oferece completar a biblioteca já identificada, com progresso e
+interrupção após o jogo atual. Editar jogo permite identificar cadastros antigos.
+
+Steam fornece ficha pública e imagens disponíveis sem chave adicional da loja.
+RAWG exige chave própria para ficha e imagem de fundo como capa/banner; SteamGridDB
+fornece identidade e artes, sem ficha detalhada. Logo/capa vertical dependem da fonte.
+Não há associação automática por nome nem alteração de original_name da ROM.
+Schema permanece 4; versão 0.1.15 somente no código, sem build Windows/publicação.
+A release v0.1.14 existente foi preservada.
+
+Validação Linux desta mudança: suíte completa **146 aprovados em 14,99 s, exit 0**;
+52 testes focados passaram anteriormente em 3,10 s. Smoke em diretório novo:
+seis páginas, exit 0, SQLite integrity=ok, schema 4, zero jogos.
+Probes à loja Steam e CDN foram bloqueados pelo proxy (CONNECT HTTP 403);
+contratos testados com respostas controladas, sem validar download real, Windows
+ou autenticação. Nenhuma credencial foi lida ou exposta pela sessão.
+
+Estado de referência: aplicativo 0.1.15 de desenvolvimento, schema SQLite 4.
 Este documento transfere o contexto de trabalho; não é uma cópia integral do chat.
 Não contém credenciais, dados pessoais da biblioteca ou autorizações para novos acessos.
 
