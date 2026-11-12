@@ -107,35 +107,33 @@ def test_rawg_confirmed_rom_uses_its_own_identity(library, folder):
     assert library.get(identity)['platform'] == 'Game Boy Advance'
 
 
-def test_new_form_resolves_automatically_on_save_and_can_save_offline(library, app, monkeypatch):
+def test_form_saves_without_network_or_nested_loading_dialog(library, app, monkeypatch):
     from gamevault.dialogs import GameDialog
     from PySide6.QtWidgets import QDialog
-    dialog = GameDialog(library=library)
+    nested=Mock(side_effect=AssertionError('Salvar não deve abrir outro loop modal'))
+    monkeypatch.setattr(QDialog,'exec',nested)
+    dialog=GameDialog(library=library)
     dialog.fields['title'].setText('INSIDE')
-    called = []
-    def choose():
-        called.append(True); dialog.apply_catalog(provider_result())
-    monkeypatch.setattr(dialog, 'lookup_automatic', choose)
+    assert dialog.complete_on_save.isChecked()
     dialog.validate()
-    assert called and dialog.result() == QDialog.Accepted
-    assert dialog.data()['developer'] == 'Playdead'
+    assert dialog.result()==QDialog.Accepted
+    nested.assert_not_called()
     dialog.close()
-    offline = GameDialog(library=library)
+    offline=GameDialog(library=library)
     offline.fields['title'].setText('Local game')
     offline.complete_on_save.setChecked(False)
     offline.validate()
-    assert offline.result() == QDialog.Accepted
+    assert offline.result()==QDialog.Accepted
     offline.close()
 
 
-def test_missing_automatic_identification_still_saves_offline(library, app, monkeypatch):
+def test_unknown_game_form_saves_without_mandatory_catalog(library, app):
     from gamevault.dialogs import GameDialog
     from PySide6.QtWidgets import QDialog
-    dialog = GameDialog(library=library)
+    dialog=GameDialog(library=library)
     dialog.fields['title'].setText('Unknown ROM')
-    monkeypatch.setattr(dialog, 'lookup_automatic', lambda: None)
     dialog.validate()
-    assert dialog.result() == QDialog.Accepted
+    assert dialog.result()==QDialog.Accepted
     assert dialog.catalog_result is None
     dialog.close()
 

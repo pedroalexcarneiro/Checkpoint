@@ -41,6 +41,17 @@ def smoke(command, directory):
         raise RuntimeError('Auxiliar isolado do pacote não respondeu corretamente.')
 
 
+
+def save_smoke(command,directory):
+    subprocess.run([*command,'--save-smoke-test','--data-dir',str(directory)],
+                   check=True,timeout=60,env={**os.environ,'QT_QPA_PLATFORM':'offscreen'})
+    if not (directory/'save-smoke.png').is_file():
+        raise RuntimeError('Cadastro completo não gerou captura.')
+    with closing(sqlite3.connect(directory/'gamevault.sqlite')) as sql:
+        if sql.execute('PRAGMA integrity_check').fetchone()[0]!='ok' or sql.execute('SELECT count(*) FROM games').fetchone()[0]!=1:
+            raise RuntimeError('Cadastro completo não preservou a fixture isolada.')
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--test-report', type=Path, required=True)
@@ -75,8 +86,10 @@ def main():
     with TemporaryDirectory(prefix='checkpoint-release-') as temporary:
         temporary = Path(temporary).resolve()
         smoke([sys.executable, '-m', 'gamevault.app'], temporary / 'source-smoke')
+        save_smoke([sys.executable, '-m', 'gamevault.app'], temporary / 'source-save-smoke')
         extracted = extract_package(archive_path, temporary / 'extracted')
         smoke([str(extracted / 'Checkpoint.exe')], temporary / 'portable-smoke')
+        save_smoke([str(extracted / 'Checkpoint.exe')], temporary / 'portable-save-smoke')
         subprocess.run([str(extracted / 'CheckpointUpdater' / 'CheckpointUpdater.exe'), '--check'],
                        check=True, timeout=30)
     with archive_path.open('rb') as source:
@@ -90,6 +103,7 @@ def main():
         'Smoke do fonte: 6 páginas; SQLite íntegro; biblioteca vazia.',
         'Smoke do ZIP extraído: 6 páginas; SQLite íntegro; biblioteca vazia.',
         'Auxiliar isolado do fonte e do ZIP extraído: resposta e schema verificados.',
+        'Cadastro completo do fonte e do ZIP: salvar, auxiliar, imagem e SQLite verificados (fixture isolada).',
         'CheckpointUpdater.exe --check: saída 0.',
         f'ZIP SHA-256: {digest}',
         'Steam autenticada e homologação Windows 10/11 pessoal não estão cobertas.',

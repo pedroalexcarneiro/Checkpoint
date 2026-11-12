@@ -1,0 +1,33 @@
+Checkpoint 0.1.16 -> 0.1.17: queda ao salvar
+
+Reprodução Linux Qt offscreen com banco novo, transporte controlado e PNG de teste.
+Nenhuma ROM pessoal, credencial ou consulta autenticada foi usada.
+
+Antes (fonte 0.1.16, HEAD 56f4886):
+QT_QPA_PLATFORM=offscreen XDG_CACHE_HOME=/workspace/work/qt-cache .venv/bin/python -X faulthandler /workspace/work/repro_full_save.py
+Exit 139, reproduzido também removendo o download/decodificação das imagens.
+Fatal Python error: Segmentation fault
+  gamevault/window.py:183 in save (ArtworkProgress(...).exec())
+  gamevault/window.py:61 in guard
+  gamevault/window.py:185 in add_game
+
+O caminho abria AutomaticLookup.exec dentro de GameDialog.validate e, em seguida,
+ArtworkProgress.exec após aceitar o formulário. A falha nativa aparecia na abertura
+desse segundo carregamento. Isso estabelece uma reprodução de falha da interface;
+não identifica todas as possíveis causas de crashes no Windows do usuário.
+
+Depois:
+QT_QPA_PLATFORM=offscreen XDG_CACHE_HOME=/workspace/work/qt-cache .venv/bin/python -X faulthandler /workspace/work/repro_full_save_fixed.py
+Exit 0; salvar retornou antes da consulta, a capa foi carregada e o processo encerrou.
+
+Alteração: formulário só valida/aceita. Cadastro é persistido imediatamente; fila
+sequencial em segundo plano identifica/completa ficha e imagens. Sem novo loop modal.
+Drive e preenchimento em lote usam o mesmo princípio. Nenhum dado pessoal é recriado.
+
+Regressões versionadas: tests/test_save_lifecycle.py testa processos Qt reais para
+cadastro com imagens/cache/SQLite, falha abrupta do auxiliar e criação pelo Drive.
+Todos conferem retorno real do processo e integridade dos dados.
+Smoke do pacote passa a testar cadastro, auxiliar e renderização no EXE extraído.
+
+Validação local: 164 testes em 20,33 s, exit 0. Smoke seis páginas + auxiliar e
+novo smoke completo de cadastro: exit 0. Windows ainda depende do workflow.

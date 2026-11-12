@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.17 — salvamento sem carregamentos modais encadeados
+
+- Reproduzido SIGSEGV/139 na abertura do carregamento após salvar na 0.1.16.
+- Cadastro persistido imediatamente; ficha/imagens seguem em fila em segundo plano.
+- Removida a identificação modal de dentro de Salvar e o segundo modal após o cadastro.
+- Drive, edição identificada e atualização em lote também usam carregamento sem novo exec.
+- 164 testes locais aprovados; regressões de processo completo com imagens, falha do
+  auxiliar e Drive. Pacote passa a validar salvar/renderizar no EXE extraído.
+- Diagnóstico nativo habilitado na interface sem variáveis locais. Schema permanece 4.
+
 ## 0.1.16 — cadastro simples e proteção das operações (desenvolvimento)
 
 - Nome/plataforma no cadastro inicial; opções avançadas e Drive recolhidos.

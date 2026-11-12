@@ -118,13 +118,6 @@ class GameDialog(QDialog):
         from PySide6.QtCore import QTimer
         QTimer.singleShot(0,dialog.lookup)
         if dialog.exec()==QDialog.Accepted:self.apply_catalog(dialog.selected_result)
-    def lookup_automatic(self):
-        from .automatic_lookup import AutomaticLookup
-        dialog=AutomaticLookup(self.library,self.fields['title'].text(),self.fields['platform'].text(),self)
-        dialog.exec()
-        if dialog.selected_result:self.apply_catalog(dialog.selected_result)
-        else:self.error.setText('Cadastro salvo. Ficha pendente; você pode corrigir a identificação em Editar jogo.')
-
     def apply_catalog(self,result):
         self.catalog_result=result
         values={'title':result.title,'description':result.description,'genre':', '.join(result.genres),'developer':result.developer,'publisher':result.publisher,'release_date':result.release_date}
@@ -168,8 +161,6 @@ class GameDialog(QDialog):
                 self.error.setText('Arquivo não encontrado: '+key); return
             if value and key!='executable' and QPixmap(value).isNull():
                 self.error.setText('Imagem inválida: '+key); return
-        if hasattr(self,'complete_on_save') and self.complete_on_save.isChecked() and self.catalog_result is None:
-            self.lookup_automatic()
         self.accept()
 
 class ImageDialog(QDialog):

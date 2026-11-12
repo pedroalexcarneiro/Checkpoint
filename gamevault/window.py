@@ -1,7 +1,7 @@
 import json
 import logging
 from pathlib import Path
-from PySide6.QtCore import Qt,QSize,QTimer,QUrl
+from PySide6.QtCore import Qt,QSize,QTimer,QUrl,Slot
 from PySide6.QtGui import QPixmap,QIcon,QDesktopServices
 from PySide6.QtWidgets import (QMainWindow,QWidget,QHBoxLayout,QVBoxLayout,QLabel,QPushButton,
     QLineEdit,QComboBox,QListWidget,QListWidgetItem,QAbstractItemView,QTableWidget,QTableWidgetItem,
@@ -32,6 +32,14 @@ class MainWindow(QMainWindow):
         from .theme import apply_theme,DEFAULT_THEME
         self.theme=apply_theme(QApplication.instance(),library.setting('appearance.theme',DEFAULT_THEME))
         self.setWindowTitle('Checkpoint'); self.resize(1380,900); self.setMinimumSize(1000,700)
+        from .completion_queue import CompletionQueue
+        self.completion_queue=CompletionQueue(library.db.path,self)
+        self.completion_queue.updated.connect(self.game_completed)
+        self.completion_queue.busy_changed.connect(self.completion_busy)
+        self.completion_bar=QProgressBar();self.completion_bar.setRange(0,0);self.completion_bar.hide()
+        self.statusBar().addPermanentWidget(self.completion_bar)
+        self.completion_stop=button('Parar após o jogo atual',self.completion_queue.cancel_pending)
+        self.completion_stop.hide();self.statusBar().addPermanentWidget(self.completion_stop)
         self.current_page = 0; self.current_game = None; self.last_deleted = None; self.save_jobs = {}
         root = QWidget(); root.setObjectName('root'); self.setCentralWidget(root)
         layout = QHBoxLayout(root); layout.setContentsMargins(0,0,0,0); layout.setSpacing(0)
@@ -178,17 +186,17 @@ class MainWindow(QMainWindow):
         if dialog.exec()==QDialog.Accepted:
             def save():
                 from .game_import import save_import
-                from .artwork_progress import ArtworkProgress
                 game_id=save_import(self.library,dialog.data(),dialog.drive_file_id,dialog.catalog_result)
-                progress=ArtworkProgress(self.library,game_id,self);progress.exec()
-                self.refresh_library();self.detail(game_id);self.statusBar().showMessage(progress.message)
+                self.refresh_library();self.detail(game_id)
+                self.statusBar().showMessage('Jogo salvo na biblioteca.')
+                if dialog.complete_on_save.isChecked():
+                    self.completion_queue.submit([game_id])
             self.guard(save)
 
     def edit_game(self,game_id):
         dialog = GameDialog(self,self.library.get(game_id),library=self.library)
         if dialog.exec()==QDialog.Accepted:
             def save():
-                from .artwork_progress import ArtworkProgress
                 result=dialog.catalog_result
                 if result:
                     with self.library.sql:
@@ -199,8 +207,7 @@ class MainWindow(QMainWindow):
                         self.library.sql.execute('INSERT OR IGNORE INTO external_identifiers VALUES(?,?,?)',(game_id,result.provider,result.external_id))
                 self.library.save_game(dialog.data(),game_id)
                 if result:
-                    progress=ArtworkProgress(self.library,game_id,self,force=True);progress.exec()
-                    self.statusBar().showMessage(progress.message)
+                    self.completion_queue.submit([game_id],force=True)
                 self.refresh_library();self.detail(game_id)
             self.guard(save)
 
@@ -411,13 +418,23 @@ class MainWindow(QMainWindow):
         form.addWidget(button('Revisar sessões interrompidas',self.recover_sessions)); form.addStretch(); scroll.setWidget(body); layout.addWidget(scroll)
 
     def complete_library(self):
-        from .artwork_progress import ArtworkProgress
         ids=[row[0] for row in self.library.sql.execute('SELECT id FROM games WHERE deleted_at IS NULL')]
         if not ids:
             self.statusBar().showMessage('Nenhum jogo cadastrado.');return
-        progress=ArtworkProgress(self.library,ids,self,force=True);progress.exec()
-        QMessageBox.information(self,'Fichas e imagens',progress.message)
+        self.completion_queue.submit(ids,force=True)
+
+    @Slot(int,str)
+    def game_completed(self,game_id,message):
         self.refresh_library()
+        if self.current_game==game_id and self.library.get(game_id):self.detail(game_id)
+        self.statusBar().showMessage(message)
+
+    @Slot(int)
+    def completion_busy(self,count):
+        self.completion_bar.setVisible(count>0);self.completion_stop.setVisible(count>0)
+        if count:
+            self.completion_bar.setToolTip(f'{count} jogos aguardando ficha e imagens')
+            self.statusBar().showMessage('Jogo salvo. Buscando ficha e imagens em segundo plano…')
 
     def set_theme(self,key):
         from PySide6.QtWidgets import QApplication

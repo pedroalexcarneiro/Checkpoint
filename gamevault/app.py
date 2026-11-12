@@ -17,10 +17,13 @@ def main():
     parser.add_argument('--smoke-test',action='store_true',help='Abre todas as páginas e encerra em ambiente isolado')
     parser.add_argument('--network-test', action='store_true', help='Testa HTTPS público sem autenticação e salva network-test.txt no diretório de dados')
     parser.add_argument('--worker-request',type=Path,help=argparse.SUPPRESS)
+    parser.add_argument('--save-smoke-test',action='store_true',help=argparse.SUPPRESS)
     args = parser.parse_args()
     if args.worker_request:
         from .worker import execute_request
         return execute_request(args.worker_request)
+    if args.save_smoke_test and (not args.data_dir or (args.data_dir/'gamevault.sqlite').exists()):
+        parser.error('--save-smoke-test exige --data-dir novo, sem banco existente.')
     # Preserve o armazenamento e a trava legados para manter bibliotecas existentes.
     directory = args.data_dir or Path(os.environ.get('LOCALAPPDATA',str(Path.home()/'.local/share')))/'GameVault'
     directory.mkdir(parents=True,exist_ok=True)
@@ -33,7 +36,14 @@ def main():
     logging.basicConfig(level=logging.INFO,handlers=[handler],format='%(asctime)s %(levelname)s %(message)s')
     # O callback OAuth e o URL de autorização incluem códigos e estado privados.
     logging.getLogger('google_auth_oauthlib.flow').setLevel(logging.WARNING)
-    if args.smoke_test: os.environ['QT_QPA_PLATFORM'] = 'offscreen'
+    if args.smoke_test or args.save_smoke_test: os.environ['QT_QPA_PLATFORM'] = 'offscreen'
+    import faulthandler
+    try:
+        native_fd=os.open(directory/'native-crash.log',os.O_WRONLY|os.O_CREAT|os.O_APPEND,0o600)
+        faulthandler.enable(file=native_fd,all_threads=True)
+    except OSError:
+        logging.warning('Registro nativo indisponível; inicialização continua.')
+    # O descritor permanece aberto até a saída para registrar também falhas no shutdown.
     app = QApplication(sys.argv[:1]); app.setApplicationName('Checkpoint'); app.setStyle('Fusion'); app.setStyleSheet(DARK)
     lock = QLockFile(str(directory/'gamevault.lock'))
     if not lock.tryLock(100):
@@ -42,6 +52,9 @@ def main():
     try:
         db = Database(directory/'gamevault.sqlite')
         window = MainWindow(Library(db)); window.show()
+        if args.save_smoke_test:
+            from .save_smoke import start_save_smoke
+            start_save_smoke(app,window,directory)
         if args.smoke_test:
             from PySide6.QtCore import QTimer
             from PySide6.QtGui import QFontDatabase

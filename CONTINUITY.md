@@ -1,5 +1,28 @@
 # Continuidade do Checkpoint
 
+## 0.1.17 — queda reproduzida no salvamento
+
+Reproduzida no Linux uma falha nativa do fluxo completo 0.1.16: SIGSEGV/exit 139
+na abertura de ArtworkProgress.exec após AutomaticLookup.exec dentro de Salvar.
+Reproduzida também sem baixar/decodificar imagens. Ao remover o encadeamento modal,
+a mesma sequência concluiu cadastro, imagens e encerramento com exit 0.
+
+Salvar agora persiste o cadastro imediatamente. Identificação/ficha/imagens seguem
+em fila sequencial em segundo plano, com indicador na barra inferior e opção de
+parar após o jogo atual. O formulário não abre outro carregamento modal.
+Drive, edição identificada e preenchimento em lote também não abrem esse segundo
+loop modal. Mantidos processos auxiliares, preferências e proteção de dados.
+Schema permanece 4; nenhuma credencial ou biblioteca pessoal foi lida nesta correção.
+
+Validação local: **164 testes em 20,33 s, exit 0**. Novas regressões executam processos
+Qt completos para salvar com PNG/cache/SQLite, falha do auxiliar e criação pelo Drive.
+Smoke das seis páginas e smoke completo de cadastro + auxiliar passaram, exit 0.
+O empacotador agora exige esse fluxo também no EXE extraído do ZIP. Diagnóstico
+nativo também fica habilitado na interface; não registra variáveis locais/segredos.
+Evidência: evidence/save-modal-crash.txt. Fontes/transferências são controladas nos
+testes; não se trata de validação de conta autenticada ou diagnóstico do Windows
+pessoal. Build/publicação 0.1.17 ainda dependem do workflow.
+
 ## Publicação confirmada — v0.1.16
 
 Pré-release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.16
@@ -72,7 +95,7 @@ Probes à loja Steam e CDN foram bloqueados pelo proxy (CONNECT HTTP 403);
 contratos testados com respostas controladas, sem validar download real, Windows
 ou autenticação. Nenhuma credencial foi lida ou exposta pela sessão.
 
-Estado de referência: aplicativo 0.1.16 de desenvolvimento, schema SQLite 4.
+Estado de referência: aplicativo 0.1.17 de desenvolvimento, schema SQLite 4.
 Este documento transfere o contexto de trabalho; não é uma cópia integral do chat.
 Não contém credenciais, dados pessoais da biblioteca ou autorizações para novos acessos.
 

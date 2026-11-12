@@ -127,13 +127,12 @@ class DriveDialog(QDialog):
         if not file:self.state.setText('Selecione uma ROM primeiro.');return
         from .dialogs import GameDialog
         from .game_import import save_import
-        from .artwork_progress import ArtworkProgress
         dialog=GameDialog(self,library=self.library);dialog.load_drive_file(file)
         if dialog.exec()==QDialog.Accepted:
             try:
                 game_id=save_import(self.library,dialog.data(),dialog.drive_file_id,dialog.catalog_result)
-                progress=ArtworkProgress(self.library,game_id,self);progress.exec()
-                self.refresh();self.state.setText('Jogo salvo. '+progress.message)
+                self.refresh();self.state.setText('Jogo salvo na biblioteca.')
+                if dialog.complete_on_save.isChecked():self.queue_artwork(game_id,'Jogo salvo.')
             except ValueError as error:self.state.setText(str(error))
     def game_art(self):
         file=self.selected()

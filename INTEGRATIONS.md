@@ -1,5 +1,12 @@
 # Integrações
 
+## 0.1.17 — consulta após persistir o cadastro
+
+A identificação automática agora acontece em segundo plano, após salvar, sem abrir
+catálogo/carregamento modal obrigatório. Fonte indisponível ou falha do auxiliar
+preserva o jogo já cadastrado. Atualização em lote é sequencial e pode parar após
+o jogo atual. Nenhuma mudança em OAuth, chaves, escopos ou provedores.
+
 ## 0.1.16 — identificação automática e auxiliares
 
 O cadastro tenta Steam (PC), RAWG e SteamGridDB já configurados; compara nome e

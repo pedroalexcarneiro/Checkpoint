@@ -119,5 +119,5 @@ jobs:
           fi
           gh release create "$RELEASE_TAG" release-assets/* \
             --verify-tag --prerelease \
-            --title "Checkpoint ${RELEASE_TAG#v} · Cadastro simples e downloads isolados" \
+            --title "Checkpoint ${RELEASE_TAG#v} · Correção do carregamento ao salvar" \
             --notes-file .github/release-notes.md

@@ -1,8 +1,10 @@
 # Checkpoint
 
+Na 0.1.17, Salvar grava o jogo imediatamente e busca ficha/imagens em segundo plano, sem janelas de carregamento encadeadas. Corrigida uma queda nativa reproduzida nesse fluxo. Pacote Windows 0.1.17 ainda pendente de validação/publicação.
+
 Adicionar jogo: digite o nome e salve; ficha e imagens são buscadas automaticamente quando houver correspondência confiável e provedor disponível. Drive e ficha avançada ficam recolhidos. No Drive, **Baixar e adicionar à biblioteca** cria o cadastro e busca imagens após verificar o download. A versão 0.1.16 separa essas operações da interface para conter falhas abruptas. Pacote Windows publicado em https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.16 .
 
-Biblioteca pessoal de jogos para Windows, desenvolvida do zero em Python 3.12, PySide6 e SQLite. Versão **0.1.16 de desenvolvimento**, com dados locais e interface em português. Não é ainda a implementação completa da visão do produto.
+Biblioteca pessoal de jogos para Windows, desenvolvida do zero em Python 3.12, PySide6 e SQLite. Versão **0.1.17 de desenvolvimento**, com dados locais e interface em português. Não é ainda a implementação completa da visão do produto.
 
 Já oferece biblioteca manual persistente, galeria 3:4 e lista, pesquisa e filtros, favoritos, edição, lixeira recuperável, páginas de jogos, diário, mídia referenciada, conquistas pessoais, estatísticas de sessões confirmadas, metas de compra e backup/restauração local de saves explicitamente selecionados.
 
