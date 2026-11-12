@@ -1,5 +1,17 @@
 # Estado do projeto — Checkpoint
 
+## Publicação confirmada — v0.1.20
+
+Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.20
+Commit: d40439f23047a76d6424d2c49b7578f37c9387d6; workflow 43265226500 success.
+Relatório confirma 185 testes Windows, zero falhas/erros/skips. Smokes das seis
+páginas no fonte e ZIP extraído, auxiliar isolado, cadastro com imagem/SQLite e
+CheckpointUpdater.exe --check aprovados. ZIP: 83.927.939 bytes; SHA-256
+3a6f83d83bf497dce0d944bb20c63625bcb80f0cc0c9fde0c0bd5dea54386670.
+Essa confirmação prevalece sobre as pendências abaixo. Testes isolados não
+comprovam integrações autenticadas nem aprovação visual do usuário.
+
+
 ## 0.1.20 — revisão após capturas reais do usuário
 
 Barra lateral com nome centralizado, sem símbolo. Capas sem moldura lateral,

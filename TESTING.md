@@ -362,3 +362,7 @@ Validação autenticada adicional 0.1.13, em biblioteca isolada: ID SteamGridDB 
 cadastro novo preservando lixeira, rollback, identidade não roubada, proporção
 do banner, indicador compacto e estatísticas derivadas da base. Smokes isolados
 de páginas/auxiliar/cadastro aprovados. Windows depende do workflow da release.
+
+Windows 0.1.20 confirmado: workflow 43265226500 success, 185 testes sem
+falhas/erros/skips, smokes de fonte e executável extraído aprovados. Relatório
+publicado como Checkpoint-0.1.20-validation.txt na release v0.1.20.
