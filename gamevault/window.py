@@ -220,6 +220,23 @@ class MainWindow(QMainWindow):
         layout.addWidget(label(game['description'] or 'Adicione uma descrição para este jogo.','muted'))
         layout.addWidget(label(f"Desenvolvedora: {game['developer'] or '—'}  ·  Publicadora: {game['publisher'] or '—'}\nLançamento: {game['release_date'] or '—'}  ·  Nota: {game['rating'] if game['rating'] is not None else 'Sem nota'}\nCategoria: {game['category'] or '—'}  ·  Origem: {game['source']}"))
         if game['notes']: layout.addWidget(label(game['notes']))
+        from .steam_library import game_accounts
+        steam_accounts = game_accounts(self.library, game_id)
+        if steam_accounts:
+            layout.addWidget(label('STEAM · DADOS DA CONTA','eyebrow'))
+            layout.addWidget(label('Horas remotas não são somadas às sessões locais.','muted'))
+            for account in steam_accounts:
+                hours = 'Tempo não disponível' if account['minutes'] is None else f"{account['minutes']/60:.1f} h na Steam"
+                layout.addWidget(label(f"Conta {account['steam_id']} · AppID {account['app_id']} · {hours}\nConsultado em {account['checked_at'][:19]} UTC"))
+                if account['achievements_checked_at']:
+                    layout.addWidget(label(f"Conquistas Steam: {account['achievement_unlocked']}/{account['achievement_total']} · consultadas em {account['achievements_checked_at'][:19]} UTC"))
+                    achievements = self.library.sql.execute('SELECT title,unlocked_at FROM steam_achievements WHERE steam_id=? AND app_id=? ORDER BY title COLLATE NOCASE', (account['steam_id'], account['app_id']))
+                    for achievement in achievements:
+                        status = 'Bloqueada' if achievement['unlocked_at'] is None else ('Desbloqueada · '+achievement['unlocked_at'][:10] if achievement['unlocked_at'] else 'Desbloqueada · data não disponível')
+                        layout.addWidget(label(achievement['title']+' · '+status))
+                else:
+                    layout.addWidget(label('Conquistas ainda não consultadas.','muted'))
+            layout.addWidget(button('Gerenciar importação Steam', self.steam))
         layout.addWidget(label('ARQUIVOS E VERSÕES','eyebrow'))
         files = self.library.sql.execute('SELECT * FROM game_files WHERE game_id=? ORDER BY original_name',(game_id,)).fetchall()
         for file in files:
@@ -363,6 +380,7 @@ class MainWindow(QMainWindow):
             row.addWidget(button('Selecionar pasta',lambda checked=False,k=key:self.choose_directory(k))); form.addLayout(row)
         form.addWidget(label('INTEGRAÇÕES','eyebrow'))
         form.addWidget(button('Google Drive · autenticar e gerenciar ROMs',self.drive))
+        form.addWidget(button('Steam · importar biblioteca e consultar conquistas',self.steam))
         form.addWidget(button('Configurar chave RAWG',lambda:self.configure_key('rawg')))
         form.addWidget(button('Configurar chave SteamGridDB',lambda:self.configure_key('steamgriddb')))
         for provider in ['Google Drive','Steam','IGDB','SteamGridDB','RAWG','RetroAchievements','IsThereAnyDeal']:
@@ -438,8 +456,17 @@ class MainWindow(QMainWindow):
         from .drive_dialog import DriveDialog
         DriveDialog(self.library,self).exec(); self.refresh_library()
 
+    def steam(self):
+        from .steam_dialog import SteamDialog
+        dialog = SteamDialog(self.library, self)
+        dialog.exec()
+        if dialog.changed:
+            self.refresh_library()
+            if self.current_game and self.library.get(self.current_game):
+                self.detail(self.current_game)
+
     def integration_status(self,provider):
-        key = {'Google Drive':'drive-readonly','RAWG':'rawg','SteamGridDB':'steamgriddb'}.get(provider)
+        key = {'Google Drive':'drive-readonly','RAWG':'rawg','SteamGridDB':'steamgriddb','Steam':'steam'}.get(provider)
         if not key: return 'Provedor ainda não implementado'
         try:
             from .credentials import CredentialVault

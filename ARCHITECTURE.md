@@ -8,6 +8,12 @@ Direção visual: superfícies carvão, verde discreto, Segoe UI, tipografia edi
 
 ## Camadas
 
+Atualização 0.1.14: `integrations/steam.py` lê a Steam Web API; `steam_library.py`
+aplica importação transacional e snapshots; `steam_dialog.py` consulta em QThread e
+salva na thread proprietária do SQLite. Migração 4 cria tabelas por conta/AppID.
+Horas/conquistas remotas não alteram sessões ou marcos pessoais. Backup pré-migração
+usa o caminho já existente. As notas de versões anteriores abaixo são históricas.
+
 - `app.py`: diretório de dados, log rotativo, trava de instância, ciclo de vida e modo smoke.
 - `database.py`: migrações numeradas transacionais, PRAGMA user_version, backup pela API SQLite.
 - `library.py`: cadastro, busca parametrizada, lixeira, configurações, memórias, mídia e cálculos estatísticos.

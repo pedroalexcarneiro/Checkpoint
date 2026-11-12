@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.14 — Importação Steam (desenvolvimento)
+
+- Biblioteca via Steam Web API com chave no cofre, SteamID64 e seleção explícita.
+- Associação manual e reimportação por AppID preservando dados pessoais.
+- Horas por conta e conquistas por jogo separadas das sessões/marcos locais.
+- Migração SQLite 4 com backup prévio; conflitos e lixeira cancelam o lote.
+- 29 testes focados aprovados; Steam autenticada e build Windows pendentes.
+- Nenhum executável Windows ou Release 0.1.14 publicado nesta etapa.
+
 ## Continuidade entre dispositivos — 11/11/2026
 
 - Contexto durável em CONTINUITY.md e requisitos em PRODUCT_VISION.md.

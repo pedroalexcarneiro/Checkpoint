@@ -28,9 +28,21 @@ Obtenha API key própria, salve em Configurações e use Selecionar artes no jog
 
 [IGDB](https://api-docs.igdb.com/) utiliza credenciais Twitch e OAuth Client Credentials. Requer client ID/secret e tratamento de expiração. Para uma distribuição desktop pública, não embutir segredo compartilhado no executável: considerar serviço intermediário ou credenciais próprias do usuário. O contrato MetadataProvider já permite acrescentar o cliente.
 
-## Steam — avaliado, ainda não implementado
+## Steam — implementado no código 0.1.14; autenticação real pendente
 
-A [Steam Web API](https://partner.steamgames.com/doc/webapi/IPlayerService) oferece jogos/horas quando a privacidade da conta permite. Perfil, jogos privados e conquistas variam por visibilidade e suporte. Serão necessários API key e SteamID. Horas remotas devem ficar separadas das sessões locais para evitar dupla contagem; importação da biblioteca deve preservar Steam AppID e pedir confirmação em conflitos. Não há integração Steam funcional nesta versão.
+A [Steam Web API](https://partner.steamgames.com/doc/webapi/IPlayerService) é consultada por HTTPS em `api.steampowered.com`: GetOwnedGames v0001 para biblioteca/horas e GetPlayerAchievements v0001 para conquistas por jogo. Operações somente leitura.
+
+1. Obtenha uma chave pessoal em https://steamcommunity.com/dev/apikey conforme requisitos da Steam. Não envie senha, código Steam Guard ou chave no chat.
+2. Abra Configurações > Steam > Configurar chave Steam. A chave fica exclusivamente no cofre Windows com nome interno `steam`.
+3. Informe o SteamID64 de 17 dígitos. Não é apelido, AppID nem URL personalizada. Esse identificador não secreto pode ficar nas configurações locais.
+4. Consulte a biblioteca. O acesso depende de Detalhes dos jogos e regras da API. Resposta indisponível não é tratada como biblioteca vazia; horas ocultas aparecem como não disponíveis.
+5. Marque os jogos. Para aproveitar cadastro manual, selecione a linha e use Associar linha a cadastro existente. Sem escolha explícita, nomes iguais continuam cadastros distintos.
+6. Importe os marcados. Repetir atualiza o snapshot por AppID/conta sem duplicar o jogo nem substituir título pessoal, notas, artes ou status. Lixeira exige restauração; nenhum jogo local é removido por desaparecer da consulta.
+7. Selecione um jogo importado e clique Atualizar conquistas da linha. A consulta é somente desse jogo. Falha preserva o snapshot anterior. Horas, conquistas e datas de consulta aparecem na página do jogo.
+
+Horas de contas diferentes não são somadas e não entram nas estatísticas de sessões locais. Conquistas Steam preservam API name e desbloqueio, separadas dos marcos pessoais. Data desconhecida é distinta de conquista bloqueada.
+
+Não implementa login Steam, execução por URI, artes automáticas, sincronização em segundo plano ou inventário. Use os fluxos existentes para configurar executável e selecionar artes. Testes com transporte controlado não validam conta real; validação Steam autenticada e Windows continua pendente.
 
 ## RetroAchievements — avaliado, ainda não implementado
 

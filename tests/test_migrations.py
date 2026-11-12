@@ -38,7 +38,7 @@ def test_upgrade_v2_preserves_covers_and_ids(folder):
     assert db.connection.execute('SELECT cover FROM games').fetchone()[0]=='my-cover.png'
     assert db.connection.execute('SELECT external_id FROM external_identifiers').fetchone()[0]=='10'
     assert db.connection.execute('SELECT count(*) FROM artwork_assets').fetchone()[0]==0
-    backups=list((folder/'backups').glob('before-migration-v2-to-v3-*.sqlite'))
+    backups=list((folder/'backups').glob(f'before-migration-v2-to-v{len(MIGRATIONS)}-*.sqlite'))
     assert len(backups)==1
     with closing(sqlite3.connect(backups[0])) as backup:
         assert backup.execute('PRAGMA user_version').fetchone()[0]==2

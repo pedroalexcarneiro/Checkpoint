@@ -1,5 +1,24 @@
 # Validação
 
+## 0.1.14 — validação focada na nuvem
+
+Com `QT_QPA_PLATFORM=offscreen` e `XDG_CACHE_HOME=$PWD/.venv/cache`, execute:
+
+```sh
+.venv/bin/python -m pytest tests/test_steam.py tests/test_migrations.py tests/test_library.py tests/test_ui.py -q -p no:cacheprovider
+```
+
+Resultado nesta implementação: 29 aprovados, exit 0. Cobertura nova: privacidade e
+respostas inválidas da API, horas ocultas, seleção explícita, associação por AppID,
+reimportação, rollback de conflitos/lixeira, contas separadas, conquistas, backup
+v3→v4 e fluxo Qt assíncrono com SQLite real. API/cofre substituídos nos testes;
+não representam validação Steam autenticada nem Windows.
+
+Reaproveitados os testes existentes de migrações, biblioteca e UI afetados. Não
+criados ou repetidos testes de saves, scanner Drive ou temas intactos. A suíte
+histórica tem falha nativa no encerramento do teste de formulário Drive; não
+declarar suíte completa aprovada a partir da execução focada.
+
 ## Ambiente efetivamente usado
 
 Windows 10 build 19045 do ambiente Codex (identificado pelo PyInstaller), Python 3.12.14 x64, PySide6 6.8.3, pytest 9.2.0. Não foi necessário usar o computador pessoal do usuário. Versões instaladas estão em requirements-tested.txt.

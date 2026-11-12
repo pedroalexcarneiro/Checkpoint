@@ -1,6 +1,24 @@
 # Estado do projeto — Checkpoint
 
-Atualizado em 11/11/2026. Versão 0.1.13 de desenvolvimento. **O projeto completo não está concluído.**
+Versão 0.1.14 de desenvolvimento. **O projeto completo não está concluído.**
+
+## Atualização atual — importação Steam
+
+Esta seção prevalece sobre notas históricas abaixo. Schema SQLite: 4. Configurações >
+Steam oferece consulta assíncrona, marcação de jogos, associação explícita a cadastro
+existente e atualização por AppID. Não associa por título. Importação preserva dados
+pessoais; lixeira/conflitos bloqueiam o lote. Horas por conta e conquistas ficam
+separadas das sessões e marcos pessoais. Conquistas são consultadas por jogo.
+
+29 testes focados passaram com saída 0: Steam, migrações, biblioteca e UI existente.
+API com transporte controlado, sem autenticação real. Smoke Linux 0.1.14 das seis
+páginas, SQLite íntegro e diálogo Steam vazio aprovado. O SIGSEGV ao fim da suíte histórica, associado ao teste do
+formulário Drive, permanece fora desta mudança. Não repetidas suítes de saves,
+scanner Drive ou temas intactos, conforme pedido de evitar validação redundante.
+
+Cofre, API Steam autenticada e build Windows 0.1.14 ainda não validados/publicados.
+Migração v3→v4 preserva dados e backup recuperável; executável 0.1.13 não aceita banco
+novo. Consulte INTEGRATIONS.md para configuração e limitações.
 
 ## Resumo atual para continuidade
 

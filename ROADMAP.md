@@ -36,7 +36,8 @@ O escopo completo solicitado permanece como objetivo. As fases abaixo indicam en
 - [x] ROM local por versão, validação de caminhos, sem shell.
 - [x] Sessões do processo direto, emuladores com término manual explícito, recuperação de interrupções.
 - [ ] Steam/Epic/outros launchers, URIs permitidas, processos filhos, pausa/suspensão, integrações específicas por emulador.
-- [ ] Steam Web API: biblioteca, perfil, horas remotas e conquistas, com deduplicação e origem separada.
+- [x] Steam Web API: biblioteca seletiva, horas e conquistas por jogo com AppID/snapshots separados (0.1.14; contratos controlados).
+- [ ] Validar Steam autenticada e Windows; perfil público, execução via cliente e sincronização em segundo plano.
 
 ## Fase 5 — Experiência pessoal (parcial)
 

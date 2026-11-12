@@ -66,6 +66,18 @@ CREATE TABLE artwork_assets (
  local_path TEXT NOT NULL, sha256 TEXT NOT NULL, fetched_at TEXT NOT NULL,
  PRIMARY KEY(game_id,kind));
 """,
+"""
+CREATE TABLE steam_owned_games (
+ steam_id TEXT NOT NULL, app_id TEXT NOT NULL, game_id INTEGER NOT NULL REFERENCES games(id),
+ title TEXT NOT NULL, minutes INTEGER CHECK(minutes IS NULL OR minutes>=0), checked_at TEXT NOT NULL,
+ achievements_checked_at TEXT, PRIMARY KEY(steam_id,app_id));
+CREATE INDEX steam_owned_game ON steam_owned_games(game_id);
+CREATE TABLE steam_achievements (
+ steam_id TEXT NOT NULL, app_id TEXT NOT NULL, api_name TEXT NOT NULL,
+ title TEXT NOT NULL, unlocked_at TEXT, checked_at TEXT NOT NULL,
+ PRIMARY KEY(steam_id,app_id,api_name),
+ FOREIGN KEY(steam_id,app_id) REFERENCES steam_owned_games(steam_id,app_id));
+""",
 ]
 
 class Database:

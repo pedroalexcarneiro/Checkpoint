@@ -1,8 +1,32 @@
 # Continuidade do Checkpoint
 
-Estado de referência: 11/11/2026, aplicativo 0.1.13, schema SQLite 3.
+Estado de referência: aplicativo 0.1.14 de desenvolvimento, schema SQLite 4.
 Este documento transfere o contexto de trabalho; não é uma cópia integral do chat.
 Não contém credenciais, dados pessoais da biblioteca ou autorizações para novos acessos.
+
+## Atualização Cloud — importação Steam
+
+- Implementado em Configurações > Steam: chave no cofre Windows, SteamID64,
+  consulta em worker, seleção explícita, associação manual a cadastro existente,
+  importação por AppID e conquistas por jogo sob demanda.
+- Horas/conquistas são snapshots por conta, separados das sessões/marcos pessoais.
+  Reimportar preserva título pessoal, notas, status e artes. Lixeira e conflitos
+  bloqueiam a transação inteira. Não associar automaticamente por nome.
+- Migração 4 cria steam_owned_games e steam_achievements, com backup recuperável.
+  Executável 0.1.13 não aceita banco migrado; não reabrir com versão antiga.
+- 29 testes focados passaram, exit 0: Steam, migrações, biblioteca e UI existente.
+  Contratos Steam usam transporte controlado; não são conta autenticada.
+  Pedido do usuário: não criar/repetir testes de áreas intactas sem motivo.
+- Smoke 0.1.14 aprovado: seis páginas, SQLite íntegro e diálogo Steam vazio.
+- A suíte histórica tinha SIGSEGV ao encerrar o teste do formulário Drive
+  test_add_form_drive_search_and_metadata_prefill; não foi alterado nesta entrega.
+- Nenhuma chave Steam disponível nesta nuvem. API autenticada, cofre e build
+  Windows 0.1.14 não foram validados. Nenhum pacote ou Release foi publicado.
+- Domínios partner.steamgames.com e api.steampowered.com salvos no rascunho da rede;
+  o acesso ao primeiro foi recusado pela política atual. Rascunho não é aplicação
+  de política nem publicação de snapshot.
+- Próximo: validar Steam autenticada em dados isolados quando houver acesso,
+  resolver o encerramento Qt conhecido e seguir prioridades conforme escopo.
 
 ## Objetivo e forma de trabalhar
 

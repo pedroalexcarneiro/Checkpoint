@@ -1,8 +1,16 @@
 # Desenvolvimento independente deste computador
 
 O código deve ser obtido do branch `main` de `pedroalexcarneiro/Checkpoint`, não de
-um checkout antigo nem apenas do ZIP de uma release. Confira `pyproject.toml` (0.1.13)
+um checkout antigo nem apenas do ZIP de uma release. Confira `pyproject.toml` (0.1.14)
 e a presença de `AGENTS.md`, `CONTINUITY.md` e `gamevault/game_import.py`.
+
+O ambiente Linux foi preparado e validado nesta nuvem. Na 0.1.14, 29 testes focados
+de Steam, migrações, biblioteca e UI passaram com exit 0; smoke atualizado abriu
+seis páginas com SQLite íntegro. A suíte histórica completa tem SIGSEGV no fim
+do teste de formulário Drive; não foi corrigido nesta implementação Steam.
+API Steam autenticada e Windows permanecem pendentes. Consulte TESTING.md para
+validar por impacto e evitar repetir suítes de áreas intactas sem necessidade.
+Use venv com `--copies` no Linux: os testes de launcher comparam caminhos resolvidos.
 
 ## Preparar um ambiente Linux Codex Cloud
 
@@ -12,7 +20,7 @@ Debian/Ubuntu com permissão para instalar pacotes, as dependências Qt típicas
 ```sh
 sudo apt-get update
 sudo apt-get install -y libegl1 libopengl0 libgl1 libglib2.0-0 libxkbcommon0 libdbus-1-3 libfontconfig1 fonts-dejavu-core
-python3.12 -m venv .venv
+python3.12 -m venv --copies .venv
 .venv/bin/python -m pip install -e . pytest
 QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest tests -q -p no:cacheprovider
 QT_QPA_PLATFORM=offscreen .venv/bin/python -m gamevault.app --smoke-test --data-dir .cloud-smoke
