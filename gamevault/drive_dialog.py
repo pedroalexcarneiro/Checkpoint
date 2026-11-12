@@ -127,7 +127,7 @@ class DriveDialog(QDialog):
         if not file:self.state.setText('Selecione uma ROM primeiro.');return
         from .dialogs import GameDialog
         from .game_import import save_import
-        dialog=GameDialog(self,library=self.library);dialog.load_drive_file(file)
+        dialog=GameDialog(self,library=self.library,allow_steam=False);dialog.load_drive_file(file)
         if dialog.exec()==QDialog.Accepted:
             try:
                 game_id=save_import(self.library,dialog.data(),dialog.drive_file_id,dialog.catalog_result)

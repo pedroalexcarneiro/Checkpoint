@@ -1,5 +1,12 @@
 # Arquitetura
 
+## Interface 0.1.18
+
+branding.py desenha a identidade e o ícone; ui_components.py fornece hero, cards e
+abas; home_view.py, detail_view.py e settings_view.py constroem as novas páginas.
+window.py continua coordenando navegação/serviços. Os fluxos de persistência e a
+fila de enriquecimento não foram substituídos. Consulte DESIGN.md.
+
 ## Decisões
 
 Python 3.12 + PySide6 Widgets para aplicativo desktop nativo. SQLite via biblioteca padrão, com transações, chaves estrangeiras, WAL e timeout de bloqueio. SQLAlchemy não é necessário para a primeira implementação: o módulo de persistência e os serviços isolam SQL da navegação. A futura adoção de ORM não exige substituir o banco.

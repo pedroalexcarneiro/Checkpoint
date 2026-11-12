@@ -1,5 +1,22 @@
 # Estado do projeto — Checkpoint
 
+## 0.1.18 — interface e identidade aprovadas
+
+Implementados Início em feed pessoal, biblioteca limpa com abas/filtros recolhidos,
+ficha com banner/logo (sem capa repetida) e abas, cadastro por origem e Configurações
+compactas em quatro seções. Identidade C// e checkpo//nt vetorial, com 18 px lógicos
+entre símbolo e nome; ícone multirresolução também no executável Windows.
+Mantidos os dez temas, dados/arquivos, schema 4 e salvamento em segundo plano.
+Configuração de conexão não é apresentada como autenticação confirmada.
+Rascunho do diário e aba da ficha são preservados ao atualizar artes.
+
+Validação Linux: 169 testes em 25,14 s, exit 0; após o ajuste de rascunho/rotas,
+18 testes focados em 4,78 s, exit 0. Smoke seis páginas, auxiliar e cadastro com
+imagem/SQLite aprovados. Prévias reais da interface renderizadas em 1440×980 e
+1000×700, com fixtures isoladas, incluindo tema branco. ICO gerado localmente.
+Sem acesso a biblioteca pessoal ou credenciais. Build/publicação Windows 0.1.18
+pendentes do workflow. Direção visual detalhada em DESIGN.md.
+
 ## Publicação confirmada — v0.1.17
 
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.17
@@ -107,7 +124,7 @@ Probes à loja Steam e CDN foram bloqueados pelo proxy (CONNECT HTTP 403);
 contratos testados com respostas controladas, sem validar download real, Windows
 ou autenticação. Nenhuma credencial foi lida ou exposta pela sessão.
 
-Versão 0.1.17 de desenvolvimento. **O projeto completo não está concluído.**
+Versão 0.1.18 de desenvolvimento. **O projeto completo não está concluído.**
 
 ## Atualização atual — importação Steam
 

@@ -12,7 +12,7 @@ from .dialogs import GameDialog,ImageDialog
 from .launcher import Launcher
 from .saves import SaveBackupService
 
-PAGES = ['Início','Minha biblioteca','Lista de desejos','Capturas e memórias','Estatísticas','Configurações']
+PAGES = ['Início','Biblioteca','Desejos','Memórias','Estatísticas','Configurações']
 
 def label(text,kind=None):
     widget = QLabel(text); widget.setWordWrap(True)
@@ -43,20 +43,27 @@ class MainWindow(QMainWindow):
         self.current_page = 0; self.current_game = None; self.last_deleted = None; self.save_jobs = {}
         root = QWidget(); root.setObjectName('root'); self.setCentralWidget(root)
         layout = QHBoxLayout(root); layout.setContentsMargins(0,0,0,0); layout.setSpacing(0)
-        sidebar = QWidget(); sidebar.setObjectName('sidebar'); sidebar.setFixedWidth(235)
+        sidebar = QWidget(); sidebar.setObjectName('sidebar'); sidebar.setFixedWidth(238)
         nav = QVBoxLayout(sidebar); nav.setContentsMargins(10,20,10,20)
-        nav.addWidget(label('CHECKPOINT','brand')); nav.addSpacing(24)
+        from .branding import BrandWidget,app_icon
+        self.brand=BrandWidget(self.theme);nav.addWidget(self.brand);nav.addSpacing(24)
+        self.setWindowIcon(app_icon(self.theme));QApplication.instance().setWindowIcon(self.windowIcon())
+        self.nav_names=['home','library','wish','memories','stats','settings']
         self.nav_buttons = []
         for index,title in enumerate(PAGES):
             item = button(title,lambda checked=False,i=index:self.navigate(i)); item.setObjectName('nav'); item.setCheckable(True)
-            self.nav_buttons.append(item); nav.addWidget(item)
-        nav.addStretch()
+            from .ui_components import nav_icon
+            item.setIcon(nav_icon(self.nav_names[index],self.theme.colors['muted']));item.setIconSize(QSize(21,21))
+            self.nav_buttons.append(item)
+            if index==5:nav.addStretch()
+            nav.addWidget(item)
+        from . import __version__
+        nav.addWidget(label('v'+__version__,'muted'))
         layout.addWidget(sidebar)
-        self.host = QVBoxLayout(); self.host.setContentsMargins(38,30,38,24); self.host.setSpacing(20)
+        self.host = QVBoxLayout(); self.host.setContentsMargins(28,24,28,18); self.host.setSpacing(20)
         layout.addLayout(self.host,1)
-        self.header = QHBoxLayout(); self.heading = label('','title'); self.header.addWidget(self.heading); self.header.addStretch()
-        self.header.addWidget(button('Pesquisar metadados',self.metadata))
-        self.header.addWidget(button('+ Adicionar jogo',self.add_game,True)); self.host.addLayout(self.header)
+        self.header_widget=QWidget();self.header = QHBoxLayout(self.header_widget);self.header.setContentsMargins(0,0,0,0); self.heading = label('','title'); self.header.addWidget(self.heading); self.header.addStretch()
+        self.add_button=button('+ Adicionar jogo',self.add_game,True);self.header.addWidget(self.add_button); self.host.addWidget(self.header_widget)
         self.stack = QStackedWidget(); self.host.addWidget(self.stack,1)
         self.pages = []
         for _ in PAGES:
@@ -79,9 +86,9 @@ class MainWindow(QMainWindow):
         return layout
 
     def navigate(self,index):
-        self.current_page = index; self.current_game = None
+        self.current_page = index; self.current_game = None;self.header_widget.show()
         for i,b in enumerate(self.nav_buttons): b.setChecked(i==index)
-        self.heading.setText(PAGES[index])
+        self.heading.setText(PAGES[index]);self.add_button.setVisible(index in (0,1))
         if index==0: self.home()
         elif index==1: self.refresh_library()
         elif index==2: self.wishlist()
@@ -97,54 +104,53 @@ class MainWindow(QMainWindow):
         layout.addWidget(frame); return inner
 
     def home(self):
-        layout = self.clear_page(0); games = self.library.games(sort='recent'); stats = self.library.stats()
-        if not games:
-            panel = self.panel(layout,'Nenhum jogo cadastrado')
-            panel.addWidget(button('Adicionar jogo',self.add_game,True))
-        else:
-            playing = [g for g in games if g['status']=='Jogando']
-            featured = (playing or [g for g in games if g['favorite']] or games)[0]
-            panel = self.panel(layout,featured['title'],featured['platform']+'  /  '+featured['status'])
-            if featured['banner']:
-                art = label(''); pix = QPixmap(featured['banner'])
-                art.setPixmap(pix.scaled(850,230,Qt.KeepAspectRatio,Qt.SmoothTransformation)); panel.addWidget(art)
-            if featured['description']: panel.addWidget(label(featured['description'],'muted'))
-            panel.addWidget(button('Abrir jogo',lambda:self.detail(featured['id']),True))
-            layout.addWidget(label('ADICIONADOS RECENTEMENTE','eyebrow'))
-            for game in games[:4]:
-                layout.addWidget(button(game['title']+'    ·    '+game['platform'],lambda checked=False,g=game:self.detail(g['id'])))
-        layout.addWidget(label(f"{stats['total']} jogos  ·  {stats['statuses']['Jogando']} em andamento  ·  {stats['seconds']/3600:.1f} horas registradas",'muted'))
-        interrupted = self.library.sql.execute("SELECT count(*) FROM play_sessions WHERE state='interrupted'").fetchone()[0]
-        if interrupted: layout.addWidget(button(f'{interrupted} sessões interrompidas para revisar',self.recover_sessions))
-        layout.addStretch(); self.stack.setCurrentIndex(0)
+        from .home_view import build_home
+        build_home(self)
 
     def build_library(self):
         layout = QVBoxLayout(self.pages[1]); layout.setContentsMargins(0,0,0,0)
+        from PySide6.QtWidgets import QTabBar
+        self.library_tabs=QTabBar();self.library_tabs.setExpanding(False);self.library_tabs.setObjectName('libraryTabs')
+        for name in ('Todos','Favoritos','Jogando','Concluídos'):self.library_tabs.addTab(name)
+        self.library_tabs.currentChanged.connect(self.library_tab_changed);layout.addWidget(self.library_tabs)
         filters = QHBoxLayout(); self.search = QLineEdit(); self.search.setPlaceholderText('Pesquisar na sua biblioteca…')
         self.search.textChanged.connect(self.refresh_library); filters.addWidget(self.search,2)
         self.platform = QComboBox(); self.genre = QComboBox(); self.status = QComboBox()
+        self.extra_filters=QWidget();extra_layout=QHBoxLayout(self.extra_filters);extra_layout.setContentsMargins(0,0,0,0)
         self.platform.addItem('Todas as plataformas',''); self.genre.addItem('Todos os gêneros','')
         self.status.addItem('Todos os status','')
         for value in STATUSES: self.status.addItem(value,value)
         for combo in [self.platform,self.genre,self.status]:
-            combo.currentIndexChanged.connect(self.refresh_library); filters.addWidget(combo)
+            combo.currentIndexChanged.connect(self.refresh_library)
+            if combo is self.platform:filters.addWidget(combo)
+            else:extra_layout.addWidget(combo)
         layout.addLayout(filters)
         options = QHBoxLayout(); self.count = label('','muted'); options.addWidget(self.count); options.addStretch()
-        self.favorites = QCheckBox('Favoritos'); self.favorites.toggled.connect(self.refresh_library); options.addWidget(self.favorites)
+        self.favorites = QCheckBox('Favoritos',self.pages[1]); self.favorites.toggled.connect(self.refresh_library);self.favorites.hide()
+        filter_button=QPushButton('Mais filtros');filter_button.setCheckable(True);filter_button.toggled.connect(self.extra_filters.setVisible);options.addWidget(filter_button)
         self.sort = QComboBox(); self.sort.addItem('Título','title'); self.sort.addItem('Mais recentes','recent'); self.sort.addItem('Maior nota','rating')
         self.sort.currentIndexChanged.connect(self.refresh_library); options.addWidget(self.sort)
         self.view = QComboBox(); self.view.addItems(['Galeria','Lista']); self.view.currentIndexChanged.connect(self.refresh_library); options.addWidget(self.view)
-        layout.addLayout(options)
+        layout.addLayout(options);layout.addWidget(self.extra_filters);self.extra_filters.hide()
         self.gallery = QListWidget(); self.gallery.setViewMode(QListWidget.IconMode); self.gallery.setResizeMode(QListWidget.Adjust)
         self.gallery.setMovement(QListWidget.Static); self.gallery.setIconSize(QSize(174,232)); self.gallery.setGridSize(QSize(208,300))
         self.gallery.setSpacing(8); self.gallery.setWordWrap(True)
         self.gallery.itemActivated.connect(lambda item:self.detail(item.data(Qt.UserRole)))
+        self.gallery.itemClicked.connect(lambda item:self.detail(item.data(Qt.UserRole)))
         self.table = QTableWidget(0,5); self.table.setIconSize(QSize(42,56)); self.table.setHorizontalHeaderLabels(['Jogo','Plataforma','Status','Gênero','Nota'])
         self.table.horizontalHeader().setStretchLastSection(True); self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.table.cellDoubleClicked.connect(lambda row,col:self.detail(self.table.item(row,0).data(Qt.UserRole)))
         layout.addWidget(self.gallery,1); layout.addWidget(self.table,1)
-        layout.addWidget(button('Abrir selecionado',self.open_selected))
+        self.gallery.setObjectName('coverGrid');self.gallery.setFrameShape(QFrame.NoFrame);self.gallery.setTextElideMode(Qt.ElideRight)
+
+    @Slot(int)
+    def library_tab_changed(self,index):
+        self.favorites.blockSignals(True);self.status.blockSignals(True)
+        self.favorites.setChecked(index==1)
+        status={2:'Jogando',3:'Concluído'}.get(index,'')
+        self.status.setCurrentIndex(max(0,self.status.findData(status)))
+        self.favorites.blockSignals(False);self.status.blockSignals(False);self.refresh_library()
 
     def refresh_library(self,*args):
         if not hasattr(self,'gallery'): return
@@ -154,7 +160,9 @@ class MainWindow(QMainWindow):
             for value in values: combo.addItem(value,value)
             index = combo.findData(selected); combo.setCurrentIndex(max(0,index)); combo.blockSignals(False)
         games = self.library.games(self.search.text(),self.platform.currentData(),self.genre.currentData(),self.status.currentData(),self.favorites.isChecked(),self.sort.currentData())
-        self.gallery.clear(); self.table.setRowCount(len(games)); self.count.setText(f'{len(games)} jogos • clique duas vezes para abrir' if games else 'Nenhum jogo encontrado. Adicione um jogo ou ajuste os filtros.')
+        compact=self.library.setting('appearance.density','comfortable')=='compact'
+        self.gallery.setIconSize(QSize(138,184) if compact else QSize(174,232));self.gallery.setGridSize(QSize(166,246) if compact else QSize(206,294))
+        self.gallery.clear(); self.table.setRowCount(len(games)); self.count.setText(f'{len(games)} jogos' if games else 'Nenhum jogo encontrado. Adicione um jogo ou ajuste os filtros.')
         for row,game in enumerate(games):
             pix = QPixmap(game['cover']) if game['cover'] else QPixmap()
             if pix.isNull():
@@ -165,7 +173,7 @@ class MainWindow(QMainWindow):
             else:
                 from .artwork_render import fit_artwork
                 pix = fit_artwork(pix,174,232,self.theme.colors['selected'])
-            item = QListWidgetItem(QIcon(pix),('★ ' if game['favorite'] else '')+game['title']+'\n'+game['platform'])
+            item = QListWidgetItem(QIcon(pix),('★ ' if game['favorite'] else '')+game['title']+'\n'+game['status'])
             item.setData(Qt.UserRole,game['id']); self.gallery.addItem(item)
             for col,key in enumerate(['title','platform','status','genre','rating']):
                 cell = QTableWidgetItem(str(game[key]) if game[key] is not None else '—'); cell.setData(Qt.UserRole,game['id']);
@@ -183,7 +191,10 @@ class MainWindow(QMainWindow):
 
     def add_game(self):
         dialog = GameDialog(self,library=self.library)
-        if dialog.exec()==QDialog.Accepted:
+        result=dialog.exec()
+        if dialog.steam_requested:
+            QTimer.singleShot(0,self.steam);return
+        if result==QDialog.Accepted:
             def save():
                 from .game_import import save_import
                 game_id=save_import(self.library,dialog.data(),dialog.drive_file_id,dialog.catalog_result)
@@ -212,97 +223,10 @@ class MainWindow(QMainWindow):
             self.guard(save)
 
     def detail(self,game_id):
-        game = self.library.get(game_id)
-        if not game: return
-        self.current_game = game_id; self.heading.setText(game['title'])
-        if hasattr(self,'detail_page'):
-            self.stack.removeWidget(self.detail_page); self.detail_page.deleteLater()
-        self.detail_page = QScrollArea(); self.detail_page.setWidgetResizable(True); body = QWidget(); layout = QVBoxLayout(body); layout.setSpacing(20)
-        self.detail_page.setWidget(body); self.stack.addWidget(self.detail_page); self.stack.setCurrentWidget(self.detail_page)
-        actions = QHBoxLayout(); actions.addWidget(button('← Biblioteca',lambda:self.navigate(1)))
-        actions.addWidget(button('Jogar',lambda:self.start_game(game),True))
-        actions.addWidget(button('Editar',lambda:self.edit_game(game_id)))
-        actions.addWidget(button('Selecionar artes',lambda:self.artworks(game_id)))
-        layout.addLayout(actions)
-        secondary = QHBoxLayout(); secondary.addWidget(button('Lista de desejos',lambda:self.add_wish(game_id))); secondary.addWidget(button('Remover da biblioteca',lambda:self.remove_game(game_id))); secondary.addStretch(); layout.addLayout(secondary)
-        hero = QHBoxLayout()
-        for key,width,height in [('cover',150,200),('banner',780,200)]:
-            if game[key]:
-                art = QPixmap(game[key])
-                if not art.isNull():
-                    from .artwork_render import fit_artwork
-                    art = fit_artwork(art,width,height,self.theme.colors['selected'])
-                    image = label(''); image.setPixmap(art); hero.addWidget(image)
-        if hero.count(): layout.addLayout(hero)
-        if game['logo']:
-            logo=QPixmap(game['logo'])
-            if not logo.isNull():
-                logo_widget=QLabel();logo_widget.setPixmap(logo.scaled(320,96,Qt.KeepAspectRatio,Qt.SmoothTransformation));layout.addWidget(logo_widget)
-        layout.addWidget(label(game['platform']+'   /   '+game['genre']+'   /   '+game['status'],'eyebrow'))
-        layout.addWidget(label(game['description'] or 'Adicione uma descrição para este jogo.','muted'))
-        layout.addWidget(label(f"Desenvolvedora: {game['developer'] or '—'}  ·  Publicadora: {game['publisher'] or '—'}\nLançamento: {game['release_date'] or '—'}  ·  Nota: {game['rating'] if game['rating'] is not None else 'Sem nota'}\nCategoria: {game['category'] or '—'}  ·  Origem: {game['source']}"))
-        if game['notes']: layout.addWidget(label(game['notes']))
-        from .steam_library import game_accounts
-        steam_accounts = game_accounts(self.library, game_id)
-        if steam_accounts:
-            layout.addWidget(label('STEAM · DADOS DA CONTA','eyebrow'))
-            layout.addWidget(label('Horas remotas não são somadas às sessões locais.','muted'))
-            for account in steam_accounts:
-                hours = 'Tempo não disponível' if account['minutes'] is None else f"{account['minutes']/60:.1f} h na Steam"
-                layout.addWidget(label(f"Conta {account['steam_id']} · AppID {account['app_id']} · {hours}\nConsultado em {account['checked_at'][:19]} UTC"))
-                if account['achievements_checked_at']:
-                    layout.addWidget(label(f"Conquistas Steam: {account['achievement_unlocked']}/{account['achievement_total']} · consultadas em {account['achievements_checked_at'][:19]} UTC"))
-                    achievements = self.library.sql.execute('SELECT title,unlocked_at FROM steam_achievements WHERE steam_id=? AND app_id=? ORDER BY title COLLATE NOCASE', (account['steam_id'], account['app_id']))
-                    for achievement in achievements:
-                        status = 'Bloqueada' if achievement['unlocked_at'] is None else ('Desbloqueada · '+achievement['unlocked_at'][:10] if achievement['unlocked_at'] else 'Desbloqueada · data não disponível')
-                        layout.addWidget(label(achievement['title']+' · '+status))
-                else:
-                    layout.addWidget(label('Conquistas ainda não consultadas.','muted'))
-            layout.addWidget(button('Gerenciar importação Steam', self.steam))
-        layout.addWidget(label('ARQUIVOS E VERSÕES','eyebrow'))
-        files = self.library.sql.execute('SELECT * FROM game_files WHERE game_id=? ORDER BY original_name',(game_id,)).fetchall()
-        for file in files:
-            row = QHBoxLayout(); row.addWidget(label(file['original_name']+' · '+('Local' if file['available'] else 'Somente no Drive')))
-            if file['available']:
-                row.addWidget(button('Executar versão',lambda checked=False,f=dict(file):self.launch_rom(game_id,f)))
-            else:
-                row.addWidget(button('Baixar pelo Drive',self.drive))
-            layout.addLayout(row)
-        for session,item in self.launcher.active.items():
-            if item[2]==game_id:
-                layout.addWidget(button('Encerrar registro desta sessão',lambda checked=False,i=session:self.end_session(i,game_id)))
-        layout.addWidget(label('SAVES','eyebrow'))
-        layout.addWidget(button('Configurar saves deste jogo',lambda:self.configure_saves(game_id)))
-        from .save_profiles import SaveProfiles
-        from .game_saves import GameSaveBackups
-        profile = SaveProfiles(self.library).latest(game_id)
-        if profile:
-            layout.addWidget(label(profile['directory']+' · '+', '.join(json.loads(profile['patterns_json'])),'muted'))
-            automatic = QCheckBox('Backup ao encerrar o registro da sessão')
-            automatic.setChecked(self.library.setting('auto_save_'+str(game_id),False))
-            automatic.toggled.connect(lambda value:self.library.set_setting('auto_save_'+str(game_id),value))
-            layout.addWidget(automatic)
-            layout.addWidget(label('Encerre o jogo antes do registro. Saves em alteração impedem o backup.','muted'))
-            layout.addWidget(button('Fazer backup agora',lambda:self.game_backup(game_id)))
-            for backup in GameSaveBackups(self.library).history(game_id):
-                layout.addWidget(button('Restaurar · '+backup['created_at'][:19],lambda checked=False,b=backup:self.restore_game_backup(game_id,b)))
-        layout.addWidget(label('DIÁRIO DE JOGO','eyebrow')); entry = QTextEdit(); entry.setPlaceholderText('O que você quer guardar desta experiência?'); entry.setMaximumHeight(120); layout.addWidget(entry)
-        def save_entry():
-            self.guard(lambda:self.library.add_diary(game_id,entry.toPlainText())); self.detail(game_id)
-        layout.addWidget(button('Salvar memória',save_entry))
-        for record in self.library.diary(game_id):
-            layout.addWidget(label(record['created_at'][:10]+'\n'+record['text']))
-        layout.addWidget(label('CONQUISTAS PESSOAIS','eyebrow'))
-        layout.addWidget(button('+ Registrar marco',lambda:self.achievement(game_id)))
-        for achievement in self.library.sql.execute('SELECT * FROM achievements WHERE game_id=?',(game_id,)):
-            layout.addWidget(label('◆ '+achievement['title']+'  ·  '+achievement['unlocked_at'][:10]))
-        layout.addWidget(label('CAPTURAS E VÍDEOS','eyebrow')); layout.addWidget(button('Importar referência de mídia',lambda:self.import_media(game_id)))
-        for media in self.library.sql.execute('SELECT * FROM media_files WHERE game_id=?',(game_id,)):
-            layout.addWidget(button(Path(media['path']).name+'  '+media['caption'],lambda checked=False,m=dict(media):self.show_media(m)))
-        layout.addWidget(label('SESSÕES REGISTRADAS','eyebrow'))
-        for session in self.library.sql.execute('SELECT * FROM play_sessions WHERE game_id=? ORDER BY id DESC',(game_id,)):
-            layout.addWidget(label(f"{session['started_at'][:16]} · {session['state']} · {session['duration_seconds']//60} min"))
-        layout.addStretch()
+        game=self.library.get(game_id)
+        if not game:return
+        from .detail_view import build_detail
+        build_detail(self,game)
 
     def remove_game(self,game_id):
         if QMessageBox.question(self,'Remover jogo','Mover este jogo para a lixeira? Arquivos e saves serão preservados.')==QMessageBox.Yes:
@@ -384,38 +308,18 @@ class MainWindow(QMainWindow):
         layout.addStretch()
 
     def settings(self):
-        layout = self.clear_page(5); scroll = QScrollArea(); scroll.setWidgetResizable(True); body = QWidget(); form = QVBoxLayout(body)
-        form.addWidget(label('APARÊNCIA','eyebrow'))
-        from .theme import THEMES
-        theme_row=QHBoxLayout(); theme_row.addWidget(label('Tema'))
-        self.theme_selector=QComboBox(); self.theme_selector.setObjectName('themeSelector')
-        for key,theme in THEMES.items(): self.theme_selector.addItem(theme.name,key)
-        self.theme_selector.setCurrentIndex(self.theme_selector.findData(self.theme.key))
-        self.theme_selector.currentIndexChanged.connect(lambda index:self.set_theme(self.theme_selector.itemData(index)))
-        theme_row.addWidget(self.theme_selector,1); form.addLayout(theme_row)
-        form.addWidget(button('Atualizações do Checkpoint',self.updates))
-        form.addWidget(label('DADOS LOCAIS','eyebrow')); form.addWidget(label(str(self.library.db.path),'muted'))
-        form.addWidget(button('Criar cópia de segurança do banco',self.backup_database))
-        form.addWidget(button('Configurar perfis de emuladores',self.emulators))
-        for key,title in [('downloads','Downloads de ROMs'),('captures','Capturas'),('save_backups','Backups de saves')]:
-            row = QHBoxLayout(); row.addWidget(label(title+': '+self.library.setting(key,'Não configurado')))
-            row.addWidget(button('Selecionar pasta',lambda checked=False,k=key:self.choose_directory(k))); form.addLayout(row)
-        form.addWidget(label('INTEGRAÇÕES','eyebrow'))
-        form.addWidget(button('Google Drive · autenticar e gerenciar ROMs',self.drive))
-        form.addWidget(button('Steam · importar biblioteca e consultar conquistas',self.steam))
-        form.addWidget(button('Completar fichas e imagens faltantes da biblioteca',self.complete_library))
-        form.addWidget(button('Configurar chave RAWG',lambda:self.configure_key('rawg')))
-        form.addWidget(button('Configurar chave SteamGridDB',lambda:self.configure_key('steamgriddb')))
-        for provider in ['Google Drive','Steam','IGDB','SteamGridDB','RAWG','RetroAchievements','IsThereAnyDeal']:
-            form.addWidget(label(provider+'  ·  '+self.integration_status(provider),'muted'))
-        form.addWidget(label('SAVES TRADICIONAIS','eyebrow'))
-        form.addWidget(label('Backup local versionado por padrões explícitos. Feche o jogo antes de copiar. Nenhum perfil de emulador foi validado ainda.','muted'))
-        form.addWidget(button('Criar backup manual de saves',self.backup_saves))
-        form.addWidget(button('Restaurar backup de saves',self.restore_saves))
-        form.addWidget(label('LIXEIRA — ARQUIVOS ORIGINAIS PRESERVADOS','eyebrow'))
-        for game in self.library.sql.execute('SELECT id,title FROM games WHERE deleted_at IS NOT NULL'):
-            form.addWidget(button('Restaurar '+game['title'],lambda checked=False,g=game['id']:self.restore_game(g)))
-        form.addWidget(button('Revisar sessões interrompidas',self.recover_sessions)); form.addStretch(); scroll.setWidget(body); layout.addWidget(scroll)
+        from .settings_view import build_settings
+        build_settings(self)
+
+    @Slot(int)
+    def theme_changed(self,index):
+        self.set_theme(self.theme_selector.itemData(index))
+
+    @Slot(int)
+    def settings_section_changed(self,index):self.settings_section=index
+
+    def set_density(self,density):
+        self.library.set_setting('appearance.density',density);self.refresh_library()
 
     def complete_library(self):
         ids=[row[0] for row in self.library.sql.execute('SELECT id FROM games WHERE deleted_at IS NULL')]
@@ -441,6 +345,11 @@ class MainWindow(QMainWindow):
         from .theme import apply_theme
         self.library.set_setting('appearance.theme',key)
         self.theme=apply_theme(QApplication.instance(),key)
+        from .branding import app_icon
+        from .ui_components import Hero,nav_icon
+        self.brand.set_theme(self.theme);self.setWindowIcon(app_icon(self.theme));QApplication.instance().setWindowIcon(self.windowIcon())
+        for item,name in zip(self.nav_buttons,self.nav_names):item.setIcon(nav_icon(name,self.theme.colors['muted']))
+        for hero in self.findChildren(Hero):hero.set_theme(self.theme)
         self.refresh_library()
 
     def updates(self):

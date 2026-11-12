@@ -74,6 +74,33 @@ QCheckBox:disabled, QComboBox:disabled {{ color: {c['disabled']}; }}
 QCheckBox::indicator {{ width: 14px; height: 14px; border: 1px solid {c['muted']}; border-radius: 3px; background: {c['input']}; }}
 QCheckBox::indicator:checked {{ background: {c['accent']}; border: 2px solid {c['on_accent']}; }}
 QToolTip {{ background: {c['selected']}; color: {c['text']}; border: 1px solid {c['border']}; }}
+QLabel#sectionTitle {{ font-size: 18px; font-weight: 600; }}
+QLabel#bodyText {{ font-size: 15px; line-height: 1.5; }}
+QLabel#serviceBadge {{ background: {c['selected']}; color: {c['accent']}; border-radius: 10px; font-weight: 700; }}
+QPushButton#nav {{ padding: 12px 14px; }}
+QPushButton#nav:checked {{ background: {c['selected']}; color: {c['text']}; border: none; border-radius: 8px; }}
+QPushButton#gameTile {{ background: transparent; border: 1px solid transparent; padding: 0; text-align: left; }}
+QPushButton#gameTile:hover, QPushButton#gameTile:focus {{ background: {c['panel']}; border: 1px solid {c['accent']}; }}
+QLabel#tileArt {{ background: {c['selected']}; color: {c['accent']}; font-size: 26px; border-radius: 8px; }}
+QPushButton#quiet {{ background: transparent; border: none; text-align: left; color: {c['muted']}; padding: 6px 0; }}
+QListWidget#coverGrid {{ background: transparent; border: none; padding: 0; }}
+QListWidget#coverGrid::item {{ border: 1px solid transparent; border-radius: 8px; padding: 4px; }}
+QListWidget#coverGrid::item:selected {{ background: {c['selected']}; border: 1px solid {c['accent']}; color: {c['text']}; }}
+QListWidget#coverGrid::item:hover {{ background: {c['panel']}; }}
+QTabWidget::pane {{ border: none; background: transparent; }}
+QTabBar::tab {{ background: transparent; color: {c['muted']}; padding: 12px 16px; border-bottom: 2px solid transparent; }}
+QTabBar::tab:selected {{ color: {c['text']}; border-bottom: 2px solid {c['accent']}; }}
+QTabBar::tab:hover {{ color: {c['text']}; background: {c['panel']}; }}
+QToolButton {{ background: {c['button']}; border: 1px solid {c['border']}; border-radius: 7px; padding: 8px 12px; }}
+QToolButton:hover {{ background: {c['hover']}; }}
+QMenu {{ background: {c['panel']}; color: {c['text']}; border: 1px solid {c['border']}; padding: 5px; }}
+QMenu::item {{ padding: 10px 18px; border-radius: 4px; }}
+QMenu::item:selected {{ background: {c['selected']}; }}
+QScrollBar:vertical {{ background: transparent; width: 8px; margin: 2px; }}
+QScrollBar::handle:vertical {{ background: {c['border']}; border-radius: 3px; min-height: 28px; }}
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{ height: 0; }}
+QGroupBox {{ border: none; margin-top: 18px; }}
+QGroupBox::title {{ color: {c['muted']}; subcontrol-origin: margin; }}
 QStatusBar {{ color: {c['muted']}; background: {c['background']}; }}
 """
 

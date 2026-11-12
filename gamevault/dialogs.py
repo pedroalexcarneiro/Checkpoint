@@ -2,40 +2,52 @@ from pathlib import Path
 from PySide6.QtCore import Qt, QSize, QUrl
 from PySide6.QtGui import QPixmap, QDesktopServices
 from PySide6.QtWidgets import (QDialog,QDialogButtonBox,QFormLayout,QLineEdit,QTextEdit,QComboBox,
-    QSpinBox,QCheckBox,QPushButton,QHBoxLayout,QVBoxLayout,QFileDialog,QLabel,QScrollArea,QWidget,QListWidget,QGroupBox,QMessageBox)
+    QSpinBox,QCheckBox,QPushButton,QHBoxLayout,QVBoxLayout,QFileDialog,QLabel,QScrollArea,QWidget,QListWidget,QGroupBox,QMessageBox,QTabBar)
 from .library import STATUSES
 
 class GameDialog(QDialog):
-    def __init__(self, parent=None, game=None, library=None):
+    def __init__(self, parent=None, game=None, library=None, allow_steam=True):
         super().__init__(parent)
-        self.setWindowTitle('Editar jogo' if game else 'Adicionar à biblioteca')
-        self.resize(720,760 if game else 360)
+        self.setWindowTitle('Editar jogo' if game else 'Adicionar jogo')
+        self.resize(660,760 if game else 390)
         self.library=library;self.drive_file_id=None;self.catalog_result=None;self.drive_results=[]
-        outer = QVBoxLayout(self)
+        self.steam_requested=False
+        outer = QVBoxLayout(self);outer.setContentsMargins(24,24,24,24);outer.setSpacing(14)
+        heading=QLabel('Editar jogo' if game else 'Adicionar jogo');heading.setObjectName('sectionTitle');outer.addWidget(heading)
+        if library is not None and game is None:
+            self.source_tabs=QTabBar();self.source_tabs.setObjectName('sourceTabs');self.source_tabs.setExpanding(True)
+            for name in ('Pesquisar jogo','ROM do Drive','Steam'):self.source_tabs.addTab(name)
+            if not allow_steam:self.source_tabs.setTabVisible(2,False)
+            outer.addWidget(self.source_tabs)
+            self.steam_panel=QWidget();steam_layout=QVBoxLayout(self.steam_panel)
+            steam_layout.addWidget(QLabel('Escolha os jogos da sua conta para importar de uma vez.'))
+            steam_button=QPushButton('Importar biblioteca Steam');steam_button.setObjectName('primary');steam_button.clicked.connect(self.request_steam);steam_layout.addWidget(steam_button)
+            outer.addWidget(self.steam_panel);self.steam_panel.hide()
         if library is not None and game is None:
             group=QGroupBox('Adicionar do Google Drive');drive=QVBoxLayout(group)
-            self.drive_query=QLineEdit();self.drive_query.setObjectName('addDriveSearch');self.drive_query.setPlaceholderText('Pesquisar ROM no índice do Drive por nome ou pasta')
+            self.drive_query=QLineEdit();self.drive_query.setObjectName('addDriveSearch');self.drive_query.setPlaceholderText('Buscar ROM por nome ou pasta…')
             drive.addWidget(self.drive_query);self.drive_list=QListWidget();self.drive_list.setMaximumHeight(115);drive.addWidget(self.drive_list)
             row=QHBoxLayout();use=QPushButton('Usar ROM selecionada');use.clicked.connect(self.choose_drive);row.addWidget(use)
             manage=QPushButton('Atualizar índice do Drive');manage.clicked.connect(self.manage_drive);row.addWidget(manage);drive.addLayout(row)
-            self.drive_info=QLabel('Pesquisa local. Se a pasta for nova, atualize o índice primeiro.');self.drive_info.setWordWrap(True);drive.addWidget(self.drive_info)
+            self.drive_info=QLabel('Escolha uma versão no índice do Drive.');self.drive_info.setWordWrap(True);drive.addWidget(self.drive_info)
             self.drive_query.textChanged.connect(self.search_drive)
             self.drive_toggle=QCheckBox('Escolher ROM do Google Drive')
             self.drive_toggle.toggled.connect(group.setVisible)
-            outer.addWidget(self.drive_toggle);outer.addWidget(group);group.hide()
+            self.drive_group=group;self.drive_toggle.hide();outer.addWidget(group);group.hide()
             lookup=QPushButton('Confirmar título original e completar dados no catálogo');lookup.clicked.connect(self.lookup_catalog);outer.addWidget(lookup);self.catalog_button=lookup
         if library is not None and game is not None:
             lookup=QPushButton('Identificar e completar ficha e imagens');lookup.clicked.connect(self.lookup_catalog);outer.addWidget(lookup);self.catalog_button=lookup
         if library is not None and game is None:
-            self.complete_on_save=QCheckBox('Preencher ficha e imagens automaticamente')
+            self.complete_on_save=QCheckBox('Buscar ficha e imagens automaticamente')
             self.complete_on_save.setChecked(bool(library.setting('artwork.auto',True)));outer.addWidget(self.complete_on_save)
-        scroll = QScrollArea(); scroll.setWidgetResizable(True)
+        scroll = QScrollArea(); scroll.setWidgetResizable(True);self.form_scroll=scroll
         body = QWidget(); form = QFormLayout(body); form.setSpacing(14); self.form=form
         self.fields = {}
         for key,label in [('title','Nome *'),('platform','Plataforma'),('genre','Gênero'),('category','Categoria'),
                           ('developer','Desenvolvedora'),('publisher','Publicadora'),('release_date','Lançamento (AAAA-MM-DD)'),
                           ('source','Origem')]:
             widget = QLineEdit(); form.addRow(label,widget); self.fields[key] = widget
+        self.fields['title'].setPlaceholderText('Ex.: Hollow Knight');self.fields['title'].setClearButtonEnabled(True)
         self.fields['platform'].setText('PC'); self.fields['source'].setText('Manual')
         status = QComboBox(); status.addItems(STATUSES); form.addRow('Status',status); self.fields['status'] = status
         rating = QSpinBox(); rating.setRange(-1,10); rating.setValue(-1); rating.setSpecialValueText('Sem nota')
@@ -50,16 +62,22 @@ class GameDialog(QDialog):
             row.addWidget(line); row.addWidget(button); form.addRow(label,row); self.fields[key] = line
         for key,label in [('description','Descrição'),('notes','Observações')]:
             text = QTextEdit(); text.setMaximumHeight(100); form.addRow(label,text); self.fields[key] = text
-        self.advanced=QCheckBox('Mostrar ficha e opções avançadas')
+        self.advanced=QCheckBox('Opções avançadas')
         self.advanced.toggled.connect(self.toggle_advanced)
         outer.addWidget(self.advanced)
         self.advanced.setChecked(bool(game))
         self.toggle_advanced(bool(game))
         scroll.setWidget(body); outer.addWidget(scroll)
         self.error = QLabel(); self.error.setObjectName('error'); outer.addWidget(self.error)
-        buttons = QDialogButtonBox(QDialogButtonBox.Save|QDialogButtonBox.Cancel)
-        buttons.button(QDialogButtonBox.Save).setText('Salvar');buttons.button(QDialogButtonBox.Cancel).setText('Cancelar')
+        buttons = QDialogButtonBox(QDialogButtonBox.Save|QDialogButtonBox.Cancel);self.buttons=buttons
+        buttons.button(QDialogButtonBox.Save).setText('Salvar' if game else 'Adicionar à biblioteca');buttons.button(QDialogButtonBox.Save).setObjectName('primary');buttons.button(QDialogButtonBox.Cancel).setText('Cancelar')
         buttons.accepted.connect(self.validate); buttons.rejected.connect(self.reject); outer.addWidget(buttons)
+        outer.removeWidget(self.advanced)
+        if hasattr(self,'complete_on_save'):
+            outer.removeWidget(self.complete_on_save);outer.insertWidget(outer.indexOf(self.error),self.complete_on_save)
+        outer.insertWidget(outer.indexOf(self.error),self.advanced)
+        if hasattr(self,'source_tabs'):
+            self.source_tabs.currentChanged.connect(self.source_changed);self.source_changed(0)
         if game:
             for key, widget in self.fields.items():
                 value = game.get(key)
@@ -68,6 +86,17 @@ class GameDialog(QDialog):
                 elif isinstance(widget,QCheckBox): widget.setChecked(bool(value))
                 elif isinstance(widget,QTextEdit): widget.setPlainText(value or '')
                 else: widget.setText(value or '')
+
+    def request_steam(self):
+        self.steam_requested=True;self.reject()
+
+    def source_changed(self,index):
+        self.steam_panel.setVisible(index==2);self.drive_toggle.setChecked(index==1)
+        self.form_scroll.setVisible(index!=2);self.advanced.setVisible(index!=2);self.complete_on_save.setVisible(index!=2)
+        self.buttons.button(QDialogButtonBox.Save).setVisible(index!=2)
+        if index==0 and self.drive_file_id is not None:
+            self.drive_file_id=None;self.fields['source'].setText('Manual')
+        self.resize(660,540 if index==1 else 390)
 
     def toggle_advanced(self,visible):
         if hasattr(self,'catalog_button'):self.catalog_button.setVisible(visible)
@@ -89,7 +118,7 @@ class GameDialog(QDialog):
         self.load_drive_file(self.drive_results[index])
     def load_drive_file(self,file):
         from .integrations.drive import normalize_rom_name
-        self.drive_toggle.setChecked(True)
+        self.source_tabs.setCurrentIndex(1);self.drive_toggle.setChecked(True)
         self.drive_file_id=file['id'];self.catalog_result=None
         for key in ('genre','developer','publisher','release_date','description','cover','banner','logo','executable'):
             widget=self.fields[key]
@@ -106,7 +135,7 @@ class GameDialog(QDialog):
                     widget=self.fields[key]
                     if isinstance(widget,QTextEdit):widget.setPlainText(existing[key] or '')
                     else:widget.setText(existing[key] or '')
-        self.drive_info.setText('ROM escolhida: '+file['original_name']+'. Confirme o título no catálogo para padronizar o nome exibido. Arquivo não será baixado.')
+        self.drive_info.setText('Selecionada: '+file['original_name']+'. Download somente quando solicitado.')
     def manage_drive(self):
         from .drive_dialog import DriveDialog
         DriveDialog(self.library,self).exec();self.search_drive(self.drive_query.text())

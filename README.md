@@ -1,16 +1,14 @@
 # Checkpoint
 
-Na 0.1.17, Salvar grava o jogo imediatamente e busca ficha/imagens em segundo plano, sem janelas de carregamento encadeadas. Corrigida uma queda nativa reproduzida nesse fluxo. Pacote Windows 0.1.17 publicado e validado: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.17 .
+Biblioteca pessoal de jogos para Windows em Python/PySide6 e SQLite. Versão **0.1.18 de desenvolvimento**.
 
-Adicionar jogo: digite o nome e salve; ficha e imagens são buscadas automaticamente quando houver correspondência confiável e provedor disponível. Drive e ficha avançada ficam recolhidos. No Drive, **Baixar e adicionar à biblioteca** cria o cadastro e busca imagens após verificar o download. A versão 0.1.16 separa essas operações da interface para conter falhas abruptas. Pacote Windows publicado em https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.16 .
-
-Biblioteca pessoal de jogos para Windows, desenvolvida do zero em Python 3.12, PySide6 e SQLite. Versão **0.1.17 de desenvolvimento**, com dados locais e interface em português. Não é ainda a implementação completa da visão do produto.
+Interface renovada: Início com atividade pessoal, biblioteca com capas inteiras, ficha com banner/logo e abas, cadastro simples e Configurações compactas. Identidade checkpo//nt e dez temas adaptáveis. Salvar continua gravando o jogo imediatamente, com ficha/imagens em segundo plano. Pacote Windows 0.1.18 ainda pendente de publicação.
 
 Já oferece biblioteca manual persistente, galeria 3:4 e lista, pesquisa e filtros, favoritos, edição, lixeira recuperável, páginas de jogos, diário, mídia referenciada, conquistas pessoais, estatísticas de sessões confirmadas, metas de compra e backup/restauração local de saves explicitamente selecionados.
 
 Há fluxos de integração implementados para pesquisa RAWG, artes SteamGridDB e ROMs no Google Drive. OAuth e leitura real do Drive, pesquisa/títulos e obtenção dos três tipos de arte SteamGridDB foram validados. RAWG autenticado permanece pendente. O scanner não baixa ROMs; downloads acontecem apenas por solicitação. Nenhuma função remove arquivos no Drive.
 
-Steam: Configurações > Steam permite consultar a biblioteca, selecionar jogos para importar ou associar a cadastros existentes e consultar conquistas por jogo. Horas Steam ficam separadas das sessões locais. Requer chave Steam Web API e SteamID64; validação autenticada e pacote Windows 0.1.14 ainda pendentes.
+Steam: Configurações > Steam permite consultar a biblioteca, selecionar jogos para importar ou associar a cadastros existentes e consultar conquistas por jogo. Horas Steam ficam separadas das sessões locais. Requer chave Steam Web API e SteamID64; validação autenticada de conta Steam permanece separada dos testes controlados.
 
 Para continuar o desenvolvimento em outro dispositivo, leia [Continuidade](CONTINUITY.md),
 [Visão do produto](PRODUCT_VISION.md) e [Codex Cloud](CLOUD_SETUP.md). Código e documentação

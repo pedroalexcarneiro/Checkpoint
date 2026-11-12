@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.18 — identidade e interface
+
+- Identidade intervalo: C// e checkpo//nt, com maior respiro entre símbolo e nome.
+- Início pessoal com destaque, continuidade, recentes e atividade da biblioteca.
+- Biblioteca com abas rápidas, filtros extras recolhidos e densidade ajustável.
+- Ficha com banner/logo, ações no menu e abas; capa preservada só na biblioteca.
+- Cadastro por origem e Configurações em quatro seções compactas.
+- Dez temas preservados; ícone vetorial em runtime e ICO no executável.
+- Rascunho do diário preservado ao atualizar artes. Sem migração de banco.
+
 ## 0.1.17 — salvamento sem carregamentos modais encadeados
 
 - Reproduzido SIGSEGV/139 na abertura do carregamento após salvar na 0.1.16.
