@@ -31,3 +31,6 @@ Smoke do pacote passa a testar cadastro, auxiliar e renderização no EXE extra�
 
 Validação local: 164 testes em 20,33 s, exit 0. Smoke seis páginas + auxiliar e
 novo smoke completo de cadastro: exit 0. Windows ainda depende do workflow.
+
+Windows: workflow 43217720788 success; 164 testes aprovados e cadastro completo
+com imagem/auxiliar/SQLite validado no EXE extraído. Release v0.1.17 publicada.

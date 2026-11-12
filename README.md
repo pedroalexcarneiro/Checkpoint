@@ -1,6 +1,6 @@
 # Checkpoint
 
-Na 0.1.17, Salvar grava o jogo imediatamente e busca ficha/imagens em segundo plano, sem janelas de carregamento encadeadas. Corrigida uma queda nativa reproduzida nesse fluxo. Pacote Windows 0.1.17 ainda pendente de validação/publicação.
+Na 0.1.17, Salvar grava o jogo imediatamente e busca ficha/imagens em segundo plano, sem janelas de carregamento encadeadas. Corrigida uma queda nativa reproduzida nesse fluxo. Pacote Windows 0.1.17 publicado e validado: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.17 .
 
 Adicionar jogo: digite o nome e salve; ficha e imagens são buscadas automaticamente quando houver correspondência confiável e provedor disponível. Drive e ficha avançada ficam recolhidos. No Drive, **Baixar e adicionar à biblioteca** cria o cadastro e busca imagens após verificar o download. A versão 0.1.16 separa essas operações da interface para conter falhas abruptas. Pacote Windows publicado em https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.16 .
 

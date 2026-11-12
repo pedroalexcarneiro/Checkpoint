@@ -1,5 +1,17 @@
 # Estado do projeto — Checkpoint
 
+## Publicação confirmada — v0.1.17
+
+Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.17
+Commit: 1b09d84445f12582d4a2bd3ae21c92bb8c4c563b; workflow 43217720788 success.
+Relatório da release confirma 164 testes Windows sem falhas/erros/skips e smoke
+completo de salvar, auxiliar, imagem e SQLite no fonte e no EXE extraído do ZIP,
+além das seis páginas e CheckpointUpdater --check. Fixtures isoladas, sem contas reais.
+ZIP Windows: 83.900.366 bytes; SHA-256
+51b10ee94fa3765d5cbe95c4b515b4174fa1f9c569dcbf43406eb1a70fce896a.
+Essa confirmação prevalece sobre as pendências de publicação abaixo. A reprodução
+Linux do salvamento falhava com 139 antes da alteração e agora encerra com 0.
+
 ## 0.1.17 — queda reproduzida no salvamento
 
 Reproduzida no Linux uma falha nativa do fluxo completo 0.1.16: SIGSEGV/exit 139
