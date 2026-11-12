@@ -438,4 +438,15 @@ Nenhum segredo foi lido. SteamGridDB/RAWG autenticados e cofre Windows não fora
 validados nesta nuvem.
 
 O novo workflow `Windows UI validation` valida PRs sem publicar releases ou tags.
-O resultado Windows deve ser observado separadamente e registrado ao concluir.
+## Validação Windows desta revisão — 12/11/2026
+
+Fonte validada: `5d33629`; workflow [43326388407](https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43326388407), concluído com sucesso.
+Windows/Python 3.12.10: **216 testes, zero falhas/erros/skips**, 125,089 s.
+Build do aplicativo e atualizador, seis páginas, auxiliar isolado, cadastro com
+imagem/SQLite e integridade do banco passaram na origem e no executável extraído.
+`CheckpointUpdater.exe --check` retornou 0. Artefato de revisão contém pacote
+Windows e 48 capturas Qt com fixtures; Biblioteca, Desejos e Estatísticas foram
+inspecionados. Não equivale a aprovação estética, sessão autenticada ou homologação
+interativa de DPI em Windows 10/11. Nenhuma release/tag foi publicada.
+ZIP Windows SHA-256: `72157494dfbc9d68996b82ad45cf0bb4c3de9961573a8d8addae1ece0f215729`.
+ZIP visual SHA-256: `838d68435a16d5aaa74863551cd81ce5d420ad79ca2c1aeb4ec3fdf1ce3b20af`.
