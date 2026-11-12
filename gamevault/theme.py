@@ -49,7 +49,7 @@ QWidget {{ color: {c['text']}; }}
 QWidget#sidebar {{ background: {c['sidebar']}; border-right: 1px solid {c['border']}; }}
 QLabel#brand {{ font-size: 25px; font-weight: 800; color: {c['accent']}; padding: 22px 12px; }}
 QLabel#eyebrow {{ color: {c['muted']}; font-size: 11px; letter-spacing: 2px; }}
-QLabel#title {{ font-size: 36px; font-weight: 700; }}
+QLabel#title {{ font-size: 30px; font-weight: 700; }}
 QLabel#muted {{ color: {c['muted']}; font-size: 13px; }}
 QLabel#error {{ color: {c['error']}; }}
 QPushButton {{ background: {c['button']}; border: 1px solid {c['border']}; border-radius: 9px; padding: 11px 18px; }}
@@ -82,6 +82,8 @@ QLabel#cardTitle {{ font-size: 16px; font-weight: 600; }}
 QLabel#caption {{ font-size: 12px; color: {c['muted']}; }}
 QLabel#activityKind {{ font-size: 12px; color: {c['accent']}; font-weight: 600; }}
 QFrame#activityCard {{ background: {c['panel']}; border: 1px solid {c['border']}; border-radius: 12px; }}
+QLabel#activityBadge {{ background: {c['selected']}; border-radius: 18px; }}
+QPushButton#heroBack {{ background: rgba(18,22,27,180); color: white; border: none; border-radius: 16px; padding: 0; }}
 QWidget#gameActions {{ background: {c['panel']}; border-radius: 10px; }}
 QLabel#bodyText {{ font-size: 16px; padding: 5px 0; }}
 QLabel#connectionDot {{ color: {c['accent']}; font-size: 10px; }}
@@ -101,7 +103,7 @@ QListWidget#coverGrid::item:hover {{ background: transparent; }}
 QTabWidget::pane {{ border: none; background: transparent; }}
 QTabBar::tab {{ background: transparent; color: {c['muted']}; padding: 12px 16px; border-bottom: 2px solid transparent; }}
 QTabBar::tab:selected {{ color: {c['text']}; border-bottom: 2px solid {c['accent']}; }}
-QTabBar#libraryTabs::tab {{ margin-right: 8px; padding: 10px 17px; border: none; border-radius: 8px; }}
+QTabBar#libraryTabs::tab {{ margin-right: 0; padding: 8px 16px; border: none; border-radius: 8px; }}
 QTabBar#libraryTabs::tab:selected {{ background: {c['accent']}; color: {c['on_accent']}; }}
 QTabBar::tab:hover {{ color: {c['text']}; background: {c['panel']}; }}
 QToolButton {{ background: {c['button']}; border: 1px solid {c['border']}; border-radius: 7px; padding: 8px 12px; }}
@@ -114,6 +116,15 @@ QScrollBar::handle:vertical {{ background: {c['border']}; border-radius: 3px; mi
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{ height: 0; }}
 QGroupBox {{ border: none; margin-top: 18px; }}
 QGroupBox::title {{ color: {c['muted']}; subcontrol-origin: margin; }}
+QLabel#pageTitle {{ font-size: 26px; font-weight: 600; }}
+QFrame#addPreview {{ background: {c['panel']}; border: 1px solid {c['border']}; border-radius: 12px; }}
+QLabel#addPreviewArt {{ color: {c['muted']}; background: {c['input']}; border-radius: 8px; }}
+QLineEdit#gameSearch {{ font-size: 17px; padding: 10px 16px; border-radius: 10px; }}
+QListWidget#gameSearchResults {{ background: transparent; border: none; padding: 0; }}
+QListWidget#gameSearchResults::item {{ background: {c['panel']}; border: 1px solid transparent; border-radius: 8px; padding: 8px 12px; }}
+QListWidget#gameSearchResults::item:selected {{ background: {c['selected']}; color: {c['text']}; border-color: {c['accent']}; }}
+QListWidget#gameSearchResults::item:hover {{ background: {c['hover']}; }}
+QTabBar#libraryTabs {{ background: {c['panel']}; border-radius: 8px; }}
 QLabel#systemName {{ font-size: 22px; font-weight: 600; color: {c['text']}; }}
 QLabel#metricValue {{ font-size: 30px; font-weight: 600; }}
 QToolButton::menu-indicator {{ image: none; width: 0px; height: 0px; }}

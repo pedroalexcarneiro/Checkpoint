@@ -51,6 +51,7 @@ def nav_icon(name, color):
 class Hero(QWidget):
     def __init__(self, game, theme, parent=None):
         super().__init__(parent); self.game = game; self.theme = theme
+        self.detail_mode=False
         self.banner = QPixmap(game.get('banner') or '')
         self.logo = QPixmap(game.get('logo') or '')
         if not self.logo.isNull() and self.logo.hasAlphaChannel():
@@ -78,11 +79,11 @@ class Hero(QWidget):
         shade.setColorAt(0,QColor(9,12,17,210));shade.setColorAt(.65,QColor(9,12,17,65));shade.setColorAt(1,QColor(9,12,17,0));p.fillRect(rect,shade)
         if not self.logo.isNull():
             logo=self.logo.scaled(min(290,self.width()-56),max(30,min(95,self.height()//3)),Qt.KeepAspectRatio,Qt.SmoothTransformation)
-            p.drawPixmap(28,28,logo)
+            p.drawPixmap(28,70 if self.detail_mode else 28,logo)
         else:
             p.setPen(QColor('#ffffff'));font=QFont('Segoe UI');font.setPixelSize(30);font.setWeight(QFont.Bold);p.setFont(font)
-            p.drawText(QRectF(28,26,min(self.width()-56,560),100),Qt.TextWordWrap,self.game['title'])
-        if self.height()>240:
+            p.drawText(QRectF(28,68 if self.detail_mode else 26,min(self.width()-56,560),100),Qt.TextWordWrap,self.game['title'])
+        if self.height()>240 and not self.detail_mode:
             font=QFont('Segoe UI');font.setPixelSize(14);p.setFont(font);p.setPen(QColor('#d1d5db'))
             p.drawText(QRectF(28,140,min(420,self.width()-56),30),Qt.AlignVCenter,' · '.join(value for value in (self.game.get('platform'),self.game.get('status')) if value))
         p.end()
@@ -151,3 +152,21 @@ def service_icon(provider):
         p.setPen(QColor('#ffffff'));font=QFont('Segoe UI');font.setPixelSize(16 if provider=='SteamGridDB' else 20);font.setWeight(QFont.Bold);p.setFont(font)
         p.drawText(QRectF(0,0,48,48),Qt.AlignCenter,'SG' if provider=='SteamGridDB' else 'R')
     p.end();return pixmap
+
+
+class ResponsiveToolbar(QWidget):
+    """Filtros ao lado das abas; segunda linha quando a janela é estreita."""
+    def __init__(self,left,right,parent=None):
+        super().__init__(parent)
+        from PySide6.QtWidgets import QBoxLayout,QLayout
+        self.left=left;self.right=right;self.row=QBoxLayout(QBoxLayout.LeftToRight,self)
+        self.row.setContentsMargins(0,0,0,0);self.row.setSpacing(10);self.row.setSizeConstraint(QLayout.SetNoConstraint)
+        self.row.addWidget(left);self.row.addStretch();self.row.addWidget(right)
+        self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed)
+    def minimumSizeHint(self):return QSize(0,self.sizeHint().height())
+    def resizeEvent(self,event):
+        from PySide6.QtWidgets import QBoxLayout
+        width=self.left.sizeHint().width()+self.right.sizeHint().width()+20
+        direction=QBoxLayout.LeftToRight if self.width()>=width else QBoxLayout.TopToBottom
+        if self.row.direction()!=direction:self.row.setDirection(direction);self.updateGeometry()
+        super().resizeEvent(event)

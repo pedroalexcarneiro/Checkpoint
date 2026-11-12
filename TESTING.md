@@ -366,3 +366,12 @@ de páginas/auxiliar/cadastro aprovados. Windows depende do workflow da release.
 Windows 0.1.20 confirmado: workflow 43265226500 success, 185 testes sem
 falhas/erros/skips, smokes de fonte e executável extraído aprovados. Relatório
 publicado como Checkpoint-0.1.20-validation.txt na release v0.1.20.
+
+## Busca única 0.1.21
+
+192 testes Linux em 39,54 s com Qt offscreen. Casos cobrem busca única,
+complementação entre provedores, indisponibilidade parcial, plataforma console,
+preenchimento sem etapa avançada, resposta atrasada e preservação da ROM.
+Capturas reais com fixtures isoladas; smokes de páginas/auxiliar/cadastro passaram.
+Consulta pública Steam nesta nuvem: indisponível (URLError/OSError). Testes de
+integração do catálogo usam provedores controlados, não contas autenticadas.

@@ -86,7 +86,26 @@ def execute_request(request):
                             from .trash_import import removed_match
                             restore_candidate = removed_match(lib, game, result=match)
                             if not restore_candidate:complete_identity(lib, game_id, match)
+                    identities=dict(lib.sql.execute('SELECT provider,external_id FROM external_identifiers WHERE game_id=?',(game_id,)))
+                    game=lib.get(game_id)
+                    needs_pair=('rawg' in identities and 'steamgriddb' not in identities) or ('steamgriddb' in identities and not {'rawg','steam'} & identities.keys())
+                    if game and not restore_candidate and needs_pair and any(not game[kind] for kind in ('cover','banner','logo')) and (arguments.get('force',False) or lib.setting('artwork.auto',True)):
+                        from .unified_catalog import selected_details
+                        from .game_import import complete_identity
+                        from .trash_import import removed_match
+                        source='rawg' if 'rawg' in identities else 'steamgriddb'
+                        try:
+                            match=selected_details(source,identities[source],game['platform'])
+                            restore_candidate=removed_match(lib,game,result=match)
+                            if not restore_candidate:complete_identity(lib,game_id,match)
+                        except (IntegrationError,ValueError):pass
                     result = {'state':'restore_required','removed_id':restore_candidate['id']} if restore_candidate else obtain_artwork(lib, arguments['game_id'], force=arguments.get('force', False))
+                elif operation == 'catalog_search':
+                    from .unified_catalog import search_titles
+                    result = search_titles(arguments['title'],arguments.get('platform',''))
+                elif operation == 'catalog_details':
+                    from .unified_catalog import preview_details
+                    result = preview_details(database,arguments['provider'],arguments['identity'],arguments.get('platform',''))
                 elif operation == 'resolve':
                     from dataclasses import asdict
                     from .automatic_catalog import resolve_title

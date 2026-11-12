@@ -136,12 +136,12 @@ def test_binding_automatic_result_keeps_personal_fields(library):
 def test_new_game_form_keeps_optional_configuration_collapsed(library,app):
     from gamevault.dialogs import GameDialog
     dialog=GameDialog(library=library)
-    assert dialog.form.isRowVisible(dialog.fields['title'])
-    assert dialog.form.isRowVisible(dialog.fields['platform'])
-    assert not dialog.form.isRowVisible(dialog.fields['developer'])
-    dialog.advanced.setChecked(True)
-    assert dialog.form.isRowVisible(dialog.fields['developer'])
-    dialog.close()
+    assert dialog.quick_add.query is dialog.fields['title']
+    assert dialog.form_scroll.isHidden() and dialog.advanced.isHidden()
+    assert dialog.fields['developer'].isVisibleTo(dialog) is False
+    editor=GameDialog(game={'title':'Example'},library=library)
+    assert editor.form.isRowVisible(editor.fields['developer'])
+    editor.close();dialog.close()
 
 
 def test_transfer_child_exit_preserves_partial_without_publishing_corrupt_rom(library,folder):

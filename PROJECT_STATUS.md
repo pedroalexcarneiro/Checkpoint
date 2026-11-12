@@ -1,5 +1,39 @@
 # Estado do projeto — Checkpoint
 
+## 0.1.21 — busca única e composição visual
+
+Correção da interpretação da marca: wordmark checkpo//nt original centralizado,
+sem C// na lateral. Lateral de 198 px, cabeçalho com busca à direita, biblioteca
+com abas segmentadas e filtros responsivos (segunda linha em 1000 px), atividade
+com ícones e cards compactos. Botão de voltar integrado ao banner da ficha.
+Continuar jogando no Início só inicia jogo quando há executável configurado;
+nos demais casos Ver jogo abre a ficha. Dez temas e imagens inteiras preservados.
+
+Cadastro novo usa QuickAdd dentro de GameDialog: janela 1040×720, busca única,
+resultados e ROMs indexadas à esquerda, prévia da ficha à direita, adicionar sem
+formulário técnico. Importação Steam em lote é opcional. Selecionar ROM dispara
+consulta na sua plataforma; nenhuma ROM é vinculada por semelhança fraca. Ficha
+inequívoca pode ser sugerida; ambiguidades exigem seleção. Correções ficam no
+editor opcional ou na ficha depois de salvar. Provedores configurados são
+consultados juntos, com agrupamento de resultados compatíveis. O salvamento
+continua imediato; conclusão de dados/artes ocorre no auxiliar isolado. Campos
+preenchidos e escolhas manuais são preservados. Preferência global de automação
+continua respeitada. Provedores autenticados exigem configuração única existente.
+
+Consultas/previews rodam em processos isolados. Respostas antigas não alteram
+nova seleção, trabalhos de detalhe são coalescidos, fechamento do diálogo não
+destrói QThread ativa. Busca pública Steam sem chave; RAWG/SteamGridDB usados
+quando configurados. Falha de busca não impede adicionar pelo nome. Não há
+promessa de arte disponível para todo título, nem validação autenticada aqui.
+
+Linux: 192 testes em 39,54 s, zero falhas, Qt offscreen. Smokes de seis páginas,
+auxiliar e cadastro com imagem/SQLite aprovados em diretórios isolados. Capturas
+reais da interface com fixtures, janelas 1440×980/1000×700 e cadastro 1040×720;
+fidelidade estética depende de avaliação do usuário. Consulta pública Steam
+bloqueada na nuvem (URLError/OSError); nenhum conteúdo de credencial foi lido
+ou exposto. Build Windows/release 0.1.21 pendentes neste registro.
+
+
 ## Publicação confirmada — v0.1.20
 
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.20

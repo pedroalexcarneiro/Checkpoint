@@ -87,10 +87,15 @@ class GameDialog(QDialog):
                 elif isinstance(widget,QTextEdit): widget.setPlainText(value or '')
                 else: widget.setText(value or '')
 
+        if library is not None and game is None:
+            from .quick_add import QuickAdd
+            self.quick_add=QuickAdd(self,outer,allow_steam)
+
     def request_steam(self):
         self.steam_requested=True;self.reject()
 
     def source_changed(self,index):
+        if hasattr(self,'quick_add'):return
         self.steam_panel.setVisible(index==2);self.drive_toggle.setChecked(index==1)
         self.form_scroll.setVisible(index!=2);self.advanced.setVisible(index!=2);self.complete_on_save.setVisible(index!=2)
         self.buttons.button(QDialogButtonBox.Save).setVisible(index!=2)
@@ -117,8 +122,9 @@ class GameDialog(QDialog):
         if index<0:self.drive_info.setText('Selecione uma ROM.');return
         self.load_drive_file(self.drive_results[index])
     def load_drive_file(self,file):
+        if hasattr(self,'quick_add'):self.quick_add.suspend=True
         from .integrations.drive import normalize_rom_name
-        self.source_tabs.setCurrentIndex(1);self.drive_toggle.setChecked(True)
+        if not hasattr(self,'quick_add'):self.source_tabs.setCurrentIndex(1);self.drive_toggle.setChecked(True)
         self.drive_file_id=file['id'];self.catalog_result=None
         for key in ('genre','developer','publisher','release_date','description','cover','banner','logo','executable'):
             widget=self.fields[key]
@@ -136,6 +142,8 @@ class GameDialog(QDialog):
                     if isinstance(widget,QTextEdit):widget.setPlainText(existing[key] or '')
                     else:widget.setText(existing[key] or '')
         self.drive_info.setText('Selecionada: '+file['original_name']+'. Download somente quando solicitado.')
+        if hasattr(self,'quick_add'):
+            self.quick_add.suspend=False;self.quick_add.drive_loaded(file)
     def manage_drive(self):
         from .drive_dialog import DriveDialog
         DriveDialog(self.library,self).exec();self.search_drive(self.drive_query.text())
@@ -148,6 +156,7 @@ class GameDialog(QDialog):
         QTimer.singleShot(0,dialog.lookup)
         if dialog.exec()==QDialog.Accepted:self.apply_catalog(dialog.selected_result)
     def apply_catalog(self,result):
+        if hasattr(self,'quick_add'):self.quick_add.suspend=True
         self.catalog_result=result
         values={'title':result.title,'description':result.description,'genre':', '.join(result.genres),'developer':result.developer,'publisher':result.publisher,'release_date':result.release_date}
         for key,value in values.items():
@@ -156,6 +165,7 @@ class GameDialog(QDialog):
                 if isinstance(widget,QTextEdit):widget.setPlainText(value)
                 else:widget.setText(value)
         if hasattr(self,'drive_info'):self.drive_info.setText('Título confirmado: '+result.title+'. A plataforma e o nome original da ROM foram preservados.')
+        if hasattr(self,'quick_add'):self.quick_add.suspend=False
     def choose_field(self):
         self.choose(self.sender().property('gameField'))
 

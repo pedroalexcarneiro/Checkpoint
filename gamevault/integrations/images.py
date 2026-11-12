@@ -9,7 +9,8 @@ from PySide6.QtCore import QBuffer,QByteArray,QIODevice
 from . import IntegrationError
 
 class ImageCache:
-    def __init__(self,directory):
+    def __init__(self,directory,timeout=30):
+        self.timeout=timeout
         self.directory = Path(directory); self.directory.mkdir(parents=True,exist_ok=True)
 
     def store(self,content):
@@ -36,7 +37,7 @@ class ImageCache:
         if parsed.scheme!='https' or parsed.hostname not in allowed:
             raise IntegrationError('Origem de imagem não autorizada.')
         try:
-            with urlopen(Request(url,headers={'User-Agent':'GameVault/0.1'}),timeout=30) as response:
+            with urlopen(Request(url,headers={'User-Agent':'GameVault/0.1'}),timeout=self.timeout) as response:
                 if urlsplit(response.url).hostname not in allowed: raise IntegrationError('Redirecionamento de imagem não autorizado.')
                 return self.store(response.read(25_000_001))
         except OSError:

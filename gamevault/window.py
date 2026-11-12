@@ -47,10 +47,10 @@ class MainWindow(QMainWindow):
         self.hero_upgrade_attempted=set();self.current_page = 0; self.current_game = None; self.last_deleted = None; self.save_jobs = {}
         root = QWidget(); root.setObjectName('root'); self.setCentralWidget(root)
         layout = QHBoxLayout(root); layout.setContentsMargins(0,0,0,0); layout.setSpacing(0)
-        sidebar = QWidget(); sidebar.setObjectName('sidebar'); sidebar.setFixedWidth(238)
-        nav = QVBoxLayout(sidebar); nav.setContentsMargins(10,20,10,20)
+        sidebar = QWidget(); sidebar.setObjectName('sidebar'); sidebar.setFixedWidth(198)
+        nav = QVBoxLayout(sidebar); nav.setContentsMargins(10,16,10,18)
         from .branding import SystemName,app_icon
-        self.brand=SystemName(self.theme);nav.addWidget(self.brand);nav.addSpacing(24)
+        self.brand=SystemName(self.theme);nav.addWidget(self.brand);nav.addSpacing(18)
         self.setWindowIcon(app_icon(self.theme));QApplication.instance().setWindowIcon(self.windowIcon())
         self.nav_names=['home','library','wish','memories','stats','settings']
         self.nav_buttons = []
@@ -64,7 +64,7 @@ class MainWindow(QMainWindow):
         from . import __version__
         nav.addWidget(label('v'+__version__,'muted'))
         layout.addWidget(sidebar)
-        self.host = QVBoxLayout(); self.host.setContentsMargins(34,28,34,22); self.host.setSpacing(24)
+        self.host = QVBoxLayout(); self.host.setContentsMargins(28,24,28,20); self.host.setSpacing(20)
         layout.addLayout(self.host,1)
         self.header_widget=QWidget();self.header = QHBoxLayout(self.header_widget);self.header.setContentsMargins(0,0,0,0); self.heading = label('','title'); self.header.addWidget(self.heading); self.header.addStretch()
         self.add_button=button('+ Adicionar jogo',self.add_game,True);self.header.addWidget(self.add_button); self.host.addWidget(self.header_widget)
@@ -74,9 +74,9 @@ class MainWindow(QMainWindow):
             page = QWidget(); self.pages.append(page); self.stack.addWidget(page)
         self.build_library()
         self.library_filters.removeWidget(self.search);self.search.setMinimumWidth(220);self.search.setMaximumWidth(380)
-        self.header.insertWidget(1,self.search);self.header.setSpacing(22)
+        self.header.insertWidget(2,self.search);self.header.setSpacing(22)
         self.search.returnPressed.connect(self.search_library)
-        self.library_filters.removeWidget(self.platform);self.library_options.insertWidget(2,self.platform)
+        self.library_filters.removeWidget(self.platform);self.library_options.insertWidget(1,self.platform)
         self.platform.setMaximumWidth(190);self.sort.setMaximumWidth(150);self.view.setMaximumWidth(100)
         self.navigate(0)
         self.timer = QTimer(self); self.timer.timeout.connect(self.poll_sessions); self.timer.start(1000)
@@ -157,6 +157,10 @@ class MainWindow(QMainWindow):
         self.table.horizontalHeader().setStretchLastSection(True); self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.table.cellDoubleClicked.connect(lambda row,col:self.detail(self.table.item(row,0).data(Qt.UserRole)))
+        from .ui_components import ResponsiveToolbar
+        layout.removeWidget(self.library_tabs);options.setSpacing(8);options.removeWidget(self.count)
+        layout.removeItem(options);options.setParent(None);controls=QWidget();controls.setLayout(options)
+        layout.removeItem(filters);layout.insertWidget(0,ResponsiveToolbar(self.library_tabs,controls));layout.insertWidget(1,self.count)
         layout.addWidget(self.gallery,1); layout.addWidget(self.table,1)
         self.gallery.setObjectName('coverGrid');self.gallery.setFrameShape(QFrame.NoFrame);self.gallery.setTextElideMode(Qt.ElideRight)
 

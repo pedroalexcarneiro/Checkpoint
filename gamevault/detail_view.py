@@ -16,9 +16,10 @@ def build_detail(window,game):
         window.stack.removeWidget(window.detail_page);window.detail_page.deleteLater()
     page=QScrollArea();page.setWidgetResizable(True);window.detail_page=page
     body=QWidget();layout=QVBoxLayout(body);layout.setContentsMargins(0,0,8,0);layout.setSpacing(16)
-    back=QHBoxLayout();back_button=action('←  Biblioteca',lambda:window.navigate(1));back_button.setObjectName('quiet');back.addWidget(back_button);back.addStretch();layout.addLayout(back)
-    layout.addWidget(Hero(game,window.theme))
-    actions_frame=QWidget();actions_frame.setObjectName('gameActions');bar=QHBoxLayout(actions_frame);bar.setContentsMargins(16,14,16,14);bar.setSpacing(22)
+    hero=Hero(game,window.theme);hero.detail_mode=True
+    back=QHBoxLayout();back_button=action('←',lambda:window.navigate(1));back_button.setFixedSize(32,32);back_button.setObjectName('heroBack');back_button.setAccessibleName('Voltar à biblioteca');back_button.setToolTip('Voltar à biblioteca');back.addWidget(back_button);back.addStretch();hero.content.insertLayout(0,back)
+    layout.addWidget(hero)
+    actions_frame=QWidget();actions_frame.setObjectName('gameActions');bar=QHBoxLayout(actions_frame);bar.setContentsMargins(14,10,14,10);bar.setSpacing(20)
     files=[dict(r) for r in window.library.sql.execute('SELECT * FROM game_files WHERE game_id=? ORDER BY original_name',(game_id,))]
     available=[f for f in files if f['available']]
     if game['executable']:bar.addWidget(action('▶ Jogar',lambda:window.start_game(game),True))

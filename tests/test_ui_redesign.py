@@ -55,8 +55,9 @@ def test_library_shortcuts_density_and_theme_update(library,app):
 
 def test_add_sources_do_not_start_network_or_nested_loading(library,app):
     dialog=GameDialog(library=library)
-    assert [dialog.source_tabs.tabText(i) for i in range(3)]==['Pesquisar jogo','ROM do Drive','Steam']
-    dialog.source_tabs.setCurrentIndex(2);assert not dialog.steam_panel.isHidden()
+    assert dialog.minimumWidth()>=850 and dialog.quick_add.jobs==[]
+    assert dialog.source_tabs.isHidden() and dialog.form_scroll.isHidden()
+    assert dialog.quick_add.query is dialog.fields['title']
     dialog.request_steam();assert dialog.steam_requested and dialog.result()==QDialog.Rejected
     dialog.close()
 
@@ -89,6 +90,8 @@ def test_cover_grid_uses_width_at_desktop_and_compact_window(library,app):
     window=MainWindow(library);window.show();window.navigate(1)
     for width in (1440,1000):
         window.resize(width,900);app.processEvents()
+        assert window.width()==width
+        assert window.library_tabs.width()>=window.library_tabs.sizeHint().width()-2
         grid=window.gallery
         first=[grid.visualItemRect(grid.item(i)) for i in range(grid.count()) if grid.visualItemRect(grid.item(i)).top()==0]
         assert len(first)>=3

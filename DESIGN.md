@@ -1,8 +1,21 @@
 # Direção visual do Checkpoint
 
+## Ajuste de direção — 0.1.21
+
+O nome centralizado é o wordmark checkpo//nt original, sem o símbolo C//.
+A orientação anterior de texto simples foi uma interpretação incorreta.
+Início, biblioteca e ficha continuam seguindo a composição das referências:
+lateral compacta, busca à direita, abas segmentadas, cards de atividade com
+ícones, biblioteca com filtros que quebram em outra linha sem cortar abas,
+retorno dentro do hero da ficha. Nenhuma validação funcional é aprovação estética.
+Cadastro tem busca única ampla e prévia; as bases são detalhes da integração,
+não etapas que o usuário precisa repetir para cada jogo. Metadados e imagens
+disponíveis são o padrão; editor e importação Steam em lote são opcionais.
+
+
 ## Revisão após capturas Windows — 0.1.20
 
-A barra lateral agora mostra apenas Checkpoint centralizado; o símbolo fica no
+Na 0.1.20 a barra lateral mostrava Checkpoint simples centralizado; o símbolo fica no
 ícone do executável. Capas usam espaços 2:3 para os posters Steam, sem molduras
 laterais: outras proporções preservam toda a arte, sem esticar nem cortar texto.
 Cantos suaves acompanham a imagem. O banner define a altura do próprio quadro;

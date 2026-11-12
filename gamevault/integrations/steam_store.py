@@ -15,7 +15,7 @@ class SteamStoreProvider:
     def search(self, title):
         query = urlencode({'term': title, 'l': 'english', 'cc': 'BR'})
         payload = self.http.json('https://store.steampowered.com/api/storesearch/?' + query)
-        return [MetadataResult('steam', app_id(str(row['id'])), row['name'])
+        return [MetadataResult('steam', app_id(str(row['id'])), row['name'],platforms=('PC',))
                 for row in payload.get('items', []) if row.get('type') == 'app']
 
     def details(self, identity):

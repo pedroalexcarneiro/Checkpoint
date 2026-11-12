@@ -61,9 +61,20 @@ class BrandWidget(QWidget):
         p.end()
 
 
-class SystemName(QLabel):
+class SystemName(QWidget):
+    """Wordmark original centralizado, sem o símbolo C// ao lado."""
     def __init__(self,theme,parent=None):
-        super().__init__('Checkpoint',parent);self.theme=theme
-        self.setObjectName('systemName');self.setAlignment(Qt.AlignCenter);self.setFixedHeight(58)
-        self.setAccessibleName('Checkpoint')
+        super().__init__(parent);self.theme=theme
+        self.setObjectName('systemName');self.setFixedHeight(58);self.setAccessibleName('Checkpoint')
+    def text(self):return 'Checkpoint'
+    def alignment(self):return Qt.AlignCenter
     def set_theme(self,theme):self.theme=theme;self.update()
+    def paintEvent(self,event):
+        p=QPainter(self);p.setRenderHint(QPainter.Antialiasing)
+        font=QFont('Segoe UI');font.setPixelSize(22);font.setWeight(QFont.DemiBold);p.setFont(font)
+        metrics=QFontMetricsF(font);prefix=metrics.horizontalAdvance('checkpo');suffix=metrics.horizontalAdvance('nt')
+        x=(self.width()-prefix-suffix-17)/2;baseline=(self.height()+metrics.ascent()-metrics.descent())/2
+        p.setPen(QColor(self.theme.colors['text']));p.drawText(QPointF(x,baseline),'checkpo');x+=prefix+3
+        p.setPen(QPen(QColor(self.theme.colors['accent']),2.6,Qt.SolidLine,Qt.RoundCap))
+        for offset in (0,6):p.drawLine(QPointF(x+offset,baseline-1),QPointF(x+offset+3,baseline-metrics.xHeight()+1))
+        p.setPen(QColor(self.theme.colors['text']));p.drawText(QPointF(x+12,baseline),'nt');p.end()

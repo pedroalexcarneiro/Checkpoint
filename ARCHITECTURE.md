@@ -73,3 +73,16 @@ Fonte principal: SteamGridDB API v2 (https://www.steamgriddb.com/api/v2), catego
 - Validação: 111 testes passaram (pytest result 0), com provedores/transferências substituídos em testes. Tela renderizada e inspecionada. Consulta real SteamGridDB e artes reais NÃO validadas: não há chave configurada no cofre desta sessão. Nenhuma arte foi atribuída à coleção real nesta implementação.
 - Configurar chave em Configurações > Configurar chave SteamGridDB (não compartilhar chave no chat nem versionar). Em um jogo: Selecionar artes > Pesquisar > selecionar resultado > Confirmar jogo selecionado e obter capa, banner e logo. Para Steam: Identificar pelo AppID Steam > confirmar resultado. Downloads/associações futuros reutilizam o ID salvo.
 Referência primária do provedor: https://github.com/SteamGridDB/java-steamgriddb . Os termos do serviço e as licenças dos autores continuam aplicáveis às imagens.
+
+## Busca única 0.1.21
+
+quick_add.py coordena UI, debounce e prévia dentro de GameDialog, preservando o
+contrato do cadastro e o editor existente. unified_catalog.py agrega provedores,
+filtra plataforma e reúne resultados compatíveis. worker.py executa busca e
+prévia isoladas, sem serializar credenciais. Jobs de busca/detalhes são limitados
+e respostas verificam geração. A fila completa também identidades confirmadas
+RAWG/SteamGridDB, sem exigir nova seleção de provedor no cadastro.
+
+Busca interativa consulta provedores em paralelo, com timeout de 8 s e uma
+tentativa por requisição. Previews usam timeout de 8 s por imagem. Integrações
+em segundo plano preservam os timeouts/retries anteriores por padrão.
