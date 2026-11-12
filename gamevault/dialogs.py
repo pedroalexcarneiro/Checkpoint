@@ -35,7 +35,10 @@ class GameDialog(QDialog):
         favorite = QCheckBox('Marcar como favorito'); form.addRow('',favorite); self.fields['favorite'] = favorite
         for key,label in [('cover','Capa'),('banner','Banner'),('logo','Logo'),('executable','Executável local')]:
             row = QHBoxLayout(); line = QLineEdit(); button = QPushButton('Escolher…')
-            button.clicked.connect(lambda checked=False,k=key:self.choose(k))
+            # Um método do receptor permite ao Qt encerrar a conexão com o diálogo.
+            # Lambdas que capturam self mantêm um ciclo até o shutdown do PySide.
+            button.setProperty('gameField',key)
+            button.clicked.connect(self.choose_field)
             row.addWidget(line); row.addWidget(button); form.addRow(label,row); self.fields[key] = line
         for key,label in [('description','Descrição'),('notes','Observações')]:
             text = QTextEdit(); text.setMaximumHeight(100); form.addRow(label,text); self.fields[key] = text
@@ -101,6 +104,9 @@ class GameDialog(QDialog):
                 if isinstance(widget,QTextEdit):widget.setPlainText(value)
                 else:widget.setText(value)
         if hasattr(self,'drive_info'):self.drive_info.setText('Título confirmado: '+result.title+'. A plataforma e o nome original da ROM foram preservados.')
+    def choose_field(self):
+        self.choose(self.sender().property('gameField'))
+
     def choose(self,key):
         filters = 'Executáveis (*.exe);;Todos (*)' if key=='executable' else 'Imagens (*.png *.jpg *.jpeg *.webp)'
         path,_ = QFileDialog.getOpenFileName(self,'Selecionar arquivo','',filters)

@@ -4,6 +4,14 @@ Versão 0.1.14 de desenvolvimento. **O projeto completo não está concluído.**
 
 ## Atualização atual — importação Steam
 
+Correção posterior do Qt na mesma 0.1.14 de desenvolvimento: botões de arquivo do
+GameDialog usam método do receptor em vez de lambdas que capturavam o diálogo.
+Reprodução original e 16 testes afetados passaram. Uma execução completa confirmou
+**136 aprovados em 9,62 s, exit 0**, sem falha nativa após o relatório. Smoke das seis
+páginas com SQLite íntegro passou. Duas regressões novas: campo correto de cada
+seletor de arquivo e encerramento real de subprocesso com formulários sem pai.
+Não houve mudança de dependências, esquema ou funcionalidades Steam nesta correção.
+
 Esta seção prevalece sobre notas históricas abaixo. Schema SQLite: 4. Configurações >
 Steam oferece consulta assíncrona, marcação de jogos, associação explícita a cadastro
 existente e atualização por AppID. Não associa por título. Importação preserva dados
@@ -12,9 +20,10 @@ separadas das sessões e marcos pessoais. Conquistas são consultadas por jogo.
 
 29 testes focados passaram com saída 0: Steam, migrações, biblioteca e UI existente.
 API com transporte controlado, sem autenticação real. Smoke Linux 0.1.14 das seis
-páginas, SQLite íntegro e diálogo Steam vazio aprovado. O SIGSEGV ao fim da suíte histórica, associado ao teste do
-formulário Drive, permanece fora desta mudança. Não repetidas suítes de saves,
-scanner Drive ou temas intactos, conforme pedido de evitar validação redundante.
+páginas, SQLite íntegro e diálogo Steam vazio aprovado. O SIGSEGV histórico associado
+ao formulário Drive foi resolvido na correção posterior acima. Na etapa Steam não
+foram repetidas suítes de saves, scanner Drive ou temas intactos. A execução completa
+posterior foi necessária uma vez para verificar o encerramento compartilhado do Qt.
 
 Cofre, API Steam autenticada e build Windows 0.1.14 ainda não validados/publicados.
 Migração v3→v4 preserva dados e backup recuperável; executável 0.1.13 não aceita banco

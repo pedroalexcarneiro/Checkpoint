@@ -39,6 +39,58 @@ def test_game_form_validation_and_round_trip(app):
     assert dialog.data()['title']=='Game name' and dialog.data()['rating']==8
     edit=GameDialog(game=dialog.data()); assert edit.data()==dialog.data()
 
+
+def test_game_form_file_buttons_keep_their_field(app,folder,monkeypatch):
+    from PySide6.QtWidgets import QPushButton,QFileDialog
+    selected=folder/'selected.png'
+    image=QImage(10,10,QImage.Format_RGB32); image.fill(Qt.green); assert image.save(str(selected))
+    filters=[]
+    def choose(parent,title,directory,file_filter):
+        filters.append(file_filter)
+        return str(selected),''
+    monkeypatch.setattr(QFileDialog,'getOpenFileName',choose)
+    dialog=GameDialog()
+    try:
+        buttons={button.property('gameField'):button for button in dialog.findChildren(QPushButton) if button.property('gameField')}
+        assert set(buttons)=={'cover','banner','logo','executable'}
+        for key,button in buttons.items():
+            before={name:dialog.fields[name].text() for name in buttons}
+            button.click()
+            assert dialog.fields[key].text()==str(selected)
+            assert all(dialog.fields[name].text()==value for name,value in before.items() if name!=key)
+            assert ('Executáveis' if key=='executable' else 'Imagens') in filters[-1]
+    finally:
+        dialog.close()
+
+
+def test_parentless_game_form_process_exits_cleanly(folder):
+    # A falha nativa anterior ocorria após pytest anunciar sucesso, no shutdown.
+    # Verificar o retorno do processo filho detecta o crash sem mascará-lo.
+    import os
+    import subprocess
+    import sys
+    code='''
+import sys
+from pathlib import Path
+from PySide6.QtWidgets import QApplication
+from gamevault.database import Database
+from gamevault.library import Library
+from gamevault.dialogs import GameDialog
+app=QApplication([])
+db=Database(Path(sys.argv[1])/'shutdown.sqlite')
+def open_and_close():
+    dialog=GameDialog(library=Library(db))
+    dialog.close()
+for _ in range(3):
+    open_and_close()
+db.close()
+print('form lifecycle complete',flush=True)
+'''
+    result=subprocess.run([sys.executable,'-X','faulthandler','-c',code,str(folder)],
+        env={**os.environ,'QT_QPA_PLATFORM':'offscreen'},capture_output=True,text=True,timeout=15)
+    assert result.returncode==0,result.stdout+'\n'+result.stderr
+    assert 'form lifecycle complete' in result.stdout
+
 def test_image_cache_validates_and_deduplicates(app,folder):
     cache=ImageCache(folder/'images')
     with pytest.raises(IntegrationError): cache.store(b'not image')

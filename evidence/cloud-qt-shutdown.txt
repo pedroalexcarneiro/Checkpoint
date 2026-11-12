@@ -1,0 +1,35 @@
+Checkpoint 0.1.14 — resumo dos resultados observados na correção Qt/Linux
+
+Problema reproduzido, antes da alteração:
+QT_QPA_PLATFORM=offscreen .venv/bin/python -X faulthandler -m pytest tests/test_game_import.py::test_add_form_drive_search_and_metadata_prefill -q -p no:cacheprovider
+1 passed in 0.16s; processo terminou com exit 139 / SIGSEGV após o relatório.
+
+Isolamento:
+GameDialog sem pai e callbacks de arquivo capturando self reproduziu falha nativa.
+Remover essas conexões ou usar janela pai evitou a falha nos diagnósticos.
+Troca definitiva: método do receptor Qt + propriedade gameField no botão.
+Não houve alteração de dependências, schema, fixtures ou asserções existentes.
+
+Após correção, mesmo teste original:
+1 passed in 0.18s; exit 0.
+
+Testes afetados:
+QT_QPA_PLATFORM=offscreen .venv/bin/python -X faulthandler -m pytest tests/test_game_import.py tests/test_ui.py -q -p no:cacheprovider
+16 passed in 1.84s; exit 0.
+
+Uma execução completa para confirmar encerramento compartilhado do Qt:
+QT_QPA_PLATFORM=offscreen .venv/bin/python -X faulthandler -m pytest tests -q -p no:cacheprovider
+136 passed in 9.62s; exit 0.
+
+Smoke:
+QT_QPA_PLATFORM=offscreen .venv/bin/python -m gamevault.app --smoke-test --data-dir .cloud-smoke
+Checkpoint smoke: 6 pages OK; SQLite integrity=ok
+exit 0.
+
+XDG_CACHE_HOME=$PWD/.venv/cache em todas as execuções Qt acima.
+Novas regressões limitadas a encaminhamento dos quatro seletores e subprocesso
+que cria/fecha três formulários sem pai e verifica retorno real do processo.
+
+Limites: validação Linux/PySide6 6.8.3, não valida executável Windows nem acesso
+Steam autenticado. Futuras execuções devem seguir impacto, sem repetir suítes
+intactas ou a validação completa sem motivo novo.

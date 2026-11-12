@@ -1,13 +1,16 @@
 # Desenvolvimento independente deste computador
 
-O código deve ser obtido do branch `main` de `pedroalexcarneiro/Checkpoint`, não de
-um checkout antigo nem apenas do ZIP de uma release. Confira `pyproject.toml` (0.1.14)
+O desenvolvimento 0.1.14 está na branch `codex/steam-library-import` de
+`pedroalexcarneiro/Checkpoint`, ainda não incorporado à `main`. Use o checkout
+existente ou essa branch ao retomar esta implementação; não use somente o ZIP de
+uma release anterior. Confira `pyproject.toml` (0.1.14)
 e a presença de `AGENTS.md`, `CONTINUITY.md` e `gamevault/game_import.py`.
 
 O ambiente Linux foi preparado e validado nesta nuvem. Na 0.1.14, 29 testes focados
 de Steam, migrações, biblioteca e UI passaram com exit 0; smoke atualizado abriu
-seis páginas com SQLite íntegro. A suíte histórica completa tem SIGSEGV no fim
-do teste de formulário Drive; não foi corrigido nesta implementação Steam.
+seis páginas com SQLite íntegro. A falha nativa de encerramento Qt foi corrigida
+posteriormente, com 16 testes afetados e uma execução completa: 136 aprovados,
+exit 0, sem crash após o relatório. O smoke das seis páginas foi reconfirmado.
 API Steam autenticada e Windows permanecem pendentes. Consulte TESTING.md para
 validar por impacto e evitar repetir suítes de áreas intactas sem necessidade.
 Use venv com `--copies` no Linux: os testes de launcher comparam caminhos resolvidos.

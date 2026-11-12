@@ -4,7 +4,22 @@ Estado de referência: aplicativo 0.1.14 de desenvolvimento, schema SQLite 4.
 Este documento transfere o contexto de trabalho; não é uma cópia integral do chat.
 Não contém credenciais, dados pessoais da biblioteca ou autorizações para novos acessos.
 
-## Atualização Cloud — importação Steam
+## Atualização mais recente — encerramento Qt corrigido
+
+- Reproduzida a falha nativa em GameDialog sem janela pai: lambdas conectadas aos
+  botões de arquivo capturavam o diálogo até o encerramento do PySide6.
+- Substituídas por método do receptor Qt e propriedade que identifica o campo.
+  Não mudados PySide6, credenciais, banco, migrações ou comportamento de cadastro.
+- Regressões novas somente para os quatro seletores de arquivo e saída real de
+  subprocesso que cria/fecha formulários sem pai. Nenhuma asserção antiga removida.
+- Teste original passou com exit 0; 16 testes afetados aprovados; uma única execução
+  completa confirmou 136 aprovados em 9,62 s, exit 0. Smoke: seis páginas e SQLite ok.
+- Para futuras mudanças, voltar à validação por impacto; não repetir suíte completa
+  sem alteração ou risco novo. Evidência em evidence/cloud-qt-shutdown.txt.
+- Continuação na branch codex/steam-library-import; Steam autenticada e executável
+  Windows continuam pendentes. O defeito de encerramento Linux deixou de bloquear.
+
+## Atualização anterior — importação Steam
 
 - Implementado em Configurações > Steam: chave no cofre Windows, SteamID64,
   consulta em worker, seleção explícita, associação manual a cadastro existente,
@@ -18,15 +33,15 @@ Não contém credenciais, dados pessoais da biblioteca ou autorizações para no
   Contratos Steam usam transporte controlado; não são conta autenticada.
   Pedido do usuário: não criar/repetir testes de áreas intactas sem motivo.
 - Smoke 0.1.14 aprovado: seis páginas, SQLite íntegro e diálogo Steam vazio.
-- A suíte histórica tinha SIGSEGV ao encerrar o teste do formulário Drive
-  test_add_form_drive_search_and_metadata_prefill; não foi alterado nesta entrega.
+- A suíte histórica tinha SIGSEGV ao encerrar o teste do formulário Drive;
+  resolvido na correção posterior descrita acima.
 - Nenhuma chave Steam disponível nesta nuvem. API autenticada, cofre e build
   Windows 0.1.14 não foram validados. Nenhum pacote ou Release foi publicado.
 - Domínios partner.steamgames.com e api.steampowered.com salvos no rascunho da rede;
   o acesso ao primeiro foi recusado pela política atual. Rascunho não é aplicação
   de política nem publicação de snapshot.
-- Próximo: validar Steam autenticada em dados isolados quando houver acesso,
-  resolver o encerramento Qt conhecido e seguir prioridades conforme escopo.
+- Próximo: validar Steam autenticada em dados isolados quando houver acesso
+  e seguir prioridades conforme escopo. Encerramento Qt já corrigido acima.
 
 ## Objetivo e forma de trabalhar
 

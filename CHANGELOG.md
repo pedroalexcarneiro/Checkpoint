@@ -2,6 +2,11 @@
 
 ## 0.1.14 — Importação Steam (desenvolvimento)
 
+- Corrigido encerramento nativo do formulário sem pai: seletores de arquivo usam
+  método do receptor Qt em vez de lambdas que capturavam o diálogo.
+- Duas regressões de seletores/lifecycle; 136 testes completos passaram com exit 0
+  após a correção. Smoke de seis páginas com SQLite íntegro reconfirmado.
+
 - Biblioteca via Steam Web API com chave no cofre, SteamID64 e seleção explícita.
 - Associação manual e reimportação por AppID preservando dados pessoais.
 - Horas por conta e conquistas por jogo separadas das sessões/marcos locais.

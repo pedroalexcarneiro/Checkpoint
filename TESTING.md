@@ -1,5 +1,26 @@
 # Validação
 
+## 0.1.14 — encerramento Qt corrigido
+
+Reprodução original: test_add_form_drive_search_and_metadata_prefill passava na
+asserção e o processo saía com SIGSEGV/139. Conexões dos seletores de arquivo foram
+trocadas de lambdas que capturavam o diálogo para método do receptor Qt.
+
+Validação por etapas: teste original exit 0; 16 testes de formulário/UI exit 0;
+uma execução completa (necessária para confirmar o shutdown global) terminou com
+**136 aprovados em 9,62 s, exit 0**. Smoke: seis páginas, SQLite integrity=ok.
+Comando completo, com QT_QPA_PLATFORM=offscreen e XDG_CACHE_HOME=$PWD/.venv/cache:
+
+```sh
+.venv/bin/python -X faulthandler -m pytest tests -q -p no:cacheprovider
+```
+
+Somente duas regressões novas: destino correto dos quatro botões de arquivo e
+subprocesso que abre/fecha formulários sem pai, verificando seu retorno real.
+Não foram desabilitadas asserções, encerrado o processo à força nem alteradas
+dependências. Para mudanças futuras, executar por impacto; não repetir a suíte
+completa sem novo motivo. Detalhes em evidence/cloud-qt-shutdown.txt.
+
 ## 0.1.14 — validação focada na nuvem
 
 Com `QT_QPA_PLATFORM=offscreen` e `XDG_CACHE_HOME=$PWD/.venv/cache`, execute:
@@ -16,8 +37,9 @@ não representam validação Steam autenticada nem Windows.
 
 Reaproveitados os testes existentes de migrações, biblioteca e UI afetados. Não
 criados ou repetidos testes de saves, scanner Drive ou temas intactos. A suíte
-histórica tem falha nativa no encerramento do teste de formulário Drive; não
-declarar suíte completa aprovada a partir da execução focada.
+histórica tinha falha nativa no encerramento do teste de formulário Drive, resolvida
+na etapa posterior acima. A execução focada de Steam isoladamente não validava
+o encerramento da suíte completa.
 
 ## Ambiente efetivamente usado
 
