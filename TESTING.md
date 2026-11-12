@@ -1,5 +1,17 @@
 # Validação
 
+## Publicação confirmada — v0.1.18
+
+Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.18
+Commit: a8c6d413ae87acc839cb145e270a7c3442a4ed78; workflow 43253229490 success.
+Relatório confirma 170 testes Windows sem falhas/erros/skips, seis páginas,
+auxiliar e cadastro completo com imagem/SQLite no fonte e no EXE extraído,
+além de CheckpointUpdater --check. Novo ícone incluído no build Windows.
+ZIP: 83.897.043 bytes; SHA-256
+b53161b73324e0180043f6e897c49b96a5ac88e093d5a88aeb97edc1a165b924.
+Essa confirmação prevalece sobre pendências de publicação abaixo. As fixtures
+não comprovam autenticação de contas; dados pessoais não foram acessados.
+
 ## 0.1.18 — interface e identidade aprovadas
 
 Implementados Início em feed pessoal, biblioteca limpa com abas/filtros recolhidos,
