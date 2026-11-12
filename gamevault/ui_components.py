@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt, QSize, QRectF, QPointF
-from PySide6.QtGui import QPixmap, QPainter, QColor, QLinearGradient, QFont, QIcon, QPen, QPolygonF, QRegion
+from PySide6.QtGui import QPixmap, QPainter, QColor, QLinearGradient, QFont, QIcon, QPen, QPolygonF, QRegion, QPainterPath
 from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QFrame, QTabWidget, QSizePolicy
 
 
@@ -51,19 +51,26 @@ class Hero(QWidget):
         if not self.logo.isNull() and self.logo.hasAlphaChannel():
             bounds=QRegion(self.logo.mask()).boundingRect()
             if not bounds.isEmpty():self.logo=self.logo.copy(bounds)
-        self.setObjectName('gameHero');self.setMinimumHeight(254);self.setMaximumHeight(300)
+        self.setObjectName('gameHero');self.setMinimumHeight(250);self.setMaximumHeight(370);self._hero_height=0
         self.content = QVBoxLayout(self);self.content.setContentsMargins(30,26,30,24)
         self.content.addStretch()
 
     def set_theme(self, theme):self.theme = theme;self.update()
 
+    def resizeEvent(self,event):
+        super().resizeEvent(event)
+        ratio=self.banner.width()/self.banner.height() if not self.banner.isNull() else 3.5
+        height=max(250,min(370,round(event.size().width()/max(2.8,ratio))))
+        if height!=self._hero_height:self._hero_height=height;self.setFixedHeight(height)
+
     def paintEvent(self, event):
         p = QPainter(self); p.setRenderHint(QPainter.Antialiasing)
-        rect = self.rect();p.fillRect(rect,QColor('#15191e'))
+        rect = self.rect();clip=QPainterPath();clip.addRoundedRect(QRectF(rect),14,14);p.setClipPath(clip)
+        p.fillRect(rect,QColor('#15191e'))
         if not self.banner.isNull():
             background=self.banner.scaled(48,24,Qt.IgnoreAspectRatio,Qt.SmoothTransformation).scaled(self.size(),Qt.KeepAspectRatioByExpanding,Qt.SmoothTransformation)
             p.drawPixmap((self.width()-background.width())//2,(self.height()-background.height())//2,background)
-            foreground=self.banner.scaled(self.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation)
+            foreground=self.banner.scaled(self.size()-QSize(24,24),Qt.KeepAspectRatio,Qt.SmoothTransformation)
             p.drawPixmap((self.width()-foreground.width())//2,(self.height()-foreground.height())//2,foreground)
         shade=QLinearGradient(0,0,self.width(),0)
         shade.setColorAt(0,QColor(9,12,17,230));shade.setColorAt(.52,QColor(9,12,17,90));shade.setColorAt(1,QColor(9,12,17,15))
@@ -74,6 +81,8 @@ class Hero(QWidget):
         else:
             p.setPen(QColor('#ffffff'));font=QFont('Segoe UI',25);font.setWeight(QFont.Bold);p.setFont(font)
             p.drawText(QRectF(30,30,min(self.width()-60,560),105),Qt.TextWordWrap,self.game['title'])
+        font=QFont('Segoe UI');font.setPixelSize(14);p.setFont(font);p.setPen(QColor('#d1d5db'))
+        p.drawText(QRectF(30,151,min(420,self.width()-60),30),Qt.AlignVCenter,' · '.join(value for value in (self.game.get('platform'),self.game.get('status')) if value))
         p.end()
 
 
@@ -109,3 +118,20 @@ class CurrentPageTabs(QTabWidget):
     def minimumSizeHint(self):return QSize(0,self.sizeHint().height())
 
     def page_changed(self,index):self.updateGeometry()
+
+
+def service_icon(provider):
+    pixmap=QPixmap(48,48);pixmap.fill(Qt.transparent)
+    p=QPainter(pixmap);p.setRenderHint(QPainter.Antialiasing);p.setPen(Qt.NoPen)
+    backgrounds={'Steam':'#152b49','Google Drive':'#202933','SteamGridDB':'#204659','RAWG':'#191b20'}
+    p.setBrush(QColor(backgrounds.get(provider,'#25323c')));p.drawRoundedRect(QRectF(0,0,48,48),10,10)
+    if provider=='Steam':
+        p.setPen(QPen(QColor('#ffffff'),3,Qt.SolidLine,Qt.RoundCap));p.drawLine(15,32,31,17)
+        p.drawEllipse(QRectF(24,9,14,14));p.drawEllipse(QRectF(8,26,12,12));p.drawLine(4,26,12,31)
+    elif provider=='Google Drive':
+        for color,points in [('#34a853',[(21,8),(28,8),(15,31),(8,31)]),('#fbbc04',[(28,8),(40,31),(32,31),(21,12)]),('#4285f4',[(8,31),(15,24),(36,24),(40,31),(36,38),(12,38)])]:
+            p.setBrush(QColor(color));p.drawPolygon(QPolygonF([QPointF(x,y) for x,y in points]))
+    else:
+        p.setPen(QColor('#ffffff'));font=QFont('Segoe UI');font.setPixelSize(16 if provider=='SteamGridDB' else 20);font.setWeight(QFont.Bold);p.setFont(font)
+        p.drawText(QRectF(0,0,48,48),Qt.AlignCenter,'SG' if provider=='SteamGridDB' else 'R')
+    p.end();return pixmap

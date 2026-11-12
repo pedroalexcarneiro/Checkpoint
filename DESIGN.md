@@ -1,5 +1,13 @@
 # Direção visual do Checkpoint
 
+## Revisão de fidelidade — 0.1.19
+
+O usuário não aprovou a fidelidade da implementação 0.1.18 às imagens. Manter as
+referências como alvo; conferir capturas reais, hierarquia, proporções e estados
+sem arte. Cards próprios substituem a aparência nativa da lista; Início usa duas
+colunas abaixo do hero. Metadados não devem voltar a um formulário largo na ficha.
+A validação funcional não equivale à aprovação visual do usuário.
+
 Direção aprovada com o usuário e implementada inicialmente na 0.1.18.
 
 ## Identidade

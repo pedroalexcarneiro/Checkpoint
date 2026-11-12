@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.19 — composição visual e banners Steam
+
+- Cards próprios e grade responsiva; busca no cabeçalho e controles mais discretos.
+- Início com continuidade e atividade lado a lado, hero com cantos e altura adaptável.
+- Ficha com barra de ações, descrição e informações compactas; detalhes recolhidos.
+- Tipografia, superfícies, ícones das conexões e barra de título Windows revistos.
+- Steam prioriza banner panorâmico; corrige header automático antigo por proveniência.
+- Escolhas manuais e cache preservados, inclusive ao confirmar arte durante download.
+- 177 testes locais passaram; smokes aprovados; rede do CDN Steam bloqueada no Cloud.
+
 ## 0.1.18 — identidade e interface
 
 - Identidade intervalo: C// e checkpo//nt, com maior respiro entre símbolo e nome.

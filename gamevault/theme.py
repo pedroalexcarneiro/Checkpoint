@@ -17,7 +17,7 @@ def dark_theme(key,name,accent):
         'background':blend('#101216',accent,.035),'sidebar':blend('#16191d',accent,.045),
         'panel':blend('#1c2025',accent,.05),'input':blend('#171b20',accent,.04),
         'button':blend('#272d34',accent,.06),'hover':blend('#303841',accent,.12),
-        'border':blend('#3c454f',accent,.10),'text':'#e8eaed','muted':'#abb3bd',
+        'border':blend('#30363e',accent,.08),'text':'#e8eaed','muted':'#abb3bd',
         'accent':accent,'on_accent':'#152027','selected':blend('#242b32',accent,.16),
         'error':'#e2b3ad','disabled':'#7c858f'})
 
@@ -43,16 +43,16 @@ def get_theme(key): return THEMES.get(key,THEMES[DEFAULT_THEME]) if isinstance(k
 def stylesheet(key):
     c=get_theme(key).colors
     return f"""
-* {{ font-family: 'Segoe UI'; font-size: 14px; }}
+* {{ font-family: 'Segoe UI'; font-size: 15px; }}
 QMainWindow, QDialog, QWidget#root {{ background: {c['background']}; color: {c['text']}; }}
 QWidget {{ color: {c['text']}; }}
 QWidget#sidebar {{ background: {c['sidebar']}; border-right: 1px solid {c['border']}; }}
 QLabel#brand {{ font-size: 25px; font-weight: 800; color: {c['accent']}; padding: 22px 12px; }}
 QLabel#eyebrow {{ color: {c['muted']}; font-size: 11px; letter-spacing: 2px; }}
-QLabel#title {{ font-size: 32px; font-weight: 700; }}
-QLabel#muted {{ color: {c['muted']}; }}
+QLabel#title {{ font-size: 36px; font-weight: 700; }}
+QLabel#muted {{ color: {c['muted']}; font-size: 13px; }}
 QLabel#error {{ color: {c['error']}; }}
-QPushButton {{ background: {c['button']}; border: 1px solid {c['border']}; border-radius: 7px; padding: 10px 16px; }}
+QPushButton {{ background: {c['button']}; border: 1px solid {c['border']}; border-radius: 9px; padding: 11px 18px; }}
 QPushButton:hover {{ background: {c['hover']}; border-color: {c['accent']}; }}
 QPushButton:focus, QLineEdit:focus, QTextEdit:focus, QComboBox:focus, QSpinBox:focus {{ border: 2px solid {c['accent']}; }}
 QPushButton#primary {{ background: {c['accent']}; color: {c['on_accent']}; border: none; font-weight: 700; }}
@@ -62,6 +62,9 @@ QPushButton#nav {{ text-align: left; background: transparent; border: none; padd
 QPushButton#nav:hover {{ background: {c['hover']}; color: {c['text']}; }}
 QPushButton#nav:checked {{ background: {c['selected']}; color: {c['text']}; border-left: 3px solid {c['accent']}; border-radius: 0; }}
 QLineEdit, QTextEdit, QComboBox, QSpinBox, QListWidget, QTableWidget {{ background: {c['input']}; border: 1px solid {c['border']}; border-radius: 6px; padding: 9px; selection-background-color: {c['accent']}; selection-color: {c['on_accent']}; }}
+QLineEdit#headerSearch {{ border-radius: 19px; padding: 10px 18px; font-size: 14px; }}
+QComboBox::drop-down {{ subcontrol-origin: padding; subcontrol-position: top right; width: 24px; border: none; background: transparent; }}
+QStatusBar::item {{ border: none; }}
 QComboBox QAbstractItemView {{ background: {c['panel']}; color: {c['text']}; selection-background-color: {c['accent']}; selection-color: {c['on_accent']}; }}
 QScrollArea, QScrollArea > QWidget > QWidget {{ background: transparent; border: none; }}
 QHeaderView::section {{ background: {c['button']}; color: {c['muted']}; padding: 10px; border: none; }}
@@ -74,22 +77,32 @@ QCheckBox:disabled, QComboBox:disabled {{ color: {c['disabled']}; }}
 QCheckBox::indicator {{ width: 14px; height: 14px; border: 1px solid {c['muted']}; border-radius: 3px; background: {c['input']}; }}
 QCheckBox::indicator:checked {{ background: {c['accent']}; border: 2px solid {c['on_accent']}; }}
 QToolTip {{ background: {c['selected']}; color: {c['text']}; border: 1px solid {c['border']}; }}
-QLabel#sectionTitle {{ font-size: 18px; font-weight: 600; }}
-QLabel#bodyText {{ font-size: 15px; line-height: 1.5; }}
+QLabel#sectionTitle {{ font-size: 20px; font-weight: 600; }}
+QLabel#cardTitle {{ font-size: 16px; font-weight: 600; }}
+QLabel#caption {{ font-size: 12px; color: {c['muted']}; }}
+QLabel#activityKind {{ font-size: 12px; color: {c['accent']}; font-weight: 600; }}
+QFrame#activityCard {{ background: {c['panel']}; border: 1px solid {c['border']}; border-radius: 12px; }}
+QWidget#gameActions {{ background: {c['panel']}; border-radius: 10px; }}
+QLabel#bodyText {{ font-size: 16px; padding: 5px 0; }}
+QLabel#connectionDot {{ color: {c['accent']}; font-size: 10px; }}
 QLabel#serviceBadge {{ background: {c['selected']}; color: {c['accent']}; border-radius: 10px; font-weight: 700; }}
-QPushButton#nav {{ padding: 12px 14px; }}
+QPushButton#nav {{ padding: 13px 14px; font-size: 15px; }}
 QPushButton#nav:checked {{ background: {c['selected']}; color: {c['text']}; border: none; border-radius: 8px; }}
 QPushButton#gameTile {{ background: transparent; border: 1px solid transparent; padding: 0; text-align: left; }}
 QPushButton#gameTile:hover, QPushButton#gameTile:focus {{ background: {c['panel']}; border: 1px solid {c['accent']}; }}
 QLabel#tileArt {{ background: {c['selected']}; color: {c['accent']}; font-size: 26px; border-radius: 8px; }}
+QPushButton#activityLink {{ background: transparent; border: none; padding: 2px 0; text-align: left; font-size: 16px; font-weight: 600; }}
+QPushButton#activityLink:hover {{ color: {c['accent']}; }}
 QPushButton#quiet {{ background: transparent; border: none; text-align: left; color: {c['muted']}; padding: 6px 0; }}
 QListWidget#coverGrid {{ background: transparent; border: none; padding: 0; }}
-QListWidget#coverGrid::item {{ border: 1px solid transparent; border-radius: 8px; padding: 4px; }}
-QListWidget#coverGrid::item:selected {{ background: {c['selected']}; border: 1px solid {c['accent']}; color: {c['text']}; }}
-QListWidget#coverGrid::item:hover {{ background: {c['panel']}; }}
+QListWidget#coverGrid::item {{ border: none; padding: 0; margin: 0; }}
+QListWidget#coverGrid::item:selected {{ background: transparent; border: none; color: {c['text']}; }}
+QListWidget#coverGrid::item:hover {{ background: transparent; }}
 QTabWidget::pane {{ border: none; background: transparent; }}
 QTabBar::tab {{ background: transparent; color: {c['muted']}; padding: 12px 16px; border-bottom: 2px solid transparent; }}
 QTabBar::tab:selected {{ color: {c['text']}; border-bottom: 2px solid {c['accent']}; }}
+QTabBar#libraryTabs::tab {{ margin-right: 8px; padding: 10px 17px; border: none; border-radius: 8px; }}
+QTabBar#libraryTabs::tab:selected {{ background: {c['accent']}; color: {c['on_accent']}; }}
 QTabBar::tab:hover {{ color: {c['text']}; background: {c['panel']}; }}
 QToolButton {{ background: {c['button']}; border: 1px solid {c['border']}; border-radius: 7px; padding: 8px 12px; }}
 QToolButton:hover {{ background: {c['hover']}; }}

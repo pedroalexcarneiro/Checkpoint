@@ -1,11 +1,24 @@
 """Completa somente campos vazios de identidades confirmadas, sem buscar por nome."""
 import hashlib
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from .integrations import IntegrationError
 from .integrations.images import ImageCache
 from .integrations.steam_store import SteamStoreProvider
 from .library import now
+
+
+
+def replaceable_steam_header(library,game,identity):
+    asset=library.sql.execute("SELECT * FROM artwork_assets WHERE game_id=? AND kind='banner'",(game['id'],)).fetchone()
+    if not asset or asset['provider']!='steam' or asset['external_id']!=identity or asset['local_path']!=game['banner']:
+        return False
+    parsed=urlsplit(asset['source_url'])
+    if not (parsed.hostname or '').endswith('.steamstatic.com') or not Path(parsed.path).name.lower().startswith('header'):
+        return False
+    try:return hashlib.sha256(Path(game['banner']).read_bytes()).hexdigest()==asset['sha256']
+    except OSError:return False
 
 
 def complete_game(library, game_id, steam_provider=None, rawg_provider=None, cache=None):
@@ -53,17 +66,26 @@ def complete_game(library, game_id, steam_provider=None, rawg_provider=None, cac
                 if kind not in ('cover', 'banner', 'logo'):
                     continue
                 current = library.get(game_id)
-                if not current or current[kind]:
-                    continue
+                if not current:continue
+                upgrade=source=='steam' and kind=='banner' and 'library_hero' in url and bool(current[kind]) and replaceable_steam_header(library,current,result.external_id)
+                if current[kind] and not upgrade:continue
+                expected=current[kind]
+                candidates=[url] if upgrade else [url,*result.image_candidates.get(kind,[])]
                 try:
-                    path = cache.download(url)
+                    path=None
+                    for candidate in candidates:
+                        try:path=cache.download(candidate);url=candidate;break
+                        except (IntegrationError,OSError,ValueError):continue
+                    if not path:raise IntegrationError('Nenhuma imagem disponível para este tipo.')
                     digest = hashlib.sha256(Path(path).read_bytes()).hexdigest()
                     with library.sql:
                         cursor = library.sql.execute(
-                            f"UPDATE games SET {kind}=?,updated_at=? WHERE id=? AND {kind}='' "
+                            f"UPDATE games SET {kind}=?,updated_at=? WHERE id=? AND {kind}=? "
                             "AND deleted_at IS NULL AND EXISTS (SELECT 1 FROM external_identifiers "
-                            "WHERE game_id=games.id AND provider=? AND external_id=?)",
-                            (path, now(), game_id, source, result.external_id))
+                            "WHERE game_id=games.id AND provider=? AND external_id=?) "
+                            "AND (?=0 OR EXISTS (SELECT 1 FROM artwork_assets WHERE game_id=games.id "
+                            "AND kind='banner' AND provider='steam' AND local_path=?))",
+                            (path, now(), game_id, expected, source, result.external_id, int(upgrade), expected))
                         if cursor.rowcount:
                             library.sql.execute('INSERT INTO artwork_assets VALUES(?,?,?,?,?,?,?,?) '
                                 'ON CONFLICT(game_id,kind) DO UPDATE SET provider=excluded.provider,'

@@ -3,7 +3,7 @@ from pathlib import Path
 from PySide6.QtCore import Qt,QUrl
 from PySide6.QtGui import QDesktopServices
 from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QTabWidget,QComboBox,QToolButton,QMessageBox,QCheckBox,QScrollArea
-from .ui_components import text,action,card
+from .ui_components import text,action,card,service_icon
 from .theme import THEMES
 
 
@@ -40,9 +40,9 @@ def build_settings(window):
     appearance.addWidget(text('As cores se adaptam à navegação, aos botões e à identidade do aplicativo.','muted'));appearance.addStretch()
     grid=QGridLayout();grid.setSpacing(16)
     for index,(provider,short,callback) in enumerate([('Steam','S',window.steam),('Google Drive','D',window.drive),('SteamGridDB','SG',lambda:window.configure_key('steamgriddb')),('RAWG','R',lambda:window.configure_key('rawg'))]):
-        frame,inside=card();row=QHBoxLayout();badge=text(short,'serviceBadge');badge.setAlignment(Qt.AlignCenter);badge.setFixedSize(42,42);row.addWidget(badge)
+        frame,inside=card();row=QHBoxLayout();badge=text(short,'serviceBadge');badge.setAlignment(Qt.AlignCenter);badge.setFixedSize(48,48);badge.setPixmap(service_icon(provider));row.addWidget(badge)
         names=QVBoxLayout();names.addWidget(text(provider,'sectionTitle'));status=window.integration_status(provider);configured=status.startswith('Credencial salva')
-        names.addWidget(text('Configurado' if configured else 'Não configurado','muted'));row.addLayout(names,1);row.addWidget(action('Gerenciar' if configured else 'Configurar',callback));inside.addLayout(row);grid.addWidget(frame,index//2,index%2)
+        state=QHBoxLayout();dot=text('●','connectionDot' if configured else 'muted');dot.setFixedWidth(11);state.addWidget(dot);state.addWidget(text('Configurado' if configured else 'Não configurado','muted'));state.addStretch();names.addLayout(state);row.addLayout(names,1);row.addWidget(action('Gerenciar' if configured else 'Configurar',callback));inside.addLayout(row);grid.addWidget(frame,index//2,index%2)
     connections.addLayout(grid)
     help_button=action('Sobre as conexões',lambda:QMessageBox.information(window,'Conexões','Configurado indica uma credencial salva. Use Gerenciar para consultar o serviço e verificar o acesso. Chaves ficam no cofre do Windows.'))
     help_button.setObjectName('quiet');connections.addWidget(help_button)

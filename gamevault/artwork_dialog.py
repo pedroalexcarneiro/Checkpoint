@@ -100,7 +100,9 @@ class ArtworkDialog(QDialog):
         ImageDialog(path,self).exec()
         if QMessageBox.question(self,'Aplicar arte','Usar esta arte no jogo?')==QMessageBox.Yes:
             game=self.library.get(self.game['id']); game[self.loaded_kind]=path
-            self.library.save_game(game,game['id']); self.state.setText('Arte salva no cache local.')
+            self.library.save_game(game,game['id'])
+            with self.library.sql:self.library.sql.execute('DELETE FROM artwork_assets WHERE game_id=? AND kind=?',(game['id'],self.loaded_kind))
+            self.state.setText('Arte salva no cache local.')
     def reject(self):
         if self.jobs: self.state.setText('Aguarde a consulta terminar.'); return
         super().reject()

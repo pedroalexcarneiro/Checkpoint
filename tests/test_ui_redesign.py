@@ -82,3 +82,27 @@ def test_detail_refresh_preserves_diary_draft_and_save_clears_it(library,app):
     assert library.diary(identity)[0]['text']=='Minha memória ainda não salva'
     assert window.detail_diary.toPlainText()==''
     window.close()
+
+
+def test_cover_grid_uses_width_at_desktop_and_compact_window(library,app):
+    for index in range(12):library.save_game({'title':f'Fixture {index}'})
+    window=MainWindow(library);window.show();window.navigate(1)
+    for width in (1440,1000):
+        window.resize(width,900);app.processEvents()
+        grid=window.gallery
+        first=[grid.visualItemRect(grid.item(i)) for i in range(grid.count()) if grid.visualItemRect(grid.item(i)).top()==0]
+        assert len(first)>=3
+        assert first[-1].right()>grid.viewport().width()*.8
+        assert first[-1].right()<=grid.viewport().width()
+    window.close()
+
+
+def test_home_places_activity_beside_continuity(library,app):
+    from PySide6.QtWidgets import QWidget
+    library.save_game({'title':'Fixture','status':'Jogando'})
+    window=MainWindow(library);window.resize(1440,980);window.show();app.processEvents()
+    continuation=window.pages[0].findChild(QWidget,'homeContinuation')
+    activity=window.pages[0].findChild(QWidget,'homeActivity')
+    assert continuation.geometry().top()==activity.geometry().top()
+    assert activity.geometry().left()>continuation.geometry().right()
+    window.close()

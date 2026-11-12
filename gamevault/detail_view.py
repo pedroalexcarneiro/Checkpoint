@@ -16,9 +16,9 @@ def build_detail(window,game):
         window.stack.removeWidget(window.detail_page);window.detail_page.deleteLater()
     page=QScrollArea();page.setWidgetResizable(True);window.detail_page=page
     body=QWidget();layout=QVBoxLayout(body);layout.setContentsMargins(0,0,8,0);layout.setSpacing(16)
-    back=QHBoxLayout();back.addWidget(action('← Biblioteca',lambda:window.navigate(1)));back.addStretch();layout.addLayout(back)
+    back=QHBoxLayout();back_button=action('←  Biblioteca',lambda:window.navigate(1));back_button.setObjectName('quiet');back.addWidget(back_button);back.addStretch();layout.addLayout(back)
     layout.addWidget(Hero(game,window.theme))
-    bar=QHBoxLayout()
+    actions_frame=QWidget();actions_frame.setObjectName('gameActions');bar=QHBoxLayout(actions_frame);bar.setContentsMargins(16,14,16,14);bar.setSpacing(22)
     files=[dict(r) for r in window.library.sql.execute('SELECT * FROM game_files WHERE game_id=? ORDER BY original_name',(game_id,))]
     available=[f for f in files if f['available']]
     if game['executable']:bar.addWidget(action('▶ Jogar',lambda:window.start_game(game),True))
@@ -31,26 +31,38 @@ def build_detail(window,game):
     menu=QMenu(more)
     for title,callback in [('Editar ficha',lambda:window.edit_game(game_id)),('Trocar imagens',lambda:window.artworks(game_id)),('Obter ficha e imagens faltantes',lambda:window.completion_queue.submit([game_id],force=True)),('Adicionar aos desejos',lambda:window.add_wish(game_id)),('Remover da biblioteca',lambda:window.remove_game(game_id))]:
         item=menu.addAction(title);item.triggered.connect(callback)
-    more.setMenu(menu);bar.addWidget(more);layout.addLayout(bar)
+    more.setMenu(menu);bar.addWidget(more);layout.addWidget(actions_frame)
     tabs=CurrentPageTabs();tabs.setObjectName('detailTabs');window.detail_tabs=tabs
     layouts=[]
     for name in ('Visão geral','Atividade','Memórias','Arquivos'):
         tab=QWidget();inside=QVBoxLayout(tab);inside.setContentsMargins(8,20,8,12);inside.setSpacing(16);tabs.addTab(tab,name);layouts.append(inside)
     overview,activity,memories,technical=layouts
-    overview.addWidget(text(game['description'] or 'A descrição aparecerá aqui quando estiver disponível.','bodyText'))
-    frame,info=card();grid=QGridLayout();grid.setHorizontalSpacing(36);grid.setVerticalSpacing(15)
-    fields=[('Plataforma',game['platform']),('Desenvolvedora',game['developer']),('Publicadora',game['publisher']),('Lançamento',game['release_date']),('Gênero',game['genre']),('Origem',game['source']),('Categoria',game['category']),('Sua nota',str(game['rating'])+'/10' if game['rating'] is not None else '')]
-    for index,(caption,value) in enumerate(fields):
-        cell=QVBoxLayout();cell.addWidget(text(caption,'muted'));cell.addWidget(text(value or '—'));grid.addLayout(cell,index//2,index%2)
-    info.addLayout(grid);overview.addWidget(frame)
-    if game['notes']:overview.addWidget(text('Suas observações','sectionTitle'));overview.addWidget(text(game['notes']))
+    columns=QHBoxLayout();columns.setSpacing(30)
+    about=QWidget();about_layout=QVBoxLayout(about);about_layout.setContentsMargins(0,0,0,0);about_layout.setSpacing(14)
+    about_layout.addWidget(text('Sobre o jogo','sectionTitle'))
+    about_layout.addWidget(text(game['description'] or 'A descrição será exibida quando a ficha estiver disponível.','bodyText'))
+    if game['notes']:about_layout.addWidget(text('Suas observações','cardTitle'));about_layout.addWidget(text(game['notes'],'muted'))
     media=[dict(r) for r in window.library.sql.execute('SELECT * FROM media_files WHERE game_id=? ORDER BY id DESC',(game_id,))]
-    images=[m for m in media if m['kind']=='image'][:3]
+    images=[m for m in media if m['kind']=='image'][:2]
     if images:
-        overview.addWidget(text('Galeria','sectionTitle'));row=QHBoxLayout()
+        about_layout.addWidget(text('Galeria','sectionTitle'));row=QHBoxLayout()
         for image in images:
             b=action('',lambda checked=False,m=image:window.show_media(m));pix=QPixmap(image['path']);b.setIcon(QIcon(pix));b.setIconSize(QSize(170,100));b.setAccessibleName(image['caption'] or 'Abrir captura');row.addWidget(b)
-        overview.addLayout(row)
+        about_layout.addLayout(row)
+    about_layout.addStretch()
+    frame,info=card();frame.setMaximumWidth(330);frame.setMinimumWidth(240);info.addWidget(text('Informações','cardTitle'))
+    fields=[('Plataforma',game['platform']),('Desenvolvedora',game['developer']),('Publicadora',game['publisher']),('Lançamento',game['release_date']),('Gênero',game['genre']),('Origem',game['source']),('Categoria',game['category']),('Sua nota',str(game['rating'])+'/10' if game['rating'] is not None else '')]
+    core={'Plataforma','Desenvolvedora','Lançamento','Gênero'}
+    for caption,value in fields:
+        if value and caption in core:
+            info.addWidget(text(caption,'caption'));info.addWidget(text(value))
+    extra=QWidget();extra_layout=QVBoxLayout(extra);extra_layout.setContentsMargins(0,4,0,0)
+    for caption,value in fields:
+        if value and caption not in core:
+            extra_layout.addWidget(text(caption,'caption'));extra_layout.addWidget(text(value))
+    from .settings_view import disclosure
+    disclosure('Mais informações',extra,info)
+    columns.addWidget(about,2);columns.addWidget(frame,1,Qt.AlignTop);overview.addLayout(columns)
     from .steam_library import game_accounts
     accounts=game_accounts(window.library,game_id)
     if accounts:activity.addWidget(text('Steam','sectionTitle'))

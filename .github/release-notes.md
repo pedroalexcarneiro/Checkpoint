@@ -1,13 +1,12 @@
-Nova identidade e interface do Checkpoint.
+Revisão visual e banners panorâmicos Steam.
 
-- Logo checkpo//nt: as barras substituem o i, com mais espaço entre símbolo e nome. Ícone próprio no aplicativo e no executável.
-- Início com banner, jogos recentes, continuidade e atividade da sua biblioteca.
-- Biblioteca com capas inteiras, abas rápidas, filtros extras recolhidos e densidade compacta/confortável.
-- Ficha com banner e logo, ações no menu ⋯ e abas Visão geral, Atividade, Memórias e Arquivos. A capa continua na biblioteca.
-- Cadastro com Pesquisar jogo, ROM do Drive e Steam; opções avançadas recolhidas. Busca de imagens permanece em segundo plano.
-- Configurações compactas: Aparência, Conexões, Downloads, Dados e backup. Os dez temas existentes foram preservados.
-- Campos pessoais, ROMs e imagens existentes preservados; rascunhos de diário sobrevivem à atualização de artes. SQLite permanece no schema 4.
+- Biblioteca com cards desenhados para o aplicativo, grade responsiva, busca no cabeçalho e títulos/status alinhados.
+- Início com destaque e continuidade ao lado da atividade pessoal; banner arredondado com altura adaptável.
+- Ficha com barra de ações e descrição ao lado de informações compactas. Detalhes secundários ficam recolhidos.
+- Tipografia, espaçamentos, superfícies, ícones das conexões e controles revisados. Barra de título acompanha o tema onde o Windows permite.
+- Steam prioriza library_hero.jpg; a imagem curta da loja fica como fallback. Ao abrir a ficha, o aplicativo pode substituir um cabeçalho antigo comprovadamente automático, preservando escolhas manuais e o cache anterior.
+- Os dez temas, a identidade checkpo//nt, dados pessoais e schema SQLite 4 são preservados.
 
-Baixe **Checkpoint-0.1.18-windows-x64.zip**, extraia a pasta completa e abra Checkpoint.exe. Preserve `_internal` e `CheckpointUpdater`.
+Baixe **Checkpoint-0.1.19-windows-x64.zip**, extraia a pasta completa e abra Checkpoint.exe. Preserve `_internal` e `CheckpointUpdater`.
 
-Consulte o arquivo de validação para os resultados Windows e o cadastro completo testado no executável extraído. Fixtures e estado Configurado não comprovam autenticação de serviços externos.
+O arquivo de validação informa testes Windows e smokes do executável extraído. Testes de banners usam transporte controlado; não garantem disponibilidade de arte para todos os jogos. A fidelidade visual continua sujeita à revisão do usuário nas telas reais.

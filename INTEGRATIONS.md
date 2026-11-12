@@ -1,5 +1,15 @@
 # Integrações
 
+## Banner Steam — 0.1.19
+
+Preferir library_hero.jpg ao cabeçalho curto da loja. Usar header_image apenas se
+o panorâmico não estiver disponível. Atualizar cabeçalhos antigos somente quando
+artwork_assets confirmar download automático Steam, identidade, caminho e hash
+inalterados. A confirmação manual remove a proveniência automática desse tipo.
+A ficha solicita essa atualização uma vez por sessão, respeitando artwork.auto;
+também é possível repetir pelo menu de artes/preenchimento em lote. Não mudar
+capas/banners escolhidos pelo usuário nem apagar arquivos antigos do cache.
+
 ## 0.1.17 — consulta após persistir o cadastro
 
 A identificação automática agora acontece em segundo plano, após salvar, sem abrir

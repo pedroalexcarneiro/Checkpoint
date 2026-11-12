@@ -1,5 +1,29 @@
 # Continuidade do Checkpoint
 
+## 0.1.19 — fidelidade visual e banner Steam
+
+O usuário rejeitou a fidelidade visual da 0.1.18; os mockups aprovados continuam
+sendo a referência, sem considerar testes funcionais como aprovação estética.
+A biblioteca agora usa delegate próprio com cards, título/status alinhados e grade
+responsiva; a busca foi para o cabeçalho. Início reorganizado com continuidade e
+atividade lado a lado. Hero arredondado, altura proporcional ao banner e arte
+principal inteira; ficha com barra de ações e informações secundárias recolhidas.
+Tipografia, superfícies, controles e ícones das conexões revistos. Barra de título
+nativa solicita o tema escuro no Windows compatível, sem remover controles do SO.
+
+Steam passa a priorizar library_hero.jpg; header da loja é fallback. Cabeçalhos
+antigos são substituíveis somente com proveniência Steam, caminho/hash intactos e
+identidade correspondente. Abertura da ficha tenta uma vez por sessão, respeitando
+a automação. Confirmação manual de arte invalida a proveniência automática.
+Alteração manual durante download prevalece; cache antigo permanece preservado.
+
+Validação Linux: 177 testes em 40,09 s, exit 0; após ajustar proporções, 12 focados
+em 6,17 s, exit 0. Smokes de páginas, auxiliar e cadastro com imagem/SQLite passaram.
+Capturas reais com fixtures isoladas em 1440×980/1000×700; sem dados pessoais.
+Probe do hero Steam: CONNECT bloqueado pelo proxy HTTP 403 (curl 56, HTTP 000).
+Seleção/fallback/upgrade testados com transporte controlado, não download real.
+Schema permanece 4. Build/publicação Windows 0.1.19 dependem do workflow.
+
 ## Publicação confirmada — v0.1.18
 
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.18
@@ -136,7 +160,7 @@ Probes à loja Steam e CDN foram bloqueados pelo proxy (CONNECT HTTP 403);
 contratos testados com respostas controladas, sem validar download real, Windows
 ou autenticação. Nenhuma credencial foi lida ou exposta pela sessão.
 
-Estado de referência: aplicativo 0.1.18 de desenvolvimento, schema SQLite 4.
+Estado de referência: aplicativo 0.1.19 de desenvolvimento, schema SQLite 4.
 Este documento transfere o contexto de trabalho; não é uma cópia integral do chat.
 Não contém credenciais, dados pessoais da biblioteca ou autorizações para novos acessos.
 

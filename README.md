@@ -1,6 +1,8 @@
 # Checkpoint
 
-Biblioteca pessoal de jogos para Windows em Python/PySide6 e SQLite. Versão **0.1.18 de desenvolvimento**.
+0.1.19 revisa a composição visual em relação aos mockups e prioriza banners panorâmicos Steam. Capturas reais e detalhes estão na documentação de desenvolvimento; o pacote Windows ainda depende da validação do workflow.
+
+Biblioteca pessoal de jogos para Windows em Python/PySide6 e SQLite. Versão **0.1.19 de desenvolvimento**.
 
 Interface renovada: Início com atividade pessoal, biblioteca com capas inteiras, ficha com banner/logo e abas, cadastro simples e Configurações compactas. Identidade checkpo//nt e dez temas adaptáveis. Salvar continua gravando o jogo imediatamente, com ficha/imagens em segundo plano. Pacote Windows publicado: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.18 .
 

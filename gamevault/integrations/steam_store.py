@@ -36,14 +36,16 @@ class SteamStoreProvider:
                 except ValueError:
                     pass
         images = {'cover': f'https://cdn.akamai.steamstatic.com/steam/apps/{identity}/library_600x900.jpg',
-                  'logo': f'https://cdn.akamai.steamstatic.com/steam/apps/{identity}/logo.png'}
+                  'logo': f'https://cdn.akamai.steamstatic.com/steam/apps/{identity}/logo.png',
+                  'banner': f'https://cdn.akamai.steamstatic.com/steam/apps/{identity}/library_hero.jpg'}
+        alternatives={}
         if row.get('header_image'):
-            images['banner'] = row['header_image']
+            alternatives['banner']=[row['header_image']]
         # Alguns jogos não publicam todos os formatos de arte. O cache valida cada resposta.
         return MetadataResult('steam', identity, row['name'],
                               description=re.sub('<[^>]+>', '', row.get('short_description') or ''),
                               release_date=date,
                               genres=tuple(item['description'] for item in row.get('genres', [])),
-                              platforms=('PC',), images=images,
+                              platforms=('PC',), images=images, image_candidates=alternatives,
                               developer=', '.join(row.get('developers') or []),
                               publisher=', '.join(row.get('publishers') or []))
