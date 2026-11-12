@@ -89,7 +89,7 @@ def execute_request(request):
                     identities=dict(lib.sql.execute('SELECT provider,external_id FROM external_identifiers WHERE game_id=?',(game_id,)))
                     game=lib.get(game_id)
                     needs_pair=('rawg' in identities and 'steamgriddb' not in identities) or ('steamgriddb' in identities and not {'rawg','steam'} & identities.keys())
-                    if game and not restore_candidate and needs_pair and any(not game[kind] for kind in ('cover','banner','logo')) and (arguments.get('force',False) or lib.setting('artwork.auto',True)):
+                    if game and not restore_candidate and needs_pair and any(not game[kind] for kind in ('description','cover','banner','logo')) and (arguments.get('force',False) or lib.setting('artwork.auto',True)):
                         from .unified_catalog import selected_details
                         from .game_import import complete_identity
                         from .trash_import import removed_match
@@ -106,6 +106,9 @@ def execute_request(request):
                 elif operation == 'catalog_details':
                     from .unified_catalog import preview_details
                     result = preview_details(database,arguments['provider'],arguments['identity'],arguments.get('platform',''))
+                elif operation == 'prices':
+                    from .prices import refresh_prices
+                    result=refresh_prices(lib,arguments['game_id'])
                 elif operation == 'resolve':
                     from dataclasses import asdict
                     from .automatic_catalog import resolve_title

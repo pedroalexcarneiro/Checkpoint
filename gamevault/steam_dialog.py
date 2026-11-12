@@ -82,7 +82,7 @@ class SteamDialog(QDialog):
         self.stop_button.hide()
         layout.addWidget(self.stop_button)
         from .design_system import dialog_heading
-        dialog_heading(layout,'Steam','Consulte sua conta e escolha os jogos para importar.','library')
+        dialog_heading(layout,'Steam','Consulte sua conta e escolha os jogos para importar.','Steam')
         self.account.textChanged.connect(self.invalidate)
         self.selection_changed()
 

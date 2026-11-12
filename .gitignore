@@ -21,3 +21,4 @@ client_secret*.json
 pytest-cache-files-*/
 .ci-results/
 release-assets/
+*.egg-info/

@@ -16,6 +16,8 @@ class MetadataResult:
     publisher: str = ''
     identifiers: dict[str,str] = field(default_factory=dict)
     image_candidates: dict[str,list[str]] = field(default_factory=dict)
+    description_source: str = ''
+    description_language: str = ''
 
 class MetadataProvider(Protocol):
     def search(self,title:str) -> list[MetadataResult]: ...

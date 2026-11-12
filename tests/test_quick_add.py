@@ -57,7 +57,7 @@ def test_search_prefills_form_and_can_save_without_advanced_step(library,app,mon
     wait(app,lambda:not dialog.quick_add.jobs)
     assert dialog.catalog_result.external_id=='42'
     assert dialog.data()['developer']=='Studio' and dialog.data()['platform']=='PC'
-    assert not dialog.form_scroll.isVisible() and not dialog.source_tabs.isVisible()
+    assert not dialog.form_scroll.isVisible() and dialog.source_tabs.isVisible()
     dialog.validate();assert dialog.result()==QDialog.Accepted;window.close()
 
 
@@ -129,3 +129,40 @@ result=app.exec();db.close();raise SystemExit(result)
 """
     result=subprocess.run([sys.executable,'-X','faulthandler','-c',script,str(folder.resolve())],env={**os.environ,'QT_QPA_PLATFORM':'offscreen'},capture_output=True,text=True,timeout=8)
     assert result.returncode==0,result.stdout+'\n'+result.stderr
+
+
+def test_source_change_rejects_inflight_catalog_and_steam_uses_import(library,app,monkeypatch):
+    blocked=Event();started=Event()
+    def worker(operation,database,**kwargs):
+        started.set();blocked.wait(3)
+        return {'results':[asdict(MetadataResult('steam','42','Old',platforms=('PC',)))],'unavailable':0}
+    monkeypatch.setattr('gamevault.quick_add.run_isolated',worker)
+    window=MainWindow(library);dialog=GameDialog(window,library=library);dialog.show()
+    quick=dialog.quick_add;quick.query.setText('Old');quick.lookup();wait(app,started.is_set)
+    dialog.source_tabs.setCurrentIndex(2);blocked.set();wait(app,lambda:not quick.jobs)
+    assert dialog.catalog_result is None and quick.candidates==[]
+    assert quick.steam_panel.isVisible() and not quick.save.isVisible()
+    assert quick.query.isHidden() and not dialog.steam_requested
+    dialog.source_tabs.setCurrentIndex(1);app.processEvents()
+    assert quick.results.isVisible() and quick.drive_manage.isVisible()
+    assert quick.save.isVisible() and quick.timer.isActive() is False
+    dialog.reject();window.close()
+
+
+def test_drive_source_displays_versions_and_preserves_original(library,app,monkeypatch):
+    from gamevault.integrations.drive import DriveScanner
+    for region in ('USA','Europe'):
+        DriveScanner(library,None).record({'id':region,'name':f'Example ({region}).gba'},'/GBA')
+    library.sql.commit();calls=[]
+    def worker(operation,database,**kwargs):
+        calls.append(kwargs);return {'results':[],'unavailable':0}
+    monkeypatch.setattr('gamevault.quick_add.run_isolated',worker)
+    window=MainWindow(library);dialog=GameDialog(window,library=library);dialog.show()
+    dialog.source_tabs.setCurrentIndex(1);quick=dialog.quick_add;quick.query.setText('Example');app.processEvents()
+    assert quick.results.count()==2 and calls==[] and dialog.drive_file_id is None
+    assert 'Europe' in quick.results.item(0).text() and 'USA' in quick.results.item(1).text()
+    quick.results.setCurrentRow(1);wait(app,lambda:not quick.jobs)
+    assert calls[0]['platform']=='Game Boy Advance'
+    assert library.sql.execute('SELECT original_name FROM game_files WHERE id=?',(dialog.drive_file_id,)).fetchone()[0]=='Example (USA).gba'
+    assert dialog.data()['source']=='Google Drive'
+    quick.save.click();assert dialog.result()==QDialog.Accepted;window.close()

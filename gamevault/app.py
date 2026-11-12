@@ -64,6 +64,12 @@ def main():
             if font.exists(): QFontDatabase.addApplicationFont(str(font))
             def verify():
                 try:
+                    from .ui_components import service_icon
+                    for name in ('Steam','Google Drive'):
+                        pix=service_icon(name)
+                        asset=Path(__file__).resolve().parent/'assets'/'services'/('steam.ico' if name=='Steam' else 'google-drive.png')
+                        from PySide6.QtGui import QIcon
+                        if not asset.is_file() or QIcon(str(asset)).pixmap(48,48).isNull() or pix.isNull():raise RuntimeError('Asset oficial ausente no pacote: '+name)
                     for index in range(6): window.navigate(index); app.processEvents()
                     window.navigate(0); app.processEvents(); window.grab().save(str(directory/'smoke-home.png'))
                     print('Checkpoint smoke: 6 pages OK; SQLite integrity='+db.connection.execute('PRAGMA integrity_check').fetchone()[0])

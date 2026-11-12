@@ -1,5 +1,77 @@
 # Estado do projeto — Checkpoint
 
+## Decisões finais desta continuidade — 12/11/2026
+
+- Modo claro removido por pedido expresso posterior do usuário. Permanecem nove
+  temas escuros e as preferências de cor existentes. Uma preferência legada `white`
+  passa para Verde ao abrir; dados da biblioteca não são alterados. Esta decisão
+  substitui os registros históricos de dez temas/tema Branco abaixo.
+
+- O usuário descartou o modo quadrado da **Biblioteca** porque não há garantia de
+  artes quadradas estáticas para todos os jogos. A Biblioteca mantém o formato
+  vertical com área ampliada para o pôster e as imagens inteiras, sem corte/deformação. Não há seletor de formato
+  quadrado nem obtenção paralela de artes quadradas nesta entrega.
+- **Wishlist:** cards quadrados com logos estáticas, proporção preservada, mesma
+  área de apresentação, título de uma linha, preço e ações alinhados. Ver ofertas, + e lixeira
+  ficam na mesma linha; logos maiores sem fundo preto no tema claro. Sem logo,
+  usa placeholder discreto e o título normal; não estica texto nem improvisa uma logo.
+- **Horas de jogo:** calendário diário no estilo GitHub, com intensidade e tooltip
+  de data/duração, últimos 12 meses ou ano escolhido. Usa sessões reais em UTC.
+- Retirada a repetição do nome do serviço dos textos de preço. Os botões de ofertas
+  continuam abrindo a comparação completa, com links originais preservados.
+- Downloads/cadastro de artes recusam GIFs e animações. Os vídeos pessoais em
+  Memórias continuam disponíveis; essa regra se refere às artes do jogo.
+
+## Continuidade de design e PT-BR — revisão em 12/11/2026
+
+Esta revisão parte de `codex/steam-library-import` em `d23439d`, árvore inicialmente
+limpa. Implementação em `codex/design-fidelity-pt-br`, para revisão contra a branch
+de desenvolvimento. `main`, tags e releases existentes foram preservadas. A versão
+publicada continua v0.1.23. Esta revisão não declara o design aprovado/concluído.
+As imagens anexadas pelo usuário continuam sendo a especificação visual; os
+registros históricos de “interface completa” abaixo não representam sua aprovação.
+
+- Shell e cabeçalhos compactados; Início mantém continuidade/atividade lado a lado
+  em 1000 px; Biblioteca agrupa filtros sem perder lista, ordenação ou favoritos.
+  Cadastro passa a diálogo compacto com Pesquisar jogo / ROM do Drive / Steam,
+  sugestão em linha e configurações opcionais. Busca/enriquecimento continuam isolados.
+- Ícones Steam e Drive são arquivos oficiais, sem redesenho. Incluídos nos dados do
+  pacote Python e PyInstaller; origem em THIRD_PARTY_NOTICES.md. O smoke verifica assets.
+- Biblioteca vertical com capas inteiras; wishlist em cards quadrados com logos,
+  sem texto espremido e com preço/ações em posições comuns. O modo quadrado da
+  Biblioteca foi descartado por decisão explícita do usuário, conforme nota acima.
+- Steam solicita `brazilian`; datas localizadas da fonte são normalizadas em ISO.
+  Ficha/editor/catálogos exibem DD/MM/AAAA; SQLite e contratos permanecem ISO.
+  Publicadora, origem, categoria e nota existentes ficam sempre visíveis na ficha.
+- ROMs com identidade confirmada podem obter texto PT da Wikipédia quando há artigo
+  exato, plataforma compatível e tradução. Desambiguação, remake/ano incompatível e
+  ausência de PT não são associados. Fonte/licença ficam visíveis; hash de texto
+  protege edições locais. Inglês legado da Steam/RAWG só é substituído com comprovação
+  de que ainda coincide com a fonte automática. Sem tradução disponível não há texto
+  inventado nem promessa de cobertura integral. Fontes existentes são preservadas.
+- Desejos não exibem status de progresso e não contam como coleção possuída nas
+  estatísticas/Início/Biblioteca. “Adicionar à biblioteca” confirma aquisição.
+  Retirar dos desejos preserva o cadastro como não possuído, recuperável em Dados e
+  backup > Desejos removidos. Notas, histórico, status legado, artes e arquivos não
+  são apagados. O campo legado de meta de preço é preservado no banco, sem uso na UI.
+- Desejos mostra **menor preço atual do GG.deals**, não meta pessoal. A ficha apresenta
+  lojas oficiais/keyshops, ofertas carregadas e links originais; botão abre a página
+  brasileira com a comparação completa. Usa página pública BR identificada pelo
+  redirecionamento oficial de AppID, moeda BRL verificada, cache de uma hora e fila
+  espaçada em 6,5 s. Não precisa de chave de API. Falha não vira R$ 0: sinaliza
+  indisponibilidade/valor salvo e mantém link e última consulta. Lista local pode ser
+  parcial; todas as ofertas ficam acessíveis no GG.deals. Sem AppID/página confirmada,
+  oferece pesquisa no site sem presumir uma associação.
+- Estatísticas passam a calendário diário com intensidade e distribuição por barras,
+  sem pizza; sessões/períodos ausentes recebem zero no intervalo apresentado.
+  Totais continuam derivados do SQLite e horas Steam não duplicam sessões locais.
+
+Schema permanece 4. Nenhum banco pessoal, ROM, save, nota, credencial ou log privado
+foi lido, copiado ou versionado. Regressões cobrem edição manual, versão de ROM,
+origens do cadastro, datas, wishlist/posse, formatos e cache/preços em BRL.
+Windows tem workflow de validação de PR separado da publicação de releases.
+Resultados efetivos e limitações estão em TESTING.md e evidence/design-ptbr-validation.txt.
+
 ## Publicação confirmada — v0.1.23
 
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.23

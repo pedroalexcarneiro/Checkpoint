@@ -1,5 +1,31 @@
 # Integrações
 
+## Descrições PT e preços GG.deals — revisão 12/11/2026
+
+Steam Store API usa `l=brazilian&cc=BR`. RAWG não oferece descrição PT garantida;
+SteamGridDB não fornece sinopse. `integrations/descriptions.py` consulta MediaWiki
+público: título exato no artigo inglês, categoria da plataforma, ano quando conhecido,
+sem desambiguação, seguido da tradução PT via langlinks e introdução em texto simples.
+Sem correspondência segura mantém a ficha existente. Não usa tradução automática nem
+associa a ROM a outro jogo. Proveniência/hash em settings protege texto manual, sem
+nova migração. Wikipédia: atribuição/link no jogo e licença CC BY-SA 4.0.
+
+GG.deals: documentação consultada em https://gg.deals/api/prices/ e
+https://gg.deals/api/redirections/ . A API por chave retorna mínimos, sem lista por
+loja. O aplicativo lê a página pública brasileira obtida pelo endpoint documentado
+`https://gg.deals/br/steam/app/<AppID>/`; usa preço visível BRL/JSON-LD, nunca o
+`data-deal-value` analítico em dólares. Links de lojas/afiliados são preservados e
+A comparação mantém os links originais de ofertas e acesso à página completa. Preview pode ser parcial;
+o botão para a página dá acesso à lista completa, conforme autorizado pelo usuário.
+
+Cache em settings `prices.ggdeals.<id>` (tentativa, consulta, moeda, mínimos, ofertas
+públicas e URL), TTL 1h, consultas isoladas e espaçadas em 6,5s. Falha/HTML alterado/
+moeda errada não gera preços fictícios nem substitui um snapshot válido por zero.
+Sem AppID confirmado não faz associação por nome: abre pesquisa manual no GG.deals.
+A preferência `prices.auto` pode ser desativada em Conexões > Avançado. Nenhuma chave,
+conta, senha ou cookie pessoal é necessário para esta implementação pública.
+
+
 ## Banner Steam — 0.1.19
 
 Preferir library_hero.jpg ao cabeçalho curto da loja. Usar header_image apenas se
@@ -183,3 +209,8 @@ Referência primária do provedor: https://github.com/SteamGridDB/java-steamgrid
 - RAWG continua sem validação autenticada nesta sessão; não promete ficha completa usando somente a chave SteamGridDB. Verificar em Windows: novo cadastro pelo Drive, escolha da edição correta, obtenção automática de artes e navegação após salvar.
 
 Validação autenticada adicional 0.1.13, em biblioteca isolada: ID SteamGridDB já confirmado para The Legend of Zelda: The Minish Cap; formulário preenchido com ROM de teste, título do catálogo aplicado, cadastro/identidade/versão salvos e ArtworkProgress concluído. API real retornou e cacheou cover, banner e logo (3 sucessos, zero falhas). Nome original preservado e integrity_check ok. Não adicionou jogo/ROM à coleção real. RAWG real continua pendente.
+
+
+Artes são solicitadas com `types=static` ao SteamGridDB e o cache também rejeita
+GIFs/imagens com animação detectada. Não há garantia de logo ou capa em todos os
+jogos: ausência permanece explícita. A Biblioteca quadrada foi descartada pelo usuário.

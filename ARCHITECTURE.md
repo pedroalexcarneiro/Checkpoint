@@ -95,3 +95,24 @@ campos existentes em quatro abas sem alterar o contrato de GameDialog.data().
 A persistência, a identificação de ROMs e os provedores não foram substituídos.
 Capturas de revisão são produzidas por scripts/render_ui_review.py em base nova;
 o empacotamento visual só aceita PNGs de capturas e índice HTML, nunca a base.
+
+
+## Revisão de design/PT e wishlist — 12/11/2026
+
+`locale.py` separa apresentação DD/MM/AAAA do armazenamento ISO.
+`description_provenance.py` guarda fonte/idioma/hash em settings; atualizações
+condicionais preservam texto editado. `integrations/descriptions.py` é leitura
+pública por artigo exato/plataforma, não substitui a identidade do catálogo.
+`Library.games()` mantém o contrato de registros ativos; `owned_games()`/
+`is_owned()` filtram desejos e entradas arquivadas para a UI e estatísticas.
+`collection.unowned.<id>` preserva posse separada de remoção da wishlist.
+Importação explícita de jogo/conta Steam confirma posse e limpa essa marca.
+`prices.py` guarda snapshots públicos, `integrations/ggdeals.py` valida moeda,
+identidade e links, `price_queue.py` executa em auxiliares sequenciais sem bloquear
+Qt, e `price_view.py` apresenta valores/fontes. Não há mudança de schema.
+
+`activity_heatmap.py` apresenta os agregados `stats()['daily']`; nenhum valor de
+calendário é aleatório. `SquareWishCard`/`WishLogo`/`WishTitle` padronizam dimensões,
+proporção de logo e uma linha de título, sem reutilizar o pôster da Biblioteca.
+A opção de Biblioteca quadrada foi descartada; não há fila/auxiliar adicional de
+arte quadrada no código final.

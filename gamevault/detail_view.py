@@ -1,5 +1,6 @@
 """Ficha editorial: banner/logo, ações claras e informações em abas."""
 import json
+from .locale import date_display,datetime_display
 from pathlib import Path
 from PySide6.QtCore import Qt,QSize
 from PySide6.QtGui import QPixmap,QIcon
@@ -16,19 +17,24 @@ def build_detail(window,game):
     if hasattr(window,'detail_page'):
         window.stack.removeWidget(window.detail_page);window.detail_page.deleteLater()
     page=QScrollArea();page.setWidgetResizable(True);window.detail_page=page
-    body=QWidget();layout=QVBoxLayout(body);layout.setContentsMargins(0,0,8,0);layout.setSpacing(16)
+    body=QWidget();layout=QVBoxLayout(body);layout.setContentsMargins(0,0,8,0);layout.setSpacing(8)
     hero=Hero(game,window.theme);hero.detail_mode=True
     back=QHBoxLayout();back_button=action('←',lambda:window.navigate(1));back_button.setFixedSize(32,32);back_button.setObjectName('heroBack');back_button.setAccessibleName('Voltar à biblioteca');back_button.setToolTip('Voltar à biblioteca');back.addWidget(back_button);back.addStretch();hero.content.insertLayout(0,back)
     layout.addWidget(hero)
-    actions_frame=QWidget();actions_frame.setObjectName('gameActions');bar=QHBoxLayout(actions_frame);bar.setContentsMargins(14,10,14,10);bar.setSpacing(20)
+    actions_frame=QWidget();actions_frame.setObjectName('gameActions');bar=QHBoxLayout(actions_frame);bar.setContentsMargins(14,8,14,8);bar.setSpacing(20)
     files=[dict(r) for r in window.library.sql.execute('SELECT * FROM game_files WHERE game_id=? ORDER BY original_name',(game_id,))]
     available=[f for f in files if f['available']]
-    if game['executable']:bar.addWidget(action('▶ Jogar',lambda:window.start_game(game),True))
+    owned=window.library.is_owned(game_id)
+    if not owned:bar.addWidget(action('Adicionar à biblioteca',lambda:window.acquire_wish(game_id),True))
+    elif game['executable']:bar.addWidget(action('▶ Jogar',lambda:window.start_game(game),True))
     elif available:bar.addWidget(action('▶ Jogar',lambda:window.launch_rom(game_id,available[0]),True))
     elif files:bar.addWidget(action('Baixar ROM',window.drive,True))
     else:bar.addWidget(action('Configurar execução',lambda:window.edit_game(game_id),True))
     seconds=window.library.sql.execute("SELECT COALESCE(SUM(duration_seconds),0) FROM play_sessions WHERE game_id=? AND state='finished'",(game_id,)).fetchone()[0]
-    bar.addWidget(text('● '+game['status'],'muted'));bar.addWidget(text(f'{seconds/3600:.1f} h registradas','muted'));bar.addStretch()
+    if owned:
+        bar.addWidget(text('● '+game['status'],'muted'));bar.addWidget(text(f'{seconds/3600:.1f} h registradas','muted'))
+    else:bar.addWidget(text('Na lista de desejos' if window.library.sql.execute('SELECT 1 FROM wishlist WHERE game_id=?',(game_id,)).fetchone() else 'Desejo arquivado','muted'))
+    bar.addStretch()
     bar.addWidget(IconButton('heart','Retirar dos favoritos' if game['favorite'] else 'Marcar como favorito',lambda:window.toggle_favorite(game_id)))
     more=QToolButton();more.setFixedSize(40,36);more.setText('⋯');more.setAccessibleName('Gerenciar jogo');more.setPopupMode(QToolButton.InstantPopup)
     menu=QMenu(more)
@@ -42,12 +48,19 @@ def build_detail(window,game):
     overview,activity,memories,technical=layouts
     columns=None
     about=QWidget();about_layout=QVBoxLayout(about);about_layout.setContentsMargins(0,0,0,0);about_layout.setSpacing(14)
-    about_layout.addWidget(text('Sobre o jogo','sectionTitle'))
     about_layout.addWidget(text(game['description'] or 'A descrição será exibida quando a ficha estiver disponível.','bodyText'))
+    from .description_provenance import current
+    provenance=current(window.library,game)
+    if provenance.get('source','').startswith('https://pt.wikipedia.org/'):
+        from PySide6.QtGui import QDesktopServices
+        from PySide6.QtCore import QUrl
+        source=provenance['source']
+        attribution=action('Fonte: Wikipédia · CC BY-SA 4.0',lambda:QDesktopServices.openUrl(QUrl(source)))
+        attribution.setObjectName('quiet');attribution.setToolTip(source);about_layout.addWidget(attribution,0,Qt.AlignLeft)
     if game['notes']:about_layout.addWidget(text('Suas observações','cardTitle'));about_layout.addWidget(text(game['notes'],'muted'))
     media=[dict(r) for r in window.library.sql.execute('SELECT * FROM media_files WHERE game_id=? ORDER BY id DESC',(game_id,))]
     images=[m for m in media if m['kind']=='image'][:2]
-    fields=[('Desenvolvedora',game['developer']),('Plataforma',game['platform']),('Gênero',game['genre']),('Lançamento',game['release_date'])]
+    fields=[('Desenvolvedora',game['developer']),('Plataforma',game['platform']),('Gênero',game['genre']),('Lançamento',date_display(game['release_date']))]
     facts=QGridLayout();facts.setHorizontalSpacing(36);facts.setVerticalSpacing(16)
     for index,(caption,value) in enumerate((pair for pair in fields if pair[1])):
         item=QWidget();inside=QVBoxLayout(item);inside.setContentsMargins(0,0,0,0);inside.setSpacing(4)
@@ -58,9 +71,13 @@ def build_detail(window,game):
     for caption,value in other:
         if value:extra_layout.addWidget(text(f'{caption} · {value}','muted'))
     from .settings_view import disclosure
-    if any(value for _,value in other):disclosure('Mais informações',extra,about_layout)
+    if any(value for _,value in other):about_layout.addWidget(extra)
+    if not owned:
+        from .price_view import comparison
+        about_layout.addWidget(comparison(window,game))
+        if window.isVisible() and window.library.setting('prices.auto',True):window.price_queue.submit([game_id])
     about_layout.addStretch()
-    gallery=QWidget();gallery.setMaximumWidth(380);gallery.setMinimumWidth(240)
+    gallery=QWidget();gallery.setMaximumWidth(380);gallery.setMinimumWidth(240);gallery.setObjectName('detailGallery')
     gallery_layout=QVBoxLayout(gallery);gallery_layout.setContentsMargins(20,0,0,0);gallery_layout.setSpacing(14)
     gallery_layout.addWidget(text('Galeria','sectionTitle'))
     if images:
@@ -70,13 +87,13 @@ def build_detail(window,game):
         gallery_layout.addLayout(row)
     else:gallery_layout.addWidget(text('Suas capturas deste jogo aparecem aqui.','muted'))
     add=action('Adicionar captura',lambda:window.import_media(game_id));add.setObjectName('quiet');gallery_layout.addWidget(add,0,Qt.AlignLeft);gallery_layout.addStretch()
-    overview.addWidget(AdaptiveColumns(about,gallery,(3,2),breakpoint=780))
+    overview.addWidget(AdaptiveColumns(about,gallery,(3,2),breakpoint=640))
     from .steam_library import game_accounts
     accounts=game_accounts(window.library,game_id)
     if accounts:activity.addWidget(text('Steam','sectionTitle'))
     for account in accounts:
         frame,inside=card();hours='Tempo não disponível' if account['minutes'] is None else f"{account['minutes']/60:.1f} h na Steam"
-        inside.addWidget(text(hours,'sectionTitle'));inside.addWidget(text(f"AppID {account['app_id']} · Consulta {(account['checked_at'] or '')[:10]}",'muted'))
+        inside.addWidget(text(hours,'sectionTitle'));inside.addWidget(text(f"AppID {account['app_id']} · Consulta {date_display(account['checked_at'])}",'muted'))
         if account['achievements_checked_at']:
             inside.addWidget(text(f"Conquistas: {account['achievement_unlocked']}/{account['achievement_total']}"))
             for achievement in window.library.sql.execute('SELECT title,unlocked_at FROM steam_achievements WHERE steam_id=? AND app_id=? ORDER BY title COLLATE NOCASE',(account['steam_id'],account['app_id'])):
@@ -89,12 +106,12 @@ def build_detail(window,game):
     milestones=window.library.sql.execute('SELECT * FROM achievements WHERE game_id=?',(game_id,)).fetchall()
     if not milestones:activity.addWidget(text('Seus marcos e conquistas aparecem aqui.','muted'))
     for record in milestones:
-        frame,inside=card();row=QHBoxLayout();row.addWidget(Badge('trophy'));row.addWidget(text(record['title'],'cardTitle'),1);row.addWidget(text((record['unlocked_at'] or '')[:10],'caption'));inside.addLayout(row);activity.addWidget(frame)
+        frame,inside=card();row=QHBoxLayout();row.addWidget(Badge('trophy'));row.addWidget(text(record['title'],'cardTitle'),1);row.addWidget(text(date_display(record['unlocked_at']),'caption'));inside.addLayout(row);activity.addWidget(frame)
     activity.addWidget(text('Sessões','sectionTitle'))
     sessions=window.library.sql.execute('SELECT * FROM play_sessions WHERE game_id=? ORDER BY id DESC',(game_id,)).fetchall()
     if not sessions:activity.addWidget(text('Nenhuma sessão registrada.','muted'))
     for record in sessions:
-        frame,inside=card();row=QHBoxLayout();row.addWidget(Badge('clock'));words=QVBoxLayout();words.addWidget(text(record['started_at'][:16].replace('T',' '),'cardTitle'));words.addWidget(text({'finished':'Concluída','active':'Em andamento','interrupted':'Interrompida'}.get(record['state'],record['state']),'muted'));row.addLayout(words,1);row.addWidget(text(f"{record['duration_seconds']//60} min",'cardTitle'));inside.addLayout(row);activity.addWidget(frame)
+        frame,inside=card();row=QHBoxLayout();row.addWidget(Badge('clock'));words=QVBoxLayout();words.addWidget(text(datetime_display(record['started_at']),'cardTitle'));words.addWidget(text({'finished':'Concluída','active':'Em andamento','interrupted':'Interrompida'}.get(record['state'],record['state']),'muted'));row.addLayout(words,1);row.addWidget(text(f"{record['duration_seconds']//60} min",'cardTitle'));inside.addLayout(row);activity.addWidget(frame)
     for session,item in window.launcher.active.items():
         if item[2]==game_id:activity.addWidget(action('Encerrar registro desta sessão',lambda checked=False,i=session:window.end_session(i,game_id)))
     memories.addWidget(text('Diário de jogo','sectionTitle'));entry=QTextEdit();window.detail_diary=entry;entry.setPlainText(draft);entry.setPlaceholderText('O que você quer guardar desta experiência?');entry.setMaximumHeight(110);memories.addWidget(entry)
@@ -125,7 +142,7 @@ def build_detail(window,game):
         automatic=QCheckBox('Backup ao encerrar a sessão');automatic.setChecked(window.library.setting('auto_save_'+str(game_id),False));automatic.toggled.connect(lambda value:window.library.set_setting('auto_save_'+str(game_id),value));inside.addWidget(automatic)
         inside.addWidget(action('Fazer backup agora',lambda:window.game_backup(game_id)),0,Qt.AlignLeft);technical.addWidget(frame)
         for backup in GameSaveBackups(window.library).history(game_id):
-            frame,inside=card();row=QHBoxLayout();row.addWidget(text(backup['created_at'][:19].replace('T',' ')),1);row.addWidget(action('Restaurar',lambda checked=False,b=backup:window.restore_game_backup(game_id,b)));inside.addLayout(row);technical.addWidget(frame)
+            frame,inside=card();row=QHBoxLayout();row.addWidget(text(datetime_display(backup['created_at'])),1);row.addWidget(action('Restaurar',lambda checked=False,b=backup:window.restore_game_backup(game_id,b)));inside.addLayout(row);technical.addWidget(frame)
     else:technical.addWidget(text('Configure uma pasta de saves para criar e restaurar backups.','muted'))
     for inside in layouts:inside.addStretch()
     tabs.setCurrentIndex(min(saved_tab,3));layout.addWidget(tabs);page.setWidget(body);window.stack.addWidget(page);window.stack.setCurrentWidget(page)

@@ -400,3 +400,42 @@ falhas/erros/skips e smokes aprovados. Capturas com fonte corrigida produzidas e
 PNG de Início/Biblioteca/Aparência inspecionados. ZIP visual possui 37 capturas
 e hash conferido; nenhum banco/log foi incluído. Resultado visual continua
 aberto a ajustes do usuário, sem confundir sucesso funcional com aprovação estética.
+
+## Continuidade após v0.1.23 — 12/11/2026
+
+Estado final: nove temas escuros (modo claro removido), Biblioteca vertical com
+capas ampliadas e legendas alinhadas, wishlist quadrada com logos e ações na mesma
+linha, calendário diário, PT-BR/datas e preços públicos BRL. A opção de Biblioteca
+quadrada foi descartada pelo usuário; não deve ser reintroduzida por esta revisão.
+
+Validação Linux final: **216 testes aprovados em 93,36 s, exit 0**, sem abort nativo:
+
+```sh
+QT_QPA_PLATFORM=offscreen .venv/bin/python -X faulthandler -m pytest tests -q -p no:cacheprovider -o faulthandler_timeout=90
+```
+
+Smokes executados via `scripts.package_windows_release.smoke` e `save_smoke`, com
+`sys.executable -m gamevault.app` e diretórios novos sob `work/`: seis páginas,
+integridade/schema SQLite, auxiliar `ping`, assets oficiais presentes e cadastro
+com imagem/SQLite aprovados. Nunca abriram a biblioteca pessoal. O wheel foi
+construído e inspecionado: contém os módulos e assets necessários, sem base/logs.
+Isso não equivale a empacotamento ou homologação Windows.
+
+`scripts/render_ui_review.py work/review-dark-final --art-dir work/reference-art
+--prices-file work/prices-for-review.json` gerou 48 capturas Qt, incluindo verde,
+roxo/azul, janelas 1100×740 e 1000×700, abas, diálogos, calendário e wishlist.
+Dados de jogos/sessões são fixtures; os arquivos opcionais trazem artes/snapshot
+públicos para revisão, sem autenticação de conta. O empacotador inclui somente
+capturas/índice, sem bases/logs. Inspeção visual Linux não é aprovação estética.
+
+Consultas públicas reais, separadas dos testes com transportes substituídos:
+Steam Store retornou descrição PT de Hollow Knight e data ISO 2017-02-24;
+MediaWiki retornou descrição PT de The Minish Cap para Game Boy Advance;
+GG.deals BR retornou Hollow Knight, mínimo R$ 46,99, lojas oficiais R$ 46,99 e
+keyshops R$ 47,46, com 11 ofertas carregadas e links originais. Esses valores são
+um snapshot da consulta, não promessa de preço futuro nem validação autenticada.
+Nenhum segredo foi lido. SteamGridDB/RAWG autenticados e cofre Windows não foram
+validados nesta nuvem.
+
+O novo workflow `Windows UI validation` valida PRs sem publicar releases ou tags.
+O resultado Windows deve ser observado separadamente e registrado ao concluir.

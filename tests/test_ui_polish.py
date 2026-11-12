@@ -30,3 +30,21 @@ def test_statistics_chart_uses_library_totals(library,app):
     assert sum(ring.statuses.values())==2 and ring.statuses['Concluído']==1
     assert chart.values=={} and 'Nenhuma sessão' in chart.accessibleDescription()
     window.close()
+
+
+def test_library_caption_starts_at_visible_cover_edge(library,app,tmp_path):
+    image=QImage(120,180,QImage.Format_RGB32);image.fill(QColor('red'));path=tmp_path/'poster.png';image.save(str(path))
+    library.save_game({'title':'I','cover':str(path)})
+    window=MainWindow(library);window.resize(1000,700);window.navigate(1);window.show()
+    for _ in range(3):app.processEvents()
+    grid=window.gallery;rect=grid.visualItemRect(grid.item(0));capture=grid.viewport().grab(rect).toImage()
+    red=[];letters=[]
+    for y in range(capture.height()):
+        for x in range(capture.width()):
+            pixel=capture.pixelColor(x,y)
+            if pixel.red()>240 and pixel.green()<40 and pixel.blue()<40:red.append((x,y))
+            elif pixel.red()>215 and pixel.green()>215 and pixel.blue()>215:letters.append((x,y))
+    assert red and letters
+    assert abs(min(x for x,y in letters)-min(x for x,y in red))<=3
+    assert max(x for x,y in red)-min(x for x,y in red)>capture.width()*.8
+    window.close()

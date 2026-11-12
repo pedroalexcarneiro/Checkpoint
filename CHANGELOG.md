@@ -1,5 +1,15 @@
 # Changelog
 
+## Em revisão — continuidade após v0.1.23
+
+- Cadastro compacto, cabeçalhos e filtros reorganizados; capas ampliadas com título/status alinhados.
+- Ícones oficiais Steam/Drive e nove temas escuros; preferência clara antiga usa Verde.
+- Wishlist separada da posse, com logos em cards quadrados e ações alinhadas na mesma linha.
+- Menor preço em BRL, lojas/keyshops e links de comparação; nenhuma meta de preço na interface.
+- Calendário diário de horas, descrições PT quando disponíveis e datas DD/MM/AAAA.
+- Informações adicionais da ficha sempre visíveis; GIFs/animações recusados nas artes.
+- Dados, arquivos, schema 4 e proteções de processos/QThreads preservados.
+
 ## 0.1.19 — composição visual e banners Steam
 
 - Cards próprios e grade responsiva; busca no cabeçalho e controles mais discretos.

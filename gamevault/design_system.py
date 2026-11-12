@@ -18,7 +18,12 @@ class Badge(QLabel):
     def __init__(self,name,size=40,parent=None):
         super().__init__(parent);self.name=name;self.setObjectName('iconBadge');self.setFixedSize(size,size);self.setAlignment(Qt.AlignCenter)
     def paintEvent(self,event):
-        super().paintEvent(event);p=QPainter(self);pix=icon(self.name,min(24,self.width()-14),True);p.drawPixmap((self.width()-pix.width())//2,(self.height()-pix.height())//2,pix);p.end()
+        super().paintEvent(event);p=QPainter(self)
+        if self.name in ('Steam','Google Drive'):
+            from .ui_components import service_icon
+            pix=service_icon(self.name).scaled(self.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation)
+        else:pix=icon(self.name,min(24,self.width()-14),True)
+        p.drawPixmap((self.width()-pix.width())//2,(self.height()-pix.height())//2,pix);p.end()
 
 
 class IconButton(QPushButton):
@@ -57,12 +62,13 @@ class AdaptiveColumns(QWidget):
 
 
 class CardGrid(QWidget):
-    def __init__(self,target=300,parent=None):
-        super().__init__(parent);self.target=target;self.cards=[];self.columns=0
+    def __init__(self,target=300,parent=None,max_columns=None):
+        super().__init__(parent);self.target=target;self.max_columns=max_columns;self.cards=[];self.columns=0
         self.grid=QGridLayout(self);self.grid.setContentsMargins(0,0,0,0);self.grid.setSpacing(20);self.grid.setAlignment(Qt.AlignTop)
     def add_card(self,widget):self.cards.append(widget);self.reflow()
     def reflow(self):
         columns=max(1,self.width()//self.target)
+        if self.max_columns:columns=min(columns,self.max_columns)
         if columns==self.columns and self.grid.count()==len(self.cards):return
         self.columns=columns
         while self.grid.count():self.grid.takeAt(0)
@@ -100,7 +106,7 @@ def dialog_heading(layout,title,description='',name='settings'):
     from .ui_components import text
     layout.setContentsMargins(24,22,24,22);layout.setSpacing(16)
     from .window_style import titlebar_theme
-    if layout.parentWidget():titlebar_theme(layout.parentWidget().window(),QApplication.instance().property('checkpointTheme')!='white')
+    if layout.parentWidget():titlebar_theme(layout.parentWidget().window(),True)
     frame=QWidget();frame.setObjectName('dialogHeading');row=QHBoxLayout(frame);row.setContentsMargins(0,0,0,8);row.setSpacing(14);row.addWidget(Badge(name,44),0,Qt.AlignTop)
     words=QVBoxLayout();words.setSpacing(4);words.addWidget(text(title,'sectionTitle'))
     if description:words.addWidget(text(description,'muted'))

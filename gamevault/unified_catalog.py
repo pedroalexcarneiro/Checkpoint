@@ -49,7 +49,8 @@ def search_titles(title,platform='',sources=None):
     return {'results':[asdict(row) for row in results[:24]],'unavailable':failed}
 
 
-def selected_details(provider,identity,platform='',sources=None):
+def selected_details(provider,identity,platform='',sources=None,descriptions=None):
+    live=sources is None
     sources=providers() if sources is None else sources
     if provider not in sources:raise IntegrationError('Catálogo indisponível. Você pode adicionar o jogo e tentar completar a ficha depois.')
     source=sources[provider]
@@ -71,11 +72,17 @@ def selected_details(provider,identity,platform='',sources=None):
                 release_date=result.release_date or detail.release_date,genres=result.genres or detail.genres,
                 platforms=result.platforms or detail.platforms,images={**detail.images,**result.images})
         except Exception:continue
-    return replace(result,identifiers=identities)
+    result=replace(result,identifiers=identities)
+    if live or descriptions is not None:
+        from .integrations.descriptions import localize_result
+        result=localize_result(result,platform or next(iter(result.platforms),''),descriptions)
+    return result
 
 
 def preview_details(database,provider,identity,platform=''):
-    sources=providers();result=selected_details(provider,identity,platform,sources)
+    sources=providers()
+    from .integrations.descriptions import PortugueseDescriptions
+    result=selected_details(provider,identity,platform,sources,PortugueseDescriptions())
     from .integrations.images import ImageCache
     from pathlib import Path
     cache=ImageCache(Path(database).parent/'images',timeout=8);preview={}

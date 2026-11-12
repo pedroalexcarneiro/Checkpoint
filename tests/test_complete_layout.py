@@ -6,14 +6,17 @@ from gamevault.dialogs import GameDialog
 from gamevault.design_system import CardGrid,IconButton,ThemeSwatch
 
 
-def test_wishlist_actions_update_price_and_remove_only_wish(library,app,monkeypatch):
+def test_wishlist_uses_current_prices_and_removal_preserves_game(library,app,monkeypatch):
     identity=library.save_game({'title':'Wishlist fixture','notes':'Preserve'})
     with library.sql:library.sql.execute('INSERT INTO wishlist(game_id,target_cents) VALUES(?,?)',(identity,5000))
     window=MainWindow(library);window.navigate(2);window.show();app.processEvents()
     assert len(window.pages[2].findChild(CardGrid,'wishlistGrid').cards)==1
     monkeypatch.setattr(QInputDialog,'getDouble',lambda *args:(39.9,True))
     window.add_wish(identity)
-    assert library.sql.execute('SELECT target_cents FROM wishlist').fetchone()[0]==3990
+    assert library.sql.execute('SELECT target_cents FROM wishlist').fetchone()[0]==5000
+    labels=[item.text() for item in window.pages[2].findChildren(QLabel)]
+    assert 'Menor preço' in labels and 'Meta de preço' not in labels
+    assert not library.is_owned(identity)
     window.pages[2].findChild(IconButton).click()
     assert library.sql.execute('SELECT count(*) FROM wishlist').fetchone()[0]==0
     assert library.get(identity)['notes']=='Preserve';window.close()

@@ -16,7 +16,7 @@ class DriveDialog(QDialog):
         from .design_system import dialog_heading
         from .settings_view import disclosure
         from PySide6.QtWidgets import QWidget,QToolButton,QMenu
-        layout=QVBoxLayout(self);dialog_heading(layout,'ROMs do Drive','Pesquise seu índice e baixe somente o que quiser jogar.','folder')
+        layout=QVBoxLayout(self);dialog_heading(layout,'ROMs do Drive','Pesquise seu índice e baixe somente o que quiser jogar.','Google Drive')
         self.controls=[]
         setup=QWidget();connection=QVBoxLayout(setup);connection.setContentsMargins(0,4,0,4)
         self.root=QLineEdit();self.root.setPlaceholderText('ID da pasta principal do Drive');state=library.setting('drive_scan',{});self.root.setText(state.get('root',''));connection.addWidget(self.root)

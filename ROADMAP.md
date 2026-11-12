@@ -71,3 +71,17 @@ O escopo completo solicitado permanece como objetivo. As fases abaixo indicam en
 - [ ] Validar atualização autenticada no repositório privado; migrações com backup automático e distribuição pública.
 
 Próxima prioridade: validar credenciais em biblioteca isolada; robustecer scanner e sessões; implementar automação e Drive para saves; conectar preços com fonte regional validada. Não iniciar novas fontes antes de estabilizar os fluxos existentes.
+
+
+## Continuidade de interface e experiência — 12/11/2026
+
+- [x] Cadastro compacto por origem, cabeçalhos compactos e continuidade/atividade em duas colunas.
+- [x] Assets oficiais Steam/Drive; wishlist quadrada com logos alinhadas e Biblioteca vertical sem alterar originais.
+- [x] Datas PT-BR, pedido de ficha Steam em português e fallback PT por artigo exato para ROMs.
+- [x] Desejos separados da posse, preços GG.deals em BRL, ofertas/link para comparação completa.
+- [x] Estatísticas com calendário diário de horas e distribuição em barras, excluindo wishlist.
+- [ ] Aprovação visual final pelo usuário nas referências, incluindo Windows/DPI.
+- [ ] Ampliar cobertura de descrições PT quando a fonte não tem artigo/tradução seguros.
+- [ ] Monitoramento/alertas de preço e cobertura de plataformas sem AppID/página confirmada.
+
+O cache/consulta pública de preços desta revisão não implementa alertas de preço.
