@@ -7,12 +7,18 @@ from .jobs import Job
 class ArtworkProgress(QDialog):
     progress=Signal(str)
     def __init__(self,library,game_id,parent=None,force=False):
-        super().__init__(parent);self.setWindowTitle('Completando ficha e imagens');self.resize(500,110);self.setAttribute(Qt.WA_QuitOnClose,False)
+        super().__init__(parent);self.setWindowTitle('Completando ficha e imagens');self.resize(560,200);self.setAttribute(Qt.WA_QuitOnClose,False)
         self.force=force;self.message='';self.job=None;self.path=library.db.path;self.game_id=game_id;self.game_ids=list(game_id) if isinstance(game_id,(list,tuple)) else [game_id]
-        layout=QVBoxLayout(self);self.state=QLabel('Obtendo ficha, capa, banner e logo disponíveis…');self.state.setWordWrap(True);self.state.setTextFormat(Qt.PlainText);layout.addWidget(self.state)
+        layout=QVBoxLayout(self)
+        from .design_system import dialog_heading
+        dialog_heading(layout,'Completando ficha e imagens','O cadastro e os arquivos já salvos permanecem disponíveis.','download')
+        self.state=QLabel('Obtendo ficha, capa, banner e logo disponíveis…');self.state.setWordWrap(True);self.state.setTextFormat(Qt.PlainText);layout.addWidget(self.state)
         self.stop=Event();self.progress.connect(self.state.setText)
         self.cancel=QPushButton('Parar após o jogo atual');self.cancel.clicked.connect(self.stop.set);layout.addWidget(self.cancel)
-        QTimer.singleShot(0,self.start)
+        self.started=False
+    def showEvent(self,event):
+        super().showEvent(event)
+        if not self.started:self.started=True;QTimer.singleShot(0,self.start)
     def start(self):
         def work():
             from .database import Database
@@ -34,7 +40,7 @@ class ArtworkProgress(QDialog):
             finally:db.close()
         self.job=Job(work,self);self.job.succeeded.connect(self.result_ready);self.job.failed.connect(self.result_ready);self.job.finished.connect(self.finish_job);self.job.start()
     def result_ready(self,message):self.message=message
-    def finish_job(self):self.job.deleteLater();self.job=None;self.accept()
+    def finish_job(self):self.job.deleteLater();self.job=None;QTimer.singleShot(0,self.accept)
     def reject(self):
         if self.job:
             self.stop.set();self.state.setText('Interrompendo após o jogo atual. O cadastro já foi salvo.');return

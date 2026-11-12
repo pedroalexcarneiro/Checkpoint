@@ -20,6 +20,9 @@ class FolderPlatformDialog(QDialog):
         apply=QPushButton('Salvar associação e aplicar aos arquivos');apply.clicked.connect(self.apply);layout.addWidget(apply)
         remove=QPushButton('Remover associação personalizada');remove.clicked.connect(self.remove);layout.addWidget(remove)
         self.folder.currentIndexChanged.connect(self.selected);self.selected()
+        from .design_system import dialog_heading
+        dialog_heading(layout,'Pastas e plataformas','Uma regra por pasta, herdada pelas subpastas.','folder')
+
     def selected(self):
         rules=self.library.setting('drive_folder_platforms',{})
         value=rules.get(self.folder.currentData())

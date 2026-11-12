@@ -1,5 +1,43 @@
 # Estado do projeto — Checkpoint
 
+## 0.1.22 — revisão completa da interface
+
+A revisão abrange as seis áreas principais, quatro abas da ficha, cadastro,
+editor em quatro abas e diálogos de Drive, Steam, imagens, metadados, emuladores,
+pastas e atualização. design_system.py concentra superfícies, ícones vetoriais,
+estados vazios, grids, colunas adaptativas, previews e amostras de tema.
+Tipografia 28/18/14/12 px, bordas discretas, superfícies em gradiente sutil,
+componentes compactos e espaçamento comum. Verde padrão aproximado da referência;
+os dez temas e preferências persistentes permanecem disponíveis.
+
+Início: descrição no hero, continuidade com tempo local e atividade pessoal;
+colunas empilham em janelas estreitas. Biblioteca: grade de quatro colunas em
+1000 px, até seis confortável, oito compacta, sem deformar artes. Nome e status
+separados da imagem. Cabeçalho de altura estável e filtros sem abas cortadas.
+Ficha: banner/logo, favoritos reais, galeria, sessões e marcos em cards, memórias
+e arquivos/saves organizados. Favoritar preserva rascunho do diário.
+Desejos: capas e metas pessoais com ações reais. Memórias: Tudo/Diário/Capturas
+e vídeos, grid com mídia local, sem registros de jogos removidos. Estatísticas:
+indicadores, gráfico e legenda com cores, períodos legíveis em PT-BR e plataformas.
+Configurações: perfil local, swatches dos dez temas, conexões e pastas compactas,
+backups e lixeira recolhida. Nome local usa settings, sem alteração de schema.
+Editor opcional: Ficha/Execução/Imagens/Pessoal; contratos de validação e dados
+preservados. Diálogos de integração mantêm operações existentes com novo enquadramento.
+
+Reforço de ciclo de vida: busca aguarda Show; diálogo independente não destrói
+QThread ativa ao fechar; filtro de eventos tolera destruição do wrapper Python;
+consulta de artes inicia após exibição. Temporizadores da janela param ao fechar.
+Regressão em subprocesso verifica consulta ativa e encerramento sem abort nativo.
+
+Validação final Linux: 199 testes em 73,65 s, exit 0, sem abort nativo.
+Smokes de seis páginas, auxiliar e cadastro com imagem/SQLite passaram com dados
+isolados. scripts/render_ui_review.py gera 37 capturas Qt com fixtures, sem conta
+ou consulta remota; package_ui_review.py publica PNGs e índice, excluindo bases e
+logs. Workflow passa a gerar revisão visual Windows junto da release. Capturas
+com fixtures não são prova de integração autenticada nem aprovação estética.
+Build Windows 0.1.22 e publicação pendentes neste registro.
+
+
 ## Publicação confirmada — v0.1.21
 
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.21

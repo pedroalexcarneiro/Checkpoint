@@ -8,21 +8,36 @@ from .jobs import Job
 class ArtworkDialog(QDialog):
     def __init__(self,library,game,parent=None):
         super().__init__(parent); self.library=library; self.game=game; self.jobs=[]; self.results=[]; self.urls=[]
-        self.setWindowTitle('Selecionar arte · SteamGridDB'); self.resize(700,600)
-        layout=QVBoxLayout(self); layout.addWidget(QLabel('Escolha o jogo, o tipo de arte e depois a imagem. Imagens são armazenadas no cache local.'))
-        local=QPushButton('Escolher imagem local (sem chave de API)');local.clicked.connect(self.local_art);layout.addWidget(local)
-        self.local=local
-        self.search=QPushButton('Pesquisar '+game['title']); self.search.clicked.connect(self.lookup); layout.addWidget(self.search)
-        self.games=QListWidget(); layout.addWidget(self.games)
-        self.kind=QComboBox(); self.kind.addItem('Capa vertical','cover'); self.kind.addItem('Banner','banner'); self.kind.addItem('Logo transparente','logo'); layout.addWidget(self.kind)
-        self.load=QPushButton('Listar artes do jogo selecionado'); self.load.clicked.connect(self.load_arts); layout.addWidget(self.load)
-        self.art=QListWidget(); layout.addWidget(self.art)
-        self.apply=QPushButton('Baixar e usar arte selecionada'); self.apply.clicked.connect(self.apply_art); layout.addWidget(self.apply)
-        self.identify=QPushButton('Confirmar jogo selecionado e obter capa, banner e logo');self.identify.clicked.connect(self.confirm_game);layout.addWidget(self.identify)
-        self.missing=QPushButton('Obter artes faltantes do jogo já identificado');self.missing.clicked.connect(self.obtain_missing);layout.addWidget(self.missing)
-        self.steam=QPushButton('Identificar pelo AppID Steam');self.steam.clicked.connect(self.identify_steam);layout.addWidget(self.steam)
-        self.auto=QCheckBox('Obter artes faltantes automaticamente ao criar, associar ou baixar');self.auto.setChecked(library.setting('artwork.auto',True));self.auto.toggled.connect(lambda value:library.set_setting('artwork.auto',value));layout.addWidget(self.auto)
-        self.state=QLabel('Confirme o jogo uma vez. Artes faltantes serão obtidas por tipo, sem substituir escolhas existentes. Requer chave SteamGridDB.'); self.state.setWordWrap(True); layout.addWidget(self.state)
+        self.setWindowTitle('Imagens do jogo');self.resize(960,720)
+        from PySide6.QtCore import Qt
+        from PySide6.QtGui import QPixmap
+        from PySide6.QtWidgets import QWidget,QHBoxLayout
+        from .design_system import dialog_heading,AdaptiveColumns
+        from .settings_view import disclosure
+        layout=QVBoxLayout(self);dialog_heading(layout,'Imagens do jogo',game['title'],'memories')
+        row=QHBoxLayout();self.kind=QComboBox();self.kind.addItem('Capa vertical','cover');self.kind.addItem('Banner','banner');self.kind.addItem('Logo transparente','logo');row.addWidget(self.kind);row.addStretch()
+        self.local=QPushButton('Escolher imagem local');self.local.clicked.connect(self.local_art);row.addWidget(self.local);layout.addLayout(row)
+        preview=QWidget();left=QVBoxLayout(preview);left.setContentsMargins(0,0,0,0);self.current_preview=QLabel();self.current_preview.setAlignment(Qt.AlignCenter);self.current_preview.setMinimumSize(240,280);left.addWidget(self.current_preview,1);caption=QLabel('Imagem atual · original preservado');caption.setObjectName('caption');left.addWidget(caption)
+        catalog=QWidget();right=QVBoxLayout(catalog);right.setContentsMargins(0,0,0,0);self.search=QPushButton('Pesquisar jogo no catálogo');self.search.clicked.connect(self.lookup);right.addWidget(self.search)
+        self.games=QListWidget();self.games.setMaximumHeight(100);right.addWidget(self.games)
+        self.load=QPushButton('Ver opções de imagens');self.load.clicked.connect(self.load_arts);right.addWidget(self.load)
+        self.art=QListWidget();right.addWidget(self.art,1)
+        self.apply=QPushButton('Conferir imagem selecionada');self.apply.setObjectName('primary');self.apply.clicked.connect(self.apply_art);right.addWidget(self.apply)
+        layout.addWidget(AdaptiveColumns(preview,catalog,(1,1),breakpoint=700),1)
+        advanced=QWidget();inside=QVBoxLayout(advanced);self.identify=QPushButton('Confirmar jogo e obter imagens');self.identify.clicked.connect(self.confirm_game);inside.addWidget(self.identify)
+        self.missing=QPushButton('Obter imagens faltantes');self.missing.clicked.connect(self.obtain_missing);inside.addWidget(self.missing)
+        self.steam=QPushButton('Identificar pelo AppID Steam');self.steam.clicked.connect(self.identify_steam);inside.addWidget(self.steam)
+        self.auto=QCheckBox('Completar imagens automaticamente');self.auto.setChecked(library.setting('artwork.auto',True));self.auto.toggled.connect(lambda value:library.set_setting('artwork.auto',value));inside.addWidget(self.auto);disclosure('Identificação e automação',advanced,layout)
+        self.state=QLabel('Escolha uma imagem local ou pesquise opções no catálogo configurado.');self.state.setWordWrap(True);self.state.setObjectName('muted');layout.addWidget(self.state)
+        self.kind.currentIndexChanged.connect(self.show_current);self.show_current()
+
+    def show_current(self,*args):
+        from PySide6.QtCore import Qt
+        from PySide6.QtGui import QPixmap
+        game=self.library.get(self.game['id']) or self.game;pix=QPixmap(game.get(self.kind.currentData()) or '')
+        if pix.isNull():self.current_preview.clear();self.current_preview.setText('Nenhuma imagem definida')
+        else:self.current_preview.setPixmap(pix.scaled(340,320,Qt.KeepAspectRatio,Qt.SmoothTransformation))
+
     def confirm_game(self):
         index=self.games.currentRow()
         if index<0: self.state.setText('Pesquise e selecione o jogo correto primeiro.');return
@@ -87,7 +102,7 @@ class ArtworkDialog(QDialog):
         self.run(lambda:self.provider().artworks(game_id,kind),self.show_arts)
     def show_arts(self,urls):
         self.urls=urls; self.art.clear()
-        for index,url in enumerate(urls): self.art.addItem(f'Arte {index+1} · '+url.rsplit('/',1)[-1])
+        for index,url in enumerate(urls): self.art.addItem(f'Opção {index+1}')
         self.state.setText(f'{len(urls)} artes disponíveis. A imagem será exibida para confirmação após o download.')
     def apply_art(self):
         index=self.art.currentRow()
@@ -102,7 +117,7 @@ class ArtworkDialog(QDialog):
             game=self.library.get(self.game['id']); game[self.loaded_kind]=path
             self.library.save_game(game,game['id'])
             with self.library.sql:self.library.sql.execute('DELETE FROM artwork_assets WHERE game_id=? AND kind=?',(game['id'],self.loaded_kind))
-            self.state.setText('Arte salva no cache local.')
+            self.state.setText('Arte salva no cache local.');self.show_current()
     def reject(self):
         if self.jobs: self.state.setText('Aguarde a consulta terminar.'); return
         super().reject()

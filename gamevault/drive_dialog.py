@@ -12,37 +12,32 @@ from .integrations.drive import DriveScanner,GoogleDriveClient
 class DriveDialog(QDialog):
     def __init__(self,library,parent=None):
         super().__init__(parent); self.library=library; self.jobs=[]; self.files=[]; self.pending_artwork=None
-        self.setWindowTitle('Google Drive · ROMs'); self.resize(860,650)
-        layout=QVBoxLayout(self)
-        layout.addWidget(QLabel('Varredura de metadados. Nenhum arquivo é baixado durante o scanner.'))
-        self.root=QLineEdit(); self.root.setPlaceholderText('ID da pasta principal do Drive')
-        state=library.setting('drive_scan',{}); self.root.setText(state.get('root','')); layout.addWidget(self.root)
+        self.setWindowTitle('Google Drive · ROMs');self.resize(1000,720);self.setMinimumSize(820,600)
+        from .design_system import dialog_heading
+        from .settings_view import disclosure
+        from PySide6.QtWidgets import QWidget,QToolButton,QMenu
+        layout=QVBoxLayout(self);dialog_heading(layout,'ROMs do Drive','Pesquise seu índice e baixe somente o que quiser jogar.','folder')
         self.controls=[]
-        actions=QHBoxLayout()
-        for title,callback in [('Testar conexão',self.test_connection),('Autenticar',self.authenticate),('Varredura inicial',lambda:self.scan(False)),('Atualizar alterações',lambda:self.scan(True))]:
-            item=QPushButton(title); item.clicked.connect(callback); actions.addWidget(item); self.controls.append(item)
-        layout.addLayout(actions)
-        filters=QHBoxLayout()
-        self.search=QLineEdit();self.search.setObjectName('romSearch');self.search.setPlaceholderText('Pesquisar ROM, jogo associado ou pasta');self.search.setClearButtonEnabled(True)
-        self.platform_filter=QComboBox();self.platform_filter.setObjectName('romPlatformFilter')
-        filters.addWidget(self.search,2);filters.addWidget(self.platform_filter,1);layout.addLayout(filters)
-        self.result_count=QLabel();layout.addWidget(self.result_count)
-        self.search.textChanged.connect(lambda text:self.refresh())
-        self.platform_filter.currentIndexChanged.connect(lambda index:self.refresh())
-        self.list=QListWidget(); self.list.setIconSize(QSize(42,56)); layout.addWidget(self.list)
-        actions=QHBoxLayout()
-        for title,callback in [('Associar a um jogo',self.associate),('Baixar e adicionar à biblioteca',self.download)]:
-            item=QPushButton(title); item.clicked.connect(callback); actions.addWidget(item); self.controls.append(item)
-        layout.addLayout(actions)
-        more=QHBoxLayout()
-        for title,callback in [('Pastas e plataformas',self.folder_platforms),('Criar jogo desta ROM',self.create_game),('Capa do jogo',self.game_art)]:
-            item=QPushButton(title);item.clicked.connect(callback);more.addWidget(item);self.controls.append(item)
-        layout.addLayout(more)
-        catalog=QHBoxLayout()
-        for title,callback in [('Reconhecer plataformas',self.recognize_platforms),('Importar catálogo DAT',self.import_dat),('Consultar MD5 no catálogo',self.check_catalog)]:
-            item=QPushButton(title); item.clicked.connect(callback); catalog.addWidget(item); self.controls.append(item)
-        layout.addLayout(catalog)
-        self.state=QLabel('Não autenticado nesta janela. Credenciais são mantidas no cofre do Windows.'); self.state.setWordWrap(True); self.state.setTextFormat(Qt.PlainText); layout.addWidget(self.state)
+        setup=QWidget();connection=QVBoxLayout(setup);connection.setContentsMargins(0,4,0,4)
+        self.root=QLineEdit();self.root.setPlaceholderText('ID da pasta principal do Drive');state=library.setting('drive_scan',{});self.root.setText(state.get('root',''));connection.addWidget(self.root)
+        row=QHBoxLayout()
+        for title,callback in [('Testar conexão',self.test_connection),('Autenticar',self.authenticate),('Varredura inicial',lambda:self.scan(False))]:
+            item=QPushButton(title);item.clicked.connect(callback);row.addWidget(item);self.controls.append(item)
+        connection.addLayout(row);disclosure('Conexão e pasta principal',setup,layout)
+        toolbar=QHBoxLayout();self.search=QLineEdit();self.search.setObjectName('romSearch');self.search.setPlaceholderText('Buscar ROM, jogo ou pasta…');self.search.setClearButtonEnabled(True)
+        self.platform_filter=QComboBox();self.platform_filter.setObjectName('romPlatformFilter');toolbar.addWidget(self.search,2);toolbar.addWidget(self.platform_filter,1)
+        refresh=QPushButton('Atualizar índice');refresh.clicked.connect(lambda:self.scan(bool(self.library.setting('drive_scan',{}).get('cursor'))));toolbar.addWidget(refresh);self.controls.append(refresh);layout.addLayout(toolbar)
+        self.result_count=QLabel();self.result_count.setObjectName('caption');layout.addWidget(self.result_count)
+        self.search.textChanged.connect(lambda text:self.refresh());self.platform_filter.currentIndexChanged.connect(lambda index:self.refresh())
+        self.list=QListWidget();self.list.setIconSize(QSize(38,52));self.list.setSpacing(4);layout.addWidget(self.list,1)
+        footer=QHBoxLayout()
+        for title,callback in [('Adicionar à biblioteca',self.create_game),('Baixar ROM',self.download)]:
+            item=QPushButton(title);item.clicked.connect(callback);item.setObjectName('primary' if title=='Baixar ROM' else '');footer.addWidget(item);self.controls.append(item)
+        footer.addStretch();more=QToolButton();more.setText('Mais opções');more.setPopupMode(QToolButton.InstantPopup);menu=QMenu(more)
+        for title,callback in [('Associar a um jogo',self.associate),('Pastas e plataformas',self.folder_platforms),('Trocar imagens do jogo',self.game_art),('Reconhecer plataformas',self.recognize_platforms),('Importar catálogo DAT',self.import_dat),('Consultar MD5 no catálogo',self.check_catalog)]:
+            item=menu.addAction(title);item.triggered.connect(callback)
+        more.setMenu(menu);footer.addWidget(more);self.controls.append(more);layout.addLayout(footer)
+        self.state=QLabel('Downloads sob demanda. Arquivos remotos permanecem no Drive.');self.state.setObjectName('muted');self.state.setWordWrap(True);self.state.setTextFormat(Qt.PlainText);layout.addWidget(self.state)
         self.refresh()
 
     def refresh(self):
@@ -64,7 +59,9 @@ class DriveDialog(QDialog):
                     and (not query or any(query in fold(file.get(key) or '') for key in ('original_name','title','folder_path')))]
         self.list.clear()
         for index,file in enumerate(self.files):
-            item=QListWidgetItem(file['original_name']+' · '+(file['platform'] or 'Revisar plataforma')+' · '+(file['title'] or 'Sem associação')+' · '+file['review_state'])
+            from .integrations.drive import normalize_rom_name
+            item=QListWidgetItem((file['title'] or normalize_rom_name(file['original_name']))+'\n'+(file['platform'] or 'Revisar plataforma')+' · '+('Baixada' if file['available'] else 'No Drive'))
+            item.setSizeHint(QSize(0,66));item.setToolTip(file['original_name']+'\n'+(file['folder_path'] or ''))
             if file['cover']: item.setIcon(QIcon(file['cover']))
             self.list.addItem(item)
             if file['id']==selected_id: self.list.setCurrentRow(index)

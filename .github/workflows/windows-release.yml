@@ -69,6 +69,13 @@ jobs:
         run: |
           python scripts/package_windows_release.py --test-report .ci-results/pytest.xml
           if ($LASTEXITCODE -ne 0) { throw 'Validação do pacote Windows falhou.' }
+      - name: Render Windows interface review
+        shell: pwsh
+        run: |
+          python scripts/render_ui_review.py work/ui-review
+          if ($LASTEXITCODE -ne 0) { throw 'Capturas da interface falharam.' }
+          python scripts/package_ui_review.py work/ui-review release-assets
+          if ($LASTEXITCODE -ne 0) { throw 'Revisão visual incompleta.' }
       - name: Upload verified release files
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
@@ -119,5 +126,5 @@ jobs:
           fi
           gh release create "$RELEASE_TAG" release-assets/* \
             --verify-tag --prerelease \
-            --title "Checkpoint ${RELEASE_TAG#v} · Revisão visual e banners Steam" \
+            --title "Checkpoint ${RELEASE_TAG#v} · Interface completa" \
             --notes-file .github/release-notes.md

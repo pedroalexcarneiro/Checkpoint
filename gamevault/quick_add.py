@@ -14,7 +14,7 @@ from .ui_components import text,action
 class QuickAdd(QObject):
     def __init__(self,dialog,outer,allow_steam):
         super().__init__(dialog);self.dialog=dialog;self.library=dialog.library
-        self.generation=0;self.jobs=[];self.suspend=False;self.closed=False;self.pending_search=False;self.pending_details=None
+        self.generation=0;self.jobs=[];self.suspend=False;self.closed=False;self.pending_show_lookup=False;self.pending_search=False;self.pending_details=None
         self.candidates=[];self.local=[];self.owner=dialog
         while self.owner.parentWidget() is not None:self.owner=self.owner.parentWidget()
         while outer.count():
@@ -38,7 +38,11 @@ class QuickAdd(QObject):
         body=QHBoxLayout();body.setSpacing(24)
         left=QWidget();column=QVBoxLayout(left);column.setContentsMargins(0,0,0,0);column.setSpacing(10)
         column.addWidget(text('Resultados','cardTitle'));self.results=QListWidget();self.results.setObjectName('gameSearchResults');self.results.setMinimumWidth(330);self.results.setSpacing(4);column.addWidget(self.results,1)
-        self.state=text('Digite um nome. Ficha e imagens são buscadas automaticamente.','muted');column.addWidget(self.state)
+        self.state=text('Digite um nome. Ficha e imagens são buscadas automaticamente.','muted')
+        from .task_status import BusyIndicator
+        from .theme import get_theme
+        self.busy=BusyIndicator(get_theme(self.library.setting('appearance.theme','green')));self.busy.hide()
+        status=QHBoxLayout();status.addWidget(self.busy);status.addWidget(self.state,1);column.addLayout(status)
         body.addWidget(left,3)
         preview=QFrame();preview.setObjectName('addPreview');preview.setMinimumWidth(290);right=QVBoxLayout(preview);right.setContentsMargins(22,22,22,22);right.setSpacing(14)
         self.art=QLabel();self.art.setObjectName('addPreviewArt');self.art.setFixedSize(150,225);self.art.setAlignment(Qt.AlignCenter);self.art.setText('Prévia');right.addWidget(self.art,0,Qt.AlignHCenter)
@@ -55,6 +59,7 @@ class QuickAdd(QObject):
         for control in dialog.findChildren(QPushButton):control.setAutoDefault(False);control.setDefault(False)
         dialog.complete_on_save.setChecked(bool(self.library.setting('artwork.auto',True)))
         self.timer=QTimer(self);self.timer.setSingleShot(True);self.timer.setInterval(550);self.timer.timeout.connect(self.lookup)
+        self.dialog.installEventFilter(self)
         self.query.installEventFilter(self)
         self.query.textChanged.connect(self.changed);self.query.returnPressed.connect(self.lookup)
         self.platform.currentIndexChanged.connect(self.platform_changed)
@@ -63,6 +68,9 @@ class QuickAdd(QObject):
         dialog.fields['platform'].setText('')
 
     def eventFilter(self,watched,event):
+        if not hasattr(self,'dialog'):return False
+        if watched is self.dialog and event.type()==QEvent.Show and self.pending_show_lookup:
+            self.pending_show_lookup=False;QTimer.singleShot(0,self.lookup)
         if watched is self.query and event.type()==QEvent.KeyPress and event.key() in (Qt.Key_Return,Qt.Key_Enter):
             self.lookup();return True
         return super().eventFilter(watched,event)
@@ -105,6 +113,7 @@ class QuickAdd(QObject):
     def lookup(self):
         self.timer.stop()
         if self.closed or len(self.query.text().strip())<2:return
+        if not self.dialog.isVisible():self.pending_show_lookup=True;return
         if any(job.property('operation')=='catalog_search' for job in self.jobs):self.pending_search=True;return
         self.pending_search=False;self.state.setText('Buscando jogos e versões disponíveis…')
         self.run('catalog_search',title=self.query.text().strip(),platform=self.dialog.fields['platform'].text())
@@ -114,6 +123,7 @@ class QuickAdd(QObject):
             self.pending_details=(self.generation,arguments);return
         job=Job(partial(run_isolated,operation,self.library.db.path,**arguments),self.owner)
         job.setProperty('generation',self.generation);job.setProperty('operation',operation)
+        self.busy.show()
         self.jobs.append(job);job.succeeded.connect(self.received);job.failed.connect(self.failed);job.finished.connect(self.job_finished);job.start()
 
     @Slot(object)
@@ -147,6 +157,9 @@ class QuickAdd(QObject):
     @Slot()
     def job_finished(self):
         job=self.sender();self.jobs.remove(job);job.deleteLater()
+        self.busy.setVisible(bool(self.jobs))
+        if not self.jobs and hasattr(self,'deferred_result'):
+            self.dialog.done(self.deferred_result);return
         if self.pending_search and not self.closed:self.lookup()
         if self.pending_details and not self.closed:
             generation,arguments=self.pending_details;self.pending_details=None

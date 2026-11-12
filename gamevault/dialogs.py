@@ -90,6 +90,19 @@ class GameDialog(QDialog):
         if library is not None and game is None:
             from .quick_add import QuickAdd
             self.quick_add=QuickAdd(self,outer,allow_steam)
+        elif game is not None:
+            from .game_editor import build_editor
+            build_editor(self,outer)
+
+    def finish_or_wait(self,result):
+        quick=getattr(self,'quick_add',None)
+        if quick and quick.owner is self and quick.jobs:
+            quick.deferred_result=result;quick.closed=True;quick.timer.stop()
+            quick.state.setText('Encerrando a consulta atual…');return
+        self.done(result)
+
+    def accept(self):self.finish_or_wait(QDialog.Accepted)
+    def reject(self):self.finish_or_wait(QDialog.Rejected)
 
     def request_steam(self):
         self.steam_requested=True;self.reject()

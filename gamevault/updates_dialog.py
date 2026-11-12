@@ -23,6 +23,9 @@ class UpdatesDialog(QDialog):
         self.download=QPushButton('Baixar e verificar'); self.download.setEnabled(False); self.download.clicked.connect(self.prepare); layout.addWidget(self.download)
         self.install=QPushButton('Aplicar atualização e reiniciar'); self.install.setEnabled(False); self.install.clicked.connect(self.install_update); layout.addWidget(self.install)
         self.state=QLabel('A credencial é necessária para o repositório privado. Permissão mínima: Contents, somente leitura.'); self.state.setWordWrap(True); layout.addWidget(self.state)
+        from .design_system import dialog_heading
+        dialog_heading(layout,'Atualizações','Verifique, baixe e aplique uma versão do Checkpoint.','download')
+
     def client(self):
         token=CredentialVault().get('github-updates')
         if not token: raise UpdateError('Nenhuma credencial salva. Cole o token e clique em Salvar credencial antes de verificar.')

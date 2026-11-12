@@ -1,5 +1,30 @@
 # Direção visual do Checkpoint
 
+## Sistema visual completo — 0.1.22
+
+A referência aprovada orienta toda a aplicação: shell carvão, wordmark central,
+sidebar de 198 px, tipografia compacta, botões com cor do perfil, biblioteca de
+capas, hero com banner/logo, continuidade e feed pessoal. Sem copiar identidade
+de terceiros nem inserir conteúdo fictício na biblioteca distribuída.
+
+- Títulos 28 px, seções 18 px, corpo 14 px e legendas 12 px; espaçamentos 8–28 px.
+- Superfícies com gradiente sutil, raio 7–11 px, borda discreta e contraste em dez temas.
+- Ícones vetoriais comuns para navegação, perfis, tempo, marcos, arquivos e ações.
+- Header com altura estável; grade confortável de quatro colunas na janela mínima.
+- Ficha: quatro abas completas, cards de atividade/memórias e arquivos/saves com ações.
+- Desejos e Memórias usam coleções visuais, não as antigas listas de botões.
+- Configurações usam amostras de cores e cards compactos; perfil é local, sem conta remota.
+- Editor opcional em quatro abas. Diálogos compartilham títulos, dimensões e controles.
+- Estados vazios úteis, indicadores pequenos, foco/hover e nomes acessíveis.
+
+Arte continua inteira: sem corte de texto, distorção ou cópia desfocada. Formatos
+atípicos preservam a proporção dentro da área, enquanto posters 2:3 ocupam o espaço.
+Biblioteca e imagens pessoais não são modificadas pela apresentação.
+Revisão visual: 37 capturas reais com fixtures, incluindo formatos mistos, janelas
+pequenas, temas escuro/roxo/branco, abas e diálogos. Arquivos são gerados fora do
+repositório e disponibilizados como ui-review.zip, sem banco/logs/credenciais.
+
+
 ## Ajuste de direção — 0.1.21
 
 O nome centralizado é o wordmark checkpo//nt original, sem o símbolo C//.

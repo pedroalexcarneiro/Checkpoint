@@ -18,6 +18,9 @@ class CatalogPicker(QDialog):
         self.list=QListWidget();layout.addWidget(self.list)
         self.use=QPushButton('Usar título e dados do resultado selecionado');self.use.clicked.connect(self.choose);layout.addWidget(self.use)
         self.state=QLabel('Nenhum jogo é associado automaticamente por semelhança de nome.');self.state.setWordWrap(True);layout.addWidget(self.state)
+        from .design_system import dialog_heading
+        dialog_heading(layout,'Identificar jogo','Confirme o jogo e a edição corretos.','search')
+
     def source(self):
         key=self.provider.currentData()
         if key=='steam':return SteamStoreProvider()

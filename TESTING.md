@@ -379,3 +379,14 @@ integração do catálogo usam provedores controlados, não contas autenticadas.
 Windows 0.1.21 confirmado: workflow 43272087982 success, 192 testes sem
 falhas/erros/skips. Smokes do fonte e do ZIP extraído e atualizador aprovados.
 Relatório Checkpoint-0.1.21-validation.txt publicado na release v0.1.21.
+
+## Revisão completa 0.1.22
+
+Novos casos verificam metas e retirada de desejos sem perda de jogos, exclusão
+de removidos das memórias, editor em abas preservando valores/imagens, favoritos
+preservando rascunhos, header/grade na janela mínima, temas/perfil e encerramento
+de diálogo independente com consulta ativa em subprocesso. A rodada final
+passou com 199 testes em 73,65 s, exit 0, sem abort nativo. Windows pendente neste registro.
+Smokes de páginas, auxiliar e cadastro com imagem/SQLite passaram isoladamente.
+37 capturas em scripts/render_ui_review.py cobrem seis páginas, abas, diálogos,
+proporções mistas e janelas/temas diferentes. São fixtures, não APIs autenticadas.

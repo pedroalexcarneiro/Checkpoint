@@ -103,3 +103,29 @@ def test_same_title_across_sources_is_one_result_not_a_provider_choice():
     assert len(result['results'])==1
     assert result['results'][0]['identifiers']=={'steam':'42','rawg':'9','steamgriddb':'8'}
     assert set(result['results'][0]['platforms'])=={'PC','Nintendo Switch'}
+
+
+def test_standalone_dialog_finishes_query_before_destruction(folder):
+    import os,subprocess,sys
+    script=r"""
+import time,sys
+from pathlib import Path
+from PySide6.QtCore import QTimer
+from PySide6.QtWidgets import QApplication
+from gamevault.database import Database
+from gamevault.library import Library
+from gamevault.dialogs import GameDialog
+import gamevault.quick_add as quick
+app=QApplication([]);app.setQuitOnLastWindowClosed(False)
+db=Database(Path(sys.argv[1])/'standalone.sqlite')
+def query(*args,**kwargs):time.sleep(.08);return {'results':[],'unavailable':0}
+quick.run_isolated=query
+dialog=GameDialog(library=Library(db));dialog.show();dialog.fields['title'].setText('Example');dialog.quick_add.lookup();dialog.reject()
+def verify():
+ if dialog.quick_add.jobs:QTimer.singleShot(10,verify);return
+ assert not dialog.isVisible();app.exit(0)
+QTimer.singleShot(10,verify);QTimer.singleShot(3000,lambda:app.exit(5))
+result=app.exec();db.close();raise SystemExit(result)
+"""
+    result=subprocess.run([sys.executable,'-X','faulthandler','-c',script,str(folder.resolve())],env={**os.environ,'QT_QPA_PLATFORM':'offscreen'},capture_output=True,text=True,timeout=8)
+    assert result.returncode==0,result.stdout+'\n'+result.stderr

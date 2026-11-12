@@ -17,7 +17,7 @@ def action(title, callback, primary=False):
 
 def card():
     frame = QFrame(); frame.setObjectName('panel')
-    layout = QVBoxLayout(frame); layout.setContentsMargins(20, 18, 20, 18); layout.setSpacing(12)
+    layout = QVBoxLayout(frame); layout.setContentsMargins(18, 16, 18, 16); layout.setSpacing(10)
     return frame, layout
 
 
@@ -43,8 +43,27 @@ def nav_icon(name, color):
             angle=i*math.pi/24
             points.append(QPointF(12+radius*math.cos(angle),12+radius*math.sin(angle)))
         p.drawPolygon(QPolygonF(points));p.drawEllipse(QRectF(8.5,8.5,7,7))
-    elif name == 'wish':
+    elif name in ('wish','heart'):
         path=QPainterPath(QPointF(12,21));path.cubicTo(8,17,2,13,2,8);path.cubicTo(2,2,9,1,12,6);path.cubicTo(15,1,22,2,22,8);path.cubicTo(22,13,16,17,12,21);p.drawPath(path)
+    elif name=='clock':
+        p.drawEllipse(QRectF(3,3,18,18));p.drawLine(12,6,12,12);p.drawLine(12,12,16,14)
+    elif name=='user':
+        p.drawEllipse(QRectF(8,3,8,8));path=QPainterPath(QPointF(4,21));path.cubicTo(4,10,20,10,20,21);p.drawPath(path)
+    elif name=='search':
+        p.drawEllipse(QRectF(3,3,13,13));p.drawLine(15,15,21,21)
+    elif name=='folder':
+        path=QPainterPath(QPointF(3,7));path.lineTo(3,4);path.lineTo(10,4);path.lineTo(12,7);path.lineTo(21,7);path.lineTo(21,20);path.lineTo(3,20);path.closeSubpath();p.drawPath(path)
+    elif name=='download':
+        p.drawLine(12,3,12,16);p.drawLine(7,11,12,16);p.drawLine(12,16,17,11);p.drawPolyline(QPolygonF([QPointF(4,17),QPointF(4,21),QPointF(20,21),QPointF(20,17)]))
+    elif name=='trophy':
+        p.drawPolyline(QPolygonF([QPointF(7,3),QPointF(17,3),QPointF(16,12),QPointF(12,16),QPointF(8,12),QPointF(7,3)]));p.drawPolyline(QPolygonF([QPointF(7,5),QPointF(3,5),QPointF(4,11),QPointF(8,12)]));p.drawPolyline(QPolygonF([QPointF(17,5),QPointF(21,5),QPointF(20,11),QPointF(16,12)]));p.drawLine(12,16,12,21);p.drawLine(8,21,16,21)
+    elif name=='trash':
+        p.drawLine(4,6,20,6);p.drawPolyline(QPolygonF([QPointF(6,6),QPointF(7,21),QPointF(17,21),QPointF(18,6)]));p.drawRoundedRect(QRectF(9,2,6,4),1,1);p.drawLine(10,10,10,17);p.drawLine(14,10,14,17)
+    elif name=='play':
+        p.drawPolygon(QPolygonF([QPointF(8,4),QPointF(20,12),QPointF(8,20)]))
+    elif name=='plus':p.drawLine(12,4,12,20);p.drawLine(4,12,20,12)
+    else:
+        p.drawRoundedRect(QRectF(4,3,16,18),2,2);p.drawLine(8,9,16,9);p.drawLine(8,14,16,14)
     p.end();return QIcon(pixmap)
 
 
@@ -78,14 +97,25 @@ class Hero(QWidget):
         shade=QLinearGradient(0,0,self.width()*.7,0)
         shade.setColorAt(0,QColor(9,12,17,210));shade.setColorAt(.65,QColor(9,12,17,65));shade.setColorAt(1,QColor(9,12,17,0));p.fillRect(rect,shade)
         if not self.logo.isNull():
-            logo=self.logo.scaled(min(290,self.width()-56),max(30,min(95,self.height()//3)),Qt.KeepAspectRatio,Qt.SmoothTransformation)
+            logo=self.logo.scaled(min(260,self.width()-56),max(30,min(95,self.height()//3)),Qt.KeepAspectRatio,Qt.SmoothTransformation)
             p.drawPixmap(28,70 if self.detail_mode else 28,logo)
         else:
-            p.setPen(QColor('#ffffff'));font=QFont('Segoe UI');font.setPixelSize(30);font.setWeight(QFont.Bold);p.setFont(font)
+            p.setPen(QColor('#ffffff'));font=QFont('Segoe UI');font.setPixelSize(28);font.setWeight(QFont.DemiBold);p.setFont(font)
             p.drawText(QRectF(28,68 if self.detail_mode else 26,min(self.width()-56,560),100),Qt.TextWordWrap,self.game['title'])
         if self.height()>240 and not self.detail_mode:
-            font=QFont('Segoe UI');font.setPixelSize(14);p.setFont(font);p.setPen(QColor('#d1d5db'))
-            p.drawText(QRectF(28,140,min(420,self.width()-56),30),Qt.AlignVCenter,' · '.join(value for value in (self.game.get('platform'),self.game.get('status')) if value))
+            font=QFont('Segoe UI');font.setPixelSize(12);p.setFont(font);p.setPen(QColor('#d1d5db'))
+            p.drawText(QRectF(28,133,min(420,self.width()-56),24),Qt.AlignVCenter,' · '.join(value for value in (self.game.get('platform'),self.game.get('status')) if value))
+            if self.height()>315 and self.game.get('description'):
+                font.setPixelSize(14);p.setFont(font);p.setPen(QColor('#f0f1f3'))
+                description=self.game['description'].replace('\n',' ')
+                width=int(min(365,self.width()*.46));words=description.split();lines=[]
+                for index in range(3):
+                    if index==2:lines.append(p.fontMetrics().elidedText(' '.join(words),Qt.ElideRight,width));break
+                    line=''
+                    while words and p.fontMetrics().horizontalAdvance((line+' '+words[0]).strip())<=width:line=(line+' '+words.pop(0)).strip()
+                    if not line:break
+                    lines.append(line)
+                for index,line in enumerate(lines):p.drawText(QRectF(28,self.height()-144+index*19,width,19),Qt.AlignVCenter,line)
         p.end()
 
 
@@ -114,7 +144,7 @@ class GameTile(QPushButton):
         font=QFont('Segoe UI');font.setPixelSize(14);font.setWeight(QFont.DemiBold);p.setFont(font);p.setPen(QColor(colors['text']))
         p.drawText(QRectF(0,self.art_height+10,self.width(),20),Qt.AlignVCenter,p.fontMetrics().elidedText(self.game['title'],Qt.ElideRight,self.width()))
         font.setPixelSize(12);font.setWeight(QFont.Normal);p.setFont(font);p.setPen(QColor(colors['muted']))
-        p.drawText(QRectF(0,self.art_height+33,self.width(),18),Qt.AlignVCenter,self.game.get('status') or '')
+        p.drawText(QRectF(0,self.art_height+33,self.width(),18),Qt.AlignVCenter,' · '.join(filter(None,[self.game.get('status'),f"{self.game['seconds']/3600:.0f} h" if self.game.get('seconds') else ''])))
         if self.hasFocus():p.setPen(QPen(QColor(colors['accent']),1));p.setBrush(Qt.NoBrush);p.drawRoundedRect(self.rect().adjusted(1,1,-1,-1),7,7)
         p.end()
 
@@ -170,3 +200,17 @@ class ResponsiveToolbar(QWidget):
         direction=QBoxLayout.LeftToRight if self.width()>=width else QBoxLayout.TopToBottom
         if self.row.direction()!=direction:self.row.setDirection(direction);self.updateGeometry()
         super().resizeEvent(event)
+
+
+def relative_date(value):
+    from datetime import datetime,timezone
+    try:
+        date=datetime.fromisoformat(value.replace('Z','+00:00'))
+        if date.tzinfo is None:date=date.replace(tzinfo=timezone.utc)
+        seconds=max(0,(datetime.now(timezone.utc)-date).total_seconds())
+        if seconds<60:return 'agora'
+        if seconds<3600:return f'há {int(seconds//60)} min'
+        if seconds<86400:return f'há {int(seconds//3600)} h'
+        if seconds<172800:return 'ontem'
+        return date.strftime('%d/%m/%Y')
+    except (ValueError,AttributeError):return str(value or '')[:10]

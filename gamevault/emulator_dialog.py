@@ -14,6 +14,9 @@ class EmulatorDialog(QDialog):
         for title,callback in [('Escolher executável',self.choose),('Novo perfil',self.reset),('Salvar perfil',self.save)]:
             item=QPushButton(title); item.clicked.connect(callback); actions.addWidget(item)
         layout.addLayout(actions); self.refresh()
+        from .design_system import dialog_heading
+        dialog_heading(layout,'Perfis de emuladores','Configure como suas ROMs serão abertas.','settings')
+
     def refresh(self):
         self.rows=[dict(r) for r in self.library.sql.execute('SELECT p.*,e.name,e.executable FROM emulator_profiles p JOIN emulators e ON e.id=p.emulator_id')]
         self.list.clear()

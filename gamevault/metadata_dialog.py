@@ -19,6 +19,9 @@ class MetadataDialog(QDialog):
         self.state = QLabel('Requer chave RAWG nas configurações.'); self.state.setWordWrap(True); layout.addWidget(self.state)
         self.import_button = QPushButton('Importar resultado selecionado'); self.import_button.clicked.connect(self.import_selected); layout.addWidget(self.import_button)
 
+        from .design_system import dialog_heading
+        dialog_heading(layout,'Metadados','Pesquisa manual e identificação de jogos.','search')
+
     def run_job(self,work,success):
         self.search_button.setEnabled(False); self.import_button.setEnabled(False)
         job = Job(work,self); self.jobs.append(job)

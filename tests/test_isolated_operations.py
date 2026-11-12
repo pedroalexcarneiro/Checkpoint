@@ -140,7 +140,8 @@ def test_new_game_form_keeps_optional_configuration_collapsed(library,app):
     assert dialog.form_scroll.isHidden() and dialog.advanced.isHidden()
     assert dialog.fields['developer'].isVisibleTo(dialog) is False
     editor=GameDialog(game={'title':'Example'},library=library)
-    assert editor.form.isRowVisible(editor.fields['developer'])
+    assert editor.editor_tabs.count()==4
+    assert editor.fields['developer'].isVisibleTo(editor)
     editor.close();dialog.close()
 
 

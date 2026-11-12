@@ -1,7 +1,7 @@
 """Composição do início: hero, continuidade e atividade lado a lado."""
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QScrollArea,QWidget,QVBoxLayout,QHBoxLayout,QSizePolicy,QLabel
-from .ui_components import Hero,GameTile,text,action,card,nav_icon
+from .ui_components import Hero,GameTile,text,action,card,nav_icon,relative_date
 
 
 def activity(window,layout):
@@ -19,9 +19,9 @@ def activity(window,layout):
         frame,inside=card();frame.setObjectName('activityCard')
         contents=QHBoxLayout();contents.setSpacing(14)
         badge=QLabel();badge.setFixedSize(36,36);badge.setObjectName('activityBadge')
-        badge.setPixmap(nav_icon('memories' if kind=='Memória' else 'stats',window.theme.colors['accent']).pixmap(22,22));badge.setAlignment(Qt.AlignCenter);contents.addWidget(badge,0,Qt.AlignTop)
+        badge.setPixmap(nav_icon('memories' if kind=='Memória' else 'trophy' if kind=='Marco' else 'clock',window.theme.colors['accent']).pixmap(22,22));badge.setAlignment(Qt.AlignCenter);contents.addWidget(badge,0,Qt.AlignTop)
         words=QVBoxLayout();words.setSpacing(4)
-        top=QHBoxLayout();top.addWidget(text(kind,'activityKind'));top.addStretch();top.addWidget(text((event['time'] or '')[:10],'caption'));words.addLayout(top)
+        top=QHBoxLayout();top.addWidget(text(kind,'activityKind'));top.addStretch();top.addWidget(text(relative_date(event['time']),'caption'));words.addLayout(top)
         link=action(event['title'],lambda checked=False,identity=event['id']:window.detail(identity));link.setObjectName('activityLink');words.addWidget(link)
         message=f"{int(event['message'])//60} min registrados" if kind=='Sessão' else str(event['message'])
         words.addWidget(text(message[:115],'muted'));contents.addLayout(words,1);inside.addLayout(contents)
@@ -43,8 +43,8 @@ def build_home(window):
     body=QWidget();layout=QVBoxLayout(body);layout.setContentsMargins(0,0,8,0);layout.setSpacing(22)
     games=window.library.games(sort='recent')
     if not games:
-        frame,inside=card();inside.addWidget(text('Sua próxima história começa aqui','sectionTitle'))
-        inside.addWidget(text('Adicione um jogo para montar sua biblioteca.','muted'));inside.addWidget(action('+ Adicionar jogo',window.add_game,True));layout.addWidget(frame)
+        from .design_system import empty_state
+        layout.addWidget(empty_state('library','Sua biblioteca começa aqui','Pesquise um jogo pelo nome para adicionar ficha e imagens à sua coleção.',window.add_game,'Adicionar jogo'))
         activity(window,layout)
     else:
         playing=[game for game in games if game['status']=='Jogando']
@@ -54,13 +54,13 @@ def build_home(window):
         if featured['executable']:play=action('▶ Continuar jogando' if featured['status']=='Jogando' else '▶ Jogar',lambda:window.start_game(featured),True)
         else:play=action('Ver jogo',lambda:window.detail(featured['id']),True)
         buttons.addWidget(play);buttons.addStretch();hero.content.addLayout(buttons);layout.addWidget(hero)
-        continuing=[dict(row) for row in window.library.sql.execute("SELECT g.*,MAX(s.started_at) AS last_played FROM games g JOIN play_sessions s ON s.game_id=g.id WHERE g.deleted_at IS NULL GROUP BY g.id ORDER BY last_played DESC LIMIT 6")] or playing
-        content=QHBoxLayout();content.setSpacing(26)
+        continuing=[dict(row) for row in window.library.sql.execute("SELECT g.*,MAX(s.started_at) AS last_played,SUM(CASE WHEN s.state='finished' THEN s.duration_seconds ELSE 0 END) AS seconds FROM games g JOIN play_sessions s ON s.game_id=g.id WHERE g.deleted_at IS NULL GROUP BY g.id ORDER BY last_played DESC LIMIT 6")] or playing
+        from .design_system import AdaptiveColumns
         left=QWidget();left.setObjectName('homeContinuation');left.setMinimumWidth(270);left_layout=QVBoxLayout(left);left_layout.setContentsMargins(0,0,0,0);left_layout.setSpacing(14)
         game_strip(window,left_layout,'Continuar jogando' if continuing else 'Sua biblioteca',continuing or games)
         left_layout.addStretch()
-        right=QWidget();right.setObjectName('homeActivity');right.setMinimumWidth(270);right.setMaximumWidth(340);right_layout=QVBoxLayout(right);right_layout.setContentsMargins(0,0,0,0);right_layout.setSpacing(12);activity(window,right_layout)
-        content.addWidget(left,2);content.addWidget(right,1);layout.addLayout(content)
+        right=QWidget();right.setObjectName('homeActivity');right.setMinimumWidth(270);right.setMaximumWidth(360);right_layout=QVBoxLayout(right);right_layout.setContentsMargins(0,0,0,0);right_layout.setSpacing(12);activity(window,right_layout)
+        layout.addWidget(AdaptiveColumns(left,right,(3,1),breakpoint=820))
         game_strip(window,layout,'Adicionados recentemente',games,6)
     interrupted=window.library.sql.execute("SELECT count(*) FROM play_sessions WHERE state='interrupted'").fetchone()[0]
     if interrupted:layout.addWidget(action(f'{interrupted} sessões para revisar',window.recover_sessions))

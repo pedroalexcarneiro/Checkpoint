@@ -86,3 +86,12 @@ RAWG/SteamGridDB, sem exigir nova seleção de provedor no cadastro.
 Busca interativa consulta provedores em paralelo, com timeout de 8 s e uma
 tentativa por requisição. Previews usam timeout de 8 s por imagem. Integrações
 em segundo plano preservam os timeouts/retries anteriores por padrão.
+
+## Sistema de interface 0.1.22
+
+design_system.py fornece composição responsiva e componentes comuns;
+collection_views.py apresenta desejos e memórias; game_editor.py reorganiza os
+campos existentes em quatro abas sem alterar o contrato de GameDialog.data().
+A persistência, a identificação de ROMs e os provedores não foram substituídos.
+Capturas de revisão são produzidas por scripts/render_ui_review.py em base nova;
+o empacotamento visual só aceita PNGs de capturas e índice HTML, nunca a base.

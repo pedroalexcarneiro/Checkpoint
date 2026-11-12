@@ -22,11 +22,11 @@ class SteamDialog(QDialog):
         self.job = None
         self.changed = False
         self.setWindowTitle('Importar biblioteca Steam')
-        self.resize(900, 620)
+        self.resize(1040, 700)
         layout = QVBoxLayout(self)
         help_text = QLabel('Consulte a conta, marque os jogos e confirme a importação. Horas Steam ficam separadas das sessões locais. Jogos com o mesmo nome só são associados por sua escolha.')
         help_text.setWordWrap(True)
-        layout.addWidget(help_text)
+        help_text.hide()
         row = QHBoxLayout()
         row.addWidget(QLabel('SteamID64'))
         self.account = QLineEdit(str(library.setting('steam.account', '')))
@@ -36,6 +36,7 @@ class SteamDialog(QDialog):
         self.key_button.clicked.connect(self.configure_key)
         row.addWidget(self.key_button)
         self.fetch_button = QPushButton('Consultar biblioteca')
+        self.fetch_button.setObjectName('primary')
         self.fetch_button.clicked.connect(self.fetch)
         row.addWidget(self.fetch_button)
         layout.addLayout(row)
@@ -45,7 +46,8 @@ class SteamDialog(QDialog):
         self.table.setSelectionMode(QAbstractItemView.SingleSelection)
         self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.table.horizontalHeader().setStretchLastSection(True)
-        self.table.setColumnWidth(1, 270)
+        self.table.setColumnWidth(1, 300)
+        self.table.setAlternatingRowColors(True);self.table.setShowGrid(False);self.table.verticalHeader().hide()
         self.table.itemChanged.connect(self.selection_changed)
         layout.addWidget(self.table, 1)
         actions = QHBoxLayout()
@@ -62,6 +64,7 @@ class SteamDialog(QDialog):
         layout.addLayout(actions)
         footer = QHBoxLayout()
         self.import_button = QPushButton('Importar jogos marcados')
+        self.import_button.setObjectName('primary')
         self.import_button.clicked.connect(self.import_selected)
         self.achievements_button = QPushButton('Atualizar conquistas da linha')
         self.achievements_button.clicked.connect(self.fetch_achievements)
@@ -78,6 +81,8 @@ class SteamDialog(QDialog):
         self.stop_button.clicked.connect(self.enrichment_stop.set)
         self.stop_button.hide()
         layout.addWidget(self.stop_button)
+        from .design_system import dialog_heading
+        dialog_heading(layout,'Steam','Consulte sua conta e escolha os jogos para importar.','library')
         self.account.textChanged.connect(self.invalidate)
         self.selection_changed()
 

@@ -54,8 +54,8 @@ class CoverGrid(QListWidget):
         self.compact=compact;self.update_grid()
 
     def update_grid(self):
-        width=max(1,self.viewport().width()-32);target=174 if self.compact else 218
-        columns=max(1,width//target);cell=max(100,width//columns)
+        width=max(1,self.viewport().width()-32);target=142 if self.compact else 166
+        columns=max(1,min(8 if self.compact else 6,width//target));cell=max(100,width//columns)
         size=QSize(cell,round((cell-22)*1.5)+82)
         if self.last_grid!=size:self.last_grid=size;self.setGridSize(size)
         self.viewport().update()
