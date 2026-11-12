@@ -1,6 +1,6 @@
 # Checkpoint
 
-Adicionar jogo: digite o nome e salve; ficha e imagens são buscadas automaticamente quando houver correspondência confiável e provedor disponível. Drive e ficha avançada ficam recolhidos. No Drive, **Baixar e adicionar à biblioteca** cria o cadastro e busca imagens após verificar o download. A versão 0.1.16 separa essas operações da interface para conter falhas abruptas. Publicação Windows desta versão ainda pendente.
+Adicionar jogo: digite o nome e salve; ficha e imagens são buscadas automaticamente quando houver correspondência confiável e provedor disponível. Drive e ficha avançada ficam recolhidos. No Drive, **Baixar e adicionar à biblioteca** cria o cadastro e busca imagens após verificar o download. A versão 0.1.16 separa essas operações da interface para conter falhas abruptas. Pacote Windows publicado em https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.16 .
 
 Biblioteca pessoal de jogos para Windows, desenvolvida do zero em Python 3.12, PySide6 e SQLite. Versão **0.1.16 de desenvolvimento**, com dados locais e interface em português. Não é ainda a implementação completa da visão do produto.
 

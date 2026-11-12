@@ -1,5 +1,17 @@
 # Validação
 
+## Publicação confirmada — v0.1.16
+
+Pré-release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.16
+Commit: 41208c3217ed3ec007aa267196a6ddc3eedfbf7c; workflow 43215131011 success.
+Relatório anexado confirma 158 testes Windows (zero falhas/erros/skips), smoke
+fonte/ZIP extraído, auxiliar isolado nos dois formatos e CheckpointUpdater --check.
+ZIP: 83.897.718 bytes; SHA-256
+b97c5d5a79df5065644fae93380fcf6f1bfc1133046f1b4f4a887e6b4b6fac6f.
+Esta confirmação prevalece sobre as pendências de publicação abaixo. O crash
+original não foi reproduzido; a contenção foi validada com saídas abruptas
+controladas, sem leitura autenticada de uma ROM real nesta sessão.
+
 ## 0.1.16 — cadastro simples e operações isoladas
 
 - Formulário novo mostra nome/plataforma; Drive, catálogo manual e ficha completa
