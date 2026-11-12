@@ -45,6 +45,8 @@ def main():
         logging.warning('Registro nativo indisponível; inicialização continua.')
     # O descritor permanece aberto até a saída para registrar também falhas no shutdown.
     app = QApplication(sys.argv[:1]); app.setApplicationName('Checkpoint'); app.setStyle('Fusion'); app.setStyleSheet(DARK)
+    from .fonts import install_fonts
+    install_fonts(app)
     lock = QLockFile(str(directory/'gamevault.lock'))
     if not lock.tryLock(100):
         QMessageBox.warning(None,'Checkpoint','Esta biblioteca já está aberta em outra instância.'); return 1

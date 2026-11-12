@@ -1,5 +1,16 @@
 # Estado do projeto — Checkpoint
 
+## 0.1.23 — fontes e revisão Windows verificável
+
+A 0.1.22 foi publicada no commit 39da4e198a2226d82ae90a657c1f1696cb1afa16,
+workflow 43278032123 success, 199 testes Windows e smokes aprovados. Ao abrir
+os PNGs publicados, foi encontrada fonte ausente no Qt offscreen (quadrados).
+O problema não foi detectado pelos testes funcionais. Assets/tag 0.1.22 ficam
+preservados. A entrega é substituída por 0.1.23, com registro de Segoe UI antes
+da UI e verificação de glifos portugueses que bloqueia capturas sem fonte.
+As 37 capturas devem ser abertas e conferidas antes da confirmação final.
+
+
 ## 0.1.22 — revisão completa da interface
 
 A revisão abrange as seis áreas principais, quatro abas da ficha, cadastro,

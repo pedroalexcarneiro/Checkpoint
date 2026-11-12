@@ -390,3 +390,7 @@ passou com 199 testes em 73,65 s, exit 0, sem abort nativo. Windows pendente nes
 Smokes de páginas, auxiliar e cadastro com imagem/SQLite passaram isoladamente.
 37 capturas em scripts/render_ui_review.py cobrem seis páginas, abas, diálogos,
 proporções mistas e janelas/temas diferentes. São fixtures, não APIs autenticadas.
+
+A revisão visual 0.1.22 revelou falta de fonte nos PNGs offscreen Windows,
+apesar dos 199 testes passarem. A 0.1.23 registra Segoe UI explicitamente e
+verifica glifos em português antes de renderizar; capturas exigem inspeção visual.

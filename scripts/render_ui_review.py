@@ -35,7 +35,11 @@ def artwork(root,index,title,color,kind,width,height):
 def main():
     root=Path(sys.argv[1]).resolve();root.mkdir(parents=True,exist_ok=True)
     if (root/'review.sqlite').exists():raise SystemExit('Use um diretório novo: base existente preservada.')
-    app=QApplication([]);app.setStyle('Fusion');db=Database(root/'review.sqlite');lib=Library(db)
+    app=QApplication([]);app.setStyle('Fusion')
+    from gamevault.fonts import install_fonts,verify_text_font
+    install_fonts(app)
+    if not verify_text_font():raise SystemExit('Fonte sem os glifos necessários; capturas bloqueadas.')
+    db=Database(root/'review.sqlite');lib=Library(db)
     names=['Hollow Knight','Celeste','INSIDE','Hades','The Legend of Zelda: Breath of the Wild','Ori and the Will of the Wisps','Returnal','Dead Cells']
     colors=['#365d79','#a06388','#86474e','#9d5b43','#668771','#42888b','#4a687e','#71577c'];ids=[]
     for index,(title,color) in enumerate(zip(names,colors)):
