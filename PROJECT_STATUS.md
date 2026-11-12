@@ -4,6 +4,12 @@ Versão 0.1.14 de desenvolvimento. **O projeto completo não está concluído.**
 
 ## Atualização atual — importação Steam
 
+Publicação Windows em preparação: workflow Actions e empacotador com validação
+do executável extraído e SHA-256 foram adicionados. Actionlint e sintaxe Python
+verificados localmente; build Windows e publicação só devem ser considerados
+concluídos após confirmação da execução. API GitHub bloqueada pela rede vigente;
+api.github.com foi acrescentado ao rascunho para permitir acompanhamento.
+
 Correção posterior do Qt na mesma 0.1.14 de desenvolvimento: botões de arquivo do
 GameDialog usam método do receptor em vez de lambdas que capturavam o diálogo.
 Reprodução original e 16 testes afetados passaram. Uma execução completa confirmou

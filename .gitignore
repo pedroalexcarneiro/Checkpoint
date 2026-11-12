@@ -19,3 +19,5 @@ client_secret*.json
 .env.*
 !.env.example
 pytest-cache-files-*/
+.ci-results/
+release-assets/

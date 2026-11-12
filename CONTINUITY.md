@@ -6,6 +6,14 @@ Não contém credenciais, dados pessoais da biblioteca ou autorizações para no
 
 ## Atualização mais recente — encerramento Qt corrigido
 
+Publicação solicitada posteriormente: preparado workflow Windows em
+`.github/workflows/windows-release.yml` e empacotador que valida o ZIP extraído,
+smoke, SQLite, auxiliar, checksum e limite do atualizador antes da pré-release.
+Validadores locais: actionlint 1.7.7 (checksum oficial conferido) e compilação
+Python; isso não comprova execução Windows. O acesso à API GitHub foi recusado
+pela política atual; api.github.com foi adicionado ao rascunho de rede, ainda
+dependente de aplicação. Não declarar Release publicada sem observar o resultado.
+
 - Reproduzida a falha nativa em GameDialog sem janela pai: lambdas conectadas aos
   botões de arquivo capturavam o diálogo até o encerramento do PySide6.
 - Substituídas por método do receptor Qt e propriedade que identifica o campo.

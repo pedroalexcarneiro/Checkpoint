@@ -34,6 +34,29 @@ Para restaurar o banco, feche todas as instâncias, preserve o diretório atual 
 
 ## Empacotar
 
+### Publicação automatizada da 0.1.14
+
+`.github/workflows/windows-release.yml` prepara o pacote num executor GitHub Actions
+Windows 2022 x64 com Python 3.12. Alterações de versão/empacotamento na `main` ou
+`codex/steam-library-import` iniciam o fluxo. Ele instala o inventário Windows,
+executa a suíte nessa plataforma e usa o script de build abaixo.
+
+`scripts/package_windows_release.py` cria o ZIP com a pasta Checkpoint completa,
+verifica CRC/tamanho, extrai usando o validador do atualizador e executa smoke do
+fonte e do executável extraído em dados isolados, conferindo captura, schema e
+integridade SQLite. Também verifica o auxiliar e gera SHA-256 e evidência do build.
+
+Somente após essas etapas o job de publicação, com `contents: write`, cria a tag
+nova no commit compilado e publica uma pré-release com ZIP/checksum/validação.
+Não modifica tags nem Releases existentes. Se o fluxo falhar, consulte Actions;
+não há pacote aprovado a partir de mera validação estática do workflow.
+
+Não é necessário fornecer token pessoal ao workflow: ele usa GITHUB_TOKEN do
+próprio job, sem credenciais Steam ou dados pessoais. O acesso local a Actions e
+Releases pela CLI requer também rede para api.github.com e permissões da conexão.
+
+### Build manual no Windows
+
 ```powershell
 .\scripts\build.ps1 -Python .\.venv\Scripts\python.exe
 ```
