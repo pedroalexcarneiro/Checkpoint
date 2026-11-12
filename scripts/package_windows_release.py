@@ -1,5 +1,6 @@
 """Cria ZIP Windows e só o libera após smoke do conteúdo efetivamente extraído."""
 import argparse
+from contextlib import closing
 import hashlib
 import os
 from pathlib import Path
@@ -23,7 +24,7 @@ def smoke(command, directory):
     screenshot = directory / 'smoke-home.png'
     if not screenshot.is_file() or screenshot.read_bytes()[:8] != b'\x89PNG\r\n\x1a\n':
         raise RuntimeError('Smoke não gerou uma captura PNG válida.')
-    with sqlite3.connect((directory / 'gamevault.sqlite').as_uri() + '?mode=ro', uri=True) as sql:
+    with closing(sqlite3.connect((directory / 'gamevault.sqlite').as_uri() + '?mode=ro', uri=True)) as sql:
         if sql.execute('PRAGMA integrity_check').fetchone()[0] != 'ok':
             raise RuntimeError('Integridade SQLite falhou.')
         if sql.execute('PRAGMA user_version').fetchone()[0] != len(MIGRATIONS):
