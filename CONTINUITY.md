@@ -1,5 +1,21 @@
 # Continuidade do Checkpoint
 
+## Publicação confirmada — v0.1.23
+
+Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.23
+Commit: faa60825bcb5fcfa09f443c7926616aba2bb070c; workflow 43279071033 success.
+Relatório: 199 testes Windows, zero falhas/erros/skips; seis páginas, auxiliar,
+cadastro com imagem/SQLite no fonte e ZIP extraído e atualizador aprovados.
+ZIP Windows: 83.984.000 bytes; SHA-256
+ a38a093efc96aa55acecad89a2b8a9a5ae498108a491d1fbf656a9a47af2a16e.
+Revisão visual: 37 PNGs Qt Windows + index.html; ZIP 2.964.823 bytes; SHA-256
+8b702d4eabafdaa53e209f1a3163402b7b9728865728c6866439f63cc9631936.
+Hash do ZIP visual conferido em leitura. Início, Biblioteca e Aparência Windows
+abertos e inspecionados: textos legíveis, sem quadrados após registro das fontes.
+Capturas usam fixtures; não representam contas autenticadas nem dados pessoais.
+A publicação substitui as pendências abaixo; releases anteriores foram preservadas.
+
+
 ## 0.1.23 — fontes e revisão Windows verificável
 
 A 0.1.22 foi publicada no commit 39da4e198a2226d82ae90a657c1f1696cb1afa16,

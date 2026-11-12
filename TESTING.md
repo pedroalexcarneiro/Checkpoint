@@ -394,3 +394,9 @@ proporções mistas e janelas/temas diferentes. São fixtures, não APIs autenti
 A revisão visual 0.1.22 revelou falta de fonte nos PNGs offscreen Windows,
 apesar dos 199 testes passarem. A 0.1.23 registra Segoe UI explicitamente e
 verifica glifos em português antes de renderizar; capturas exigem inspeção visual.
+
+Windows 0.1.23 confirmado: workflow 43279071033 success, 199 testes sem
+falhas/erros/skips e smokes aprovados. Capturas com fonte corrigida produzidas e
+PNG de Início/Biblioteca/Aparência inspecionados. ZIP visual possui 37 capturas
+e hash conferido; nenhum banco/log foi incluído. Resultado visual continua
+aberto a ajustes do usuário, sem confundir sucesso funcional com aprovação estética.
