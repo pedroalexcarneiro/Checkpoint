@@ -17,7 +17,7 @@ class ArtworkProgress(QDialog):
         def work():
             from .database import Database
             from .library import Library
-            from .auto_artwork import obtain_artwork
+            from .worker import run_isolated
             db=Database(self.path)
             try:
                 lib=Library(db)
@@ -27,7 +27,8 @@ class ArtworkProgress(QDialog):
                         messages.append('Consulta interrompida. Jogos e resultados já salvos foram preservados.');break
                     game=lib.get(identity)
                     self.progress.emit(f'{index+1}/{len(self.game_ids)} · '+(game['title'] if game else 'Jogo indisponível'))
-                    result=obtain_artwork(lib,identity,force=True) if self.force else obtain_artwork(lib,identity)
+                    try:result=run_isolated('enrich',self.path,game_id=identity,force=self.force)
+                    except Exception as error:result=str(error) if isinstance(error,RuntimeError) else 'Consulta interrompida; cadastro preservado.'
                     messages.append((game['title']+': ' if game else '')+result)
                 return '\n'.join(messages)
             finally:db.close()

@@ -1,5 +1,32 @@
 # Validação
 
+## 0.1.16 — cadastro simples e operações isoladas
+
+- Formulário novo mostra nome/plataforma; Drive, catálogo manual e ficha completa
+  ficam recolhidos. Ao salvar, tenta identificar pelo nome/plataforma e completar
+  ficha/imagens sem confirmação obrigatória. Sem resultado confiável, salva offline.
+  Empates, plataformas incompatíveis e baixa semelhança não são associados.
+- Baixar e adicionar à biblioteca no Drive cria o jogo/vínculo da ROM se necessário
+  e inicia a obtenção das imagens depois de concluir/verificar o arquivo.
+- Download e enriquecimento executam em auxiliares separados. Saída abrupta do
+  auxiliar vira mensagem na janela; o cadastro e os arquivos são preservados.
+  Não há mudança de OAuth, cofre, schema (4) ou exclusão remota.
+- Respostas do Drive chegam a slots Qt do receptor; fechamento das janelas aguarda
+  trabalhos ativos. Arte vertical SteamGridDB precede fallback da imagem RAWG.
+- Provedores já configurados são reutilizados; não se pede chave por jogo. Campos
+  indisponíveis na fonte permanecem vazios, sem inventar metadados ou logos.
+
+O crash relatado durante ROM/capa no Windows não foi reproduzido nesta nuvem.
+Foi validada a contenção: transferência controlada em processo real, interrupção
+abrupta do auxiliar de imagens e da transferência; interface viva, download válido
+preservado e arquivo parcial não publicado como ROM íntegra. Isso não comprova a
+causa exata da queda original nem autenticação Drive real nesta sessão.
+
+Validação Linux: 156 testes em 13,73 s (exit 0), depois 19 testes focados em 3,13 s
+após proteção de fechamento/compactação. Últimos testes focados: 22 em 1,65 s, exit 0. Smoke das seis páginas + auxiliar real:
+SQLite íntegro/schema 4/biblioteca vazia. Empacotador agora também testa o auxiliar
+no executável extraído. Build Windows e publicação 0.1.16 ainda pendentes.
+
 ## 0.1.15 — preenchimento de ficha e imagens
 
 Validação Linux desta mudança: suíte completa **146 aprovados em 14,99 s, exit 0**;

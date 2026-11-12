@@ -16,7 +16,11 @@ def main():
     parser.add_argument('--data-dir',type=Path,help='Diretório de dados isolado')
     parser.add_argument('--smoke-test',action='store_true',help='Abre todas as páginas e encerra em ambiente isolado')
     parser.add_argument('--network-test', action='store_true', help='Testa HTTPS público sem autenticação e salva network-test.txt no diretório de dados')
+    parser.add_argument('--worker-request',type=Path,help=argparse.SUPPRESS)
     args = parser.parse_args()
+    if args.worker_request:
+        from .worker import execute_request
+        return execute_request(args.worker_request)
     # Preserve o armazenamento e a trava legados para manter bibliotecas existentes.
     directory = args.data_dir or Path(os.environ.get('LOCALAPPDATA',str(Path.home()/'.local/share')))/'GameVault'
     directory.mkdir(parents=True,exist_ok=True)

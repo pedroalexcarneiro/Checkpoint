@@ -107,7 +107,7 @@ def test_rawg_confirmed_rom_uses_its_own_identity(library, folder):
     assert library.get(identity)['platform'] == 'Game Boy Advance'
 
 
-def test_new_form_opens_catalog_on_save_and_can_save_offline(library, app, monkeypatch):
+def test_new_form_resolves_automatically_on_save_and_can_save_offline(library, app, monkeypatch):
     from gamevault.dialogs import GameDialog
     from PySide6.QtWidgets import QDialog
     dialog = GameDialog(library=library)
@@ -115,7 +115,7 @@ def test_new_form_opens_catalog_on_save_and_can_save_offline(library, app, monke
     called = []
     def choose():
         called.append(True); dialog.apply_catalog(provider_result())
-    monkeypatch.setattr(dialog, 'lookup_catalog', choose)
+    monkeypatch.setattr(dialog, 'lookup_automatic', choose)
     dialog.validate()
     assert called and dialog.result() == QDialog.Accepted
     assert dialog.data()['developer'] == 'Playdead'
@@ -128,15 +128,15 @@ def test_new_form_opens_catalog_on_save_and_can_save_offline(library, app, monke
     offline.close()
 
 
-def test_cancelled_identification_does_not_silently_save(library, app, monkeypatch):
+def test_missing_automatic_identification_still_saves_offline(library, app, monkeypatch):
     from gamevault.dialogs import GameDialog
     from PySide6.QtWidgets import QDialog
     dialog = GameDialog(library=library)
     dialog.fields['title'].setText('Unknown ROM')
-    monkeypatch.setattr(dialog, 'lookup_catalog', lambda: None)
+    monkeypatch.setattr(dialog, 'lookup_automatic', lambda: None)
     dialog.validate()
-    assert dialog.result() != QDialog.Accepted
-    assert 'Confirme' in dialog.error.text()
+    assert dialog.result() == QDialog.Accepted
+    assert dialog.catalog_result is None
     dialog.close()
 
 
@@ -144,7 +144,7 @@ def test_batch_cancellation_keeps_existing_library(library, app, monkeypatch):
     from gamevault.artwork_progress import ArtworkProgress
     identity = library.save_game({'title': 'Keep me'})
     obtain = Mock()
-    monkeypatch.setattr('gamevault.auto_artwork.obtain_artwork', obtain)
+    monkeypatch.setattr('gamevault.worker.run_isolated', obtain)
     dialog = ArtworkProgress(library, [identity])
     dialog.cancel.click()
     dialog.exec()

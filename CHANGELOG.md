@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.16 — cadastro simples e proteção das operações (desenvolvimento)
+
+- Nome/plataforma no cadastro inicial; opções avançadas e Drive recolhidos.
+- Identificação automática com fontes disponíveis, sem catálogo obrigatório.
+- Download Drive adiciona o jogo e busca imagens após verificar o arquivo.
+- Download e imagens em processos auxiliares; falhas abruptas preservam a interface.
+- Proteção de fechamento com workers ativos, slots Qt no receptor e parciais preservados.
+- Causa exata do crash Windows relatado ainda não reproduzida; contenção validada
+  com interrupções controladas. Smoke do pacote passa a incluir o auxiliar real.
+
 ## 0.1.15 — ficha e imagens no cadastro (desenvolvimento)
 
 - Importação Steam completa dados e imagens por AppID, em worker com progresso.

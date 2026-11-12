@@ -75,12 +75,16 @@ class AutoArtwork:
 
 def obtain_artwork(library,game_id,force=False):
     # Falha de arte nunca desfaz cadastro, associação ou download de ROM.
-    metadata=''
-    try:
-        from .enrichment import complete_game
-        if not force and not library.setting('artwork.auto',True):
-            return 'Ficha e artes automáticas desativadas.'
-        metadata=complete_game(library,game_id)
-        artwork=AutoArtwork(library).obtain(game_id,force)
-        return metadata+' '+artwork
-    except Exception: return metadata+' Arte pendente: não foi possível consultar o provedor ou o cofre. Jogo e arquivos preservados.'
+    if not force and not library.setting('artwork.auto',True):
+        return 'Ficha e artes automáticas desativadas.'
+    from .enrichment import complete_game
+    has_art_identity=library.sql.execute("SELECT 1 FROM external_identifiers WHERE game_id=? AND provider='steamgriddb'",(game_id,)).fetchone()
+    def art():
+        try:return AutoArtwork(library).obtain(game_id,force)
+        except Exception:return 'Arte pendente: não foi possível consultar o provedor ou o cofre. Jogo e arquivos preservados.'
+    # Arte vertical do SteamGridDB tem preferência sobre a imagem de fundo RAWG.
+    if has_art_identity:
+        artwork=art();metadata=complete_game(library,game_id)
+    else:
+        metadata=complete_game(library,game_id);artwork=art()
+    return metadata+' '+artwork

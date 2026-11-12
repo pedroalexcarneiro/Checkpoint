@@ -1,5 +1,21 @@
 # Integrações
 
+## 0.1.16 — identificação automática e auxiliares
+
+O cadastro tenta Steam (PC), RAWG e SteamGridDB já configurados; compara nome e
+plataforma, recusando empates e baixa semelhança. RAWG e SteamGridDB só compartilham
+identidades quando retornam o mesmo título. Não há pedido de chave por jogo nem
+escopo OAuth novo. Sem correspondência, o cadastro manual continua funcionando.
+A preferência global de automação é respeitada; uma tentativa manual em lote pode
+ser forçada. Ficha/imagens dependem da disponibilidade nas fontes.
+
+Download Drive e enriquecimento rodam em processos auxiliares, com banco próprio,
+sem transportar credenciais na linha de comando ou IPC. Um encerramento abrupto
+é reportado sem encerrar a interface; native-crash.log recebe stack nativo do
+auxiliar sem variáveis locais. Arquivos parciais ficam preservados, e somente
+transferências verificadas são disponibilizadas. Testes usam transporte controlado;
+Google Drive autenticado não foi acessado nesta correção.
+
 ## 0.1.15 — ficha e imagens no cadastro (desenvolvimento)
 
 Steam inicia preenchimento assíncrono por AppID após importar. Cadastro manual e

@@ -1,13 +1,11 @@
-Ficha e imagens ao adicionar jogos à biblioteca.
+Cadastro simples e proteção durante downloads/imagens.
 
-- Steam: após importar os jogos selecionados, o Checkpoint busca ficha e imagens pelo AppID, sem chave adicional para a loja.
-- ROMs e cadastro manual: ao salvar, confirme o jogo no catálogo. Steam fornece dados de jogos de PC; RAWG cobre outras plataformas com chave própria; SteamGridDB complementa artes com chave própria.
-- Configurações > Completar fichas e imagens faltantes da biblioteca permite atualizar cadastros já identificados. Cadastros sem identidade podem ser identificados em Editar jogo.
-- Campos e imagens existentes são preservados no preenchimento automático. Categoria, nota, status e observações são pessoais.
-- Consultas têm progresso e podem ser interrompidas após o jogo atual. Falhas de rede não desfazem o cadastro. É possível cadastrar offline desmarcando a busca no formulário.
-- Ficha e imagens dependem da disponibilidade da fonte; alguns jogos não oferecem logo ou capa vertical. RAWG usa a imagem de fundo como capa/banner, exibida inteira.
-- SQLite permanece no schema 4. Nenhuma biblioteca pessoal ou credencial é incluída no pacote.
+- Para adicionar um jogo, digite o nome e salve. O Checkpoint tenta buscar ficha e imagens automaticamente nas fontes disponíveis, sem exigir confirmação de catálogo. Sem correspondência confiável, o cadastro é salvo mesmo assim.
+- Nome e plataforma aparecem primeiro; Drive e ficha avançada ficam recolhidos. A edição manual continua disponível para corrigir imagens ou identificação.
+- No Drive, **Baixar e adicionar à biblioteca** cria o cadastro/vínculo e inicia a busca das imagens após verificar o arquivo.
+- Downloads e imagens executam em auxiliares separados. Se um auxiliar encerrar abruptamente, a interface permanece aberta e informa a falha. Downloads válidos e parciais são preservados.
+- Preferências de automação, campos pessoais e artes existentes são respeitados. Não há novos escopos OAuth nem chaves exigidas por jogo. SQLite permanece no schema 4.
 
-Baixe **Checkpoint-0.1.15-windows-x64.zip**, extraia a pasta Checkpoint completa e abra Checkpoint.exe. Preserve `_internal` e `CheckpointUpdater`.
+Baixe **Checkpoint-0.1.16-windows-x64.zip**, extraia a pasta completa e abra Checkpoint.exe. Preserve `_internal` e `CheckpointUpdater`.
 
-A publicação exige a validação Windows do workflow. Consulte o arquivo de validação da compilação; testes com respostas controladas não comprovam acesso autenticado. O projeto completo permanece em desenvolvimento.
+A queda Windows relatada durante ROM/capa não foi reproduzida no Linux. A contenção foi testada com processos interrompidos deliberadamente; isso não comprova a causa exata do incidente. Consulte o arquivo de validação para os testes Windows e smoke do executável/auxiliar desta compilação. Downloads Drive autenticados e acesso real às imagens não são comprovados pelos testes com transporte controlado.

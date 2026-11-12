@@ -1,7 +1,7 @@
 from pathlib import Path
 import unicodedata
 from PySide6.QtGui import QIcon
-from PySide6.QtCore import QSize
+from PySide6.QtCore import QSize,Slot,Qt
 from PySide6.QtWidgets import QDialog,QVBoxLayout,QHBoxLayout,QLabel,QLineEdit,QPushButton,QListWidget,QListWidgetItem,QComboBox,QMessageBox,QFileDialog,QInputDialog
 from .jobs import Job
 from .database import Database
@@ -11,7 +11,7 @@ from .integrations.drive import DriveScanner,GoogleDriveClient
 
 class DriveDialog(QDialog):
     def __init__(self,library,parent=None):
-        super().__init__(parent); self.library=library; self.jobs=[]; self.files=[]
+        super().__init__(parent); self.library=library; self.jobs=[]; self.files=[]; self.pending_artwork=None
         self.setWindowTitle('Google Drive · ROMs'); self.resize(860,650)
         layout=QVBoxLayout(self)
         layout.addWidget(QLabel('Varredura de metadados. Nenhum arquivo é baixado durante o scanner.'))
@@ -31,7 +31,7 @@ class DriveDialog(QDialog):
         self.platform_filter.currentIndexChanged.connect(lambda index:self.refresh())
         self.list=QListWidget(); self.list.setIconSize(QSize(42,56)); layout.addWidget(self.list)
         actions=QHBoxLayout()
-        for title,callback in [('Associar a um jogo',self.associate),('Baixar versão selecionada',self.download)]:
+        for title,callback in [('Associar a um jogo',self.associate),('Baixar e adicionar à biblioteca',self.download)]:
             item=QPushButton(title); item.clicked.connect(callback); actions.addWidget(item); self.controls.append(item)
         layout.addLayout(actions)
         more=QHBoxLayout()
@@ -42,7 +42,7 @@ class DriveDialog(QDialog):
         for title,callback in [('Reconhecer plataformas',self.recognize_platforms),('Importar catálogo DAT',self.import_dat),('Consultar MD5 no catálogo',self.check_catalog)]:
             item=QPushButton(title); item.clicked.connect(callback); catalog.addWidget(item); self.controls.append(item)
         layout.addLayout(catalog)
-        self.state=QLabel('Não autenticado nesta janela. Credenciais são mantidas no cofre do Windows.'); self.state.setWordWrap(True); layout.addWidget(self.state)
+        self.state=QLabel('Não autenticado nesta janela. Credenciais são mantidas no cofre do Windows.'); self.state.setWordWrap(True); self.state.setTextFormat(Qt.PlainText); layout.addWidget(self.state)
         self.refresh()
 
     def refresh(self):
@@ -71,6 +71,7 @@ class DriveDialog(QDialog):
         self.result_count.setText(f'{len(self.files)} de {len(files)} ROMs' if self.files else f'Nenhuma ROM encontrada · {len(files)} no índice. Limpe a pesquisa ou ajuste a plataforma.')
 
     def run(self,operation):
+        if self.jobs:return
         path=self.library.db.path
         def work():
             db=Database(path)
@@ -78,13 +79,26 @@ class DriveDialog(QDialog):
             finally: db.close()
         for control in self.controls: control.setEnabled(False)
         job=Job(work,self); self.jobs.append(job)
-        job.succeeded.connect(lambda result:self.completed(result)); job.failed.connect(self.state.setText)
-        job.finished.connect(lambda:self.finished_job(job)); self.state.setText('Processando…'); job.start()
+        job.succeeded.connect(self.completed); job.failed.connect(self.state.setText)
+        job.finished.connect(self.finished_job); self.state.setText('Processando…'); job.start()
 
-    def completed(self,result): self.state.setText(str(result)); self.refresh()
-    def finished_job(self,job):
+    @Slot(object)
+    def completed(self,result):
+        if isinstance(result,dict):
+            self.state.setText(result['message'])
+            self.pending_artwork=result.get('game_id')
+        else:self.state.setText(str(result))
+        self.refresh()
+    @Slot()
+    def finished_job(self):
+        job=self.sender()
+        if job not in self.jobs:return
         self.jobs.remove(job); job.deleteLater()
         for control in self.controls: control.setEnabled(True)
+        if self.pending_artwork:
+            game_id=self.pending_artwork;self.pending_artwork=None
+            self.queue_artwork(game_id,'ROM baixada e verificada. ')
+
     def client(self,interactive=False,client_json=None):
         return GoogleDriveClient.authenticate(client_json,CredentialVault(),interactive)
     def test_connection(self):
@@ -138,21 +152,16 @@ class DriveDialog(QDialog):
             DriveScanner(self.library,None).associate(file['id'],game_id); self.refresh()
             self.queue_artwork(game_id,'ROM associada ao jogo.')
     def queue_artwork(self,game_id,message):
-        from .auto_artwork import obtain_artwork
-        self.run(lambda lib: message+' '+obtain_artwork(lib,game_id))
+        from .worker import run_isolated
+        self.run(lambda lib: message+' '+run_isolated('enrich',lib.db.path,game_id=game_id))
     def download(self):
         file=self.selected()
         if not file: return
         directory=self.library.setting('downloads')
         if not directory:
             QMessageBox.information(self,'Downloads','Configure a pasta de downloads primeiro.'); return
-        def download(lib):
-            path=DriveScanner(lib,self.client()).download(file['id'],directory)
-            if file['game_id']:
-                from .auto_artwork import obtain_artwork
-                return 'ROM baixada. '+obtain_artwork(lib,file['game_id'])
-            return 'ROM baixada. Associe ao jogo correto para obter as artes.'
-        self.run(download)
+        from .worker import run_isolated
+        self.run(lambda lib:run_isolated('download',lib.db.path,file_id=file['id'],directory=directory))
     def recognize_platforms(self):
         self.run(lambda lib: f'{DriveScanner(lib,None).recognize_platforms()} plataformas reconhecidas. Nenhuma ROM foi baixada.')
     def import_dat(self):
@@ -176,3 +185,13 @@ class DriveDialog(QDialog):
         if self.jobs:
             self.state.setText('Aguarde a operação terminar antes de fechar.'); return
         super().reject()
+
+    def closeEvent(self,event):
+        if self.jobs:
+            self.state.setText('Aguarde a operação terminar antes de fechar.');event.ignore();return
+        super().closeEvent(event)
+
+    def accept(self):
+        if self.jobs:
+            self.state.setText('Aguarde a operação terminar antes de fechar.');return
+        super().accept()

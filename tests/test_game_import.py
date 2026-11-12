@@ -80,7 +80,7 @@ def test_artwork_progress_finishes_and_closes(library,app,monkeypatch):
     from PySide6.QtCore import QTimer
     import gamevault.auto_artwork
     game=library.save_game({'title':'Test'})
-    monkeypatch.setattr(gamevault.auto_artwork,'obtain_artwork',lambda lib,game_id:'done safely')
+    monkeypatch.setattr('gamevault.worker.run_isolated',lambda *args,**kwargs:'done safely')
     dialog=ArtworkProgress(library,game)
     QTimer.singleShot(5000,lambda:dialog.accept() if dialog.isVisible() else None)
     assert dialog.exec()==QDialog.Accepted

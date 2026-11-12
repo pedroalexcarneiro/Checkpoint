@@ -171,7 +171,7 @@ def test_dialog_async_query_selection_import_achievements_and_account_change(app
         def achievements(self, account, identity):
             assert threading.get_ident() != main_thread
             return [SteamAchievement('A', 'Marco Steam', '')]
-    monkeypatch.setattr('gamevault.auto_artwork.obtain_artwork', lambda lib, identity: 'Ficha e imagens verificadas')
+    monkeypatch.setattr('gamevault.worker.run_isolated', lambda *args, **kwargs: 'Ficha e imagens verificadas')
     monkeypatch.setattr(module, 'CredentialVault', Vault)
     monkeypatch.setattr(module, 'SteamProvider', Provider)
     monkeypatch.setattr(module.QInputDialog, 'getItem', lambda *args: (args[3][0], True))

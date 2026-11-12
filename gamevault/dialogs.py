@@ -9,7 +9,7 @@ class GameDialog(QDialog):
     def __init__(self, parent=None, game=None, library=None):
         super().__init__(parent)
         self.setWindowTitle('Editar jogo' if game else 'Adicionar à biblioteca')
-        self.resize(720,760)
+        self.resize(720,760 if game else 360)
         self.library=library;self.drive_file_id=None;self.catalog_result=None;self.drive_results=[]
         outer = QVBoxLayout(self)
         if library is not None and game is None:
@@ -19,15 +19,18 @@ class GameDialog(QDialog):
             row=QHBoxLayout();use=QPushButton('Usar ROM selecionada');use.clicked.connect(self.choose_drive);row.addWidget(use)
             manage=QPushButton('Atualizar índice do Drive');manage.clicked.connect(self.manage_drive);row.addWidget(manage);drive.addLayout(row)
             self.drive_info=QLabel('Pesquisa local. Se a pasta for nova, atualize o índice primeiro.');self.drive_info.setWordWrap(True);drive.addWidget(self.drive_info)
-            self.drive_query.textChanged.connect(self.search_drive);outer.addWidget(group)
-            lookup=QPushButton('Confirmar título original e completar dados no catálogo');lookup.clicked.connect(self.lookup_catalog);outer.addWidget(lookup)
+            self.drive_query.textChanged.connect(self.search_drive)
+            self.drive_toggle=QCheckBox('Escolher ROM do Google Drive')
+            self.drive_toggle.toggled.connect(group.setVisible)
+            outer.addWidget(self.drive_toggle);outer.addWidget(group);group.hide()
+            lookup=QPushButton('Confirmar título original e completar dados no catálogo');lookup.clicked.connect(self.lookup_catalog);outer.addWidget(lookup);self.catalog_button=lookup
         if library is not None and game is not None:
-            lookup=QPushButton('Identificar e completar ficha e imagens');lookup.clicked.connect(self.lookup_catalog);outer.addWidget(lookup)
+            lookup=QPushButton('Identificar e completar ficha e imagens');lookup.clicked.connect(self.lookup_catalog);outer.addWidget(lookup);self.catalog_button=lookup
         if library is not None and game is None:
-            self.complete_on_save=QCheckBox('Buscar ficha e imagens no catálogo ao salvar')
-            self.complete_on_save.setChecked(True);outer.addWidget(self.complete_on_save)
+            self.complete_on_save=QCheckBox('Preencher ficha e imagens automaticamente')
+            self.complete_on_save.setChecked(bool(library.setting('artwork.auto',True)));outer.addWidget(self.complete_on_save)
         scroll = QScrollArea(); scroll.setWidgetResizable(True)
-        body = QWidget(); form = QFormLayout(body); form.setSpacing(14)
+        body = QWidget(); form = QFormLayout(body); form.setSpacing(14); self.form=form
         self.fields = {}
         for key,label in [('title','Nome *'),('platform','Plataforma'),('genre','Gênero'),('category','Categoria'),
                           ('developer','Desenvolvedora'),('publisher','Publicadora'),('release_date','Lançamento (AAAA-MM-DD)'),
@@ -47,6 +50,11 @@ class GameDialog(QDialog):
             row.addWidget(line); row.addWidget(button); form.addRow(label,row); self.fields[key] = line
         for key,label in [('description','Descrição'),('notes','Observações')]:
             text = QTextEdit(); text.setMaximumHeight(100); form.addRow(label,text); self.fields[key] = text
+        self.advanced=QCheckBox('Mostrar ficha e opções avançadas')
+        self.advanced.toggled.connect(self.toggle_advanced)
+        outer.addWidget(self.advanced)
+        self.advanced.setChecked(bool(game))
+        self.toggle_advanced(bool(game))
         scroll.setWidget(body); outer.addWidget(scroll)
         self.error = QLabel(); self.error.setObjectName('error'); outer.addWidget(self.error)
         buttons = QDialogButtonBox(QDialogButtonBox.Save|QDialogButtonBox.Cancel)
@@ -60,6 +68,11 @@ class GameDialog(QDialog):
                 elif isinstance(widget,QCheckBox): widget.setChecked(bool(value))
                 elif isinstance(widget,QTextEdit): widget.setPlainText(value or '')
                 else: widget.setText(value or '')
+
+    def toggle_advanced(self,visible):
+        if hasattr(self,'catalog_button'):self.catalog_button.setVisible(visible)
+        for row in range(self.form.rowCount()):
+            self.form.setRowVisible(row,visible or row in (0,1))
 
     def search_drive(self,text):
         import unicodedata
@@ -76,6 +89,7 @@ class GameDialog(QDialog):
         self.load_drive_file(self.drive_results[index])
     def load_drive_file(self,file):
         from .integrations.drive import normalize_rom_name
+        self.drive_toggle.setChecked(True)
         self.drive_file_id=file['id'];self.catalog_result=None
         for key in ('genre','developer','publisher','release_date','description','cover','banner','logo','executable'):
             widget=self.fields[key]
@@ -104,6 +118,13 @@ class GameDialog(QDialog):
         from PySide6.QtCore import QTimer
         QTimer.singleShot(0,dialog.lookup)
         if dialog.exec()==QDialog.Accepted:self.apply_catalog(dialog.selected_result)
+    def lookup_automatic(self):
+        from .automatic_lookup import AutomaticLookup
+        dialog=AutomaticLookup(self.library,self.fields['title'].text(),self.fields['platform'].text(),self)
+        dialog.exec()
+        if dialog.selected_result:self.apply_catalog(dialog.selected_result)
+        else:self.error.setText('Cadastro salvo. Ficha pendente; você pode corrigir a identificação em Editar jogo.')
+
     def apply_catalog(self,result):
         self.catalog_result=result
         values={'title':result.title,'description':result.description,'genre':', '.join(result.genres),'developer':result.developer,'publisher':result.publisher,'release_date':result.release_date}
@@ -148,9 +169,7 @@ class GameDialog(QDialog):
             if value and key!='executable' and QPixmap(value).isNull():
                 self.error.setText('Imagem inválida: '+key); return
         if hasattr(self,'complete_on_save') and self.complete_on_save.isChecked() and self.catalog_result is None:
-            self.lookup_catalog()
-            if self.catalog_result is None:
-                self.error.setText('Confirme o jogo no catálogo ou desmarque a busca para salvar manualmente.');return
+            self.lookup_automatic()
         self.accept()
 
 class ImageDialog(QDialog):

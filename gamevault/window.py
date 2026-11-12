@@ -597,6 +597,9 @@ class MainWindow(QMainWindow):
             self.statusBar().showMessage('Sessão encerrada e tempo salvo.'); self.auto_backup(game_id)
 
     def closeEvent(self,event):
+        from .jobs import Job
+        if any(job.isRunning() for job in self.findChildren(Job)):
+            QMessageBox.information(self,'Operação em andamento','Aguarde a operação terminar antes de fechar o Checkpoint.');event.ignore();return
         if self.save_jobs:
             QMessageBox.information(self,'Saves','Aguarde a operação de saves terminar antes de fechar.'); event.ignore(); return
         if self.launcher.active:

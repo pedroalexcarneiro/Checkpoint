@@ -2,6 +2,7 @@
 import argparse
 from contextlib import closing
 import hashlib
+import json
 import os
 from pathlib import Path
 import platform
@@ -31,6 +32,13 @@ def smoke(command, directory):
             raise RuntimeError('Schema incorreto no smoke.')
         if sql.execute('SELECT count(*) FROM games').fetchone()[0] != 0:
             raise RuntimeError('Smoke deve começar com biblioteca vazia.')
+    request=directory/'worker-request.json'
+    response=directory/'worker-response.json'
+    request.write_text(json.dumps({'operation':'ping','database':str(directory/'gamevault.sqlite'),
+                                  'response':str(response),'arguments':{}}),encoding='utf-8')
+    subprocess.run([*command,'--worker-request',str(request)],check=True,timeout=30)
+    if json.loads(response.read_text(encoding='utf-8')) != {'ok':True,'result':{'worker':'ok','schema':len(MIGRATIONS)}}:
+        raise RuntimeError('Auxiliar isolado do pacote não respondeu corretamente.')
 
 
 def main():
@@ -81,6 +89,7 @@ def main():
         f'Testes: {counts}',
         'Smoke do fonte: 6 páginas; SQLite íntegro; biblioteca vazia.',
         'Smoke do ZIP extraído: 6 páginas; SQLite íntegro; biblioteca vazia.',
+        'Auxiliar isolado do fonte e do ZIP extraído: resposta e schema verificados.',
         'CheckpointUpdater.exe --check: saída 0.',
         f'ZIP SHA-256: {digest}',
         'Steam autenticada e homologação Windows 10/11 pessoal não estão cobertas.',

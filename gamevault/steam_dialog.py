@@ -222,7 +222,7 @@ class SteamDialog(QDialog):
         def complete():
             from .database import Database
             from .library import Library
-            from .auto_artwork import obtain_artwork
+            from .worker import run_isolated
             db=Database(path)
             try:
                 lib=Library(db);messages=[]
@@ -232,7 +232,9 @@ class SteamDialog(QDialog):
                     game=lib.get(identity)
                     title=game['title'] if game else 'Jogo indisponível'
                     self.enrichment_progress.emit(f'{index+1}/{len(ids)} · '+title+' · buscando ficha e imagens…')
-                    messages.append(title+': '+obtain_artwork(lib,identity))
+                    try:message=run_isolated('enrich',path,game_id=identity)
+                    except Exception:message='Não foi possível completar as imagens; jogo importado preservado.'
+                    messages.append(title+': '+message)
                 return '\n'.join(messages)
             finally:db.close()
         self.state.setText(summary+' Buscando fichas e imagens…')
