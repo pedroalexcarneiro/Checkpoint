@@ -1,5 +1,15 @@
 # Continuidade do Checkpoint
 
+## Publicação confirmada — v0.1.15
+
+Pré-release publicada: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.15
+Commit da release: 394e6b6847f723ba6077f75b588b6df9c63ed6aa.
+Workflow 43210583534 concluído com sucesso: testes Windows, build do aplicativo e
+atualizador, validação do ZIP extraído e publicação. ZIP Windows: 83.883.652 bytes;
+SHA-256 afa756039eee0d7dd238c0c388a5dc331a270bd4e9278f264b386f43bb2b1cbe.
+Esta confirmação prevalece sobre as notas de preparação abaixo. Acesso real às
+fontes de metadados/imagens segue sem validação nesta nuvem (bloqueio do proxy).
+
 ## 0.1.15 — ficha e imagens no cadastro (desenvolvimento)
 
 Steam inicia preenchimento assíncrono por AppID após importar. Cadastro manual e
