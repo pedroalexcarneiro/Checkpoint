@@ -1,6 +1,6 @@
 # Checkpoint
 
-0.1.19 revisa a composição visual em relação aos mockups e prioriza banners panorâmicos Steam. Capturas reais e detalhes estão na documentação de desenvolvimento; o pacote Windows ainda depende da validação do workflow.
+0.1.19 revisa a composição visual em relação aos mockups e prioriza banners panorâmicos Steam. Capturas reais e detalhes estão na documentação de desenvolvimento; pacote publicado em https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.19 .
 
 Biblioteca pessoal de jogos para Windows em Python/PySide6 e SQLite. Versão **0.1.19 de desenvolvimento**.
 

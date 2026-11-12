@@ -1,5 +1,17 @@
 # Validação
 
+## Publicação confirmada — v0.1.19
+
+Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.19
+Commit: 6ab43bfb2cf60a96d48a864af722b3ea7cd5b529; workflow 43259509483 success.
+Relatório confirma 177 testes Windows sem falhas/erros/skips; smokes das seis
+páginas, auxiliar, cadastro com imagem/SQLite e atualizador do ZIP aprovados.
+ZIP Windows: 83.912.188 bytes; SHA-256
+353d6c7e40b1571019c1b46503b0f4855741cb688ea815773a94048cf6aec5b1.
+A confirmação prevalece sobre as pendências abaixo. A fidelidade visual continua
+sendo avaliada pelo usuário. O banner panorâmico não foi baixado do CDN nesta
+nuvem: proxy CONNECT 403; contratos/fallback/proteção manual usam testes controlados.
+
 ## 0.1.19 — fidelidade visual e banner Steam
 
 O usuário rejeitou a fidelidade visual da 0.1.18; os mockups aprovados continuam
