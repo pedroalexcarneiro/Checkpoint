@@ -1,5 +1,17 @@
 # Continuidade do Checkpoint
 
+## Publicação confirmada — v0.1.21
+
+Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.21
+Commit: e479f87b97dc507b5686f7e0406441a50da56f66; workflow 43272087982 success.
+Relatório: 192 testes Windows, zero falhas/erros/skips. Smokes de seis páginas,
+auxiliar, cadastro completo com imagem e SQLite no fonte e ZIP extraído aprovados;
+CheckpointUpdater.exe --check saiu com 0. ZIP Windows: 83.953.182 bytes; SHA-256
+3c5f159048f9ee4584b4679b4559a81260326604b64d1c9669fbbabd55b3852b.
+Essa confirmação prevalece sobre as pendências abaixo. A avaliação visual pelo
+usuário e testes autenticados continuam distintos da validação automatizada.
+
+
 ## 0.1.21 — busca única e composição visual
 
 Correção da interpretação da marca: wordmark checkpo//nt original centralizado,

@@ -375,3 +375,7 @@ preenchimento sem etapa avançada, resposta atrasada e preservação da ROM.
 Capturas reais com fixtures isoladas; smokes de páginas/auxiliar/cadastro passaram.
 Consulta pública Steam nesta nuvem: indisponível (URLError/OSError). Testes de
 integração do catálogo usam provedores controlados, não contas autenticadas.
+
+Windows 0.1.21 confirmado: workflow 43272087982 success, 192 testes sem
+falhas/erros/skips. Smokes do fonte e do ZIP extraído e atualizador aprovados.
+Relatório Checkpoint-0.1.21-validation.txt publicado na release v0.1.21.
