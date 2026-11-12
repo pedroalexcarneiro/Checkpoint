@@ -27,7 +27,7 @@ def build_detail(window,game):
     else:bar.addWidget(action('Configurar execução',lambda:window.edit_game(game_id),True))
     seconds=window.library.sql.execute("SELECT COALESCE(SUM(duration_seconds),0) FROM play_sessions WHERE game_id=? AND state='finished'",(game_id,)).fetchone()[0]
     bar.addWidget(text(game['status'],'muted'));bar.addWidget(text(f'{seconds/3600:.1f} h registradas','muted'));bar.addStretch()
-    more=QToolButton();more.setText('⋯');more.setAccessibleName('Gerenciar jogo');more.setPopupMode(QToolButton.InstantPopup)
+    more=QToolButton();more.setFixedSize(40,36);more.setText('⋯');more.setAccessibleName('Gerenciar jogo');more.setPopupMode(QToolButton.InstantPopup)
     menu=QMenu(more)
     for title,callback in [('Editar ficha',lambda:window.edit_game(game_id)),('Trocar imagens',lambda:window.artworks(game_id)),('Obter ficha e imagens faltantes',lambda:window.completion_queue.submit([game_id],force=True)),('Adicionar aos desejos',lambda:window.add_wish(game_id)),('Remover da biblioteca',lambda:window.remove_game(game_id))]:
         item=menu.addAction(title);item.triggered.connect(callback)
@@ -44,25 +44,30 @@ def build_detail(window,game):
     if game['notes']:about_layout.addWidget(text('Suas observações','cardTitle'));about_layout.addWidget(text(game['notes'],'muted'))
     media=[dict(r) for r in window.library.sql.execute('SELECT * FROM media_files WHERE game_id=? ORDER BY id DESC',(game_id,))]
     images=[m for m in media if m['kind']=='image'][:2]
-    if images:
-        about_layout.addWidget(text('Galeria','sectionTitle'));row=QHBoxLayout()
-        for image in images:
-            b=action('',lambda checked=False,m=image:window.show_media(m));pix=QPixmap(image['path']);b.setIcon(QIcon(pix));b.setIconSize(QSize(170,100));b.setAccessibleName(image['caption'] or 'Abrir captura');row.addWidget(b)
-        about_layout.addLayout(row)
-    about_layout.addStretch()
-    frame,info=card();frame.setMaximumWidth(330);frame.setMinimumWidth(240);info.addWidget(text('Informações','cardTitle'))
-    fields=[('Plataforma',game['platform']),('Desenvolvedora',game['developer']),('Publicadora',game['publisher']),('Lançamento',game['release_date']),('Gênero',game['genre']),('Origem',game['source']),('Categoria',game['category']),('Sua nota',str(game['rating'])+'/10' if game['rating'] is not None else '')]
-    core={'Plataforma','Desenvolvedora','Lançamento','Gênero'}
-    for caption,value in fields:
-        if value and caption in core:
-            info.addWidget(text(caption,'caption'));info.addWidget(text(value))
+    fields=[('Desenvolvedora',game['developer']),('Plataforma',game['platform']),('Gênero',game['genre']),('Lançamento',game['release_date'])]
+    facts=QGridLayout();facts.setHorizontalSpacing(36);facts.setVerticalSpacing(16)
+    for index,(caption,value) in enumerate((pair for pair in fields if pair[1])):
+        item=QWidget();inside=QVBoxLayout(item);inside.setContentsMargins(0,0,0,0);inside.setSpacing(4)
+        inside.addWidget(text(caption,'caption'));inside.addWidget(text(value));facts.addWidget(item,index//2,index%2)
+    about_layout.addLayout(facts)
     extra=QWidget();extra_layout=QVBoxLayout(extra);extra_layout.setContentsMargins(0,4,0,0)
-    for caption,value in fields:
-        if value and caption not in core:
-            extra_layout.addWidget(text(caption,'caption'));extra_layout.addWidget(text(value))
+    other=[('Publicadora',game['publisher']),('Origem',game['source']),('Categoria',game['category']),('Sua nota',str(game['rating'])+'/10' if game['rating'] is not None else '')]
+    for caption,value in other:
+        if value:extra_layout.addWidget(text(f'{caption} · {value}','muted'))
     from .settings_view import disclosure
-    disclosure('Mais informações',extra,info)
-    columns.addWidget(about,2);columns.addWidget(frame,1,Qt.AlignTop);overview.addLayout(columns)
+    if any(value for _,value in other):disclosure('Mais informações',extra,about_layout)
+    about_layout.addStretch();columns.addWidget(about,3)
+    gallery=QWidget();gallery.setMaximumWidth(380);gallery.setMinimumWidth(240)
+    gallery_layout=QVBoxLayout(gallery);gallery_layout.setContentsMargins(20,0,0,0);gallery_layout.setSpacing(14)
+    gallery_layout.addWidget(text('Galeria','sectionTitle'))
+    if images:
+        row=QHBoxLayout()
+        for image in images:
+            b=action('',lambda checked=False,m=image:window.show_media(m));pix=QPixmap(image['path']);b.setIcon(QIcon(pix));b.setIconSize(QSize(150,90));b.setAccessibleName(image['caption'] or 'Abrir captura');row.addWidget(b)
+        gallery_layout.addLayout(row)
+    else:gallery_layout.addWidget(text('Suas capturas deste jogo aparecem aqui.','muted'))
+    add=action('Adicionar captura',lambda:window.import_media(game_id));add.setObjectName('quiet');gallery_layout.addWidget(add,0,Qt.AlignLeft);gallery_layout.addStretch()
+    columns.addWidget(gallery,2);overview.addLayout(columns)
     from .steam_library import game_accounts
     accounts=game_accounts(window.library,game_id)
     if accounts:activity.addWidget(text('Steam','sectionTitle'))

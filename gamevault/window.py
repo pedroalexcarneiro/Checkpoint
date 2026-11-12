@@ -35,18 +35,22 @@ class MainWindow(QMainWindow):
         from .completion_queue import CompletionQueue
         self.completion_queue=CompletionQueue(library.db.path,self)
         self.completion_queue.updated.connect(self.game_completed)
+        self.completion_queue.restore_requested.connect(self.offer_restore_match)
         self.completion_queue.busy_changed.connect(self.completion_busy)
-        self.completion_bar=QProgressBar();self.completion_bar.setRange(0,0);self.completion_bar.hide()
-        self.statusBar().addPermanentWidget(self.completion_bar)
-        self.completion_stop=button('Parar após o jogo atual',self.completion_queue.cancel_pending)
-        self.completion_stop.hide();self.statusBar().addPermanentWidget(self.completion_stop)
+        from .task_status import TaskStatus
+        self.task_status=TaskStatus(self.theme,self.completion_queue.cancel_pending)
+        self.completion_bar=self.task_status.spinner;self.completion_stop=self.task_status.stop
+        self.statusBar().addPermanentWidget(self.task_status)
+        self.status_timer=QTimer(self);self.status_timer.setSingleShot(True);self.status_timer.setInterval(6000)
+        self.status_timer.timeout.connect(self.statusBar().clearMessage)
+        self.statusBar().messageChanged.connect(self.status_message_changed)
         self.hero_upgrade_attempted=set();self.current_page = 0; self.current_game = None; self.last_deleted = None; self.save_jobs = {}
         root = QWidget(); root.setObjectName('root'); self.setCentralWidget(root)
         layout = QHBoxLayout(root); layout.setContentsMargins(0,0,0,0); layout.setSpacing(0)
         sidebar = QWidget(); sidebar.setObjectName('sidebar'); sidebar.setFixedWidth(238)
         nav = QVBoxLayout(sidebar); nav.setContentsMargins(10,20,10,20)
-        from .branding import BrandWidget,app_icon
-        self.brand=BrandWidget(self.theme);nav.addWidget(self.brand);nav.addSpacing(24)
+        from .branding import SystemName,app_icon
+        self.brand=SystemName(self.theme);nav.addWidget(self.brand);nav.addSpacing(24)
         self.setWindowIcon(app_icon(self.theme));QApplication.instance().setWindowIcon(self.windowIcon())
         self.nav_names=['home','library','wish','memories','stats','settings']
         self.nav_buttons = []
@@ -76,7 +80,7 @@ class MainWindow(QMainWindow):
         self.platform.setMaximumWidth(190);self.sort.setMaximumWidth(150);self.view.setMaximumWidth(100)
         self.navigate(0)
         self.timer = QTimer(self); self.timer.timeout.connect(self.poll_sessions); self.timer.start(1000)
-        self.statusBar().setSizeGripEnabled(False);self.statusBar().showMessage('')
+        self.statusBar().setSizeGripEnabled(False);self.statusBar().showMessage('');self.statusBar().hide()
 
     def showEvent(self,event):
         super().showEvent(event)
@@ -205,8 +209,9 @@ class MainWindow(QMainWindow):
             QTimer.singleShot(0,self.steam);return
         if result==QDialog.Accepted:
             def save():
-                from .game_import import save_import
-                game_id=save_import(self.library,dialog.data(),dialog.drive_file_id,dialog.catalog_result)
+                from .trash_import import save_with_prompt
+                game_id=save_with_prompt(self,self.library,dialog.data(),dialog.drive_file_id,dialog.catalog_result)
+                if game_id is None:return
                 self.refresh_library();self.detail(game_id)
                 self.statusBar().showMessage('Jogo salvo na biblioteca.')
                 if dialog.complete_on_save.isChecked():
@@ -306,24 +311,8 @@ class MainWindow(QMainWindow):
         self.navigate(2)
 
     def statistics(self):
-        outer = self.clear_page(4); scroll = QScrollArea(); scroll.setWidgetResizable(True); body = QWidget(); layout = QVBoxLayout(body); scroll.setWidget(body); outer.addWidget(scroll); stats = self.library.stats()
-        panel = self.panel(layout,f"{stats['total']} jogos na sua biblioteca",f"{stats['seconds']/3600:.1f} horas · {stats['sessions']} sessões confirmadas · média de {stats['average']/60:.1f} min por sessão")
-        for status,count in stats['statuses'].items():
-            panel.addWidget(label(f'{status}  ·  {count}'))
-            progress = QProgressBar(); progress.setRange(0,max(1,stats['total'])); progress.setValue(count); progress.setTextVisible(False); panel.addWidget(progress)
-        layout.addWidget(label('DISTRIBUIÇÃO POR PLATAFORMA','eyebrow'))
-        for platform,count in stats['platforms'].items(): layout.addWidget(label(f'{platform}   {count} jogos'))
-        for title,key in [('Por gênero','genres'),('Tempo semanal (início da semana UTC)','weekly'),('Tempo mensal (UTC)','monthly'),('Conclusões por mês','completions')]:
-            layout.addWidget(label(title.upper(),'eyebrow'))
-            values = stats[key]
-            if not values: layout.addWidget(label('Sem registros neste período.','muted'))
-            for name,value in values.items():
-                unit = f'{value/3600:.1f} h' if key in {'weekly','monthly'} else str(value)
-                layout.addWidget(label(f'{name} · {unit}'))
-        layout.addWidget(label('MAIS JOGADOS','eyebrow'))
-        for game in stats['top']: layout.addWidget(label(game['title']+f" · {game['seconds']/3600:.1f} h"))
-        if not stats['total']: layout.addWidget(label('Nenhum jogo cadastrado.','muted'))
-        layout.addStretch()
+        from .statistics_view import build_statistics
+        build_statistics(self)
 
     def settings(self):
         from .settings_view import build_settings
@@ -345,6 +334,30 @@ class MainWindow(QMainWindow):
             self.statusBar().showMessage('Nenhum jogo cadastrado.');return
         self.completion_queue.submit(ids,force=True)
 
+    @Slot(int,int)
+    def offer_restore_match(self,new_id,old_id):
+        QTimer.singleShot(0,lambda:self.resolve_restore_match(new_id,old_id))
+
+    def resolve_restore_match(self,new_id,old_id):
+        from .trash_import import ask_removed,detach_removed
+        game=self.library.get(new_id)
+        old=self.library.sql.execute('SELECT * FROM games WHERE id=? AND deleted_at IS NOT NULL',(old_id,)).fetchone()
+        if not game or not old:return
+        decision=ask_removed(self,old['title'])
+        if decision=='cancel':return
+        def apply():
+            with self.library.sql:
+                if decision=='restore':
+                    self.library.sql.execute('UPDATE games SET deleted_at=NULL WHERE id=?',(old_id,))
+                    self.library.sql.execute('UPDATE game_files SET game_id=? WHERE game_id=?',(old_id,new_id))
+                    from .library import now
+                    self.library.sql.execute('UPDATE games SET deleted_at=? WHERE id=?',(now(),new_id))
+                else:detach_removed(self.library,old_id)
+            target=old_id if decision=='restore' else new_id
+            self.refresh_library();self.detail(target)
+            self.completion_queue.submit([target])
+        self.guard(apply)
+
     @Slot(int,str)
     def game_completed(self,game_id,message):
         self.refresh_library()
@@ -352,12 +365,16 @@ class MainWindow(QMainWindow):
         elif self.current_page==0:self.home()
         self.statusBar().showMessage(message)
 
+    @Slot(str)
+    def status_message_changed(self,message):
+        busy=self.completion_queue.active is not None or bool(self.completion_queue.pending)
+        self.statusBar().setVisible(bool(message) or busy)
+        if message:self.status_timer.start()
+
     @Slot(int)
     def completion_busy(self,count):
-        self.completion_bar.setVisible(count>0);self.completion_stop.setVisible(count>0)
-        if count:
-            self.completion_bar.setToolTip(f'{count} jogos aguardando ficha e imagens')
-            self.statusBar().showMessage('Buscando ficha e imagens em segundo plano…')
+        self.task_status.set_count(count)
+        self.statusBar().setVisible(count>0 or bool(self.statusBar().currentMessage()))
 
     def set_theme(self,key):
         from PySide6.QtWidgets import QApplication
@@ -371,6 +388,7 @@ class MainWindow(QMainWindow):
         self.brand.set_theme(self.theme);self.setWindowIcon(app_icon(self.theme));QApplication.instance().setWindowIcon(self.windowIcon())
         for item,name in zip(self.nav_buttons,self.nav_names):item.setIcon(nav_icon(name,self.theme.colors['muted']))
         for hero in self.findChildren(Hero):hero.set_theme(self.theme)
+        self.completion_bar.theme=self.theme;self.completion_bar.update()
         self.refresh_library()
 
     def updates(self):

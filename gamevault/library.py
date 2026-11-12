@@ -67,6 +67,8 @@ class Library:
     def restore(self, game_id):
         with self.sql:
             self.sql.execute('UPDATE games SET deleted_at=NULL WHERE id=?',(game_id,))
+            for provider,identity in self.setting(f'trash.identities.{game_id}',[]):
+                self.sql.execute('INSERT OR IGNORE INTO external_identifiers VALUES(?,?,?)',(game_id,provider,identity))
 
     def setting(self, key, default=None):
         row = self.sql.execute('SELECT value FROM settings WHERE key=?',(key,)).fetchone()

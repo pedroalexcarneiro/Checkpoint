@@ -355,3 +355,10 @@ Referência primária do provedor: https://github.com/SteamGridDB/java-steamgrid
 - RAWG continua sem validação autenticada nesta sessão; não promete ficha completa usando somente a chave SteamGridDB. Verificar em Windows: novo cadastro pelo Drive, escolha da edição correta, obtenção automática de artes e navegação após salvar.
 
 Validação autenticada adicional 0.1.13, em biblioteca isolada: ID SteamGridDB já confirmado para The Legend of Zelda: The Minish Cap; formulário preenchido com ROM de teste, título do catálogo aplicado, cadastro/identidade/versão salvos e ArtworkProgress concluído. API real retornou e cacheou cover, banner e logo (3 sucessos, zero falhas). Nome original preservado e integrity_check ok. Não adicionou jogo/ROM à coleção real. RAWG real continua pendente.
+
+## Revisão 0.1.20
+
+185 testes Linux em 33,42 s, sem falhas. Novos casos cobrem restauração,
+cadastro novo preservando lixeira, rollback, identidade não roubada, proporção
+do banner, indicador compacto e estatísticas derivadas da base. Smokes isolados
+de páginas/auxiliar/cadastro aprovados. Windows depende do workflow da release.

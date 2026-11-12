@@ -1,11 +1,24 @@
 """Cadastro confirmado + vínculo de ROM em uma única transação."""
 from .library import clean_game_data,now
+from contextlib import contextmanager
+
+@contextmanager
+def atomic(sql):
+    sql.execute('SAVEPOINT game_import')
+    try:
+        yield
+        sql.execute('RELEASE SAVEPOINT game_import')
+    except Exception:
+        sql.execute('ROLLBACK TO SAVEPOINT game_import')
+        sql.execute('RELEASE SAVEPOINT game_import')
+        raise
+
 
 
 def complete_identity(library,game_id,result):
     if not library.get(game_id):raise ValueError('Jogo indisponível.')
     identities={**result.identifiers,result.provider:result.external_id}
-    with library.sql:
+    with atomic(library.sql):
         for provider,external_id in identities.items():
             if provider not in {'rawg','steamgriddb','steam'} or not str(external_id).isdigit() or int(external_id)<=0:
                 raise ValueError('Identidade de catálogo inválida.')
@@ -38,7 +51,7 @@ def save_import(library,data,file_id=None,result=None):
         if existing and existing!=file['game_id']: raise ValueError('Esta ROM já está associada a outro jogo. Revise a associação no gerenciador Drive.')
         existing=file['game_id']
     if existing and not library.get(existing): raise ValueError('O jogo correspondente está na lixeira. Restaure-o antes de associar outra versão.')
-    with library.sql:
+    with atomic(library.sql):
         if existing:
             game_id=existing
         else:

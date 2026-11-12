@@ -13,21 +13,22 @@ class CoverDelegate(QStyledItemDelegate):
         rect=QRectF(option.rect).adjusted(3,3,-15,-15)
         hovered=bool(option.state & QStyle.State_MouseOver)
         selected=bool(option.state & QStyle.State_Selected)
-        painter.setPen(QPen(QColor(colors['accent'] if selected else colors['border']),1) if hovered or selected else Qt.NoPen)
-        painter.setBrush(QColor(colors['selected'] if selected else colors['panel'] if hovered else colors['background']))
-        painter.drawRoundedRect(rect,11,11)
-        art=QRectF(rect.x()+5,rect.y()+5,rect.width()-10,(rect.width()-10)*4/3)
-        path=QPainterPath();path.addRoundedRect(art,8,8)
-        gradient=QLinearGradient(art.topLeft(),art.bottomRight());gradient.setColorAt(0,QColor(colors['selected']));gradient.setColorAt(1,QColor(colors['panel']))
-        painter.fillPath(path,gradient)
+        painter.setPen(QPen(QColor(colors['accent']),1) if selected else Qt.NoPen)
+        painter.setBrush(QColor(colors['selected']) if hovered or selected else Qt.NoBrush)
+        if hovered or selected:painter.drawRoundedRect(rect,9,9)
+        art=QRectF(rect.x()+2,rect.y()+2,rect.width()-4,(rect.width()-4)*1.5)
         game=index.data(Qt.UserRole+1) or {}
         icon=index.data(Qt.DecorationRole)
         if game.get('cover') and icon and not icon.isNull():
-            # A margem mantém toda a imagem dentro do quadro, inclusive os cantos.
-            bounds=art.adjusted(3,3,-3,-3)
+            # O recorte suave acompanha a própria imagem, sem moldura lateral.
+            bounds=art
             pix=icon.pixmap(bounds.size().toSize()).scaled(bounds.size().toSize(),Qt.KeepAspectRatio,Qt.SmoothTransformation)
-            painter.drawPixmap(int(bounds.center().x()-pix.width()/2),int(bounds.center().y()-pix.height()/2),pix)
+            image_rect=QRectF(bounds.center().x()-pix.width()/2,bounds.bottom()-pix.height(),pix.width(),pix.height())
+            painter.save();clip=QPainterPath();clip.addRoundedRect(image_rect,7,7);painter.setClipPath(clip)
+            painter.drawPixmap(int(bounds.center().x()-pix.width()/2),int(bounds.bottom()-pix.height()),pix)
+            painter.restore()
         else:
+            painter.fillRect(art,QColor(colors['panel']))
             painter.setPen(QColor(colors['accent']));font=QFont('Segoe UI');font.setPixelSize(34);font.setWeight(QFont.Light);painter.setFont(font)
             painter.drawText(art,Qt.AlignCenter,(game.get('title') or '?')[:2].upper())
         font=QFont('Segoe UI');font.setPixelSize(15);font.setWeight(QFont.DemiBold);painter.setFont(font);painter.setPen(QColor(colors['text']))
@@ -55,7 +56,7 @@ class CoverGrid(QListWidget):
     def update_grid(self):
         width=max(1,self.viewport().width()-32);target=174 if self.compact else 218
         columns=max(1,width//target);cell=max(100,width//columns)
-        size=QSize(cell,int((cell-28)*4/3)+88)
+        size=QSize(cell,round((cell-22)*1.5)+82)
         if self.last_grid!=size:self.last_grid=size;self.setGridSize(size)
         self.viewport().update()
 

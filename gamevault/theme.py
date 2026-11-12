@@ -114,6 +114,11 @@ QScrollBar::handle:vertical {{ background: {c['border']}; border-radius: 3px; mi
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{ height: 0; }}
 QGroupBox {{ border: none; margin-top: 18px; }}
 QGroupBox::title {{ color: {c['muted']}; subcontrol-origin: margin; }}
+QLabel#systemName {{ font-size: 22px; font-weight: 600; color: {c['text']}; }}
+QLabel#metricValue {{ font-size: 30px; font-weight: 600; }}
+QToolButton::menu-indicator {{ image: none; width: 0px; height: 0px; }}
+QWidget#taskStatus QToolButton {{ padding: 0; border: none; background: transparent; }}
+QStatusBar::item {{ border: none; }}
 QStatusBar {{ color: {c['muted']}; background: {c['background']}; }}
 """
 

@@ -1,12 +1,13 @@
-Revisão visual e banners panorâmicos Steam.
+Revisão de proporções, estatísticas e cadastro de jogos removidos.
 
-- Biblioteca com cards desenhados para o aplicativo, grade responsiva, busca no cabeçalho e títulos/status alinhados.
-- Início com destaque e continuidade ao lado da atividade pessoal; banner arredondado com altura adaptável.
-- Ficha com barra de ações e descrição ao lado de informações compactas. Detalhes secundários ficam recolhidos.
-- Tipografia, espaçamentos, superfícies, ícones das conexões e controles revisados. Barra de título acompanha o tema onde o Windows permite.
-- Steam prioriza library_hero.jpg; a imagem curta da loja fica como fallback. Ao abrir a ficha, o aplicativo pode substituir um cabeçalho antigo comprovadamente automático, preservando escolhas manuais e o cache anterior.
-- Os dez temas, a identidade checkpo//nt, dados pessoais e schema SQLite 4 são preservados.
+- Barra lateral com apenas Checkpoint centralizado; ícones de desejos e configurações corrigidos.
+- Capas sem molduras laterais, proporção 2:3 para posters Steam e títulos separados da arte.
+- Banner com quadro na proporção original, sem duplicação desfocada; ficha com descrição/dados e galeria lado a lado.
+- Estatísticas com indicadores, gráfico de tempo, distribuição por status, mais jogados e plataformas.
+- Carregamento discreto com interrupção dos pendentes; rodapé oculto quando ocioso.
+- Ao adicionar um jogo removido, escolha entre restaurar ou adicionar como novo. Notas, artes e histórico do registro antigo são preservados. A escolha também funciona quando o catálogo encontra a correspondência após salvar.
+- Dez temas, banco existente, arquivos e releases anteriores preservados.
 
-Baixe **Checkpoint-0.1.19-windows-x64.zip**, extraia a pasta completa e abra Checkpoint.exe. Preserve `_internal` e `CheckpointUpdater`.
+Baixe **Checkpoint-0.1.20-windows-x64.zip**, extraia a pasta completa e abra Checkpoint.exe. Preserve `_internal` e `CheckpointUpdater`.
 
-O arquivo de validação informa testes Windows e smokes do executável extraído. Testes de banners usam transporte controlado; não garantem disponibilidade de arte para todos os jogos. A fidelidade visual continua sujeita à revisão do usuário nas telas reais.
+Consulte o relatório de validação do Windows nesta release. Capturas de teste usam dados isolados; não comprovam integrações autenticadas nem substituem a avaliação visual do usuário.

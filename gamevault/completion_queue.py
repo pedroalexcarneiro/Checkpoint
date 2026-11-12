@@ -10,6 +10,7 @@ from .worker import run_isolated
 
 class CompletionQueue(QObject):
     updated = Signal(int, str)
+    restore_requested = Signal(int,int)
     busy_changed = Signal(int)
 
     def __init__(self, database, parent=None):
@@ -42,7 +43,9 @@ class CompletionQueue(QObject):
 
     @Slot(object)
     def completed(self, message):
-        self.updated.emit(self.sender().property('gameId'), str(message))
+        if isinstance(message,dict) and message.get('state')=='restore_required':
+            self.restore_requested.emit(self.sender().property('gameId'),message['removed_id'])
+        else:self.updated.emit(self.sender().property('gameId'), str(message))
 
     @Slot(str)
     def failed(self, message):

@@ -13,7 +13,8 @@ def import_games(library, account, games, links=None):
     if set(links) - set(identities):
         raise ValueError('Associação fora da seleção de jogos.')
     created = updated = 0
-    with library.sql:
+    from .game_import import atomic
+    with atomic(library.sql):
         for game, identity in zip(games, identities):
             if not isinstance(game.title, str) or not game.title.strip():
                 raise ValueError('Jogo Steam sem título.')

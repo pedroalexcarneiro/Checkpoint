@@ -1,5 +1,32 @@
 # Estado do projeto — Checkpoint
 
+## 0.1.20 — revisão após capturas reais do usuário
+
+Barra lateral com nome centralizado, sem símbolo. Capas sem moldura lateral,
+espaços 2:3 para posters Steam e títulos pintados abaixo da arte. Banner define
+a proporção do quadro, sem cópia desfocada. Ficha organiza descrição/dados à
+esquerda e galeria pessoal à direita. Estatísticas extraídas para módulo próprio,
+com indicadores, gráfico temporal e distribuição por status. Rodapé de trabalho
+compacto, cancelamento dos pendentes e mensagens transitórias.
+
+Cadastro manual/Drive/Steam oferece restaurar ou adicionar como novo quando há
+correspondência removida. Identidades públicas anteriores são arquivadas em
+settings ao escolher novo; histórico, notas, arte e registro removido permanecem.
+Restaurar depois não rouba identidades já atribuídas ao novo cadastro. A fila
+sinaliza correspondências tardias do catálogo para decisão na thread da UI.
+Comparação por título é exata e exige a mesma plataforma; ambiguidades não são
+associadas automaticamente. Operações de importação usam savepoints aninháveis.
+
+Validação Linux: 185 testes, 33,42 s, exit 0. Comando:
+`QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest tests -q -p no:cacheprovider`.
+Smokes via scripts.package_windows_release.smoke/save_smoke: seis páginas,
+auxiliar, cadastro com imagem e integridade SQLite aprovados com dados isolados.
+Capturas reais com fixtures em 1440×980 e 1000×700, tema escuro/claro; não são
+aprovação estética nem testes autenticados. api.github.com respondeu HTTP 200;
+v0.1.19 consultada em leitura. Schema 4, dados e releases anteriores preservados.
+Build/publicação Windows 0.1.20 pendentes do workflow neste registro.
+
+
 ## Publicação confirmada — v0.1.19
 
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.19

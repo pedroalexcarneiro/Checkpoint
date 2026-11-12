@@ -1,7 +1,7 @@
 """Identidade intervalo: C// e checkpo//nt, desenhados em vetor pelo Qt."""
 from PySide6.QtCore import Qt, QRectF, QSize, QPointF
 from PySide6.QtGui import QPainter, QPen, QColor, QFont, QFontMetricsF, QIcon, QPixmap
-from PySide6.QtWidgets import QWidget
+from PySide6.QtWidgets import QWidget,QLabel
 
 
 def draw_symbol(painter, rect, foreground, accent):
@@ -59,3 +59,11 @@ class BrandWidget(QWidget):
         p.setPen(QColor(colors['text']))
         p.drawText(QRectF(x+12, 0, 40, self.height()), Qt.AlignVCenter, 'nt')
         p.end()
+
+
+class SystemName(QLabel):
+    def __init__(self,theme,parent=None):
+        super().__init__('Checkpoint',parent);self.theme=theme
+        self.setObjectName('systemName');self.setAlignment(Qt.AlignCenter);self.setFixedHeight(58)
+        self.setAccessibleName('Checkpoint')
+    def set_theme(self,theme):self.theme=theme;self.update()

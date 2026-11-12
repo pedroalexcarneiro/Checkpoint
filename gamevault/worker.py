@@ -76,14 +76,17 @@ def execute_request(request):
                 elif operation == 'enrich':
                     from .auto_artwork import obtain_artwork
                     game_id = arguments['game_id']
+                    restore_candidate = None
                     if (arguments.get('force', False) or lib.setting('artwork.auto', True)) and not lib.sql.execute('SELECT 1 FROM external_identifiers WHERE game_id=?', (game_id,)).fetchone():
                         from .automatic_catalog import resolve_title
                         from .game_import import complete_identity
                         game = lib.get(game_id)
                         match = resolve_title(game['title'], game['platform']) if game else None
                         if match:
-                            complete_identity(lib, game_id, match)
-                    result = obtain_artwork(lib, arguments['game_id'], force=arguments.get('force', False))
+                            from .trash_import import removed_match
+                            restore_candidate = removed_match(lib, game, result=match)
+                            if not restore_candidate:complete_identity(lib, game_id, match)
+                    result = {'state':'restore_required','removed_id':restore_candidate['id']} if restore_candidate else obtain_artwork(lib, arguments['game_id'], force=arguments.get('force', False))
                 elif operation == 'resolve':
                     from dataclasses import asdict
                     from .automatic_catalog import resolve_title

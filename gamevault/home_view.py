@@ -28,7 +28,7 @@ def activity(window,layout):
 def game_strip(window,layout,title,games,maximum=4):
     heading=QHBoxLayout();caption=text(title,'sectionTitle');caption.setMinimumWidth(250);heading.addWidget(caption);heading.addStretch()
     link=action('Ver tudo  ›',lambda:window.navigate(1));link.setObjectName('quiet');heading.addWidget(link);layout.addLayout(heading)
-    strip=QScrollArea();strip.setWidgetResizable(True);strip.setFixedHeight(282);strip.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+    strip=QScrollArea();strip.setWidgetResizable(True);strip.setFixedHeight(310);strip.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
     tiles=QWidget();row=QHBoxLayout(tiles);row.setContentsMargins(0,0,0,0);row.setSpacing(16);row.setAlignment(Qt.AlignTop)
     for game in games[:maximum]:row.addWidget(GameTile(game,window.detail,width=154))
     row.addStretch();strip.setWidget(tiles);layout.addWidget(strip)
@@ -45,7 +45,7 @@ def build_home(window):
     else:
         playing=[game for game in games if game['status']=='Jogando']
         featured=(playing or [game for game in games if game['favorite']] or games)[0]
-        hero=Hero(featured,window.theme);hero.setFixedHeight(286)
+        hero=Hero(featured,window.theme);hero.setMinimumHeight(0)
         buttons=QHBoxLayout();buttons.addWidget(action('Abrir jogo',lambda:window.detail(featured['id']),True));buttons.addStretch();hero.content.addLayout(buttons);layout.addWidget(hero)
         continuing=[dict(row) for row in window.library.sql.execute("SELECT g.*,MAX(s.started_at) AS last_played FROM games g JOIN play_sessions s ON s.game_id=g.id WHERE g.deleted_at IS NULL GROUP BY g.id ORDER BY last_played DESC LIMIT 6")] or playing
         content=QHBoxLayout();content.setSpacing(26)

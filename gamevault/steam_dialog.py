@@ -204,8 +204,24 @@ class SteamDialog(QDialog):
         if not selected or not self.result_account:
             return
         try:
+            from .trash_import import ask_removed,removed_match,detach_removed
+            decisions=[]
+            for game in selected:
+                from .integrations import MetadataResult
+                removed=removed_match(self.library,{'title':game.title,'platform':'PC'},result=MetadataResult('steam',game.app_id,game.title))
+                if removed:
+                    decision=ask_removed(self,removed['title'])
+                    if decision=='cancel':return
+                    decisions.append((removed['id'],game.app_id,decision))
             selected_ids = {game.app_id for game in selected}
-            created, updated = import_games(self.library, self.result_account, selected, {key: value for key, value in self.links.items() if key in selected_ids})
+            import_links={key:value for key,value in self.links.items() if key in selected_ids}
+            with self.library.sql:
+                for identity,app,decision in decisions:
+                    if decision=='restore' and app not in import_links:import_links[app]=identity
+                    elif decision=='new' and import_links.get(app)==identity:import_links.pop(app)
+                    if decision=='restore':self.library.sql.execute('UPDATE games SET deleted_at=NULL WHERE id=?',(identity,))
+                    else:detach_removed(self.library,identity)
+                created, updated = import_games(self.library, self.result_account, selected, import_links)
         except (ValueError, RuntimeError) as error:
             self.state.setText(str(error))
             return
