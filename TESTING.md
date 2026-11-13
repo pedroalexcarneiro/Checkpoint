@@ -1,5 +1,26 @@
 # Validação
 
+## Publicação confirmada — v0.1.27
+
+Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.27
+Fonte da tag: `6fad7bfa278d0cb2897588a7965d545c98fcdacf`.
+Workflow Windows release `43357748311`: completed/success.
+Windows/Python 3.12.10: **225 testes aprovados em 183,59 s**, zero falhas/erros/skips.
+Fonte e ZIP extraído: seis páginas, auxiliar, cadastro com imagem/SQLite e
+integridade aprovados; CheckpointUpdater.exe --check retornou 0.
+65 capturas Qt Windows geradas. Inspecionadas as páginas principais, conexões,
+perfil e lista Steam de 300 jogos; dados/artes dessas capturas são fixtures.
+Logos públicas reais também foram conferidas em biblioteca Linux isolada.
+Não equivale a autenticação de serviços nem aprovação estética do usuário.
+
+ZIP Windows: 84.082.193 bytes; SHA-256
+`8cf3e0c97c81f5962e3380c630fa3135a30c54c57a6766891e2d5bdba7af4768`.
+ZIP visual: 4.583.748 bytes; SHA-256
+`c3f8c1aafa31bbe7394b9988b6354ba81e1b397f4a3bc6159b7b8a568fb9824f`.
+Hash do ZIP visual baixado coincide com o digest GitHub; o hash Windows no
+relatório do empacotador coincide com o asset publicado. Tags antigas preservadas.
+
+
 ## 0.1.27 — visibilidade final do cadastro
 
 A primeira execução Windows barrou publicação: o caso de 300 jogos excedeu a

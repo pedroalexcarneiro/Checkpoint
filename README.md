@@ -1,8 +1,8 @@
 # Checkpoint
 
 Biblioteca pessoal de jogos para Windows em Python/PySide6 e SQLite.
-A última release publicada é a [v0.1.25](https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.25).
-A 0.1.27 está em preparação com os pedidos adicionais de Desejos, Steam e perfil.
+A última release publicada é a [v0.1.27](https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.27).
+225 testes Windows e smokes do pacote aprovados; revisão inclui Desejos, Steam e perfil local.
 
 Início pessoal, Biblioteca com capas verticais inteiras e legendas alinhadas, ficha
 com banner/logo e cadastro compacto. Desejos usa cards quadrados com logos,

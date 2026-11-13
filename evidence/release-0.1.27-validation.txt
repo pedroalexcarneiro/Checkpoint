@@ -4,3 +4,10 @@ Suíte completa imediatamente anterior: 225 passed in 131.98s, exit 0.
 Windows executará suíte completa, build, smokes, SQLite e capturas no commit final.
 Perfil/foto/nick, Steam com 300 jogos e wishlist com logo cobertos por regressões.
 Não representa autenticação de contas nem aprovação estética do usuário.
+Publicação confirmada: v0.1.27, fonte 6fad7bfa278d0cb2897588a7965d545c98fcdacf.
+Workflow 43357748311 completed/success.
+Windows Python 3.12.10: 225 passed in 183.59s, zero falhas/erros/skips.
+Fonte e EXE extraído: 6 páginas, SQLite, auxiliar e cadastro completo aprovados.
+CheckpointUpdater.exe --check: 0. 65 capturas Windows geradas.
+ZIP Windows SHA256: 8cf3e0c97c81f5962e3380c630fa3135a30c54c57a6766891e2d5bdba7af4768
+ZIP UI SHA256 conferido: c3f8c1aafa31bbe7394b9988b6354ba81e1b397f4a3bc6159b7b8a568fb9824f
