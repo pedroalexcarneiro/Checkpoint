@@ -10,9 +10,12 @@ def test_empty_tabs_search_and_empty_library_have_distinct_actions(library,app):
     window=MainWindow(library);window.navigate(1)
     def labels():return [x.text() for x in window.library_empty.findChildren(QLabel)]
     assert 'Biblioteca vazia' in labels()
+    assert window.library_empty.findChild(QPushButton).text()=='Adicionar jogo'
     library.save_game({'title':'Meu jogo'});window.refresh_library()
     for index,caption in [(1,'Nenhum favorito ainda'),(2,'Nenhum jogo em andamento'),(3,'Nenhum jogo concluído ainda')]:
         window.library_tabs.setCurrentIndex(index);assert caption in labels()
+        assert window.library_empty.findChild(QPushButton).text()=='Ver todos os jogos'
+        assert 'Nenhum jogo encontrado' not in labels()
     window.search.setText('inexistente');assert 'Nenhum resultado para esta busca' in labels()
     button=window.library_empty.findChild(QPushButton);assert button.text()=='Limpar filtros'
     button.click();assert not window.search.text() and window.library_tabs.currentIndex()==0

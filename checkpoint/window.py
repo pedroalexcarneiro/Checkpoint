@@ -212,7 +212,7 @@ class MainWindow(QMainWindow):
         layout.setSpacing(12)
         layout.addWidget(self.gallery,1); layout.addWidget(self.table,1)
         from .design_system import empty_state
-        self.library_empty=empty_state('search','Nenhum jogo encontrado','',self.add_game,'Adicionar jogo');layout.addWidget(self.library_empty);self.library_empty.hide()
+        self.library_empty=empty_state('library','Biblioteca vazia','',self.add_library_game,'Adicionar jogo');layout.addWidget(self.library_empty);self.library_empty.hide()
         self.gallery.setObjectName('coverGrid');self.gallery.setFrameShape(QFrame.NoFrame);self.gallery.setTextElideMode(Qt.ElideRight)
 
     @Slot(int)
