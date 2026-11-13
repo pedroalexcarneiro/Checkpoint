@@ -1,3 +1,4 @@
+from .smooth_scroll import SmoothScrollArea
 from .locale import count_text
 """Painel de estatísticas com números e gráficos derivados da biblioteca real."""
 from PySide6.QtCore import Qt,QRectF,QPointF
@@ -35,7 +36,7 @@ def metric(title,value,subtitle=''):
 
 
 def build_statistics(window):
-    outer=window.clear_page(4);scroll=QScrollArea();scroll.setWidgetResizable(True);body=QWidget();layout=QVBoxLayout(body);layout.setContentsMargins(0,0,8,0);layout.setSpacing(20)
+    outer=window.clear_page(4);scroll=SmoothScrollArea();scroll.setWidgetResizable(True);body=QWidget();layout=QVBoxLayout(body);layout.setContentsMargins(0,0,8,0);layout.setSpacing(20)
     stats=window.library.stats();row=CardGrid(180,max_columns=4);row.setObjectName('statisticsMetrics')
     for title,value,subtitle in [('Jogos',str(stats['total']),'Na biblioteca'),('Tempo registrado',f"{stats['seconds']/3600:.1f} h".replace('.',','),'Sessões locais confirmadas'),('Sessões',str(stats['sessions']),f"Média de {stats['average']/60:.0f} min"),('Concluídos',str(stats['statuses']['Concluído']),'Jogos finalizados')]:row.add_card(metric(title,value,subtitle))
     layout.addWidget(row)

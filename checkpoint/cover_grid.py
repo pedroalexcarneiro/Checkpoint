@@ -44,9 +44,12 @@ class CoverDelegate(QStyledItemDelegate):
         painter.restore()
 
 
-class CoverGrid(QListWidget):
+from .smooth_scroll import SmoothScrollMixin
+
+
+class CoverGrid(SmoothScrollMixin,QListWidget):
     def __init__(self,theme,parent=None):
-        super().__init__(parent);self.theme=theme;self.cover_percent=100;self.last_grid=None;self.art_ratio=1.5;self.card_gap=20
+        super().__init__(parent);self.enable_smooth_scroll();self.setVerticalScrollMode(QListWidget.ScrollPerPixel);self.theme=theme;self.cover_percent=100;self.last_grid=None;self.art_ratio=1.5;self.card_gap=20
         self.setItemDelegate(CoverDelegate(self));self.setMouseTracking(True)
         self.setViewMode(QListWidget.IconMode);self.setResizeMode(QListWidget.Adjust)
         self.setMovement(QListWidget.Static);self.setSpacing(0);self.setWordWrap(False)

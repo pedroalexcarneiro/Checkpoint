@@ -4,6 +4,7 @@ from PySide6.QtGui import QPainter,QPainterPath,QPixmap,QColor,QPen,QFont
 from PySide6.QtWidgets import (QWidget,QFrame,QVBoxLayout,QHBoxLayout,QBoxLayout,
     QGridLayout,QLayout,QSizePolicy,QLabel,QPushButton,QScrollArea,QApplication)
 from .theme import get_theme
+from .smooth_scroll import SmoothScrollArea
 
 
 def colors():return get_theme(QApplication.instance().property('checkpointTheme')).colors
@@ -43,7 +44,7 @@ def empty_state(name,title,description,callback=None,button='Adicionar jogo'):
 
 
 def page_scroll(outer,reserve_scrollbar=False):
-    scroll=QScrollArea();
+    scroll=SmoothScrollArea();
     if reserve_scrollbar:
         scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn);scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
     scroll.setWidgetResizable(True);scroll.setFrameShape(QFrame.NoFrame)

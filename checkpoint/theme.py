@@ -122,7 +122,7 @@ QToolButton#addDisclosure {{ background: transparent; border: none; border-top: 
 QScrollArea, QScrollArea > QWidget > QWidget {{ background: transparent; border: none; }}
 QScrollBar:vertical {{ background: transparent; width: 6px; margin: 2px 0; }}
 QScrollBar:horizontal {{ background: transparent; height: 6px; margin: 0 2px; }}
-QScrollBar::handle {{ background: {c['border']}; border-radius: 3px; min-height: 24px; min-width: 24px; }}
+QScrollBar::handle {{ background: {c['accent']}; border-radius: 3px; min-height: 24px; min-width: 24px; }}
 QScrollBar::handle:hover {{ background: {c['muted']}; }}
 QScrollBar::add-line, QScrollBar::sub-line {{ height: 0; width: 0; }}
 QScrollBar::add-page, QScrollBar::sub-page {{ background: transparent; }}
