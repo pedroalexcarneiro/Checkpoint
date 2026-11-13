@@ -1,3 +1,4 @@
+from .locale import count_text
 """Cadastro amplo com busca única, prévia e enriquecimento em segundo plano."""
 from functools import partial
 from PySide6.QtCore import QObject,Qt,QTimer,Slot,QSize,QEvent
@@ -20,15 +21,16 @@ class QuickAdd(QObject):
         while outer.count():
             item=outer.takeAt(0)
             if item.widget():item.widget().hide()
-        dialog.resize(620,510);dialog.setMinimumSize(560,470);dialog.setObjectName('quickAddDialog')
+        dialog.resize(620,600);dialog.setMinimumSize(560,600);dialog.setObjectName('quickAddDialog')
         from .window_style import titlebar_theme
         from .ui_components import nav_icon,service_icon
         from .theme import get_theme
         from PySide6.QtGui import QIcon
         from .settings_view import disclosure
         titlebar_theme(dialog,True)
-        outer.setContentsMargins(22,20,22,18);outer.setSpacing(16)
-        outer.addWidget(text('Adicionar jogo','pageTitle'))
+        outer.setContentsMargins(22,20,22,18);outer.setSpacing(12)
+        heading=QHBoxLayout();heading.addWidget(text(dialog.add_title,'pageTitle'),1)
+        close=QPushButton('×');close.setObjectName('quiet');close.setFixedSize(30,30);close.setAccessibleName('Fechar');close.clicked.connect(dialog.reject);heading.addWidget(close);outer.addLayout(heading)
         self.sources=dialog.source_tabs;self.sources.setParent(dialog);self.sources.show()
         self.sources.setCurrentIndex(0);self.sources.setObjectName('sourceTabs')
         color=get_theme(self.library.setting('appearance.theme','green')).colors['text']
@@ -40,7 +42,7 @@ class QuickAdd(QObject):
         self.query.setParent(dialog);self.query.setObjectName('gameSearch');self.query.setPlaceholderText('Pesquisar jogo…');self.query.show()
         self.query.setMinimumHeight(36);self.query.addAction(nav_icon('search',color),QLineEdit.LeadingPosition);outer.addWidget(self.query)
         self.results=QListWidget();self.results.setObjectName('gameSearchResults');self.results.setSpacing(4);self.results.setMinimumHeight(100);self.results.setMaximumHeight(180);self.results.hide();outer.addWidget(self.results)
-        self.preview=QFrame();self.preview.setObjectName('addPreview');preview=QHBoxLayout(self.preview);preview.setContentsMargins(14,10,14,10);preview.setSpacing(16)
+        self.preview=QFrame();self.preview.setObjectName('addPreview');self.preview.setMinimumHeight(116);preview=QHBoxLayout(self.preview);preview.setContentsMargins(14,10,14,10);preview.setSpacing(16)
         self.art=QLabel();self.art.setObjectName('addPreviewArt');self.art.setFixedSize(70,94);self.art.setAlignment(Qt.AlignCenter);self.art.setText('Sem capa');preview.addWidget(self.art)
         words=QVBoxLayout();words.setSpacing(6);self.title=text('Nenhum jogo selecionado','sectionTitle');words.addWidget(self.title)
         self.facts=text('','muted');words.addWidget(self.facts)
@@ -60,10 +62,11 @@ class QuickAdd(QObject):
         platform_row=QHBoxLayout();platform_row.addWidget(text('Plataforma'));platform_row.addWidget(self.platform,1);advanced_row.addLayout(platform_row)
         self.edit=action('Ajustar detalhes',self.edit_details);self.edit.setObjectName('quiet');advanced_row.addWidget(self.edit,0,Qt.AlignLeft)
         dialog.complete_on_save.setParent(advanced);dialog.complete_on_save.show();advanced_row.addWidget(dialog.complete_on_save)
+        self.automation=QWidget();info=QHBoxLayout(self.automation);info.setContentsMargins(0,0,0,0);badge=QLabel();badge.setPixmap(nav_icon('download',color).pixmap(18,18));info.addWidget(badge);info.addWidget(text('Ficha e imagens serão buscadas automaticamente','caption'),1);outer.addWidget(self.automation)
         self.advanced=disclosure('Opções avançadas',advanced,outer);self.advanced.setObjectName('addDisclosure');self.advanced.setMinimumWidth(dialog.minimumWidth()-44)
         outer.addStretch()
         dialog.error.setWordWrap(True);dialog.error.show();outer.addWidget(dialog.error)
-        self.save=dialog.buttons.button(QDialogButtonBox.Save);self.cancel=dialog.buttons.button(QDialogButtonBox.Cancel)
+        self.save=dialog.buttons.button(QDialogButtonBox.Save);self.save.setText('Salvar desejo' if dialog.purpose=='wish' else 'Adicionar à biblioteca');self.save.setEnabled(False);self.cancel=dialog.buttons.button(QDialogButtonBox.Cancel)
         # Ordem explícita: Cancelar à esquerda, ação principal à direita em todos os SO.
         dialog.buttons.removeButton(self.save);dialog.buttons.removeButton(self.cancel)
         self.save.setParent(dialog);self.cancel.setParent(dialog);self.save.clicked.connect(dialog.validate);self.cancel.clicked.connect(dialog.reject)
@@ -91,7 +94,7 @@ class QuickAdd(QObject):
         self.dialog.drive_file_id=None;self.dialog.catalog_result=None
         self.query.setVisible(index!=2);self.preview.setVisible(index==0);self.results.setVisible(index==1)
         self.steam_panel.setVisible(index==2);self.drive_manage.setVisible(index==1)
-        self.advanced.setVisible(index!=2);self.save.setVisible(index!=2);self.save.setEnabled(index==0);self.other.hide();self.confirmed.hide()
+        self.advanced.setVisible(index!=2);self.automation.setVisible(index!=2);self.save.setVisible(index!=2);self.save.setEnabled(False);self.other.hide();self.confirmed.hide()
         self.query.setPlaceholderText('Pesquisar ROM no índice do Drive…' if index==1 else 'Pesquisar jogo…')
         if index!=2:self.changed(self.query.text())
         else:self.state.clear()
@@ -114,18 +117,18 @@ class QuickAdd(QObject):
     @Slot(str)
     def changed(self,value):
         if self.suspend:return
-        self.dialog.error.clear()
+        self.dialog.error.clear();self.save.setEnabled(False)
         self.generation+=1;self.dialog.catalog_result=None;self.dialog.drive_file_id=None
         for key in ('description','genre','developer','publisher','release_date','cover','banner','logo','executable'):
             self.dialog.fields[key].clear()
         self.dialog.fields['source'].setText('Manual');self.dialog.fields['platform'].setText(self.platform.currentData() or '')
-        self.title.setText(value.strip() or 'Nenhum jogo selecionado');self.art.clear();self.art.setText('Prévia');self.facts.setText('Buscando…' if len(value.strip())>=2 else '')
-        self.association.clear();self.association.hide();self.description.clear();self.results.clear();self.candidates=[];self.confirmed.hide();self.other.hide();self.preview.setVisible(self.sources.currentIndex()==0)
+        self.title.setText(value.strip() or 'Nenhum jogo selecionado');self.art.clear();self.art.setText('Prévia');self.facts.clear()
+        self.association.clear();self.association.hide();self.description.clear();self.results.clear();self.candidates=[];self.confirmed.hide();self.other.hide();self.preview.hide()
         self.local_results()
-        if len(value.strip())>=2 and self.sources.currentIndex()==0:self.timer.start()
+        if len(value.strip())>=2 and self.sources.currentIndex()==0:self.state.setText('Buscando…');self.timer.start()
         elif self.sources.currentIndex()==1:
             self.save.setEnabled(False);self.results.show()
-            self.state.setText(f'{len(self.local)} ROMs' if self.local else 'Nenhuma ROM encontrada')
+            self.state.setText(count_text(len(self.local),'ROM','ROMs') if self.local else 'Nenhuma ROM encontrada')
         else:self.timer.stop();self.state.clear()
 
     @Slot(int)
@@ -154,7 +157,7 @@ class QuickAdd(QObject):
         if self.sources.currentIndex()==1 and self.dialog.drive_file_id is None:self.local_results();return
         if not self.dialog.isVisible():self.pending_show_lookup=True;return
         if any(job.property('operation')=='catalog_search' for job in self.jobs):self.pending_search=True;return
-        self.pending_search=False;self.state.setText('Buscando jogos e versões disponíveis…')
+        self.pending_search=False;self.preview.hide();self.results.hide();self.state.setText('Buscando…')
         self.run('catalog_search',title=self.query.text().strip(),platform=self.dialog.fields['platform'].text())
 
     def run(self,operation,**arguments):
@@ -177,6 +180,10 @@ class QuickAdd(QObject):
                 item=QListWidgetItem(result.title+'\n'+platforms+(' · '+result.release_date[:4] if result.release_date else ''));item.setSizeHint(QSize(0,60));self.results.addItem(item)
             self.results.blockSignals(False)
             self.state.setText('' if self.candidates or self.local else 'Nenhum resultado')
+            if not self.candidates and not self.local:
+                if self.dialog.drive_file_id is not None:
+                    self.preview.show();self.save.setEnabled(True);self.state.setText('ROM selecionada. Ficha indisponível; você pode adicionar e ajustar depois.')
+                else:self.preview.hide();self.results.hide();self.facts.clear();self.save.setEnabled(False)
             if payload.get('unavailable'):self.state.setText(self.state.text()+' Parte dos catálogos está indisponível.')
             # Nunca seleciona uma ROM automaticamente. Uma ficha inequívoca pode ser sugerida.
             match=best_match(self.query.text(),self.dialog.fields['platform'].text(),self.candidates)
@@ -218,7 +225,7 @@ class QuickAdd(QObject):
         self.run('catalog_details',provider=result.provider,identity=result.external_id,platform=self.dialog.fields['platform'].text())
 
     def show_result(self,result):
-        self.preview.show();self.results.hide();self.other.setVisible(bool(self.candidates));self.confirmed.show()
+        self.save.setEnabled(True);self.preview.show();self.results.hide();self.other.setVisible(bool(self.candidates));self.confirmed.show()
         self.title.setText(result.title)
         details=[self.dialog.fields['platform'].text() or ' / '.join(result.platforms[:3]),result.developer,result.release_date[:4]]
         self.facts.setText(' · '.join(value for value in details if value));self.description.setText(result.description[:260])

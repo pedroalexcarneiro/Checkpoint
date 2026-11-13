@@ -113,27 +113,31 @@ def test_form_saves_without_network_or_nested_loading_dialog(library, app, monke
     nested=Mock(side_effect=AssertionError('Salvar não deve abrir outro loop modal'))
     monkeypatch.setattr(QDialog,'exec',nested)
     dialog=GameDialog(library=library)
-    dialog.fields['title'].setText('INSIDE')
+    result=MetadataResult('steam','304430','INSIDE')
+    dialog.apply_catalog(result);dialog.quick_add.show_result(result)
     assert dialog.complete_on_save.isChecked()
     dialog.validate()
     assert dialog.result()==QDialog.Accepted
     nested.assert_not_called()
     dialog.close()
     offline=GameDialog(library=library)
-    offline.fields['title'].setText('Local game')
+    result=MetadataResult('steam','1','Local game')
+    offline.apply_catalog(result);offline.quick_add.show_result(result)
     offline.complete_on_save.setChecked(False)
     offline.validate()
     assert offline.result()==QDialog.Accepted
     offline.close()
 
 
-def test_unknown_game_form_saves_without_mandatory_catalog(library, app):
+def test_unknown_game_requires_selection(library, app):
     from checkpoint.dialogs import GameDialog
     from PySide6.QtWidgets import QDialog
     dialog=GameDialog(library=library)
     dialog.fields['title'].setText('Unknown ROM')
     dialog.validate()
-    assert dialog.result()==QDialog.Accepted
+    assert dialog.result()!=QDialog.Accepted
+    assert not dialog.quick_add.save.isEnabled()
+    assert dialog.error.text()
     assert dialog.catalog_result is None
     dialog.close()
 

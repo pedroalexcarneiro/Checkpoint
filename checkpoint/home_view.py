@@ -1,3 +1,4 @@
+from .locale import count_text
 """Composição do início: hero, continuidade e atividade lado a lado."""
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QScrollArea,QWidget,QVBoxLayout,QHBoxLayout,QSizePolicy,QLabel
@@ -15,7 +16,14 @@ def activity(window,layout):
     events.sort(key=lambda item:item[0]['time'] or '',reverse=True)
     if not events:
         frame,inside=card();inside.addWidget(text('Nenhuma atividade recente.','muted'));layout.addWidget(frame)
-    for event,kind in events[:2]:
+    selected=[]
+    for preferred in ('Marco','Memória'):
+        match=next((item for item in events if item[1]==preferred),None)
+        if match:selected.append(match)
+    for item in events:
+        if len(selected)>=2:break
+        if item not in selected:selected.append(item)
+    for event,kind in selected:
         frame,inside=card();frame.setObjectName('activityCard');inside.setContentsMargins(12,10,12,10)
         contents=QHBoxLayout();contents.setSpacing(14)
         badge=QLabel();badge.setFixedSize(36,36);badge.setObjectName('activityBadge')
@@ -75,5 +83,5 @@ def build_home(window):
         right=QWidget();right.setObjectName('homeActivity');right.setMinimumWidth(240);right_layout=QVBoxLayout(right);right_layout.setContentsMargins(0,0,0,0);right_layout.setSpacing(12);activity(window,right_layout)
         layout.addWidget(AdaptiveColumns(left,right,(3,2),breakpoint=640))
     interrupted=window.library.sql.execute("SELECT count(*) FROM play_sessions WHERE state='interrupted'").fetchone()[0]
-    if interrupted:layout.addWidget(action(f'{interrupted} sessões para revisar',window.recover_sessions))
+    if interrupted:layout.addWidget(action(count_text(interrupted,'sessão para revisar','sessões para revisar'),window.recover_sessions))
     layout.addStretch();scroll.setWidget(body);outer.addWidget(scroll)

@@ -25,7 +25,7 @@ def configured(library,folder,**fields):
 
 def test_three_kinds_cached_with_provenance_and_no_redownload(library,folder):
     game,provider,cache,service=configured(library,folder)
-    assert '3 artes' in service.obtain(game)
+    assert '3 imagens salvas' in service.obtain(game)
     assert all(library.get(game)[kind] for kind in ('cover','banner','logo'))
     rows=library.sql.execute('SELECT * FROM artwork_assets').fetchall()
     assert len(rows)==3 and all(len(row['sha256'])==64 for row in rows)
@@ -53,7 +53,7 @@ def test_partial_failure_keeps_game_and_successful_art(library,folder):
         if kind=='banner':raise IntegrationError('network')
         return base(external_id,kind)
     provider.artworks=broken
-    assert '2 artes' in service.obtain(game)
+    assert '2 imagens salvas' in service.obtain(game)
     assert library.get(game)['banner']=='' and library.get(game)['cover']
     assert 'consulta recente' in service.obtain(game)
 
@@ -81,14 +81,14 @@ def test_disabled_auto_and_manual_retry(library,folder):
     game,provider,cache,service=configured(library,folder)
     library.set_setting('artwork.auto',False)
     assert 'desativadas' in service.obtain(game) and provider.calls==[]
-    assert '3 artes' in service.obtain(game,force=True)
+    assert '3 imagens salvas' in service.obtain(game,force=True)
 
 
 def test_exact_steam_id_resolution_without_title_search(library,folder):
     game=library.save_game({'title':'Steam game'})
     with library.sql:library.sql.execute('INSERT INTO external_identifiers VALUES(?,?,?)',(game,'steam','123'))
     service=AutoArtwork(library,Provider(),Cache(folder),clock=lambda:100000)
-    assert '3 artes' in service.obtain(game)
+    assert '3 imagens salvas' in service.obtain(game)
     assert service.identity(game)[0]=='42'
 
 

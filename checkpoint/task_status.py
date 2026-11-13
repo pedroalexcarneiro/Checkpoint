@@ -1,3 +1,4 @@
+from .locale import count_text
 """Indicador compacto; nenhuma barra expansível na janela principal."""
 from PySide6.QtCore import Qt,QTimer,QRectF
 from PySide6.QtGui import QPainter,QPen,QColor
@@ -24,5 +25,5 @@ class TaskStatus(QWidget):
         self.stop=QToolButton();self.stop.setText('×');self.stop.setFixedSize(24,24);self.stop.setToolTip('Parar consultas pendentes após o jogo atual');self.stop.setAccessibleName('Parar consultas pendentes');self.stop.clicked.connect(stop);row.addWidget(self.stop)
         self.hide()
     def set_count(self,count):
-        self.message.setText('Buscando ficha e imagens' if count==1 else f'Buscando ficha e imagens · {count} jogos')
+        self.message.setText('Imagens em segundo plano' if count==1 else 'Imagens em segundo plano · '+count_text(count,'jogo'))
         self.setVisible(count>0)

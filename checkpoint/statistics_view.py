@@ -1,3 +1,4 @@
+from .locale import count_text
 """Painel de estatísticas com números e gráficos derivados da biblioteca real."""
 from PySide6.QtCore import Qt,QRectF,QPointF
 from PySide6.QtGui import QPainter,QPen,QColor,QFont,QPainterPath,QLinearGradient
@@ -56,7 +57,7 @@ def build_statistics(window):
     frame,inside=card();inside.addWidget(text('Plataformas','sectionTitle'))
     if not stats['platforms']:inside.addWidget(text('Nenhuma plataforma registrada.','muted'))
     for platform,count in sorted(stats['platforms'].items(),key=lambda pair:pair[1],reverse=True)[:6]:
-        line=QHBoxLayout();line.addWidget(text(platform or 'Não definida'));line.addStretch();line.addWidget(text(f'{count} jogos','muted'));inside.addLayout(line)
+        line=QHBoxLayout();line.addWidget(text(platform or 'Não definida'));line.addStretch();line.addWidget(text(count_text(count,'jogo'),'muted'));inside.addLayout(line)
         bar=QProgressBar();bar.setRange(0,max(stats['total'],1));bar.setValue(count);bar.setTextVisible(False);bar.setFixedHeight(4);inside.addWidget(bar)
     inside.addStretch();layout.addWidget(frame)
     extra=QWidget();inside=QVBoxLayout(extra)

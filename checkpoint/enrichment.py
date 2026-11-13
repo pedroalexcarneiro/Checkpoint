@@ -7,6 +7,7 @@ from .integrations import IntegrationError
 from .integrations.images import ImageCache
 from .integrations.steam_store import SteamStoreProvider
 from .library import now
+from .locale import count_text
 
 
 
@@ -125,4 +126,4 @@ def complete_game(library, game_id, steam_provider=None, rawg_provider=None, cac
             failures += 1
     if not sources:
         return 'Ficha pendente: fonte de descrição indisponível. Identidade e dados existentes preservados.'
-    return f'Ficha: {fields_saved} campos e {images_saved} imagens preenchidos; {failures} consultas indisponíveis. Campos existentes preservados.'
+    return 'Ficha: '+count_text(fields_saved,'campo')+' e '+count_text(images_saved,'imagem','imagens')+' preenchidos; '+count_text(failures,'consulta indisponível','consultas indisponíveis')+'. Campos existentes preservados.'

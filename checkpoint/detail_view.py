@@ -41,6 +41,9 @@ def build_detail(window,game):
     for title,callback in [('Editar ficha',lambda:window.edit_game(game_id)),('Trocar imagens',lambda:window.artworks(game_id)),('Obter ficha e imagens faltantes',lambda:window.completion_queue.submit([game_id],force=True)),('Adicionar aos desejos',lambda:window.add_wish(game_id)),('Remover da biblioteca',lambda:window.remove_game(game_id))]:
         item=menu.addAction(title);item.triggered.connect(callback)
     more.setMenu(menu);bar.addWidget(more);layout.addWidget(actions_frame)
+    notice=getattr(window,'detail_notice',None)
+    if notice and notice[0]==game_id:
+        banner=text(notice[1]);banner.setObjectName('wishNotice');banner.setAccessibleName(notice[1]);banner.setStyleSheet('padding: 10px; border: 1px solid '+window.theme.colors['accent']+'; border-radius: 7px;');layout.addWidget(banner)
     tabs=CurrentPageTabs();tabs.setObjectName('detailTabs');window.detail_tabs=tabs
     layouts=[]
     for name in ('Visão geral','Atividade','Memórias','Arquivos'):

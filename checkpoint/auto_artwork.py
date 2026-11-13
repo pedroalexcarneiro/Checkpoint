@@ -1,3 +1,4 @@
+from .locale import count_text
 """Artes por identidade confirmada, com cache e preservação de escolhas locais."""
 import hashlib
 import time
@@ -70,7 +71,7 @@ class AutoArtwork:
                         saved.append(kind)
             except (IntegrationError,OSError,ValueError): unavailable.append(kind)
         self.library.set_setting(f'artwork.checked.{game_id}',self.clock())
-        return f'{len(saved)} artes salvas no cache; {len(unavailable)} tipos indisponíveis ou com falha. Artes existentes preservadas.'
+        return count_text(len(saved),'imagem salva','imagens salvas')+'; '+count_text(len(unavailable),'tipo indisponível','tipos indisponíveis')+'. Imagens existentes preservadas.'
 
 
 def obtain_artwork(library,game_id,force=False):

@@ -1,3 +1,4 @@
+from .locale import count_text
 import json
 import logging
 from pathlib import Path
@@ -146,6 +147,7 @@ class MainWindow(QMainWindow):
         return layout
 
     def navigate(self,index):
+        self.detail_notice=None
         self.current_page = index; self.current_game = None;self.header_widget.show()
         for i,b in enumerate(self.nav_buttons): b.setChecked(i==index)
         self.heading.show();self.heading.setText(PAGES[index]);self.add_button.setText('+ Adicionar jogo');self.add_button.setVisible(index in (0,1));self.search.setVisible(index in (0,1))
@@ -230,7 +232,7 @@ class MainWindow(QMainWindow):
         games = self.library.owned_games(self.search.text(),self.platform.currentData(),self.genre.currentData(),self.status.currentData(),self.favorites.isChecked(),self.sort.currentData())
         compact=self.library.setting('appearance.density','comfortable')=='compact'
         self.gallery.setIconSize(QSize(138,184) if compact else QSize(174,232));self.gallery.theme=self.theme;self.gallery.set_density(compact)
-        self.gallery.clear(); self.table.setRowCount(len(games)); self.count.setText(f'{len(games)} jogos')
+        self.gallery.clear(); self.table.setRowCount(len(games)); self.count.setText(count_text(len(games),'jogo'))
         for row,game in enumerate(games):
             pix = QPixmap(game['cover']) if game['cover'] else QPixmap()
             if pix.isNull():
@@ -246,6 +248,29 @@ class MainWindow(QMainWindow):
                 self.table.setItem(row,col,cell)
             self.table.setRowHeight(row,64)
         self.table.resizeColumnsToContents(); self.gallery.setVisible(bool(games) and self.view.currentIndex()==0); self.table.setVisible(bool(games) and self.view.currentIndex()==1);self.library_empty.setVisible(not games)
+        if not games:self.update_library_empty()
+
+    def clear_library_filters(self):
+        for widget in (self.search,self.platform,self.genre,self.status,self.favorites,self.library_tabs):widget.blockSignals(True)
+        self.search.clear()
+        for combo in (self.platform,self.genre,self.status):combo.setCurrentIndex(0)
+        self.favorites.setChecked(False);self.library_tabs.setCurrentIndex(0)
+        for widget in (self.search,self.platform,self.genre,self.status,self.favorites,self.library_tabs):widget.blockSignals(False)
+        self.refresh_library()
+
+    def update_library_empty(self):
+        owned=self.library.owned_games();tab=self.library_tabs.currentIndex()
+        extra=bool(self.search.text().strip() or self.platform.currentData() or self.genre.currentData() or self.status.currentText()!=({2:'Jogando',3:'Concluído'}.get(tab,'Todos os status')))
+        if not owned:title='Biblioteca vazia';caption='Adicionar jogo';callback=self.add_library_game
+        elif extra:title='Nenhum resultado para esta busca';caption='Limpar filtros';callback=self.clear_library_filters
+        elif tab in (1,2,3):
+            title={1:'Nenhum favorito ainda',2:'Nenhum jogo em andamento',3:'Nenhum jogo concluído ainda'}[tab];caption='Ver todos os jogos';callback=self.clear_library_filters
+        else:title='Nenhum resultado';caption='Limpar filtros';callback=self.clear_library_filters
+        self.library_empty.findChild(QLabel,'sectionTitle').setText(title)
+        action_button=self.library_empty.findChild(QPushButton);action_button.setText(caption)
+        try:action_button.clicked.disconnect()
+        except RuntimeError:pass
+        action_button.clicked.connect(callback)
 
     def open_selected(self):
         if self.view.currentIndex()==0:
@@ -256,7 +281,8 @@ class MainWindow(QMainWindow):
 
     def add_game(self):
         wish=self.current_page==2
-        dialog = GameDialog(self,library=self.library)
+        owned_before={game['id'] for game in self.library.owned_games()}
+        dialog = GameDialog(self,library=self.library,purpose='wish' if wish else 'library')
         result=dialog.exec()
         if dialog.steam_requested:
             QTimer.singleShot(0,self.steam);return
@@ -265,12 +291,15 @@ class MainWindow(QMainWindow):
                 from .trash_import import save_with_prompt
                 game_id=save_with_prompt(self,self.library,dialog.data(),dialog.drive_file_id,dialog.catalog_result)
                 if game_id is None:return
-                if wish:
+                already_owned=wish and game_id in owned_before
+                if wish and not already_owned:
                     with self.library.sql:
                         self.library.sql.execute('INSERT OR IGNORE INTO wishlist(game_id,target_cents) VALUES(?,0)',(game_id,))
                         self.library.sql.execute('INSERT INTO settings VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value',(f'collection.unowned.{game_id}','true'))
+                message='Este jogo já está na sua biblioteca.' if already_owned else 'Adicionado à lista de desejos' if wish else 'Jogo salvo na biblioteca.'
+                self.detail_notice=(game_id,message) if wish else None
                 self.refresh_library();self.detail(game_id)
-                self.statusBar().showMessage('Jogo adicionado aos desejos.' if wish else 'Jogo salvo na biblioteca.')
+                self.statusBar().showMessage(message)
                 if dialog.complete_on_save.isChecked():
                     self.completion_queue.submit([game_id])
             self.guard(save)
@@ -352,6 +381,9 @@ class MainWindow(QMainWindow):
         build_memories(self)
 
     def add_wish(self,game_id):
+        if self.library.is_owned(game_id):
+            self.detail_notice=(game_id,'Este jogo já está na sua biblioteca.');self.detail(game_id)
+            self.statusBar().showMessage('Este jogo já está na sua biblioteca.');return
         with self.library.sql:
             self.library.sql.execute('INSERT INTO settings VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value',(f'collection.unowned.{game_id}','true'))
             self.library.sql.execute('INSERT OR IGNORE INTO wishlist(game_id,target_cents) VALUES(?,0)',(game_id,))

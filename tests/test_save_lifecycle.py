@@ -15,6 +15,8 @@ from checkpoint.worker import execute_request
 from checkpoint.integrations import MetadataResult
 import checkpoint.automatic_catalog as catalog
 import checkpoint.auto_artwork as artwork
+import checkpoint.enrichment as enrichment
+enrichment.complete_game=lambda *args,**kwargs:'Ficha selecionada preservada'
 request=Path(sys.argv[1])
 payload=json.loads(request.read_text(encoding='utf-8'))
 game_id=payload['arguments']['game_id']
@@ -63,7 +65,9 @@ if mode=='drive':
 def fill():
  active=app.activeModalWidget()
  if isinstance(active,GameDialog):
-  active.fields['title'].setText('Example');active.validate()
+  from checkpoint.integrations import MetadataResult
+  result=MetadataResult('rawg','1','Example',developer='Fixture studio',publisher='Fixture publisher')
+  active.apply_catalog(result);active.quick_add.show_result(result);active.validate()
  else:QTimer.singleShot(5,fill)
 
 def begin():

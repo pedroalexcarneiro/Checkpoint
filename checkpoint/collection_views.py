@@ -40,6 +40,13 @@ class WishCard(QFrame):
 
 
 class WishGrid(CardGrid):
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        from PySide6.QtWidgets import QLayout
+        self.grid.setSizeConstraint(QLayout.SetNoConstraint)
+    def minimumSizeHint(self):
+        from PySide6.QtCore import QSize
+        return QSize(0,0)
     def reflow(self):
         self.columns=4
         spacing=self.grid.spacing();width=max(1,(self.width()-spacing*3)//4)
@@ -56,12 +63,12 @@ class WishGrid(CardGrid):
 
 
 def build_wishlist(window):
-    outer=window.clear_page(2);inside=page_scroll(outer)
+    outer=window.clear_page(2);inside=page_scroll(outer,reserve_scrollbar=True)
     rows=[dict(row) for row in window.library.sql.execute('SELECT g.*,w.target_cents FROM wishlist w JOIN games g ON g.id=w.game_id WHERE g.deleted_at IS NULL ORDER BY g.title COLLATE NOCASE')]
     if not rows:
         inside.addWidget(empty_state('wish','Nenhum desejo','',window.add_game,'Adicionar desejo'));inside.addStretch();return
     from .locale import count_text
-    top=QHBoxLayout();top.addWidget(text(count_text(len(rows),'jogo'),'muted'));top.addStretch();top.addWidget(action('+ Adicionar desejo',window.add_game));inside.addLayout(top)
+    top=QHBoxLayout();top.addWidget(text(count_text(len(rows),'jogo'),'muted'));top.addStretch();top.addWidget(action('+ Adicionar desejo',window.add_game,True));inside.addLayout(top)
     grid=WishGrid(260);grid.setObjectName('wishlistGrid')
     from .price_view import price_summary,source_link
     for game in rows:

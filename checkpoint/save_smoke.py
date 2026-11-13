@@ -35,7 +35,9 @@ def start_save_smoke(app, window, directory):
         if not isinstance(dialog, GameDialog):
             QTimer.singleShot(5, fill)
             return
-        dialog.fields['title'].setText('Fixture de cadastro isolado')
+        from .integrations import MetadataResult
+        result=MetadataResult('steam','1','Fixture de cadastro isolado')
+        dialog.apply_catalog(result);dialog.quick_add.show_result(result)
         dialog.fields['cover'].setText(str(cover))
         dialog.validate()
 

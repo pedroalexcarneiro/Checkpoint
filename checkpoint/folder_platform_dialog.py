@@ -1,3 +1,4 @@
+from .locale import count_text
 from PySide6.QtWidgets import QDialog,QVBoxLayout,QLabel,QComboBox,QPushButton,QMessageBox
 from .integrations.drive import DriveScanner,PLATFORMS
 
@@ -31,7 +32,7 @@ class FolderPlatformDialog(QDialog):
     def save(self,value):
         try:
             count=DriveScanner(self.library,None).set_folder_platform(self.folder.currentData(),value)
-            self.selected();self.state.setText(f'{count} arquivos reclassificados. Arquivos e jogos associados preservados.')
+            self.selected();self.state.setText(count_text(count,'arquivo reclassificado','arquivos reclassificados')+'. Arquivos e jogos associados preservados.')
         except ValueError as error: QMessageBox.warning(self,'Plataforma',str(error))
     def apply(self): self.save(self.platform.currentText())
     def remove(self): self.save(None)

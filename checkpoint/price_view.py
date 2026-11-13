@@ -30,7 +30,7 @@ def price_summary(library,game):
 
 def comparison(window,game):
     value=snapshot(window.library,game['id']);frame,inside=card();head=QHBoxLayout();head.addWidget(text('Últimos preços consultados' if value.get('state')=='unavailable' else 'Preços atuais','sectionTitle'));head.addStretch();head.addWidget(source_link(window.library,game,'Abrir comparação ↗'));inside.addLayout(head)
-    for kind,title,key,anchor in [('retail','Lojas oficiais','retail','official-stores'),('keyshop','Keyshops','keyshop','keyshops')]:
+    for kind,title,key,anchor in [('retail','Lojas oficiais','retail','official-stores'),('keyshop','Lojas de chaves','keyshop','keyshops')]:
         row=QHBoxLayout();row.addWidget(text(title,'cardTitle'));row.addStretch();row.addWidget(text(money(value.get(key)),'cardTitle'));inside.addLayout(row)
         offers=[offer for offer in value.get('offers',[]) if offer['kind']==kind]
         for offer in offers[:8]:

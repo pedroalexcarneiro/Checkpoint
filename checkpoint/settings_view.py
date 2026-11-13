@@ -1,3 +1,4 @@
+from .locale import count_text
 """Configurações em quatro áreas compactas e consistentes com a biblioteca."""
 from pathlib import Path
 from PySide6.QtCore import Qt,QUrl
@@ -67,12 +68,12 @@ def build_settings(window):
     if not removed:inside.addWidget(text('A lixeira está vazia.','muted'))
     for game in removed:
         line=QHBoxLayout();line.addWidget(text(game['title']),1);line.addWidget(action('Restaurar',lambda checked=False,g=game['id']:window.restore_game(g)));inside.addLayout(line)
-    disclosure(f'Lixeira · {len(removed)} jogos',trash,data)
+    disclosure('Lixeira · '+count_text(len(removed),'jogo'),trash,data)
     archived=[game for game in window.library.games() if not window.library.is_owned(game['id']) and not window.library.sql.execute('SELECT 1 FROM wishlist WHERE game_id=?',(game['id'],)).fetchone()]
     if archived:
         archive=QWidget();inside=QVBoxLayout(archive)
         for game in archived:
             line=QHBoxLayout();line.addWidget(text(game['title']),1);line.addWidget(action('Adicionar à biblioteca',lambda checked=False,g=game['id']:window.acquire_wish(g)));inside.addLayout(line)
-        disclosure(f'Desejos removidos · {len(archived)} jogos',archive,data)
+        disclosure('Desejos removidos · '+count_text(len(archived),'jogo'),archive,data)
     data.addStretch()
     tabs.setCurrentIndex(min(getattr(window,'settings_section',0),3));tabs.currentChanged.connect(window.settings_section_changed);layout.addWidget(tabs)

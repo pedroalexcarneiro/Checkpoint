@@ -42,8 +42,11 @@ def empty_state(name,title,description,callback=None,button='Adicionar jogo'):
     inside.addStretch();return frame
 
 
-def page_scroll(outer):
-    scroll=QScrollArea();scroll.setWidgetResizable(True);scroll.setFrameShape(QFrame.NoFrame)
+def page_scroll(outer,reserve_scrollbar=False):
+    scroll=QScrollArea();
+    if reserve_scrollbar:
+        scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn);scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+    scroll.setWidgetResizable(True);scroll.setFrameShape(QFrame.NoFrame)
     body=QWidget();inside=QVBoxLayout(body);inside.setContentsMargins(0,0,4,8);inside.setSpacing(20)
     scroll.setWidget(body);outer.addWidget(scroll);return inside
 

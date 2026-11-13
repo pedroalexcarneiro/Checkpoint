@@ -1,3 +1,4 @@
+from .locale import count_text
 from pathlib import Path
 from PySide6.QtCore import Qt, QSize, QUrl
 from PySide6.QtGui import QPixmap, QDesktopServices,QImageReader
@@ -7,15 +8,16 @@ from .library import STATUSES
 from .locale import date_display,date_storage
 
 class GameDialog(QDialog):
-    def __init__(self, parent=None, game=None, library=None, allow_steam=True):
+    def __init__(self, parent=None, game=None, library=None, allow_steam=True, purpose='library'):
         super().__init__(parent)
-        self.setWindowTitle('Editar jogo' if game else 'Adicionar jogo')
+        self.purpose=purpose;self.add_title='Adicionar desejo' if purpose=='wish' else 'Adicionar jogo'
+        self.setWindowTitle('Editar jogo' if game else self.add_title)
         self.resize(660,760 if game else 390)
         self.owned=not (game and library and game.get('id') and not library.is_owned(game['id']))
         self.library=library;self.drive_file_id=None;self.catalog_result=None;self.drive_results=[]
         self.steam_requested=False
         outer = QVBoxLayout(self);outer.setContentsMargins(24,24,24,24);outer.setSpacing(14)
-        heading=QLabel('Editar jogo' if game else 'Adicionar jogo');heading.setObjectName('sectionTitle');outer.addWidget(heading)
+        heading=QLabel('Editar jogo' if game else self.add_title);heading.setObjectName('sectionTitle');outer.addWidget(heading)
         if library is not None and game is None:
             self.source_tabs=QTabBar();self.source_tabs.setObjectName('sourceTabs');self.source_tabs.setExpanding(True)
             for name in ('Pesquisar jogo','ROM do Drive','Steam'):self.source_tabs.addTab(name)
@@ -132,7 +134,7 @@ class GameDialog(QDialog):
         rows=self.library.sql.execute('SELECT f.*,g.title FROM game_files f LEFT JOIN games g ON f.game_id=g.id WHERE f.drive_id IS NOT NULL ORDER BY f.original_name')
         self.drive_results=[dict(row) for row in rows if any(query in fold(row[key] or '') for key in ('original_name','title','folder_path'))]
         for row in self.drive_results:self.drive_list.addItem(row['original_name']+' · '+(row['platform'] or 'Revisar plataforma'))
-        self.drive_info.setText(f'{len(self.drive_results)} ROMs encontradas. Selecione a versão desejada.')
+        self.drive_info.setText(count_text(len(self.drive_results),'ROM encontrada','ROMs encontradas')+'. Selecione a versão desejada.')
     def choose_drive(self):
         index=self.drive_list.currentRow()
         if index<0:self.drive_info.setText('Selecione uma ROM.');return
@@ -203,6 +205,8 @@ class GameDialog(QDialog):
         return result
 
     def validate(self):
+        if hasattr(self,'quick_add') and self.catalog_result is None and self.drive_file_id is None:
+            self.error.setText('Selecione um jogo ou uma ROM antes de adicionar.');return
         if not self.fields['title'].text().strip():
             self.error.setText('Informe o nome do jogo.'); return
         date = self.fields['release_date'].text().strip()

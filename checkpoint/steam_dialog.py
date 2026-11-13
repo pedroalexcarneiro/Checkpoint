@@ -1,3 +1,4 @@
+from .locale import count_text
 """Consulta assíncrona e importação explícita de jogos Steam."""
 from threading import Event
 from PySide6.QtCore import Qt, Signal
@@ -162,7 +163,7 @@ class SteamDialog(QDialog):
             self.table.setItem(index, 2, QTableWidgetItem('Não disponível' if game.minutes is None else f'{game.minutes / 60:.1f} h'))
             self.table.setItem(index, 3, QTableWidgetItem(self.destination(game)))
         self.table.blockSignals(False)
-        self.state.setText(f'{len(games)} jogos' if games else 'Biblioteca Steam vazia')
+        self.state.setText(count_text(len(games),'jogo') if games else 'Biblioteca Steam vazia')
         self.selection_changed()
 
     def destination(self, game):

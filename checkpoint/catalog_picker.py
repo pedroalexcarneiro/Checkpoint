@@ -1,3 +1,4 @@
+from .locale import count_text
 from .locale import date_display
 from PySide6.QtWidgets import QDialog,QVBoxLayout,QHBoxLayout,QLabel,QLineEdit,QComboBox,QPushButton,QListWidget
 from .credentials import CredentialVault
@@ -48,7 +49,7 @@ class CatalogPicker(QDialog):
     def show_results(self,results):
         self.results=results;self.list.clear()
         for result in results:self.list.addItem(result.title+(' · '+date_display(result.release_date) if result.release_date else ''))
-        self.state.setText(f'{len(results)} resultados. Confirme o jogo e a edição corretos.')
+        self.state.setText(count_text(len(results),'resultado','resultados')+'. Confirme o jogo e a edição corretos.')
     def choose(self):
         index=self.list.currentRow()
         if index<0:self.state.setText('Selecione um resultado.');return

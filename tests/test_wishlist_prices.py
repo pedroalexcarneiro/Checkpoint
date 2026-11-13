@@ -39,6 +39,7 @@ def test_prices_cache_failure_keeps_last_good_price(library):
 
 def test_wishlist_has_no_owned_status_and_is_excluded_from_owned_statistics(library,app):
     identity=library.save_game({'title':'Wish fixture','status':'Concluído','notes':'Keep notes'})
+    library.set_setting(f'collection.unowned.{identity}',True)
     window=MainWindow(library);window.add_wish(identity);window.navigate(2);window.show();app.processEvents()
     from checkpoint.collection_views import WishCard,WishLogo
     tile=window.pages[2].findChild(WishCard)

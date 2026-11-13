@@ -1,3 +1,4 @@
+from .locale import count_text
 from pathlib import Path
 from PySide6.QtWidgets import QDialog,QVBoxLayout,QPushButton,QListWidget,QLabel,QComboBox,QFileDialog,QCheckBox,QMessageBox,QInputDialog
 from .credentials import CredentialVault
@@ -103,7 +104,7 @@ class ArtworkDialog(QDialog):
     def show_arts(self,urls):
         self.urls=urls; self.art.clear()
         for index,url in enumerate(urls): self.art.addItem(f'Opção {index+1}')
-        self.state.setText(f'{len(urls)} artes disponíveis. A imagem será exibida para confirmação após o download.')
+        self.state.setText(count_text(len(urls),'imagem disponível','imagens disponíveis')+'. A imagem será exibida para confirmação após o download.')
     def apply_art(self):
         index=self.art.currentRow()
         if index<0: return

@@ -1,3 +1,4 @@
+from .locale import count_text
 from pathlib import Path
 import unicodedata
 from PySide6.QtGui import QIcon
@@ -65,7 +66,7 @@ class DriveDialog(QDialog):
             if file['cover']: item.setIcon(QIcon(file['cover']))
             self.list.addItem(item)
             if file['id']==selected_id: self.list.setCurrentRow(index)
-        self.result_count.setText(f'{len(self.files)} de {len(files)} ROMs' if self.files else f'Nenhuma ROM encontrada · {len(files)} no índice. Limpe a pesquisa ou ajuste a plataforma.')
+        self.result_count.setText(f'{len(self.files)} de '+count_text(len(files),'ROM','ROMs') if self.files else f'Nenhuma ROM encontrada · {len(files)} no índice. Limpe a pesquisa ou ajuste a plataforma.')
 
     def run(self,operation):
         if self.jobs:return
@@ -111,7 +112,7 @@ class DriveDialog(QDialog):
         def operation(lib):
             scanner=DriveScanner(lib,self.client())
             count=scanner.incremental() if incremental else scanner.full_scan(root)
-            return f'{count} registros processados. Nenhuma ROM foi baixada.'
+            return count_text(count,'registro processado','registros processados')+'. Nenhuma ROM foi baixada.'
         self.run(operation)
     def selected(self):
         index=self.list.currentRow()
