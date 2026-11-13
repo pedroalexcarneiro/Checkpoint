@@ -1,5 +1,6 @@
 """Cards de resultado: pintura apenas; seleção e consulta permanecem no QuickAdd."""
 import weakref
+from shiboken6 import isValid
 from PySide6.QtCore import Qt,QSize,QRectF
 from PySide6.QtGui import QFont,QPixmap,QColor,QPainterPath,QPen,QPainter
 from PySide6.QtWidgets import QStyledItemDelegate,QStyle
@@ -14,7 +15,7 @@ class CatalogResultDelegate(QStyledItemDelegate):
     def sizeHint(self,option,index):return QSize(0,96)
     def paint(self,painter,option,index):
         quick=self.quick_ref()
-        if quick is None:return
+        if quick is None or not isValid(quick):return
         from PySide6.QtWidgets import QApplication
         from .integrations.drive import normalize_rom_name
         colors=get_theme(QApplication.instance().property('checkpointTheme')).colors
@@ -83,7 +84,7 @@ class ResultEmptyOverlay(QFrame):
         self.sync()
     def sync(self,*args):
         quick=self.quick_ref()
-        if quick is None:return
+        if quick is None or not isValid(quick) or not isValid(quick.sources) or not isValid(quick.results):return
         self.setGeometry(quick.results.viewport().rect())
         self.setVisible(quick.sources.currentIndex()==1 and quick.results.count()==0)
     def eventFilter(self,watched,event):

@@ -17,7 +17,7 @@ def test_semantic_tokens_and_normal_text_contrast(key):
     assert tuple(SPACE.values())==(4,8,12,16,24,32)
     assert RADIUS=={'card':12,'button':8}
 
-from PySide6.QtCore import QPoint,Qt
+from PySide6.QtCore import QPoint,Qt,QCoreApplication,QEvent
 from PySide6.QtGui import QImage,QColor
 from PySide6.QtWidgets import QWidget,QPushButton,QLabel
 from checkpoint.window import MainWindow
@@ -27,6 +27,13 @@ from checkpoint.design_system import CardSurface
 
 def settle(app):
     for _ in range(6):app.processEvents()
+
+
+def dispose(widget,app):
+    # Só widgets criados por estes testes; nenhuma tarefa de cadastro é abortada.
+    widget.deleteLater()
+    QCoreApplication.sendPostedEvents(None,QEvent.DeferredDelete)
+    settle(app)
 
 
 @pytest.fixture
@@ -43,7 +50,7 @@ def visual_window(app,library,folder,monkeypatch):
     DriveScanner(library,None).record({'id':'visual-row','name':'Example (USA).gba'},'/Fixtures/GBA');library.sql.commit()
     window=MainWindow(library);window.integration_status=lambda provider:'Não configurada';window.resize(1280,800);window.show();settle(app)
     yield window,identity
-    window.close();settle(app)
+    window.close();dispose(window,app)
 
 
 def assert_inside_horizontal(root):
@@ -85,7 +92,7 @@ def test_scope_fits_1280_without_horizontal_overflow(app,visual_window,theme,scr
             panels=[widget for widget in window.detail_tabs.currentWidget().findChildren(CardSurface) if widget.parentWidget()==gallery.parentWidget()]
             assert len({widget.y() for widget in panels})==1
     finally:
-        if dialog:dialog.reject();settle(app)
+        if dialog:dialog.reject();dispose(dialog,app)
 
 
 @pytest.mark.parametrize('page',[0,1,2])
@@ -104,7 +111,7 @@ def test_empty_pages_have_title_description_and_action(app,library,monkeypatch,p
             toolbar=window.pages[1].findChild(ResponsiveToolbar)
             assert toolbar.y()==0
             assert frame.y()-toolbar.geometry().bottom()<=26
-    finally:window.close();settle(app)
+    finally:window.close();dispose(window,app)
 
 
 def test_library_and_wishes_reuse_art_component_and_dimensions(app,visual_window):
@@ -165,7 +172,7 @@ def test_empty_drive_list_has_explanation_and_existing_refresh_action(app,librar
         assert empty.isVisible() and empty.findChild(QLabel,'emptyDescription').text()
         assert dialog.quick_add.drive_manage.isVisible() and dialog.quick_add.drive_manage.isEnabled()
         assert not dialog.quick_add.save.isEnabled()
-    finally:dialog.reject();settle(app)
+    finally:dialog.reject();dispose(dialog,app)
 
 
 def test_empty_search_dialog_keeps_instruction_and_disabled_save(app,library):
@@ -175,4 +182,4 @@ def test_empty_search_dialog_keeps_instruction_and_disabled_save(app,library):
         assert len(dialog.quick_add.facts.text())>20
         assert dialog.quick_add.query.isVisible()
         assert dialog.quick_add.cancel.isEnabled() and not dialog.quick_add.save.isEnabled()
-    finally:dialog.reject();settle(app)
+    finally:dialog.reject();dispose(dialog,app)

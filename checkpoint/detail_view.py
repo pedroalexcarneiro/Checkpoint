@@ -6,7 +6,7 @@ from PySide6.QtCore import Qt,QSize
 from PySide6.QtGui import QPixmap,QIcon
 from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QScrollArea,QTabWidget,QToolButton,QMenu,QTextEdit,QCheckBox,QSizePolicy
 from .ui_components import Hero,text,action,card,CurrentPageTabs
-from .design_system import ArtworkButton,AdaptiveColumns,CardGrid,IconButton,Badge,empty_state,CardSurface,ActionCard
+from .design_system import ArtworkButton,AdaptiveColumns,CardGrid,IconButton,Badge,empty_state,CardSurface,ActionCard,StatusChip
 from .visual_tokens import SPACE,HEIGHT
 
 
@@ -146,7 +146,7 @@ def build_detail(window,game):
     technical.addWidget(text('Arquivos e versões','sectionTitle'))
     if not files:technical.addWidget(ActionCard('folder','Nenhuma ROM associada','Os arquivos e as versões vinculadas a este jogo aparecem aqui.',window.drive,'Abrir Drive'))
     for file in files:
-        frame,inside=card();row=QHBoxLayout();row.addWidget(Badge('folder'));words=QVBoxLayout();words.addWidget(text(file['original_name'],'cardTitle'));words.addWidget(text('Disponível neste computador' if file['available'] else 'Somente no Drive','muted'));row.addLayout(words,1)
+        frame,inside=card();row=QHBoxLayout();row.addWidget(Badge('folder'));words=QVBoxLayout();words.addWidget(text(file['original_name'],'cardTitle'));words.addWidget(StatusChip('Disponível neste computador' if file['available'] else 'Somente no Drive'));row.addLayout(words,1)
         row.addWidget(action('Executar versão',lambda checked=False,f=file:window.launch_rom(game_id,f),True) if file['available'] else action('Baixar ROM',window.drive,True));inside.addLayout(row);technical.addWidget(frame)
     edit=action('Configurar execução',lambda:window.edit_game(game_id));edit.setObjectName('quiet');technical.addWidget(edit,0,Qt.AlignLeft)
     heading=QHBoxLayout();heading.addWidget(text('Saves tradicionais','sectionTitle'));heading.addStretch();heading.addWidget(action('Configurar saves',lambda:window.configure_saves(game_id)));technical.addLayout(heading)
