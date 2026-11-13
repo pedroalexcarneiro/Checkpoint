@@ -206,3 +206,13 @@ A documentação foi acessada pela ferramenta web. O cliente HTTP do executor re
 As decisões conservadoras foram: conservar os dez commits anteriores; manter a branch e versão; fallback público configurável sem fallback silencioso com chave; consulta automática apenas com Steam; preço histórico separado; Nome A–Z como padrão; quinto card abaixo dos quatro; nenhuma fusão dos três componentes de cadastro; commits somente locais, sem publicação.
 
 Dependem do dono: configurar a chave no aplicativo Windows e validar acesso real; remover a pré-release v0.1.28 publicada por engano; decidir sobre futura fonte que forneça preço original se quiser percentuais pela API. Histórico não será usado como desconto. A revisão de estética/DPI permanece humana. Não foi gerado pacote Windows.
+
+## Prova adicional de pesquisa e salvamento
+
+A verificação posterior partiu de a46bff4 e não modificou checkpoint/. O novo teste
+usa cliques, busca com fonte controlada, Jobs/subprocessos, cache e banco reais.
+Reproduz a perda de desenvolvedora em 8d39c18, com capa/banner existentes, e passa
+na branch atual. A origem de Playdead foi revisada em dois testes de preservação.
+As capturas real-flow-* são da ficha efetivamente salva e têm commit/SHA-256 no
+manifesto; as 16 anteriores contêm cadastro/preview manual e não provam esse fluxo.
+Saídas integrais, diff e inventário: [RELATORIO_FLUXO_BUSCA_0.1.29.md](RELATORIO_FLUXO_BUSCA_0.1.29.md).

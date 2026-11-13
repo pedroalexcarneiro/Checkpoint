@@ -1,0 +1,41 @@
+{
+  "environment": "Linux / Qt offscreen, não Windows",
+  "flow": "Clique Adicionar, digitação, pesquisa real no auxiliar com fonte falsa, clique no resultado, clique Salvar durante detalhes pendentes; espera filas.",
+  "fixtures": "Somente fornecedores e transporte de imagens controlados; nenhum cadastro manual. Imagens identificadas como fonte controlada.",
+  "captures": [
+    {
+      "file": "real-flow-1280x800-detail.png",
+      "commit": "d64d6a0cdf0d6c0dd665c33f75028b664eb0a47e",
+      "dirty": false,
+      "width": 1280,
+      "height": 800,
+      "bytes": 84256,
+      "sha256": "53bac18d60b8e2a4e627b006309971dd64e893c0196a66cbe3804b89ea9e811f",
+      "saved": {
+        "title": "Metroid Dread",
+        "developer": "MercurySteam",
+        "publisher": "Nintendo",
+        "description": "Dados de teste: explore ZDR e enfrente os robôs E.M.M.I.",
+        "source": "Busca"
+      },
+      "images_on_disk": true
+    },
+    {
+      "file": "real-flow-1920x1080-detail.png",
+      "commit": "d64d6a0cdf0d6c0dd665c33f75028b664eb0a47e",
+      "dirty": false,
+      "width": 1920,
+      "height": 1080,
+      "bytes": 95719,
+      "sha256": "567962e73a4269045ba70f4901d2466e7f59c454018531e09627a3f38d064ca2",
+      "saved": {
+        "title": "Metroid Dread",
+        "developer": "MercurySteam",
+        "publisher": "Nintendo",
+        "description": "Dados de teste: explore ZDR e enfrente os robôs E.M.M.I.",
+        "source": "Busca"
+      },
+      "images_on_disk": true
+    }
+  ]
+}

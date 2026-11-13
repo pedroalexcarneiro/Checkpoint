@@ -11,6 +11,16 @@
 - Migração não destrutiva de dados/cofre, schema 4, saves, diário, lixeira, Steam e Drive preservados.
 - Diálogos aninhados aguardam seus jobs antes de concluir; regressões exercitam o fluxo com faulthandler.
 
+## Prova do cadastro por busca
+
+O teste de fluxo por cliques reproduz em 8d39c18 capa/banner presentes com
+desenvolvedora vazia; na base atual a46bff4 os textos e origem Busca são preservados.
+A automação d64d6a0 cobre salvar durante e depois dos detalhes, com fontes
+controladas e persistência/cache/subprocessos reais. Não houve correção adicional no app.
+Suíte integral desta verificação: 296 passando, 0 falhas/erros em 387,99 s.
+Duas novas capturas real-flow-* registram o commit limpo da geração; as antigas
+servem só como fixtures visuais. Consulte RELATORIO_FLUXO_BUSCA_0.1.29.md.
+
 ## Pendente
 
 Configuração da chave pelo dono no cofre e validação autenticada da API GG.deals. Decisão sobre futura fonte de preço original para percentual, sem usar histórico. Remoção pelo dono da pré-release anterior publicada por engano. Futura decisão sobre unificar os três componentes de cadastro; a fusão não foi executada.
