@@ -16,19 +16,35 @@ def needs_update(library,game_id):
     except (KeyError,ValueError,TypeError):return True
 
 
+def default_provider(library):
+    from .integrations.price_provider import GgDealsApiProvider
+    from .integrations.ggdeals import GgDealsProvider
+    try:
+        from .credentials import CredentialVault
+        official=GgDealsApiProvider(CredentialVault())
+        if official.enabled:return official
+    except Exception:pass
+    if library.setting('prices.public_fallback',True):return GgDealsProvider()
+    raise IntegrationError('Configure a API GG.deals ou ative a consulta pela página pública em Conexões.')
+
+
 def refresh_prices(library,game_id,provider=None):
     from .integrations.ggdeals import GgDealsProvider
     game=library.get(game_id)
     if not game:return 'Jogo indisponível.'
     identity=library.sql.execute("SELECT external_id FROM external_identifiers WHERE game_id=? AND provider='steam'",(game_id,)).fetchone()
     previous=snapshot(library,game_id);url=previous.get('url')
+    if not identity:
+        previous.update({'attempted_at':now(),'state':'missing_steam_id','message':'Sem ID da Steam para consulta'})
+        library.set_setting(f'prices.ggdeals.{game_id}',previous)
+        return 'Sem ID da Steam para consulta'
     try:
-        result=(provider or GgDealsProvider()).prices(identity[0] if identity else None,url=url)
+        result=(provider or default_provider(library)).prices(identity[0],url=url)
         current=result.get('current',result.get('lowest'))
-        if result.get('currency')!='BRL' or not isinstance(current,int) or current<=0:
+        if result.get('currency')!='BRL' or (current is not None and (type(current) is not int or current<=0)):
             raise IntegrationError('Nenhuma oferta em reais disponível. Último preço salvo preservado.')
         result['lowest']=result['current']=current
-        result.update({'checked_at':now(),'attempted_at':now(),'state':'ready'})
+        result.update({'checked_at':now(),'attempted_at':now(),'state':'ready' if current is not None else 'unavailable'})
         library.set_setting(f'prices.ggdeals.{game_id}',result)
         return 'Preços GG.deals atualizados.'
     except IntegrationError as error:

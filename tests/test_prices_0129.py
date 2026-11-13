@@ -24,12 +24,10 @@ def test_original_price_and_discount_come_from_same_offer():
     assert quote['original'] is None and quote['discount'] is None
     with pytest.raises(IntegrationError):parse_prices(HTML.replace('R$ 60,00','R$ 0,00'))
 
-def test_official_api_never_makes_undocumented_network_call():
-    provider=GgDealsApiProvider();assert not provider.enabled
+def test_official_api_without_saved_key_never_calls_transport():
+    fetch=Mock();provider=GgDealsApiProvider(fetch=fetch);assert not provider.enabled
     with pytest.raises(IntegrationError,match='não configurada'):provider.prices('42')
-    vault=Mock();vault.get.return_value=object()
-    configured=GgDealsApiProvider(vault);assert configured.enabled
-    with pytest.raises(IntegrationError,match='documentação oficial'):configured.prices('42')
+    fetch.assert_not_called()
 
 def test_wishlist_discount_sort_prices_and_scroll_survive_refresh(library,app):
     library.set_setting('prices.auto',False);library.set_setting('artwork.auto',False)

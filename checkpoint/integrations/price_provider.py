@@ -4,6 +4,8 @@ from . import IntegrationError
 
 class PriceQuote(TypedDict,total=False):
     current: int|None
+    historical: int|None
+    current_kind: str|None
     original: int|None
     discount: int|None
     currency: str
@@ -12,10 +14,5 @@ class PriceQuote(TypedDict,total=False):
 class PriceProvider(Protocol):
     def prices(self,identity=None,url=None)->PriceQuote: ...
 
-class GgDealsApiProvider:
-    """Estrutura reservada; transporte depende da documentação oficial."""
-    def __init__(self,vault=None):
-        self.enabled=vault is not None and vault.get('ggdeals') is not None
-    def prices(self,identity=None,url=None)->PriceQuote:
-        if not self.enabled:raise IntegrationError('API GG.deals não configurada.')
-        raise IntegrationError('API GG.deals aguardando documentação oficial. Use a página pública para consultar preços.')
+# Reexportação preserva os imports existentes; implementação em módulo próprio.
+from .ggdeals_api import GgDealsApiProvider
