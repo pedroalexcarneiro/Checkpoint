@@ -66,6 +66,7 @@ def main():
                 lib.sql.execute('INSERT INTO achievements(game_id,title,unlocked_at) VALUES(?,?,?)',(identity,'Primeiro caminho explorado',start))
         if index>=8:
             with lib.sql:lib.sql.execute('INSERT INTO wishlist(game_id,target_cents) VALUES(?,?)',(identity,9900+index*1000))
+    with lib.sql:lib.sql.execute('INSERT INTO external_identifiers VALUES(?,?,?)',(ids[8],'steam','1145350'))
     DriveScanner(lib,None).record({'id':'fixture-rom','name':'Example (USA).gba'},'/GBA');lib.sql.commit()
     lib.set_setting('artwork.auto',False);lib.set_setting('prices.auto',False);w=MainWindow(lib);w.integration_status=lambda provider:'Não configurada';w.resize(1100,740);w.show()
     def capture(name,widget=w):
@@ -76,7 +77,9 @@ def main():
         assert widget.grab().save(str(root/(name+'.png')))
     if args.reference_sizes:
         # Valores e artes de teste declarados, sem consultar contas ou provedores.
-        lib.set_setting(f'prices.ggdeals.{ids[8]}',{'lowest':5990,'current':5990,'original':9990,'discount':40,'currency':'BRL','state':'ready'})
+        from checkpoint.integrations.ggdeals_api import parse_api_prices
+        quote=parse_api_prices({'success':True,'data':{'1145350':{'title':'Hades II','url':'https://gg.deals/game/hades-ii/','prices':{'currentRetail':'79.90','currentKeyshops':'59.90','historicalRetail':'39.90','historicalKeyshops':'29.90','currency':'BRL'}}}},'1145350')
+        quote['state']='ready';lib.set_setting(f'prices.ggdeals.{ids[8]}',quote)
         for width,height in ((1280,800),(1920,1080)):
             w.resize(width,height);prefix=f'{width}x{height}-'
             for page,name in ((0,'home'),(1,'library'),(2,'wishlist'),(5,'settings')):
@@ -86,6 +89,7 @@ def main():
                 capture(prefix+name)
             w.settings_tabs.setCurrentIndex(0);capture(prefix+'appearance')
             w.detail(ids[0]);capture(prefix+'detail')
+            w.detail(ids[8]);app.processEvents();w.detail_page.verticalScrollBar().setValue(w.detail_page.verticalScrollBar().maximum());capture(prefix+'wish-prices')
             w.navigate(0);dialog=GameDialog(w,library=lib);quick=dialog.quick_add
             from checkpoint.integrations import MetadataResult
             selected=MetadataResult('steam','367520','Hollow Knight',platforms=('PC',),developer='Team Cherry',publisher='Team Cherry',description='Descrição de teste para revisar o cadastro.')
@@ -99,7 +103,7 @@ def main():
             # Composição de grabs Qt reais: offscreen não fornece captura do desktop.
             shot=w.grab();painter=QPainter(shot);painter.drawPixmap(dialog.mapToGlobal(dialog.rect().topLeft())-w.mapToGlobal(w.rect().topLeft()),dialog.grab());painter.end()
             assert shot.save(str(root/(prefix+'add.png')));dialog.reject()
-        (root/'review-info.json').write_text(json.dumps({'platform':sys.platform,'window':'1280×800 e 1920×1080','artwork':'fixtures locais','dialog':'composição dos grabs Qt do diálogo e da janela; não é captura do desktop'},ensure_ascii=False),encoding='utf-8')
+        (root/'review-info.json').write_text(json.dumps({'platform':sys.platform,'window':'1280×800 e 1920×1080','artwork':'fixtures locais; preços de exemplo processados pelo parser oficial, sem rede/chaves','connections':'GG.deals sem chave; estados dos demais serviços são fixtures','dialog':'composição dos grabs Qt do diálogo e da janela; não é captura do desktop'},ensure_ascii=False),encoding='utf-8')
         w.close();db.close();print(root);return
     for page,name in enumerate(['home','library','wishlist','memories','statistics','settings']):w.navigate(page);capture(name)
     w.resize(1920,1080)

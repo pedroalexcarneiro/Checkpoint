@@ -14,9 +14,15 @@ Credenciais próprias configuradas em Conexões. SteamGridDB fornece artes da co
 
 ## GG.deals
 
-O provedor **Página pública** continua sendo o padrão: consulta HTML BR, mantém links de lojas/afiliados e cache de uma hora, preservando o último preço válido quando há falha. O parser usa o preço original da mesma oferta para calcular desconto; sem original, não inventa percentual. Preço ausente ou zero não é apresentado como oferta utilizável. Bloqueios e mudanças do HTML podem impedir consultas. A página externa pode conter ofertas adicionais.
+A [documentação oficial](https://gg.deals/api/prices/) define o endpoint `https://api.gg.deals/v1/prices/by-steam-app-id/`, com `ids`, `key` e `region=br`. A aplicação usa a identidade `steam` em `external_identifiers`; sem ela, não chama a API e mostra “Sem ID da Steam para consulta”.
 
-O contrato PriceProvider retorna preço atual, original, desconto, moeda e lojas. **API oficial GG.deals** é uma implementação separada, desativada sem configuração no cofre. Mesmo com configuração, não realiza chamadas: depende da documentação oficial, a ser fornecida/verificada antes da implementação do transporte. A interface atual continua usando a página pública; não há campo para registrar segredo em arquivo. A decisão sobre a chave depende do dono. Os testes verificam a estrutura com objetos em memória e preços fictícios, não autenticam uma conta nem validam a API real.
+Com chave salva, o provedor oficial consulta preços e aceita somente BRL. `currentRetail` e `currentKeyshops` são valores atuais; a interface identifica o menor como Loja oficial ou Keyshop. Valores nulos ou zero são indisponíveis. `historicalRetail` e `historicalKeyshops` alimentam somente “Menor histórico”. Não são preço de lista: a API não fornece preço original nem desconto percentual. Descontos só aparecem se a página pública fornecer explicitamente o preço original da mesma oferta.
+
+O [GG.deals informa uso gratuito](https://gg.deals/api/) para projetos pessoais, hobby e open source, com atribuição obrigatória. Desejos e a ficha com preços mostram “Preços: GG.deals”, com link ativo para https://gg.deals/. Links recebidos da fonte não têm afiliados/referrals alterados.
+
+Em Configurações > Conexões, o card GG.deals permite Salvar/Remover a chave exclusivamente no cofre do Windows. O campo é mascarado e limpo após a operação; não mostra a chave armazenada. Há quatro conexões em 2×2 e o quinto card abaixo. Sem chave, o provedor da página pública continua como fallback se a opção em Avançado estiver ativa. Uma chave presente tem prioridade; erro de API preserva o último preço válido, sem fallback silencioso. Alterar configuração permite nova consulta sem apagar o cache.
+
+A documentação limita a API a 100 registros/minuto e 1000/hora. A fila consulta um jogo por vez, com intervalo conservador de 6,5 s e cache de uma hora. HTTP 429, erros de transporte e respostas inválidas recebem mensagens fixas, sem URL autenticada ou corpo de erro. Redirecionamentos autenticados são bloqueados. A consulta real depende da chave e do acesso da instalação Windows; esta revisão usa respostas controladas e não valida conta autenticada.
 
 ## Atualizações
 

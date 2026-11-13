@@ -6,6 +6,6 @@ Menu lateral com cinco destinos, separador, Configurações e Meu perfil no roda
 
 Ficha com banner e voltar, barra de execução/status/tempo/menu, quatro abas e galeria à direita da descrição. Jogar somente com executável; Configurar execução secundário nos demais casos.
 
-Adicionar jogo com três fontes, pesquisa, resultado selecionado, linha de automação, avançado recolhido e ação principal habilitada após seleção. Desejos usa o mesmo cálculo de colunas, com arte 1:1 e logo contida; capa recortada ao centro ou título são alternativas. Nome, preço, desconto e ações ficam abaixo da arte.
+Adicionar jogo com três fontes, pesquisa, resultado selecionado, linha de automação, avançado recolhido e ação principal habilitada após seleção. Desejos usa o mesmo cálculo de colunas, com arte 1:1 e logo contida; capa recortada ao centro ou título são alternativas. Nome, preço atual, menor histórico e ações ficam abaixo da arte. A API não fornece preço original; não calcular desconto com histórico. Nome A–Z é padrão, com alternativa por menor preço atual.
 
-Configurações com quatro abas, Conexões em 2×2, ajuda, pontos verdes ou cinzas e Avançado recolhido. Aparência oferece Tamanho das capas, de 70% a 150%, padrão 100%; não existe seletor de formato. Consulte o relatório para capturas reais, decisões e diferenças restantes.
+Configurações com quatro abas, quatro Conexões em 2×2, GG.deals abaixo, ajuda, pontos verdes ou cinzas e Avançado recolhido. Aparência oferece Tamanho das capas, de 70% a 150%, padrão 100%; não existe seletor de formato. Consulte o relatório para capturas reais, decisões e diferenças restantes.

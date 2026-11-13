@@ -15,7 +15,14 @@ ROMs do Drive e Steam ficam nas abas do cadastro. O nome original da ROM
 
 Em Configurações > Aparência, ajuste Tamanho das capas entre 70% e 150%.
 Biblioteca usa capas verticais. Desejos usa logos em área quadrada e mostra
-os descontos disponíveis. São nove temas, com Verde como padrão.
+preços atuais e menores históricos. Histórico não é preço original nem
+desconto. Ordene por Nome A–Z ou Menor preço atual. São nove temas,
+com Verde como padrão.
 
 Conexões ficam em Configurações. Credenciais ficam somente no cofre do
 Windows; não envie chaves pelo chat nem salve segredos no projeto.
+
+Para usar a API GG.deals, cole a chave apenas no card GG.deals em Conexões
+e clique em Salvar. A chave fica no cofre do Windows, não no banco.
+Sem chave, a consulta pela página pública depende da opção em Avançado.
+Jogos sem ID Steam associado não consultam a API.

@@ -1,21 +1,17 @@
-Checkpoint 0.1.29 — validação local Qt offscreen Linux
-Data: 13/11/2026 11:49 -03
-Python 3.12.14; PySide6 6.8.3; schema 4; dados isolados
-Base, antes de qualquer alteração: 252 passed in 216.36s (0:03:36)
-Ciclo de vida do Drive: 253 passed in 223.42s (0:03:43)
-Tamanho — iteração intermediária: 2 failed, 253 passed in 234.42s (0:03:54)
-Tamanho — fechamento: 255 passed in 241.47s (0:04:01)
-Início: 257 passed in 250.39s (0:04:10)
-Rolagem: 258 passed in 950.10s (0:15:50)
-Desejos e preços: 261 passed in 1092.91s (0:18:12)
-Ficha da busca: 262 passed in 1131.58s (0:18:51)
-Diálogo e ROM: 269 passed in 1236.45s (0:20:36)
-Estados vazios: 269 passed in 1112.42s (0:18:32)
-Documentação e acabamento inicial: 271 passed in 896.00s (0:14:56)
-Acabamento dos cards em 70% — final: 271 passed in 570.80s (0:09:30)
-Drive isolado após correção inicial: 5/5 passaram; após cadastro completo: 5/5 passaram; teste original inalterado
+Checkpoint 0.1.29 — conclusão GG.deals — 13/11/2026 15:36 UTC
+Python 3.12.14; PySide6 6.8.3; schema 4; Qt offscreen; dados /tmp
+Estado recebido, antes de alterar: 271 passed in 319.65s (0:05:19)
+Provedor oficial: 287 passed in 311.64s (0:05:11)
+Conexões e cofre: 290 passed in 323.44s (0:05:23)
+Desejos, histórico, ordenação e atribuição: 293 passed in 346.41s (0:05:46)
+Revisão final, incluindo proteção do cache em outra moeda: 294 passed in 586.18s (0:09:46)
+Drive isolado 1: 1 passed in 15.45s
+Drive isolado 2: 1 passed in 15.56s
+Drive isolado 3: 1 passed in 14.72s
+Drive isolado 4: 1 passed in 14.68s
+Drive isolado 5: 1 passed in 15.67s
 Smoke: 6 pages OK; SQLite integrity=ok
 Cadastro smoke: salvar, auxiliar, renderização e SQLite OK
-Capturas: 14 PNGs; 1280x800 e 1920x1080; fixtures locais
-Sem validação Windows real/DPI/contas; sem build/tag/release; sem dependências novas
-Smokes confirmados no checkout final: /tmp/checkpoint-029-root-smoke e /tmp/checkpoint-029-root-save-smoke
+Capturas: 16 PNGs, 1280x800 e 1920x1080, fixtures sem chave
+Sem conta autenticada real; sem Windows/DPI/cofre nativo; sem dependências novas
+Somente commits locais; sem push/tag/release/PR/build de release

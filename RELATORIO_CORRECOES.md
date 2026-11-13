@@ -1,204 +1,208 @@
-# Relatório de correções — Checkpoint 0.1.29
+# Relatório de conclusão — Checkpoint 0.1.29
 
-Revisão em 13/11/2026 11:49 -03. Base confirmada: `fix/rename-redesign-0.1.28`, commit `8d39c18`, versão 0.1.28 nos dois arquivos. Branch de entrega: `fix/0.1.29`. A árvore estava limpa antes das alterações. A versão final é 0.1.29 no módulo e no pyproject.
+Revisão em 13/11/2026 15:36 UTC. Base histórica solicitada: `8d39c18`. Estado recebido: branch `fix/0.1.29`, commit `f0be1b9`, árvore limpa, dez commits anteriores e versão 0.1.29 no módulo e no pyproject. A branch foi continuada sem recriação, reset, rebase ou remoção de trabalho. Os dez commits recebidos permanecem ancestrais da entrega.
 
-## Escopo e preservação
+Esta conclusão acrescenta commits locais; não houve push, tag, release, PR ou build de release. Main e branches codex não foram alteradas. A remoção da pré-release v0.1.28 continua sendo ação do dono. Documentos locais de release não foram publicados como descrições no GitHub.
 
-Schema 4 mantido. A migração de diretório, snapshot SQLite por backup, integridade, travas, cofre e origem foram preservados. Nenhum dado pessoal foi aberto para testes. Nenhuma dependência nova foi instalada: ambiente existente com Python 3.12.14 e PySide6 6.8.3.
+## O que já existia e foi preservado
 
-Não houve build de release, tag, edição/remoção de release, PR ou force push. Main e branches codex não foram alteradas. O texto `.github/release-notes.md` é um documento local atualizado, não uma publicação. A pré-release v0.1.28 publicada por engano permanece sob responsabilidade do dono.
+O estado recebido já implementava tamanho das capas 70–150%, seis colunas no padrão largo, conversão da densidade, Início por andamento, scroll de 180 ms, arte 1:1 dos desejos, busca com ficha/origem, limpeza de ROM, estados vazios e proteção do ciclo de vida dos diálogos. A suíte inicial confirmou 271 testes passando. Esses recursos foram mantidos e novamente exercitados pelas suítes completas; não foram reescritos por conveniência.
 
-## SIGSEGV: causa funcional e correção
+Wordmark checkpo//nt, ícone da base e nove temas foram preservados. A migração de diretório, snapshot SQLite, integridade, travas e credenciais anteriores continua intacta. O schema permanece 4. Nenhuma pasta pessoal ou cofre real foi aberto para testes. Não foram necessárias dependências novas.
 
-A suíte completa inicial passou, mas o caso Drive isolado retornou -11 na base. Portanto, o resultado da suíte em conjunto não foi tomado como prova de ausência da queda.
+## Preços oficiais e decisões registradas
 
-A proteção de `GameDialog.finish_or_wait()` só esperava as consultas quando `quick.owner is self`. No fluxo Drive, o owner era a janela principal; `apply_catalog()` seguido de `validate()` podia concluir o diálogo com uma busca ainda em execução. O faulthandler mostrou a queda na thread principal, antes do encerramento programado da janela, enquanto havia Jobs em `worker.run_isolated` e `DriveDialog.queue_artwork`.
+Fontes consultadas: [GG.deals API](https://gg.deals/api/) e [Prices API](https://gg.deals/api/prices/). O endpoint implementado é `https://api.gg.deals/v1/prices/by-steam-app-id/`, com IDs de `external_identifiers`/`steam` e região BR. O parâmetro de autenticação é obtido do cofre somente em memória; não entra no banco, argumentos de subprocesso, arquivos de pedido ou relatório.
 
-Trechos do traceback reproduzido na base:
+- Com chave acessível, usa API oficial. Sem chave, usa página pública apenas se a opção `prices.public_fallback` estiver ativa. Essa opção é verdadeira por padrão, preservando o comportamento público anterior. Falha com uma chave presente não provoca fallback silencioso: conserva o último valor válido.
+- Consulta automática exige ID Steam, inclusive no fallback; sem ID, informa “Sem ID da Steam para consulta” e mantém Ver ofertas. Escolhi não consultar por título para evitar associar preços a outra edição.
+- O menor entre `currentRetail` e `currentKeyshops` é exibido com Loja oficial ou Keyshop. Empate favorece loja oficial. Somente BRL é aceito; não há conversão. Nulo e zero não são oferta utilizável.
+- `historicalRetail`/`historicalKeyshops` fornecem “Menor histórico”. Não são preço de lista: a API sempre retorna original/desconto ausentes. Também há proteção na interface contra cache de outra moeda.
+- A página pública permanece disponível e pode mostrar original/percentual apenas com `price-old` explícito na mesma oferta. Histórico nunca é usado para calcular desconto.
+- Nome A–Z é o padrão; Menor preço atual ordena valores positivos em ordem crescente, sem preço no fim. A preferência antiga de maior desconto é convertida para Nome A–Z, sem mexer em outros dados. Atualizar preços conserva a rolagem.
+- Toda página que mostra preços tem “Preços: GG.deals”, com link ativo para https://gg.deals/. URLs recebidas não têm afiliados/referrals alterados.
+- A documentação declara plano gratuito para uso pessoal, hobby e open source, com atribuição. A fila existente consulta um jogo por vez em intervalos de 6,5 s, com cache de uma hora. HTTP 429 e demais erros geram mensagens fixas sem URL/corpo autenticado. O transporte não segue redirecionamentos autenticados.
 
-```text
-Current thread:
-  File "<string>", line 45 in check
-  File "<string>", line 67 in <module>
+## Conexões e cofre
 
-Thread de trabalho:
-  File "checkpoint/worker.py", line 31 in run_isolated
-  File "<string>", line 22 in isolated
-  File "checkpoint/drive_dialog.py", line 154 in <lambda>
-  File "checkpoint/drive_dialog.py", line 76 in work
-  File "checkpoint/jobs.py", line 10 in run
-```
+O pedido enumera cinco serviços em uma grade 2×2. Para conservar o desenho aprovado, mantive os quatro cards originais em 2×2 e coloquei GG.deals abaixo, ocupando a largura disponível. Isso mantém a chave e Salvar/Remover legíveis em 1280 px.
 
-A correção está em `checkpoint/dialogs.py:102` e `checkpoint/quick_add.py:205`: o diálogo aguarda seus Jobs independentemente do pai, mantendo receptor/widgets vivos até `finished`. Cancelar descarta respostas; salvar aguarda os detalhes selecionados e só então conclui. Buscas pendentes não substituem uma escolha durante esse encerramento. A thread principal continua processando eventos; não há `wait()` bloqueante no fluxo da interface.
+O campo GG.deals é mascarado, nunca recebe a chave armazenada e é limpo após salvar ou falhar. Salvar/Remover opera apenas no cofre; presença configurada tem ponto verde e ausência tem ponto cinza. Exceções do backend são substituídas por mensagens fixas. Alterar a configuração permite uma nova consulta de preços, sem apagar o último valor válido ou mudar o schema.
 
-O novo teste de diálogo aninhado mantém um job bloqueado e verifica que o diálogo permanece aberto até sua conclusão. O teste original `tests/test_save_lifecycle.py` não foi alterado, removido, pulado ou marcado como xfail. Após a correção inicial: 5/5 execuções isoladas passaram. Após a correção completa de cadastro: mais 5/5 passaram com `-X faulthandler`, sem SIGSEGV, em 17,81 s, 17,65 s, 16,94 s, 17,06 s e 18,42 s. O fluxo também integra todas as suítes completas posteriores.
+Os testes usam marcadores transitórios gerados em memória, sem chave literal em fixture ou arquivo. Conferem a ausência do valor no cache, nas mensagens e nos logs. Nenhuma captura contém campo de chave preenchido. A guarda do cofre nativo Windows ainda depende de validação no computador real.
 
-O diagnóstico confirma o caminho funcional de encerramento prematuro e a regressão corrigida; não identifica uma instrução C++ específica. Não foi feita validação equivalente no Windows real.
+## SIGSEGV
 
-## Ficha da busca
+A correção funcional já estava nos dez commits recebidos: a versão antiga só aguardava consultas quando `quick.owner is self`; sob DriveDialog, o owner era outra janela. O diálogo podia concluir com jobs ativos. A implementação recebida preserva o diálogo/receptor até `finished`, também com pai, e aguarda detalhes selecionados antes de salvar.
 
-Ao selecionar, a consulta de detalhes ainda podia estar ativa. O salvamento encerrava o diálogo e a resposta posterior era descartada; a origem continuava no valor inicial Manual. Agora o aceite aguarda detalhes, `apply_catalog` registra Busca e `save_import` completa dados selecionados dentro da transação. O teste salva durante uma consulta pendente e confere os três dados e a origem no banco. ROMs mantêm Google Drive como origem e seu nome original no índice.
+Não alterei `tests/test_save_lifecycle.py`, não introduzi skip/xfail e não alterei a correção de ciclo de vida para liberar a versão. O baseline atual passou. Confirmei novamente o caso Drive isolado, cinco vezes com `-X faulthandler`:
 
-## Decisões sem confirmação
+- Execução 1: 1 passed in 15.45s
+- Execução 2: 1 passed in 15.56s
+- Execução 3: 1 passed in 14.72s
+- Execução 4: 1 passed in 14.68s
+- Execução 5: 1 passed in 15.67s
 
-- Priorizei a queda nativa antes do desenho, pois o pedido proíbe encobrir a falha.
-- Densidade compacta vira 80%; confortável vira 100%. A preferência antiga permanece gravada e um tamanho já existente tem precedência.
-- Um único cálculo atende às duas grades; o padrão largo tem seis colunas e janelas menores reduzem. Em 70%, ações de Desejos usam duas linhas para preservar texto e ícones, sem zoom global.
-- Arte dos Desejos é 1:1: logo contida, capa recortada ao centro ou título. A Biblioteca preserva a capa vertical inteira. Não foi criado seletor de formato.
-- Automação continua ativa por padrão. A caixa local foi retirada da interface; seu controle interno é mantido para compatibilidade, respeitando a preferência global anterior de automação.
-- Limpeza de ROM remove apenas tags reconhecidas de região/versão, extensões e plataforma explícita; parênteses que podem fazer parte do título permanecem. A regra de plataforma da pasta tem precedência sobre a indicação do arquivo.
-- Provedor público GG.deals permanece em uso. A classe de API só reconhece presença de configuração injetada no cofre e retorna indisponibilidade enquanto faltar documentação. Não há endpoint presumido, transporte real nem credencial em arquivo/teste.
-- Os três componentes de cadastro foram mantidos. Não foi executada uma fusão não solicitada.
-- A partir das etapas finais, validei cópias imutáveis em /tmp, com PYTHONPATH explícito e bancos isolados. Os arquivos de aplicativo/testes no checkout foram comparados byte a byte com a cópia final. Os tempos abaixo incluem concorrência entre suítes e não medem desempenho do aplicativo.
+Não houve SIGSEGV nem nova pilha de falha. A suíte final também inclui o caso original. Isso valida o caminho corrigido em Qt offscreen Linux; não identifica uma instrução C++ nem comprova Windows/DPI/hardware do usuário.
 
-## Testes reais
+## Testes e comandos reais
 
-Comando da suíte, executado antes das mudanças e após cada etapa:
+Ambiente existente: Python 3.12.14, PySide6 6.8.3. A suíte foi rodada antes de qualquer alteração e após cada etapa. Pastas das fixtures ficam em /tmp.
 
 ```bash
 QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp PYTHONDONTWRITEBYTECODE=1 \
-  .venv/bin/python -X faulthandler -m pytest tests -q -p no:cacheprovider
+.venv/bin/python -X faulthandler -m pytest tests -q -p no:cacheprovider
 ```
 
-Nas cópias, o executável foi `/workspace/Checkpoint/.venv/bin/python`, com `PYTHONPATH=/tmp/checkpoint-029-stageN` e cwd da mesma cópia. A base inicial usou `/tmp/checkpoint-029-baseline.oPaXCM` como raiz de dados. Logs desta execução ficam em `/tmp/checkpoint-029-*.log`; o resumo durável está em `evidence/validation-0.1.29.txt`.
-
-| Etapa | Resumo real |
+| Etapa | Resultado |
 |---|---|
-| Base, antes de qualquer alteração | 252 passed in 216.36s (0:03:36) |
-| Ciclo de vida do Drive | 253 passed in 223.42s (0:03:43) |
-| Tamanho — iteração intermediária | 2 failed, 253 passed in 234.42s (0:03:54) |
-| Tamanho — fechamento | 255 passed in 241.47s (0:04:01) |
-| Início | 257 passed in 250.39s (0:04:10) |
-| Rolagem | 258 passed in 950.10s (0:15:50) |
-| Desejos e preços | 261 passed in 1092.91s (0:18:12) |
-| Ficha da busca | 262 passed in 1131.58s (0:18:51) |
-| Diálogo e ROM | 269 passed in 1236.45s (0:20:36) |
-| Estados vazios | 269 passed in 1112.42s (0:18:32) |
-| Documentação e acabamento inicial | 271 passed in 896.00s (0:14:56) |
-| Acabamento dos cards em 70% — final | 271 passed in 570.80s (0:09:30) |
+| Estado recebido, antes de alterar | 271 passed in 319.65s (0:05:19) |
+| Provedor oficial | 287 passed in 311.64s (0:05:11) |
+| Conexões e cofre | 290 passed in 323.44s (0:05:23) |
+| Desejos, histórico, ordenação e atribuição | 293 passed in 346.41s (0:05:46) |
+| Revisão final, incluindo proteção do cache em outra moeda | 294 passed in 586.18s (0:09:46) |
 
-As duas falhas intermediárias de tamanho correspondiam ao encaixe exato da última coluna no Qt e a uma expectativa antiga de quatro colunas em janela estreita. Foram corrigidas antes do fechamento. Testes de contratos antigos foram atualizados para a ficha já preenchida na importação e o estado de salvamento pendente. Na revisão visual, um teste novo de identidade de item foi corrigido para verificar somente o ajuste do slider: navegar até a Biblioteca normalmente recria seus itens.
+Cobertura nova: JSON com preços atuais/históricos distintos, nulos, moeda incompatível, campo ausente e valores inválidos; parâmetros do endpoint; HTTP 429 e erros sem segredo; seleção API/fallback e ausência de ID Steam; cofre mascarado/limpo e fora do SQLite; atribuição ativa; novas ordenações e conservação da rolagem. A cobertura anterior de 500 jogos, nove temas, migração, busca gravada, ROM, desejos já possuídos e estados vazios continua na suíte.
 
-O teste de rolagem usa 500 jogos, roda do mouse, animação de 180 ms e verifica progresso por pixel sem travar o loop. O parser é testado com e sem preço original e não fabrica desconto. A API é testada com objetos em memória, sem valor de chave. Migração, nove temas/contraste, estados vazios e proteção de jogos já possuídos continuam na suíte.
+Testes dirigidos: API e regressões de preço, 25 passaram; cofre/conexões e regressões visuais, 31 passaram; exibição/ordenação/layout, 18 passaram na preparação final. Uma iteração da cópia de preparação teve 2 falhas/16 sucessos por remover inadvertidamente o helper de invalidação do cache; foi corrigida antes do commit e da suíte da etapa. A proteção final de moeda teve 4 testes dirigidos passando.
 
-Smokes repetidos no checkout final, com pastas novas e Qt offscreen:
+Comando do caso isolado, repetido cinco vezes:
 
 ```bash
-QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -X faulthandler -m checkpoint.app --smoke-test --data-dir /tmp/checkpoint-029-root-smoke
-QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -X faulthandler -m checkpoint.app --save-smoke-test --data-dir /tmp/checkpoint-029-root-save-smoke
+QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp PYTHONDONTWRITEBYTECODE=1 \
+.venv/bin/python -X faulthandler -m pytest 'tests/test_save_lifecycle.py::test_full_save_and_loading_process_exits_cleanly[drive]' -q -p no:cacheprovider
 ```
 
-Saídas reais:
+Smokes em dados novos:
+
+```bash
+QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -X faulthandler -m checkpoint.app --smoke-test --data-dir /tmp/checkpoint-029-official-smoke
+QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -X faulthandler -m checkpoint.app --save-smoke-test --data-dir /tmp/checkpoint-029-official-save-smoke
+```
 
 ```text
 Checkpoint smoke: 6 pages OK; SQLite integrity=ok
 Cadastro smoke: salvar, auxiliar, renderização e SQLite OK
 ```
 
-## Capturas e comparação
+Logs desta execução: `/tmp/checkpoint-029-official-*.log`. O resumo durável fica em `evidence/validation-0.1.29.txt`.
 
-Geradas por `scripts/render_ui_review.py --reference-sizes`, em `/tmp/checkpoint-029-evidence-complete`, com cópias somente dos PNGs e da descrição da revisão em `evidence/ui-0.1.29/`. Nenhum banco, imagem pessoal, log privado ou arquivo de credencial foi incluído. São 14 capturas: seis telas em duas resoluções, mais Aparência nas duas.
+## Capturas
+
+Geradas com o script solicitado no checkout, sem conta/chave real:
 
 ```bash
-QT_QPA_PLATFORM=offscreen python scripts/render_ui_review.py /tmp/revisao-nova --reference-sizes
+QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp PYTHONDONTWRITEBYTECODE=1 .venv/bin/python scripts/render_ui_review.py /tmp/checkpoint-029-official-final-review --reference-sizes
 ```
 
-Os dados, preços e artes são fixtures declaradas; não demonstram integrações autenticadas. No modo offscreen, a imagem de Adicionar jogo compõe grabs Qt reais da janela e do diálogo na posição correspondente; não é captura do desktop Windows.
+São 16 PNGs: seis telas nas duas resoluções, Aparência adicional e ficha do desejo com preços. Dados, preços e artes são fixtures locais declaradas. O exemplo passa pelo parser oficial, mas não demonstra resposta de conta autenticada. No modo offscreen, Adicionar jogo é composição dos grabs Qt reais da janela e do diálogo, sem captura do desktop. Somente PNGs e a descrição foram copiados para o repositório; nenhum banco ou log privado.
 
-| Arquivo | Dimensão | Bytes |
+| Caminho | Dimensão | Bytes |
 |---|---|---:|
 | [1280x800-add.png](evidence/ui-0.1.29/1280x800-add.png) | 1280×800 | 117088 |
 | [1280x800-appearance.png](evidence/ui-0.1.29/1280x800-appearance.png) | 1280×800 | 56633 |
 | [1280x800-detail.png](evidence/ui-0.1.29/1280x800-detail.png) | 1280×800 | 114374 |
 | [1280x800-home.png](evidence/ui-0.1.29/1280x800-home.png) | 1280×800 | 165978 |
 | [1280x800-library.png](evidence/ui-0.1.29/1280x800-library.png) | 1280×800 | 221150 |
-| [1280x800-settings.png](evidence/ui-0.1.29/1280x800-settings.png) | 1280×800 | 74332 |
-| [1280x800-wishlist.png](evidence/ui-0.1.29/1280x800-wishlist.png) | 1280×800 | 83399 |
+| [1280x800-settings.png](evidence/ui-0.1.29/1280x800-settings.png) | 1280×800 | 86643 |
+| [1280x800-wish-prices.png](evidence/ui-0.1.29/1280x800-wish-prices.png) | 1280×800 | 124287 |
+| [1280x800-wishlist.png](evidence/ui-0.1.29/1280x800-wishlist.png) | 1280×800 | 86942 |
 | [1920x1080-add.png](evidence/ui-0.1.29/1920x1080-add.png) | 1920×1080 | 170742 |
 | [1920x1080-appearance.png](evidence/ui-0.1.29/1920x1080-appearance.png) | 1920×1080 | 67614 |
 | [1920x1080-detail.png](evidence/ui-0.1.29/1920x1080-detail.png) | 1920×1080 | 132637 |
 | [1920x1080-home.png](evidence/ui-0.1.29/1920x1080-home.png) | 1920×1080 | 182846 |
 | [1920x1080-library.png](evidence/ui-0.1.29/1920x1080-library.png) | 1920×1080 | 230954 |
-| [1920x1080-settings.png](evidence/ui-0.1.29/1920x1080-settings.png) | 1920×1080 | 86933 |
-| [1920x1080-wishlist.png](evidence/ui-0.1.29/1920x1080-wishlist.png) | 1920×1080 | 94628 |
+| [1920x1080-settings.png](evidence/ui-0.1.29/1920x1080-settings.png) | 1920×1080 | 99626 |
+| [1920x1080-wish-prices.png](evidence/ui-0.1.29/1920x1080-wish-prices.png) | 1920×1080 | 150363 |
+| [1920x1080-wishlist.png](evidence/ui-0.1.29/1920x1080-wishlist.png) | 1920×1080 | 99162 |
 
-Comparação visual feita com as referências fornecidas:
+Comparação com as referências:
 
-- Início: banner, texto curto, Continuar jogando, quatro jogos em andamento e atividade à direita; sem abas da Biblioteca. Botão permanece dentro do banner em ambas as resoluções.
-- Biblioteca: capas verticais, título/status, busca, adição, visualização, abas e filtros. Seis colunas no padrão largo substituem as quatro da referência por decisão explícita desta versão.
-- Desejos: cinco jogos de teste em cards uniformes, arte 1:1, preço/indisponibilidade, desconto e ações. A nova proporção prevalece sobre a foto antiga.
-- Ficha: banner, voltar, barra de execução/status/tempo/menu, abas e galeria. A captura usa Configurar execução secundário porque a fixture não tem executável, conforme a exceção solicitada.
-- Adicionar: uma barra própria, um fechamento, três fontes, seleção/check, Escolher outro resultado, informação de automação, avançado e ações. A plataforma expandida é coberta por teste de largura/altura.
-- Conexões: quatro cards 2×2, estados verdes/cinzas e botões; as presenças configuradas das capturas são simuladas, sem autenticação. Aparência mostra nove temas e o slider.
+- Início mantém banner/CTA, continuidade vertical e atividade à direita, sem abas da Biblioteca; cabe em 1280 px.
+- Biblioteca mantém cabeçalho, filtros, seleção e capas verticais; seis colunas no padrão largo seguem a decisão atual, em vez das quatro antigas.
+- Desejos mantém áreas 1:1 uniformes, logos contidas e ações alinhadas; agora apresenta histórico, atribuição, Nome A–Z e mensagens sem ID. Capas/título são alternativas quando falta logo.
+- Ficha mantém banner, voltar, barra de execução, abas e galeria. A captura sem executável mostra Configurar execução secundário. A imagem adicional da ficha de desejo mostra o painel de preços e a atribuição.
+- Adicionar mantém fechamento único, pesquisa, três fontes, resultado/check, link de troca e automação. Os testes conservam plataforma legível e seleção obrigatória.
+- Conexões conserva quatro cards 2×2 e acrescenta GG.deals abaixo. Aparência conserva nove temas e o slider.
 
-Diferenças restantes: artes/logos de jogos e textos são fixtures, não os arquivos das imagens aprovadas; a tipografia/renderização é a disponível no Linux. SteamGridDB e RAWG mantêm identificadores gráficos SG/R em vez das marcas completas. A ficha conserva metadados adicionais de gênero, lançamento, publicadora e origem; a referência os resume. A ajuda de Conexões fica em linha própria acima dos cards. Margens e espaço livre variam com a largura e a quantidade de dados; não se afirma igualdade pixel a pixel com as fotografias. Capas reais de proporções diferentes são preservadas inteiras, sem fundo desfocado. A revisão final de estética e DPI no Windows continua humana.
+Diferenças restantes: artes, logos dos jogos e conteúdo são fixtures; fontes/renderização são as do Linux. SteamGridDB e RAWG continuam com identificadores SG/R. A ficha exibe metadados adicionais; a ajuda de Conexões permanece em linha própria. O quinto card é um desvio necessário pela quantidade de serviços. Não se afirma igualdade pixel a pixel com fotografias nem validação visual Windows/DPI.
 
-## Arquivos alterados
+## Arquivo por arquivo, desde a base histórica
 
-- `.github/release-notes.md` — Texto local atualizado; nenhuma descrição de release existente foi editada no GitHub.
+A lista inclui o trabalho recebido, preservado, e a conclusão atual. O diff específico desta conclusão parte de `f0be1b9`.
+
+- `.github/release-notes.md` — Atualiza apenas o documento local; não altera nem publica uma release no GitHub.
 - `AGENTS.md` — Distingue a arte dos Desejos das capas da Biblioteca.
-- `CHANGELOG.md` — Entrada da revisão e histórico identificado como histórico.
-- `CLOUD_SETUP.md` — Branch de trabalho atual e dados isolados.
-- `CONTINUITY.md` — Base, continuidade, regras de encerramento e restrição de publicação.
-- `DESIGN.md` — Decisões atuais de tamanho, colunas e arte dos desejos.
-- `INTEGRATIONS.md` — Provedor público versus estrutura de API; cobertura e limites.
+- `CHANGELOG.md` — Atualiza a entrada 0.1.29 com a conclusão da API e a mudança da ordenação/histórico.
+- `CLOUD_SETUP.md` — Registra acesso à documentação por ferramenta web e limites de rede do executor.
+- `CONTINUITY.md` — Preserva a base e as regras de ciclo de vida; registra API implementada e proibição atual de push/publicação.
+- `DESIGN.md` — Área de arte 1:1, preços atuais/históricos e quinto card de conexão.
+- `INTEGRATIONS.md` — Documentação oficial, plano gratuito, parâmetros, quotas, atribuição, cofre e limite do desconto.
 - `PRODUCT_VISION.md` — Remove formato antigo rígido e alinha Biblioteca vertical/Desejos 1:1.
-- `PROJECT_STATUS.md` — Estado atual, pendências e limitações, sem hashes/IDs/branches.
-- `README.md` — Versão, funcionalidades e ausência de nova release.
-- `ROADMAP.md` — Pendências do dono e validação Windows.
+- `PROJECT_STATUS.md` — Estado implementado e pendências reais; sem hashes, IDs de workflow ou nomes de branch.
+- `README.md` — Estado atual da versão, preços/históricos, cofre, fallback e atribuição.
+- `RELATORIO_CORRECOES.md` — Consolida o trabalho recebido e esta conclusão, com resultados reais e diferenças visuais.
+- `ROADMAP.md` — Retira documentação oficial como bloqueio; mantém validação autenticada, revisão Windows e decisões do dono.
 - `SETUP.md` — Instalação, execução, build e dados; preferência sem mudança de schema.
-- `TESTING.md` — Comandos e cobertura atuais, isolamento e limites das capturas.
+- `TESTING.md` — Comandos, baseline atual e cobertura da API/cofre/atribuição.
 - `checkpoint/__init__.py` — Versão 0.1.29.
 - `checkpoint/auto_artwork.py` — Conclusão das imagens em linguagem simples, sem totais de tipos indisponíveis.
 - `checkpoint/card_layout.py` — Métrica única de colunas/tamanho/espaçamento e conversão da preferência de densidade.
-- `checkpoint/collection_views.py` — Arte 1:1, alternativas de capa/título, descontos, ordenação, restauração da rolagem e ações adaptáveis nos cards pequenos.
+- `checkpoint/collection_views.py` — Preserva arte 1:1/ações/scroll; adiciona atribuição, ordenações novas e espaço para preço/histórico/ausência de ID.
 - `checkpoint/cover_grid.py` — Capas verticais, tamanho responsivo e rolagem por pixel.
 - `checkpoint/data_migration.py` — Identificador de paleta legada centralizado; mesma conversão, sem alterar schema, backup ou origem.
 - `checkpoint/design_system.py` — Áreas de rolagem suave e referência à área criada para restaurar posição.
 - `checkpoint/dialogs.py` — Conclusão aguarda jobs em qualquer hierarquia; origem Busca e plataforma da ROM.
 - `checkpoint/enrichment.py` — Mensagem de ficha preenchida e orientação de falha, sem relatório técnico de totais.
 - `checkpoint/game_import.py` — Metadados selecionados completam o novo cadastro na mesma transação, com origem correta.
+- `checkpoint/ggdeals_connection.py` — Novo card com campo mascarado, Salvar/Remover apenas no cofre, limpeza da entrada e estado verde/cinza.
 - `checkpoint/home_view.py` — Seleção por andamento/recência, ausência de arte aleatória e composição que cabe em 1280 px.
 - `checkpoint/integrations/drive.py` — Limpeza conservadora de extensão, tags e plataforma; preserva original_name.
 - `checkpoint/integrations/ggdeals.py` — Preço original da oferta, desconto calculado e rejeição de preço zero.
-- `checkpoint/integrations/price_provider.py` — Contrato de preços e implementação separada da API, sem transporte real.
-- `checkpoint/price_view.py` — Preço atual, original riscado, desconto e indisponibilidade legível.
-- `checkpoint/prices.py` — Validação de BRL/valor positivo, último valor válido e ordenação dos desejos.
+- `checkpoint/integrations/ggdeals_api.py` — Novo parser oficial, transporte HTTPS sem redirecionamento autenticado, BRL, nulos, menor atual/histórico separados e erros fixos sem segredo.
+- `checkpoint/integrations/price_provider.py` — Contrato com histórico/tipo de oferta e reexportação do provedor oficial implementado.
+- `checkpoint/price_queue.py` — Fila sem jogos sem ID Steam; falhas registram apenas mensagem fixa e versão de configuração.
+- `checkpoint/price_view.py` — Atribuição ativa, histórico sem desconto, tipo do menor preço, mensagem sem Steam e proteção contra moeda de cache incompatível.
+- `checkpoint/prices.py` — Seleção API/fallback, ausência de ID Steam, cache, revisão da configuração e ordenação por nome ou menor preço.
 - `checkpoint/quick_add.py` — Estados de consulta/conclusão, detalhes aguardados, fechamento único e simplificação das opções visíveis.
-- `checkpoint/settings_view.py` — Slider 70–150%, padrão 100%, no lugar da densidade.
+- `checkpoint/settings_view.py` — Preserva slider e quatro cards existentes; acrescenta GG.deals abaixo e opção de fallback em Avançado.
 - `checkpoint/smooth_scroll.py` — Animação de 180 ms sobre a barra vertical e tratamento por pixel.
 - `checkpoint/statistics_view.py` — Uso da área de rolagem animada.
-- `checkpoint/theme.py` — Barras temáticas, slider e selo de desconto; nove paletas preservadas.
+- `checkpoint/theme.py` — Mantém nove temas e acabamento anterior; aplica a superfície comum ao card GG.deals.
 - `checkpoint/ui_components.py` — Recalcula a área do banner para manter o botão dentro dela ao redimensionar.
-- `checkpoint/window.py` — Atualiza tamanho sem reconstruir os itens, preserva a página no refresh e distingue estados vazios.
+- `checkpoint/window.py` — Mantém as correções anteriores; acrescenta status GG.deals e injeção do cofre para testes controlados.
 - `checkpoint/window_style.py` — Barra própria do diálogo, fechamento e arraste.
 - `evidence/checkpoint-015-validation.txt` — Troca do nome da paleta descontinuada por descrição genérica; números e marcação histórica preservados.
+- `evidence/validation-0.1.29.txt` — Resultados reais desta conclusão, com baseline, etapas, caso Drive e smokes.
 - `pyproject.toml` — Versão 0.1.29; dependências e schema mantidos.
-- `scripts/LEIA-ME.txt` — Orientação simples para a revisão atual, dados, cadastro e tamanho das capas.
-- `scripts/render_ui_review.py` — Matriz das seis telas em duas resoluções, Aparência adicional e composição declarada do diálogo.
+- `scripts/LEIA-ME.txt` — Instruções simples de GG.deals no cofre, ordenação e diferença entre histórico e desconto.
+- `scripts/render_ui_review.py` — Capturas com preços fictícios processados pelo parser oficial, campo de chave vazio e ficha de desejo adicional.
 - `tests/test_add_dialog_0129.py` — Fechamento único, plataforma legível, seleção e opções visíveis.
 - `tests/test_card_layout.py` — Colunas, migração da densidade, persistência, mesma fórmula e ações legíveis em 70%.
 - `tests/test_complete_layout.py` — Atualiza expectativa antiga de colunas para o comportamento responsivo.
 - `tests/test_data_migration.py` — Mantém teste de conversão da preferência usando a constante de compatibilidade.
 - `tests/test_enrichment.py` — Mensagens novas e metadados já preenchidos na importação.
+- `tests/test_ggdeals_api.py` — JSON documentado com BRL/nulos/campos ausentes/valores inválidos, parâmetros, erros sem segredo, fallback e preservação do cache.
+- `tests/test_ggdeals_connection.py` — Cofre em memória, entrada mascarada/limpa, Salvar/Remover, estados, ausência de segredo no banco/log/texto e reconsulta após configuração.
 - `tests/test_home_0129.py` — Andamento/recência, ausência de abas, estado vazio, largura e botão dentro do banner.
-- `tests/test_prices_0129.py` — Preço original/desconto, ausência de original, zero, API sem transporte, ordenação e rolagem.
+- `tests/test_price_display_official.py` — Histórico sem percentual, moeda incompatível não exibida em reais, ordenação, atribuição e fila sem Steam.
+- `tests/test_prices_0129.py` — Preserva o teste público com original explícito e atualiza testes para API sem chave, Nome A–Z e menor preço atual.
 - `tests/test_quick_add.py` — Regressão de diálogo aninhado com job pendente e estado de conclusão.
 - `tests/test_registration_0128.py` — CTAs de abas/filtros e biblioteca vazia, sem regressão de desejos já possuídos.
 - `tests/test_revision_0128.py` — Arte 1:1 dos desejos e colunas responsivas, preservando limites dos cards.
 - `tests/test_rom_titles_0129.py` — Cinco nomes típicos e preservação do original/plataforma no índice.
 - `tests/test_search_save_0129.py` — Salvar durante detalhes pendentes e conferir desenvolvedora, editora, descrição e origem no SQLite.
 - `tests/test_smooth_scroll.py` — Roda com 500 jogos, pixel/animação e áreas das demais telas.
-- `tests/test_ui_redesign.py` — Controle de tamanho substitui a expectativa antiga de densidade.
-- `RELATORIO_CORRECOES.md` — relatório desta revisão, substituindo o relatório atual anterior; o histórico permanece no Git e no CHANGELOG.
-- `evidence/ui-0.1.29/*.png` — 14 capturas listadas acima, uma por caminho.
-- `evidence/ui-0.1.29/review-info.json` — ambiente, resoluções e natureza das fixtures/composição.
-- `evidence/validation-0.1.29.txt` — resumos reais de validação.
+- `tests/test_ui_redesign.py` — Atualiza a contagem de estados configurados para as cinco conexões.
+- `evidence/ui-0.1.29/*.png` — cada captura individual está listada na tabela acima; as anteriores continuam no histórico do Git.
+- `evidence/ui-0.1.29/review-info.json` — ambiente, fixtures, chave ausente e composição do diálogo.
 
-## Auditoria e limitações
+`SETUP.md` foi revisado e mantido: já contém somente instalação, execução, build e dados. Módulo/pyproject já estavam em 0.1.29 e foram mantidos. Não se criou migração de schema.
 
-Busca case-insensitive pelo identificador anterior: zero ocorrências fora do CHANGELOG; as menções históricas no CHANGELOG foram preservadas. Não há paleta descontinuada no seletor, swatches ou catálogo de temas. Seu valor legado só é reconhecido na fronteira de migração e no teste correspondente. O schema continua 4. A identidade checkpo//nt e os arquivos do ícone da base não foram substituídos.
+## Limitações e pendências do dono
 
-Não foram lidas ou expostas credenciais reais. Nenhuma chave foi criada ou registrada em arquivos, logs ou testes novos. Não foram validados Windows real, DPI, cofre nativo real, contas de Steam/Drive/RAWG/SteamGridDB, bloqueios reais de GG.deals, nem API oficial autenticada. Não foi gerado executável Windows nesta revisão.
+A documentação foi acessada pela ferramenta web. O cliente HTTP do executor retornou URLError e os hosts GG.deals não constam na política aplicada. Não houve chamada real autenticada à API, nem teste com conta/chave real. Não foram validados Windows real, DPI, cofre nativo, contas Steam/Drive/RAWG/SteamGridDB/GG.deals ou bloqueios reais da página pública.
 
-Pendências do dono: documentação oficial e chave própria para a futura API GG.deals; remoção da pré-release v0.1.28 publicada por engano; revisão visual e validação em Windows real. A futura unificação dos componentes de cadastro permanece uma decisão separada.
+As decisões conservadoras foram: conservar os dez commits anteriores; manter a branch e versão; fallback público configurável sem fallback silencioso com chave; consulta automática apenas com Steam; preço histórico separado; Nome A–Z como padrão; quinto card abaixo dos quatro; nenhuma fusão dos três componentes de cadastro; commits somente locais, sem publicação.
+
+Dependem do dono: configurar a chave no aplicativo Windows e validar acesso real; remover a pré-release v0.1.28 publicada por engano; decidir sobre futura fonte que forneça preço original se quiser percentuais pela API. Histórico não será usado como desconto. A revisão de estética/DPI permanece humana. Não foi gerado pacote Windows.

@@ -2,13 +2,13 @@
 
 Registros anteriores descrevem o estado de cada versão; não são instruções atuais.
 
-## 0.1.29 — revisão de uso e estabilidade
+## 0.1.29 — revisão de uso, estabilidade e conclusão da API
 
 - Tamanho das capas de 70% a 150%, preferência persistida e conversão da densidade anterior; seis colunas no padrão largo, com redução responsiva.
 - Início com destaque e continuidade somente de jogos em andamento, sem abas de Biblioteca e com estado vazio.
 - Rolagem por pixel animada em 180 ms e barras discretas na cor do tema.
-- Desejos com arte 1:1, logo contida, capa/título como alternativas, preço original riscado, desconto e ordenação, preservando rolagem após atualização.
-- Contrato de provedores de preços, parser do preço original e estrutura separada da API oficial, sem transporte real enquanto faltar documentação.
+- Desejos com arte 1:1, logo contida, capa/título como alternativas, preços atuais e menores históricos; Nome A–Z padrão ou menor preço atual, preservando rolagem após atualização. Preço original/desconto somente quando explícitos na página pública.
+- API oficial GG.deals conforme documentação, com chave apenas no cofre, BRL, identidade Steam e erros sem exposição de segredo. Fallback público configurável e atribuição em todas as telas de preços.
 - Busca aguarda detalhes antes de salvar, grava dados completos e origem Busca; mensagens de conclusão simplificadas.
 - Cadastro com barra própria e um fechamento, plataforma legível, seleção obrigatória e automação como informação; limpeza de títulos de ROM preserva o nome original e a plataforma.
 - Estados vazios e confirmação de desejos verificados, incluindo a proteção de jogos já possuídos.

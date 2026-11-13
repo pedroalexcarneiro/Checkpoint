@@ -39,3 +39,14 @@ def test_wishlist_and_detail_have_active_attribution_and_no_steam_queue(library,
     assert label.openExternalLinks() and 'https://gg.deals/' in label.text()
     queue=PriceQueue(library,window);queue.submit([identity]);assert not queue.pending and queue.active is None
     window.close()
+
+
+def test_foreign_currency_cache_never_renders_as_reais(library,app):
+    from types import SimpleNamespace
+    from checkpoint.price_view import comparison
+    identity=library.save_game({'title':'Example'})
+    library.set_setting(f'prices.ggdeals.{identity}',{'provider':'api','currency':'USD','lowest':6000,'retail':6000,'keyshop':5000,'historical':1900})
+    game=library.get(identity)
+    summary=price_summary(library,game);detail=comparison(SimpleNamespace(library=library),game)
+    labels=summary.findChildren(QLabel)+detail.findChildren(QLabel)
+    assert not any('R$' in label.text() for label in labels)

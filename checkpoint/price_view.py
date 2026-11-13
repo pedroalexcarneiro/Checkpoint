@@ -27,8 +27,13 @@ def has_steam_id(library,game):
     return library.sql.execute("SELECT 1 FROM external_identifiers WHERE game_id=? AND provider='steam'",(game['id'],)).fetchone() is not None
 
 
+def display_snapshot(library,game):
+    value=snapshot(library,game['id'])
+    return value if value.get('currency','BRL')=='BRL' else {}
+
+
 def price_summary(library,game):
-    value=snapshot(library,game['id']);frame=QWidget();frame.setFixedHeight(92);row=QVBoxLayout(frame);row.setContentsMargins(0,0,0,0);row.setSpacing(2)
+    value=display_snapshot(library,game);frame=QWidget();frame.setFixedHeight(92);row=QVBoxLayout(frame);row.setContentsMargins(0,0,0,0);row.setSpacing(2)
     current=value.get('lowest');usable=type(current) is int and current>0 and value.get('currency','BRL')=='BRL'
     stale=value.get('state') in ('unavailable','missing_steam_id') and usable
     label=text('Último preço salvo' if stale else 'Menor preço atual','caption');label.setWordWrap(False);row.addWidget(label)
@@ -49,7 +54,7 @@ def price_summary(library,game):
 
 
 def comparison(window,game):
-    value=snapshot(window.library,game['id']);frame,inside=card();head=QHBoxLayout();head.addWidget(text('Últimos preços consultados' if value.get('state') in ('unavailable','missing_steam_id') else 'Preços atuais','sectionTitle'));head.addStretch();head.addWidget(source_link(window.library,game,'Abrir comparação ↗'));inside.addLayout(head);inside.addWidget(attribution_link(),0,Qt.AlignLeft)
+    value=display_snapshot(window.library,game);frame,inside=card();head=QHBoxLayout();head.addWidget(text('Últimos preços consultados' if value.get('state') in ('unavailable','missing_steam_id') else 'Preços atuais','sectionTitle'));head.addStretch();head.addWidget(source_link(window.library,game,'Abrir comparação ↗'));inside.addLayout(head);inside.addWidget(attribution_link(),0,Qt.AlignLeft)
     if not has_steam_id(window.library,game):inside.addWidget(text('Sem ID da Steam para consulta','caption'))
     if type(value.get('historical')) is int and value['historical']>0:inside.addWidget(text('Menor histórico: '+money(value['historical']),'muted'))
     for kind,title,key,anchor in [('retail','Lojas oficiais','retail','official-stores'),('keyshop','Lojas de chaves','keyshop','keyshops')]:
