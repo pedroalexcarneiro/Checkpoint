@@ -55,13 +55,16 @@ arte no arquivo ou na pasta do Drive e não se baixa a ROM ao cadastrá-la.
   inclusive em cadastro existente e complete_identity, mantendo a transação.
 - checkpoint/enrichment.py: origem atualizada ao preencher texto confirmado;
   imagens automáticas de ROM somente da fonte SteamGridDB.
-- checkpoint/window.py: recuperação manual usa o cadastro existente; sem dados
+- checkpoint/window.py: mantém add_game() sem argumentos de sinal Qt e separa
+  open_add_game(drive_file=...) para o fluxo interno; recuperação manual usa o cadastro existente; sem dados
   não inicia enriquecimento sem identidade e informa o resultado na barra.
 - checkpoint/detail_view.py: aviso persistente e botão Pesquisar manualmente.
 - tests/test_drive_metadata_policy.py: comprova por cliques a recuperação do
   mesmo jogo sem duplicata; confere que RAWG preenche texto mas não salva arte.
 - tests/test_quick_add.py: atualiza somente a expectativa de origem sem texto,
   de Google Drive para Não identificada. As demais asserções são preservadas.
+- tests/test_add_dialog_entrypoints.py: clique real em Adicionar desejo para
+  impedir que clicked(bool) seja confundido com um arquivo do Drive.
 - checkpoint/__init__.py e pyproject.toml: versão 0.1.30.
 - README.md, CHANGELOG.md, CONTINUITY.md e PROJECT_STATUS.md: estado e regras atuais.
 - RELATORIO_0130_DRIVE.md: resultados, diff, decisões e limitações desta tarefa.
@@ -447,19 +450,21 @@ index d356fc1..10ca20c 100644
      def use_name(self):
          self.timer.stop();self.generation+=1;self.state.clear();self.dialog.validate()
 diff --git a/checkpoint/window.py b/checkpoint/window.py
-index b4df9bd..2dbe15e 100644
+index b4df9bd..1235e20 100644
 --- a/checkpoint/window.py
 +++ b/checkpoint/window.py
-@@ -280,10 +280,16 @@ class MainWindow(QMainWindow):
+@@ -280,10 +280,19 @@ class MainWindow(QMainWindow):
              row = self.table.currentRow(); item = self.table.item(row,0) if row>=0 else None
          if item: self.detail(item.data(Qt.UserRole))
 
--    def add_game(self):
 +    def search_game_data(self,game_id):
 +        file=self.library.sql.execute('SELECT * FROM game_files WHERE game_id=? AND drive_id IS NOT NULL ORDER BY id LIMIT 1',(game_id,)).fetchone()
-+        if file:self.add_game(drive_file=dict(file))
++        if file:self.open_add_game(drive_file=dict(file))
 +
-+    def add_game(self,drive_file=None):
+     def add_game(self):
++        self.open_add_game()
++
++    def open_add_game(self,drive_file=None):
          wish=self.current_page==2
          owned_before={game['id'] for game in self.library.owned_games()}
          dialog = GameDialog(self,library=self.library,purpose='wish' if wish else 'library')
@@ -468,7 +473,7 @@ index b4df9bd..2dbe15e 100644
          result=dialog.exec()
          if dialog.steam_requested:
              QTimer.singleShot(0,self.steam);return
-@@ -301,7 +307,9 @@ class MainWindow(QMainWindow):
+@@ -301,7 +310,9 @@ class MainWindow(QMainWindow):
                  self.detail_notice=(game_id,message) if wish else None
                  self.refresh_library();self.detail(game_id)
                  self.statusBar().showMessage(message)
@@ -478,12 +483,11 @@ index b4df9bd..2dbe15e 100644
 +                elif dialog.complete_on_save.isChecked():
                      self.completion_queue.submit([game_id])
              self.guard(save)
-
 ```
 
-## Suíte completa
+## Primeira suíte completa (antes da revisão de assinatura)
 
-Comando no código final da correção, incluindo a versão 0.1.30:
+Comando no primeiro código da correção, incluindo a versão 0.1.30:
 
 ```bash
 QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -X faulthandler -m pytest tests -q -p no:cacheprovider
@@ -502,7 +506,7 @@ Saída completa, exit 0:
 
 302 passaram, 0 falhas e 0 erros, em 500,23 s. A base tinha 296 testes;
 os quatro casos de fluxo Drive e dois de política/recuperação somam seis novos.
-Nenhum skip/xfail foi acrescentado, nenhuma asserção foi removida e a suíte
+Nenhum skip/xfail foi acrescentado, nenhuma verificação foi suprimida e a suíte
 inclui o teste original de lifecycle. A queda nativa parcial não se reproduziu
 nessa execução completa, sem atribuir a ela uma causa/correção não demonstrada.
 
@@ -556,3 +560,53 @@ não se apresentam testes com provedores controlados como integração autentica
 Nenhuma dependência foi instalada. Não foram geradas capturas de revisão novas.
 A ocorrência nativa isolada no GC permanece registrada como limitação de estabilidade,
 sem alegação de causa resolvida. Dados antigos, releases e schema foram preservados.
+
+## Revisão final da entrada por botão
+
+Após a primeira suíte, a inspeção dos sinais encontrou um problema de assinatura:
+add_game(drive_file=None), ligado diretamente a clicked(bool) na página Desejos,
+poderia interpretar False como arquivo. A assinatura pública original add_game()
+foi mantida, delegando para open_add_game(drive_file=...) somente internamente.
+O teste por clique cancela o diálogo sem buscar dados externos, sem mockar o sinal.
+O teste original de Drive e seu suporte continuam byte a byte iguais aos da base.
+
+Comando focal final: pytest tests/test_add_dialog_entrypoints.py
+tests/test_drive_search_flow.py tests/test_drive_metadata_policy.py -q -p no:cacheprovider,
+com o mesmo ambiente offscreen/isolado e -X faulthandler. Exit 0:
+
+```text
+.......                                                                  [100%]
+7 passed in 8.73s
+```
+
+## Suíte completa no código final
+
+Código do app/testes do commit d584acc, após o ajuste de assinatura;
+somente documentação foi atualizada depois desta execução.
+
+```bash
+QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -X faulthandler -m pytest tests -q -p no:cacheprovider
+```
+
+Saída completa, exit 0:
+
+```text
+........................................................................ [ 23%]
+........................................................................ [ 47%]
+........................................................................ [ 71%]
+........................................................................ [ 95%]
+...............                                                          [100%]
+303 passed in 546.27s (0:09:06)
+```
+
+Resultado final: 303 passaram, 0 falhas e 0 erros, em 546,27 s. São os 296 testes
+originais e sete novos casos. A suíte inclui o lifecycle original, sem exclusões.
+Não houve skip/xfail novo nem supressão de verificações; uma expectativa de origem
+no teste antigo foi atualizada conforme a regra nova. Teste e suporte de reprodução
+Drive permaneceram idênticos aos usados na base. A cópia temporária da base foi
+removida depois de comparar os hashes; nenhuma pasta pessoal foi usada.
+
+A primeira suíte (302 testes) e a suíte final (303) terminaram com saída 0.
+A queda nativa parcial isolada permanece documentada, sem alegação de correção.
+Entrega em cinco commits pequenos, sem rebase/force push; somente fix/0.1.30
+é enviada. A versão 0.1.29, tags e releases foram preservadas.

@@ -24,4 +24,4 @@ a busca. Detalhes e saídas completas: RELATORIO_FLUXO_BUSCA_0.1.29.md.
 
 Suíte integral desta prova: 296 passaram em 387,99 s; sem falhas/erros, skips ou xfails novos.
 
-Validação 0.1.30: 302 testes passaram em 500,23 s, exit 0. Os quatro casos Drive falharam na base e passaram sem alteração de teste/suporte. Rodada parcial com queda no GC e repetição bem-sucedida estão integralmente documentadas no RELATORIO_0130_DRIVE.md. Windows e fontes reais ainda não validados nesta versão.
+Validação final 0.1.30: 303 testes passaram em 546,27 s, exit 0. A revisão adicional preserva add_game() sem argumentos para clicked(bool), com teste de abertura por Desejos. Os quatro casos Drive falharam na base e passaram sem alteração de teste/suporte. Rodada parcial com queda no GC e repetição bem-sucedida estão integralmente documentadas no RELATORIO_0130_DRIVE.md. Windows e fontes reais ainda não validados nesta versão.
