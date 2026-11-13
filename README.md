@@ -1,6 +1,6 @@
 # Checkpoint
 
-Biblioteca pessoal de jogos para Windows, em português do Brasil. Código-fonte atual: **0.1.30**, Python 3.12, PySide6 e SQLite (schema 4). A 0.1.30 está em desenvolvimento, sem release. A [pré-release 0.1.29](https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.29) permanece disponível.
+Biblioteca pessoal de jogos para Windows, em português do Brasil. Código-fonte atual: **0.1.30**, Python 3.12, PySide6 e SQLite (schema 4). A [pré-release 0.1.30](https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.30) está disponível com portátil Windows x64, código-fonte, evidências e hashes. O Windows CI executou 303 testes sem falhas, erros ou skips, além de build e smokes do pacote extraído. Contas reais e diferentes DPIs não foram homologados.
 
 A Biblioteca tem capas verticais e tamanho ajustável entre 70% e 150%, com seis colunas no padrão em janela larga. Desejos tem arte 1:1, logos contidas, preços atuais e menores históricos quando disponíveis. A ordenação padrão é Nome A–Z, com alternativa por menor preço atual. Início reúne jogos em andamento e atividade pessoal; a ficha reúne banner, execução, informações e galeria.
 

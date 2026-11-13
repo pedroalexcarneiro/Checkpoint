@@ -2,14 +2,14 @@
 
 Registros anteriores descrevem o estado de cada versão; não são instruções atuais.
 
-## 0.1.30 — ficha e pesquisa de ROM do Drive (sem release)
+## 0.1.30 — ficha e pesquisa de ROM do Drive
 
 - Pesquisa usa o nome limpo da ROM e preserva plataforma, nome original e vínculo.
 - Salvar aguarda a pesquisa/detalhes; textos selecionados são persistidos com origem Busca.
 - Textos RAWG/Steam e artes SteamGridDB separados do arquivo do Drive, sem download de ROM no cadastro.
 - Sem resultado/falha da fonte: aviso persistente e pesquisa manual que recupera o mesmo cadastro.
 - Fluxo por cliques reproduzido na 0.1.29 e verificado com provedores controlados na branch fix/0.1.30; schema 4 preservado.
-- Relatório completo em RELATORIO_0130_DRIVE.md. Sem tag, release ou PR.
+- Relatório completo em RELATORIO_0130_DRIVE.md. A correção foi entregue sem tag/release/PR; após autorização posterior, a pré-release v0.1.30 foi publicada com 303 testes Windows e smokes do portátil aprovados, no commit c51c245.
 
 ## 0.1.29 — revisão de uso, estabilidade e conclusão da API
 

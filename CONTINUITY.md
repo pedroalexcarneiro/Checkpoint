@@ -8,7 +8,7 @@ Não volte a permitir que um GameDialog conclua enquanto seus jobs de busca est�
 
 Valide com QT_QPA_PLATFORM=offscreen, CHECKPOINT_TEST_ROOT em /tmp e --data-dir novo nos smokes. O schema permanece 4; a migração copia e preserva a origem. Nunca consultar cofre real em testes.
 
-Não criar tags, releases ou PRs nesta tarefa; dar push somente de fix/0.1.30, sem force. A pré-release 0.1.29 já existe e deve ser preservada, assim como as demais releases. A API oficial GG.deals permanece inalterada. Não fundir os componentes de cadastro sem decisão do dono.
+Na etapa de correção não houve tag/release/PR. Depois, o dono autorizou publicar a versão: v0.1.30 está publicada no commit c51c2456f8479f208d73a1281eb0dfada8ee7213, após Windows CI com 303 testes sem falhas/erros/skips, build e smokes. O workflow de publicação é publish-0.1.30.yml, fixado na execução validada 43482592085. Preserve essa tag/release e as anteriores; não altere publicações sem novo pedido. Push de continuidade somente da branch de trabalho, sem force. A API oficial GG.deals permanece inalterada. Não fundir os componentes de cadastro sem decisão do dono.
 
 No cadastro Drive, arquivo e origem de dados são independentes: origem Busca quando houver texto do catálogo; Não identificada quando não houver dados. Salvar fica indisponível até a pesquisa/detalhes terminarem. Sem resultado/falha, manter aviso e ação de pesquisa manual; não iniciar enriquecimento sem identidade para esconder o resultado da busca. Ao pesquisar novamente, preservar o vínculo da ROM e preencher o mesmo cadastro. Artes persistidas de ROMs devem vir do SteamGridDB, não do Drive nem da imagem RAWG/Steam. Provas, diffs e limitações em RELATORIO_0130_DRIVE.md.
 

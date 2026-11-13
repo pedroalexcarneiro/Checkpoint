@@ -1,5 +1,11 @@
 # Estado atual — Checkpoint 0.1.30
 
+## Publicação posterior autorizada
+
+Em 13/11/2026, após o pedido de publicação, a pré-release v0.1.30 foi publicada a partir de c51c2456f8479f208d73a1281eb0dfada8ee7213. Windows CI: 303 testes, zero falhas/erros/skips, build, smokes do fonte/executável extraído e revisão visual com fixtures aprovados (execução 43482592085). Publicação validada pela execução 43484462109. Código do app preservado; somente workflow e documentação acrescentados depois do commit da release. Download: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.30
+
+A homologação no computador pessoal, contas reais e diferentes DPIs continua pendente. A etapa de correção abaixo usou Linux; o Windows CI foi executado posteriormente para publicar.
+
 ## Correção do cadastro Drive
 
 Branch fix/0.1.30 a partir de 90dec8e, sem alterar fix/0.1.29 nem releases. Cadastro de ROM pesquisa o nome limpo, aguarda os detalhes e grava textos com origem Busca; o arquivo fica vinculado e não é baixado. Arte persistida de ROM usa SteamGridDB. Sem dados: origem Não identificada, aviso persistente e botão Pesquisar manualmente; a recuperação reutiliza o cadastro e mantém o arquivo. Relatório: RELATORIO_0130_DRIVE.md.
