@@ -16,3 +16,7 @@ def style_add_dialog(dialog):
     for button in (quick.save,quick.cancel):
         button.setMinimumHeight(HEIGHT['button']);button.setSizePolicy(QSizePolicy.Maximum,QSizePolicy.Fixed)
     quick.save.setProperty('variant','primary');quick.cancel.setProperty('variant','secondary')
+
+    from .catalog_result_visuals import CatalogResultDelegate
+    quick.results.setItemDelegate(CatalogResultDelegate(quick,quick.results))
+    quick.results.setSpacing(SPACE['xxs']);quick.results.setMouseTracking(True)
