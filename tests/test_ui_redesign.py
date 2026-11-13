@@ -34,7 +34,7 @@ def test_settings_are_compact_and_restore_selected_section(library,app,monkeypat
     assert [window.settings_tabs.tabText(i) for i in range(4)]==['Aparência','Conexões','Downloads','Dados e backup']
     window.settings_tabs.setCurrentIndex(1)
     labels=[label.text() for label in window.settings_tabs.currentWidget().findChildren(QLabel)]
-    assert labels.count('Configurado')==4 and 'Conectado' not in labels
+    assert labels.count('Configurado')==5 and 'Conectado' not in labels
     window.navigate(0);window.navigate(5)
     assert window.settings_tabs.currentIndex()==1
     window.close()

@@ -54,10 +54,17 @@ def build_settings(window):
         from .theme import get_theme
         dot.setStyleSheet('color: '+(get_theme('green').colors['accent'] if configured else window.theme.colors['muted']));state.addWidget(dot);state.addWidget(text('Configurado' if configured else 'Não configurado','muted'));state.addStretch();words.addLayout(state);head.addLayout(words,1);head.setSpacing(18);head.addWidget(action('Gerenciar' if configured else 'Conectar',callback,not configured));inside.addLayout(head);inside.setContentsMargins(18,16,18,16);grid.add_card(frame)
     connections.addWidget(grid)
+    from .ggdeals_connection import GgDealsConnection
+    connections.addWidget(GgDealsConnection(window))
     from .design_system import IconButton
     help_row=QHBoxLayout();help_row.addStretch();help_button=IconButton('help','Ajuda sobre conexões',lambda:QMessageBox.information(window,'Conexões','Configurado indica uma credencial salva. Use Gerenciar para verificar o acesso.'));help_row.addWidget(help_button);connections.insertLayout(0,help_row)
     extra=QWidget();inside=QVBoxLayout(extra);inside.setContentsMargins(0,0,0,0);inside.addWidget(action('Completar fichas e imagens da biblioteca',window.complete_library));inside.addWidget(action('Pesquisar metadados manualmente',window.metadata))
     prices=QCheckBox('Consultar preços do GG.deals automaticamente');prices.setChecked(window.library.setting('prices.auto',True));prices.toggled.connect(lambda value:window.library.set_setting('prices.auto',value));inside.addWidget(prices)
+    fallback=QCheckBox('Usar a página pública do GG.deals quando não houver chave');fallback.setChecked(window.library.setting('prices.public_fallback',True));inside.addWidget(fallback)
+    def public_changed(value):
+        from .prices import invalidate_prices
+        window.library.set_setting('prices.public_fallback',value);invalidate_prices(window.library)
+    fallback.toggled.connect(public_changed)
     disclosure('Avançado',extra,connections);connections.addStretch()
     for key,title in [('downloads','ROMs baixadas'),('captures','Capturas'),('save_backups','Backups de saves')]:downloads.addWidget(folder_row(window,key,title))
     downloads.addStretch()

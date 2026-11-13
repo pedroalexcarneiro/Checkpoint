@@ -562,11 +562,12 @@ class MainWindow(QMainWindow):
                 self.detail(self.current_game)
 
     def integration_status(self,provider):
-        key = {'Google Drive':'drive-readonly','RAWG':'rawg','SteamGridDB':'steamgriddb','Steam':'steam'}.get(provider)
+        key = {'Google Drive':'drive-readonly','RAWG':'rawg','SteamGridDB':'steamgriddb','Steam':'steam','GG.deals':'ggdeals'}.get(provider)
         if not key: return 'Provedor ainda não implementado'
         try:
             from .credentials import CredentialVault
-            return 'Credencial salva · conexão não verificada' if CredentialVault().get(key) else 'Não configurada'
+            vault=getattr(self,'ggdeals_vault_factory',CredentialVault)() if provider=='GG.deals' else CredentialVault()
+            return 'Credencial salva · conexão não verificada' if vault.get(key) else 'Não configurada'
         except Exception: return 'Cofre de credenciais indisponível'
 
     def configure_key(self,provider):

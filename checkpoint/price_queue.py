@@ -30,7 +30,7 @@ class PriceQueue(QObject):
     def failed(self,message):
         from .library import now
         from .prices import snapshot
-        identity=self.active.property('gameId');previous=snapshot(self.library,identity);previous.update({'attempted_at':now(),'state':'unavailable','message':'A consulta de preços não foi concluída.'});self.library.set_setting(f'prices.ggdeals.{identity}',previous);self.updated.emit(identity)
+        identity=self.active.property('gameId');previous=snapshot(self.library,identity);previous.update({'config_version':self.library.setting('prices.config_version',0),'attempted_at':now(),'state':'unavailable','message':'A consulta de preços não foi concluída.'});self.library.set_setting(f'prices.ggdeals.{identity}',previous);self.updated.emit(identity)
     @Slot()
     def finished(self):
         self.active.deleteLater();self.active=None

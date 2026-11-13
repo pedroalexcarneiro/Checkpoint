@@ -93,7 +93,7 @@ QListWidget#coverGrid::item {{ padding: 0; margin: 0; border: none; background: 
 QListWidget#gameSearchResults {{ background: transparent; border: none; padding: 0; }}
 QListWidget#gameSearchResults::item {{ background: {c['panel']}; border: 1px solid transparent; border-radius: 8px; padding: 9px 12px; }}
 QListWidget#gameSearchResults::item:selected {{ background: {c['selected']}; border-color: {c['accent']}; }}
-QFrame#panel, QFrame#activityCard, QFrame#addPreview, QFrame#emptyState {{ background: qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 {blend(c['panel'],c['text'],.016)},stop:1 {c['panel']}); border: 1px solid {blend(c['border'],c['panel'],.36)}; border-radius: 11px; }}
+QFrame#panel, QFrame#ggdealsConnection, QFrame#activityCard, QFrame#addPreview, QFrame#emptyState {{ background: qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 {blend(c['panel'],c['text'],.016)},stop:1 {c['panel']}); border: 1px solid {blend(c['border'],c['panel'],.36)}; border-radius: 11px; }}
 QFrame#emptyState {{ border: 1px dashed {c['border']}; }}
 QToolButton#disclosure {{ background: transparent; border: none; border-top: 1px solid {c['border']}; border-bottom: 1px solid {c['border']}; border-radius: 0; padding: 10px 12px; text-align: left; }}
 QLabel#iconBadge, QLabel#activityBadge, QLabel#serviceBadge {{ background: {c['selected']}; border-radius: 12px; }}
