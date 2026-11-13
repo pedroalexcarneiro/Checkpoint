@@ -67,7 +67,7 @@ def test_large_steam_import_keeps_dialog_bounded_without_per_game_log(library,ap
     app.processEvents()
     assert dialog.size()==before
     assert dialog.height()<=760 and dialog.width()<=1100
-    assert '300/300 processados' in dialog.state.text()
+    assert '300 jogos processados de 300' in dialog.state.text()
     assert '\n' not in dialog.state.text() and len(dialog.state.text())<150
     dialog.close()
 
