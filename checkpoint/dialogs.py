@@ -144,7 +144,7 @@ class GameDialog(QDialog):
         self.load_drive_file(self.drive_results[index])
     def load_drive_file(self,file):
         if hasattr(self,'quick_add'):self.quick_add.suspend=True
-        from .integrations.drive import normalize_rom_name
+        from .integrations.drive import normalize_rom_name,rom_identity
         if not hasattr(self,'quick_add'):self.source_tabs.setCurrentIndex(1);self.drive_toggle.setChecked(True)
         self.drive_file_id=file['id'];self.catalog_result=None
         for key in ('genre','developer','publisher','release_date','description','cover','banner','logo','executable'):
@@ -152,7 +152,7 @@ class GameDialog(QDialog):
             if isinstance(widget,QTextEdit):widget.clear()
             else:widget.clear()
         self.fields['title'].setText(normalize_rom_name(file['original_name']))
-        self.fields['platform'].setText(file['platform'] or '')
+        self.fields['platform'].setText(file['platform'] or rom_identity(file['original_name'])[1])
         self.fields['source'].setText('Google Drive')
         if file['game_id']:
             existing=self.library.get(file['game_id'])

@@ -37,9 +37,27 @@ def validate_id(file_id):
     if not re.fullmatch(r'[A-Za-z0-9_-]+',file_id): raise ValueError('Identificador do Drive inválido.')
     return file_id
 
-def normalize_rom_name(name):
-    name = Path(name).stem
-    return re.sub(r'\s+',' ',re.sub(r'\([^)]*\)|\[[^]]*\]','',name).replace('_',' ')).strip()
+def rom_identity(name):
+    stem=Path(name).name
+    extension=''
+    while Path(stem).suffix.lower() in ROM_EXTENSIONS:
+        extension=Path(stem).suffix.lower();stem=Path(stem).stem
+    platform=''
+    suffix=re.search(r'\s*#\s*([^#]+)$',stem)
+    if suffix:
+        platform=PLATFORMS.get(suffix.group(1).strip().casefold(),'')
+        if platform:stem=stem[:suffix.start()]
+    if not platform:
+        platform={'.gba':'Game Boy Advance','.nds':'Nintendo DS','.gb':'Game Boy','.gbc':'Game Boy Color','.nes':'NES','.sfc':'SNES','.smc':'SNES','.3ds':'Nintendo 3DS','.xci':'Nintendo Switch','.nsp':'Nintendo Switch'}.get(extension,'')
+    def remove_tag(match):
+        tag=(match.group(1) or match.group(2)).strip()
+        known=r'(?:USA|Europe|Japan|World|Brazil|Australia|En|Fr|De|Es|It|Pt|Ja|Rev(?:ision)?[ ._-]*\d[^)]*|v\d[^)]*|[!bofh]\d*|T[+-].*|Disc \d+)'
+        return '' if re.fullmatch(known,tag,re.IGNORECASE) or re.fullmatch(r'(?:En|Fr|De|Es|It|Pt|Ja)(?:,(?:En|Fr|De|Es|It|Pt|Ja))+',tag,re.IGNORECASE) else match.group(0)
+    stem=re.sub(r'\(([^)]*)\)|\[([^]]*)\]',remove_tag,stem)
+    return re.sub(r'\s+',' ',stem.replace('_',' ')).strip(),platform
+
+
+def normalize_rom_name(name):return rom_identity(name)[0]
 
 def platform_for(path):
     candidates = set()
@@ -197,7 +215,7 @@ class DriveScanner:
             extension=excluded.extension,size=excluded.size,parent_id=excluded.parent_id,folder_path=excluded.folder_path,
             modified_at=excluded.modified_at,md5=excluded.md5,platform=excluded.platform''',
             (file['id'],file['name'],extension,int(file['size']) if file.get('size') else None,
-             (file.get('parents') or [None])[0],path,file.get('modifiedTime'),file.get('md5Checksum'),self.resolve_platform(path,(file.get('parents') or [None])[0])))
+             (file.get('parents') or [None])[0],path,file.get('modifiedTime'),file.get('md5Checksum'),self.resolve_platform(path,(file.get('parents') or [None])[0]) or rom_identity(file['name'])[1]))
         if changed:
             self.library.sql.execute("UPDATE game_files SET review_state='remote_changed' WHERE drive_id=?",(file['id'],))
         return 1

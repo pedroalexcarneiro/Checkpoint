@@ -21,7 +21,7 @@ class QuickAdd(QObject):
         while outer.count():
             item=outer.takeAt(0)
             if item.widget():item.widget().hide()
-        dialog.resize(620,600);dialog.setMinimumSize(560,600);dialog.setObjectName('quickAddDialog')
+        dialog.resize(620,600);dialog.setMinimumSize(560,600);dialog.setObjectName('quickAddDialog');dialog.setWindowFlag(Qt.FramelessWindowHint,True)
         from .window_style import titlebar_theme
         from .ui_components import nav_icon,service_icon
         from .theme import get_theme
@@ -29,8 +29,8 @@ class QuickAdd(QObject):
         from .settings_view import disclosure
         titlebar_theme(dialog,True)
         outer.setContentsMargins(22,20,22,18);outer.setSpacing(12)
-        heading=QHBoxLayout();heading.addWidget(text(dialog.add_title,'pageTitle'),1)
-        close=QPushButton('×');close.setObjectName('quiet');close.setFixedSize(30,30);close.setAccessibleName('Fechar');close.clicked.connect(dialog.reject);heading.addWidget(close);outer.addLayout(heading)
+        from .window_style import DialogTitleBar
+        outer.addWidget(DialogTitleBar(dialog))
         self.sources=dialog.source_tabs;self.sources.setParent(dialog);self.sources.show()
         self.sources.setCurrentIndex(0);self.sources.setObjectName('sourceTabs')
         color=get_theme(self.library.setting('appearance.theme','green')).colors['text']
@@ -40,7 +40,7 @@ class QuickAdd(QObject):
         self.sources.setIconSize(QSize(22,22));outer.addWidget(self.sources)
         self.query=dialog.fields['title'];dialog.form.removeWidget(self.query)
         self.query.setParent(dialog);self.query.setObjectName('gameSearch');self.query.setPlaceholderText('Pesquisar jogo…');self.query.show()
-        self.query.setMinimumHeight(36);self.query.addAction(nav_icon('search',color),QLineEdit.LeadingPosition);outer.addWidget(self.query)
+        self.query.setClearButtonEnabled(True);self.query.setMinimumHeight(40);self.query.addAction(nav_icon('search',color),QLineEdit.LeadingPosition);outer.addWidget(self.query)
         self.results=QListWidget();self.results.setObjectName('gameSearchResults');self.results.setSpacing(4);self.results.setMinimumHeight(100);self.results.setMaximumHeight(180);self.results.hide();outer.addWidget(self.results)
         self.preview=QFrame();self.preview.setObjectName('addPreview');self.preview.setMinimumHeight(116);preview=QHBoxLayout(self.preview);preview.setContentsMargins(14,10,14,10);preview.setSpacing(16)
         self.art=QLabel();self.art.setObjectName('addPreviewArt');self.art.setFixedSize(70,94);self.art.setAlignment(Qt.AlignCenter);self.art.setText('Sem capa');preview.addWidget(self.art)
@@ -57,11 +57,10 @@ class QuickAdd(QObject):
         self.steam_panel=dialog.steam_panel;self.steam_panel.setParent(dialog);outer.addWidget(self.steam_panel);self.steam_panel.hide()
         self.drive_manage=action('Atualizar índice do Drive',self.manage_drive);self.drive_manage.setObjectName('quiet');outer.addWidget(self.drive_manage,0,Qt.AlignLeft);self.drive_manage.hide()
         advanced=QWidget();advanced_row=QVBoxLayout(advanced);advanced_row.setContentsMargins(0,0,0,0);advanced_row.setSpacing(10)
-        self.platform=QComboBox();self.platform.addItem('Todas as plataformas','')
+        self.platform=QComboBox();self.platform.setMinimumSize(220,40);self.platform.setSizeAdjustPolicy(QComboBox.AdjustToContents);self.platform.addItem('Todas as plataformas','')
         for name in sorted({row['platform'] for row in self.library.sql.execute('SELECT DISTINCT platform FROM game_files') if row['platform']}|{'PC','Nintendo Switch','Nintendo DS','Game Boy Advance','Super Nintendo','PlayStation','PlayStation 2'}):self.platform.addItem(name,name)
         platform_row=QHBoxLayout();platform_row.addWidget(text('Plataforma'));platform_row.addWidget(self.platform,1);advanced_row.addLayout(platform_row)
-        self.edit=action('Ajustar detalhes',self.edit_details);self.edit.setObjectName('quiet');advanced_row.addWidget(self.edit,0,Qt.AlignLeft)
-        dialog.complete_on_save.setParent(advanced);dialog.complete_on_save.show();advanced_row.addWidget(dialog.complete_on_save)
+        dialog.complete_on_save.setParent(dialog);dialog.complete_on_save.hide()
         self.automation=QWidget();info=QHBoxLayout(self.automation);info.setContentsMargins(0,0,0,0);badge=QLabel();badge.setPixmap(nav_icon('download',color).pixmap(18,18));info.addWidget(badge);info.addWidget(text('Ficha e imagens serão buscadas automaticamente','caption'),1);outer.addWidget(self.automation)
         self.advanced=disclosure('Opções avançadas',advanced,outer);self.advanced.setObjectName('addDisclosure');self.advanced.setMinimumWidth(dialog.minimumWidth()-44)
         outer.addStretch()
