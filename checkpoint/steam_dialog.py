@@ -264,7 +264,7 @@ class SteamDialog(QDialog):
                     processed+=1
                     import re
                     if re.search(r'não foi possível|pendente|configure|[1-9]\d* consultas indisponíveis',str(message),re.IGNORECASE):pending+=1
-                return f'{processed}/{len(ids)} processados'+(f' · {pending} com pendências' if pending else '')+(' · Interrompido' if self.enrichment_stop.is_set() else '')
+                return count_text(processed,'jogo processado','jogos processados')+f' de {len(ids)}'+(f' · {pending} com pendências' if pending else '')+(' · Interrompido' if self.enrichment_stop.is_set() else '')
             finally:db.close()
         self.state.setText(summary+' Buscando fichas e imagens…')
         self.run_job(complete,lambda message:self.state.setText(summary+' · '+message))
@@ -283,7 +283,7 @@ class SteamDialog(QDialog):
             save_achievements(self.library, account, game.app_id, rows)
             self.changed = True
             unlocked = sum(row.unlocked_at is not None for row in rows)
-            self.state.setText(f'Conquistas Steam: {unlocked}/{len(rows)} desbloqueadas. Disponíveis na página do jogo.')
+            self.state.setText('Conquistas Steam: '+count_text(unlocked,'conquista desbloqueada','conquistas desbloqueadas')+f' de {len(rows)}. Veja na página do jogo.')
         self.run_job(lambda: SteamProvider(CredentialVault().get('steam')).achievements(account, game.app_id), save)
 
     def reject(self):

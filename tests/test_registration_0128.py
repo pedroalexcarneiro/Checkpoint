@@ -91,3 +91,15 @@ def test_missing_cover_draws_full_title_instead_of_two_letters(library,app):
     window.gallery.itemDelegate().paint(painter,option,window.gallery.model().index(0,0))
     drawn=[call.args[-1] for call in painter.drawText.call_args_list]
     assert title in drawn and 'AR' not in drawn;window.close()
+
+
+
+def test_activity_summary_uses_singular_day_and_brazilian_date(app,monkeypatch):
+    from datetime import datetime,timezone
+    from checkpoint.activity_heatmap import ActivityHeatmap
+    from checkpoint.theme import get_theme
+    day=datetime.now(timezone.utc).date();painter=Mock()
+    monkeypatch.setattr('checkpoint.activity_heatmap.QPainter',Mock(return_value=painter))
+    chart=ActivityHeatmap({day.isoformat():3600},get_theme('green'));chart.paintEvent(None)
+    assert '1,0 h em 1 dia de jogo' in [call.args[-1] for call in painter.drawText.call_args_list]
+    assert day.strftime('%d/%m/%Y') in chart.accessibleDescription();chart.close()

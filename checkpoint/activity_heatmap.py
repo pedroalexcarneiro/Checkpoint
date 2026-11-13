@@ -5,6 +5,7 @@ from PySide6.QtGui import QPainter,QColor,QFont,QPen
 from PySide6.QtWidgets import QWidget,QToolTip
 from .design_system import colors
 from .theme import blend
+from .locale import count_text,date_display
 
 MONTHS=('Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez')
 
@@ -21,7 +22,7 @@ class ActivityHeatmap(QWidget):
         super().resizeEvent(event)
     def set_values(self,values):
         self.values=values;self.setAccessibleName('Horas de jogo por dia')
-        self.setAccessibleDescription('; '.join(f'{day}: {seconds/3600:.1f} horas' for day,seconds in values.items()) or 'Nenhuma sessão registrada');self.update()
+        self.setAccessibleDescription('; '.join(date_display(day)+': '+f'{seconds/3600:.1f} h'.replace('.',',') for day,seconds in values.items()) or 'Nenhuma sessão registrada');self.update()
     def set_year(self,year):self.year=year;self.update()
     def interval(self):
         today=datetime.now(timezone.utc).date()
@@ -48,7 +49,7 @@ class ActivityHeatmap(QWidget):
         p.setPen(QColor(c['muted']))
         for weekday,label in ((0,'Seg'),(2,'Qua'),(4,'Sex')):p.drawText(QRectF(0,top+weekday*stride-1,26,cell+4),Qt.AlignRight|Qt.AlignVCenter,label)
         bottom=top+7*stride+14;total=sum(seconds for day,seconds in self.values.items() if first.isoformat()<=day<=last.isoformat());days=sum(seconds>0 for day,seconds in self.values.items() if first.isoformat()<=day<=last.isoformat())
-        summary=f'{total/3600:.1f} h em {days} dias de jogo'.replace('.',',') if total else 'Nenhuma sessão neste período'
+        summary=f'{total/3600:.1f} h em '.replace('.',',')+count_text(days,'dia de jogo','dias de jogo') if total else 'Nenhuma sessão neste período'
         p.drawText(QRectF(left,bottom,max(1,self.width()-200),20),Qt.AlignVCenter,summary)
         x=self.width()-164;p.drawText(QRectF(x-39,bottom,38,20),Qt.AlignVCenter,'Menos')
         for index,color in enumerate(shades):p.setPen(Qt.NoPen);p.setBrush(QColor(color));p.drawRoundedRect(QRectF(x+index*14,bottom+4,10,10),2,2)
