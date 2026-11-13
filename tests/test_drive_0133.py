@@ -90,3 +90,9 @@ def drive_flow(app,library,folder,*,missing=False,capture=False):
 
 def test_drive_normalized_search_click_flow(app,library,folder):drive_flow(app,library,folder,capture=True)
 def test_drive_no_results_is_explicit_and_link_survives(app,library,folder):drive_flow(app,library,folder,missing=True,capture=True)
+
+
+def test_articles_and_subtitle_separator():
+    assert rom_identity('Journey, A - Home (USA).nes')[0]=='A Journey: Home'
+    assert rom_identity('Story, An: Home (Europe).gba')[0]=='An Story: Home'
+    assert rom_identity('Adventure, The (USA).nes')[0]=='The Adventure'

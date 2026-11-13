@@ -240,7 +240,8 @@ class QuickAdd(QObject):
         self.metadata_unavailable=False;self.manual.hide()
         self.save.setEnabled(not self.finishing);self.preview.show();self.results.hide();self.other.setVisible(bool(self.candidates));self.confirmed.show()
         if self.dialog.drive_file_id is not None and self.candidates:
-            self.results.show();self.preview.hide()
+            self.results.show();self.preview.hide();self.other.hide()
+            self.dialog.setMinimumHeight(700);self.dialog.resize(self.dialog.width(),max(700,self.dialog.height()))
         self.title.setText(result.title)
         details=[self.dialog.fields['platform'].text() or ' / '.join(result.platforms[:3]),result.developer,result.release_date[:4]]
         self.facts.setText(' · '.join(value for value in details if value));self.description.setText(result.description[:260])

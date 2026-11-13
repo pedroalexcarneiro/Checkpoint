@@ -3,7 +3,7 @@ from checkpoint.integrations.drive import rom_identity,DriveScanner
 
 @pytest.mark.parametrize('name,title,platform',[
  ('Yu-Gi-Oh! - Ultimate Masters 2006 # GBA.zip','Yu-Gi-Oh! - Ultimate Masters 2006','Game Boy Advance'),
- ('Pokemon - Platinum (USA) (Rev 1).nds','Pokemon - Platinum','Nintendo DS'),
+ ('Pokemon - Platinum (USA) (Rev 1).nds','Pokemon: Platinum','Nintendo DS'),
  ('Metroid_Fusion [!].gba.zip','Metroid Fusion','Game Boy Advance'),
  ('Zelda (Europe) (En,Fr,De).sfc','Zelda','SNES'),
  ('A Game (The Return).gba','A Game (The Return)','Game Boy Advance')])
