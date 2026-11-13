@@ -14,3 +14,9 @@ QT_QPA_PLATFORM=offscreen .venv/bin/python scripts/render_ui_review.py /tmp/revi
 ```
 
 Use sempre diretórios isolados e novos para smoke. Não leia credenciais, altere releases antigas ou recrie dados do usuário. A migração mantém a origem e não muda o schema 4.
+
+## Publicação autorizada posteriormente
+
+A v0.1.28 foi publicada como pré-release após pedido explícito do dono. ZIP validado do CI, sem recompilação. A tag aponta para a revisão de código e relatório anterior à configuração da publicação; não deve ser movida. Releases anteriores foram preservadas.
+
+https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.28

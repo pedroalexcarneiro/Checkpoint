@@ -2,14 +2,14 @@
 
 Registros anteriores descrevem o estado de cada versão; não são instruções atuais.
 
-## 0.1.28 — revisão do produto (sem publicação)
+## 0.1.28 — revisão do produto e publicação autorizada
 
 - Renomeação técnica de GameVault para Checkpoint: pacote, launcher, banco, diretório de dados, cofre e scripts.
 - Migração por cópia, SQLite consistente com backup/integridade, schema 4 preservado, cofre sem apagar o serviço antigo, travas de instância e recuperação sem perda da origem.
 - Nove temas; removido Branco. Preferências antigas compatíveis passam para Verde.
 - Biblioteca de quatro colunas e capas verticais; Desejos com logos contidas em áreas fixas; Início, ficha, cadastro e Conexões alinhados às referências.
 - Cadastro exige seleção, distingue busca/ausência/seleção, confirma desejos visivelmente e preserva jogos já possuídos. Contadores e estados vazios corrigidos.
-- Documentação atual reorganizada; histórico consolidado abaixo. Nenhuma tag ou release criada nesta revisão.
+- Documentação atual reorganizada; histórico consolidado abaixo. Na etapa de correções não houve publicação; após autorização posterior do dono, a pré-release v0.1.28 foi publicada com o mesmo artefato Windows validado.
 
 ## 0.1.27
 

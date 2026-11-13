@@ -15,6 +15,6 @@ Decisão do dono sobre uma futura fusão dos três componentes de cadastro. A fu
 
 ## Limitações
 
-Capturas desta tarefa usam Qt real em Linux, dados e artes de teste isolados. Não comprovam renderização no Windows, DPI, contas Steam/Drive ou demais serviços autenticados. Provedores podem não retornar ficha ou imagens completas. Não foi publicada nova release.
+Capturas desta tarefa usam Qt real em Linux, dados e artes de teste isolados. Não comprovam renderização no Windows, DPI, contas Steam/Drive ou demais serviços autenticados. Provedores podem não retornar ficha ou imagens completas. A v0.1.28 foi publicada como pré-release, com ZIP Windows e checksum: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.28 .
 
 Resultados, comandos e diferenças visuais estão em `RELATORIO_CORRECOES.md`; histórico de versões está em `CHANGELOG.md`.

@@ -4,7 +4,7 @@
 
 Base confirmada antes das mudanças: `codex/design-fidelity-pt-br`, versão 0.1.27, commit `1f3df2730db2058ae9da074161716a9c0fa4edcc`. Branch de trabalho: `fix/rename-redesign-0.1.28`. A main não foi usada nem alterada. Versão atual consistente em pyproject e módulo: 0.1.28.
 
-Não foram criadas tags ou releases, alterados assets de releases anteriores, usados force push ou acessadas bibliotecas pessoais. Nenhuma credencial real foi lida, criada ou gravada pela tarefa. Os testes de cofre usam valores fictícios somente em memória. Os comandos Git usam a conexão já configurada, sem inspecionar seu material de autenticação.
+Na etapa original de correções não foram criadas tags ou releases. A publicação posterior, autorizada em novo pedido, está registrada ao fim deste relatório. Não foram alterados assets de releases anteriores, usados force push ou acessadas bibliotecas pessoais. Nenhuma credencial real foi lida, criada ou gravada pela tarefa. Os testes de cofre usam valores fictícios somente em memória. Os comandos Git usam a conexão já configurada, sem inspecionar seu material de autenticação.
 
 ## Renomeação, arquivo por arquivo
 
@@ -256,3 +256,16 @@ README, LEIA-ME, SETUP, INTEGRATIONS, PROJECT_STATUS, CONTINUITY, DESIGN, ARCHIT
 Não foi aberto o programa no Windows do usuário, não foram usados seus dados ou credenciais, nem verificadas contas reais Steam, Drive, SteamGridDB, RAWG ou GG.deals. DPI, múltiplos monitores, renderização final no computador pessoal e satisfação estética exigem conferência humana. A presença de configuração simulada nas capturas não comprova login. Windows CI validou o runner e o executável nele, sem validar o computador pessoal.
 
 Decisão de produto pendente: **o dono deseja futuramente unificar os três componentes de cadastro?** Nesta tarefa foram mantidos, com a sobreposição documentada. As demais decisões conservadoras e diferenças visuais estão explicitadas acima, sem substituir as referências por um layout novo.
+
+
+## Publicação posterior autorizada
+
+Após novo pedido explícito do dono, a v0.1.28 foi publicada como pré-release, mantendo a classificação das versões anteriores. Usou o artefato aprovado da execução Windows 43368694510, sem recompilação, após conferir SHA-256 e CRC do ZIP. A publicação foi preparada em rascunho e tornada pública depois do upload dos oito assets.
+
+- Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.28
+- Publicação aprovada: https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43409812604
+- Tag nova v0.1.28: 21ca701f052855fec97032f56211f3ba6f536ffc. Nenhuma tag anterior foi movida.
+- ZIP Windows: 84.057.164 bytes; SHA-256 `65548a88addb57586cf77294372265b31449b85c3a79fe2d6acd036e60859c5d`.
+- O código do aplicativo continua idêntico ao build validado em 124daab; commits posteriores registram documentação e publicação.
+
+A autorização posterior substitui a proibição de criar esta nova release; a preservação de todas as releases anteriores continua mantida.
