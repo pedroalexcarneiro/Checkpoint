@@ -1,4 +1,10 @@
-# Estado atual — Checkpoint 0.1.29
+# Estado atual — Checkpoint 0.1.30
+
+## Correção do cadastro Drive
+
+Branch fix/0.1.30 a partir de 90dec8e, sem alterar fix/0.1.29 nem releases. Cadastro de ROM pesquisa o nome limpo, aguarda os detalhes e grava textos com origem Busca; o arquivo fica vinculado e não é baixado. Arte persistida de ROM usa SteamGridDB. Sem dados: origem Não identificada, aviso persistente e botão Pesquisar manualmente; a recuperação reutiliza o cadastro e mantém o arquivo. Relatório: RELATORIO_0130_DRIVE.md.
+
+Suíte final: 302 passaram, 0 falhas/erros em 500,23 s (Qt offscreen, dados em /tmp). As quatro regressões por cliques falham na base e passam com a correção. Fontes e transporte de imagens controlados; atual versão não homologada em Windows real ou com contas reais. Uma rodada parcial teve queda nativa no GC final do pytest; base e repetição passaram. Registro detalhado no relatório, sem skip/xfail nem mudança no teste de lifecycle.
 
 ## Funciona
 

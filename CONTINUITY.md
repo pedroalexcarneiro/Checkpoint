@@ -1,6 +1,6 @@
 # Continuidade do Checkpoint
 
-Trabalho atual: versão 0.1.29, branch `fix/0.1.29`, iniciada no commit `8d39c18` da base solicitada. Não usar a main defasada nem alterar as branches codex existentes.
+Trabalho atual: versão 0.1.30, branch `fix/0.1.30`, iniciada no commit `90dec8e168d822698e176e5c93dd98951e01ab09`. O prefixo 90dec8e8 do pedido não existe; foi usado o 90dec8e confirmado na entrega anterior. Não alterar fix/0.1.29. Não usar a main defasada nem alterar as branches codex existentes.
 
 Leia PROJECT_STATUS.md, RELATORIO_CORRECOES.md e ARCHITECTURE.md. Referências visuais e decisões do dono prevalecem: wordmark checkpo//nt e ícone próprio; Biblioteca vertical com tamanho ajustável e seis colunas no padrão largo; Desejos com arte 1:1; Início de andamento; ficha com galeria; quatro Conexões 2×2 e GG.deals abaixo. São nove temas, Verde padrão.
 
@@ -8,7 +8,9 @@ Não volte a permitir que um GameDialog conclua enquanto seus jobs de busca est�
 
 Valide com QT_QPA_PLATFORM=offscreen, CHECKPOINT_TEST_ROOT em /tmp e --data-dir novo nos smokes. O schema permanece 4; a migração copia e preserva a origem. Nunca consultar cofre real em testes.
 
-Não criar tags nem publicar releases nesta tarefa. A pré-release v0.1.28 publicada por engano deve ser removida pelo dono; não alterá-la. A API oficial GG.deals está implementada conforme https://gg.deals/api/prices/. Usar somente BRL, identidade Steam e chave no cofre; não inferir desconto a partir de histórico. Sem chave, o fallback público respeita a opção de Conexões. Este pedido permite somente commits locais: não fazer push, tag, release ou PR. Não fundir os componentes de cadastro sem decisão posterior do dono.
+Não criar tags, releases ou PRs nesta tarefa; dar push somente de fix/0.1.30, sem force. A pré-release 0.1.29 já existe e deve ser preservada, assim como as demais releases. A API oficial GG.deals permanece inalterada. Não fundir os componentes de cadastro sem decisão do dono.
+
+No cadastro Drive, arquivo e origem de dados são independentes: origem Busca quando houver texto do catálogo; Não identificada quando não houver dados. Salvar fica indisponível até a pesquisa/detalhes terminarem. Sem resultado/falha, manter aviso e ação de pesquisa manual; não iniciar enriquecimento sem identidade para esconder o resultado da busca. Ao pesquisar novamente, preservar o vínculo da ROM e preencher o mesmo cadastro. Artes persistidas de ROMs devem vir do SteamGridDB, não do Drive nem da imagem RAWG/Steam. Provas, diffs e limitações em RELATORIO_0130_DRIVE.md.
 
 ## Prova adicional do cadastro pela busca
 
@@ -21,3 +23,5 @@ contas reais. As 16 capturas anteriores usam cadastro/preview manual e não comp
 a busca. Detalhes e saídas completas: RELATORIO_FLUXO_BUSCA_0.1.29.md.
 
 Suíte integral desta prova: 296 passaram em 387,99 s; sem falhas/erros, skips ou xfails novos.
+
+Validação 0.1.30: 302 testes passaram em 500,23 s, exit 0. Os quatro casos Drive falharam na base e passaram sem alteração de teste/suporte. Rodada parcial com queda no GC e repetição bem-sucedida estão integralmente documentadas no RELATORIO_0130_DRIVE.md. Windows e fontes reais ainda não validados nesta versão.
