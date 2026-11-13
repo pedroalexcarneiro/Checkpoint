@@ -111,7 +111,7 @@ class Hero(QWidget):
     def resizeEvent(self,event):
         super().resizeEvent(event)
         ratio=self.banner.width()/self.banner.height() if not self.banner.isNull() else 4.5
-        height=max(240,min(300,round(event.size().width()/4))) if self.detail_mode else max(300,min(360,round(event.size().width()/3.5)))
+        height=(200 if getattr(self,'compact',False) else max(240,min(300,round(event.size().width()/4)))) if self.detail_mode else max(300,min(360,round(event.size().width()/3.5)))
         if height!=self._hero_height:self._hero_height=height;self.setFixedHeight(height)
         self.content.setGeometry(self.rect())
 
@@ -185,7 +185,7 @@ class GameTile(CoverArtwork):
 class CurrentPageTabs(QTabWidget):
     """Uma aba longa não estica as outras páginas da ficha."""
     def __init__(self,parent=None):
-        super().__init__(parent);self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Minimum)
+        super().__init__(parent);self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
         self.currentChanged.connect(self.page_changed)
 
     def sizeHint(self):
