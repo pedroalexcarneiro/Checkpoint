@@ -22,13 +22,17 @@ class TwoLineLabel(QLabel):
 
 def action(title, callback, primary=False):
     button = QPushButton(title); button.clicked.connect(callback)
+    button.setProperty('variant','primary' if primary else 'secondary')
+    button.setSizePolicy(QSizePolicy.Maximum,QSizePolicy.Fixed);button.setMinimumHeight(40)
     if primary: button.setObjectName('primary')
     return button
 
 
 def card():
-    frame = QFrame(); frame.setObjectName('panel')
-    layout = QVBoxLayout(frame); layout.setContentsMargins(18, 16, 18, 16); layout.setSpacing(10)
+    from .design_system import CardSurface
+    from .visual_tokens import SPACE
+    frame = CardSurface()
+    layout = QVBoxLayout(frame); layout.setContentsMargins(*([SPACE['lg']]*4)); layout.setSpacing(SPACE['sm'])
     return frame, layout
 
 

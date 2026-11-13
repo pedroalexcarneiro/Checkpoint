@@ -4,6 +4,7 @@ from PySide6.QtGui import QPainter,QPainterPath,QPixmap,QColor,QPen,QFont
 from PySide6.QtWidgets import (QWidget,QFrame,QVBoxLayout,QHBoxLayout,QBoxLayout,
     QGridLayout,QLayout,QSizePolicy,QLabel,QPushButton,QScrollArea,QApplication)
 from .theme import get_theme
+from .visual_tokens import SPACE,TYPE,RADIUS,HEIGHT
 from .smooth_scroll import SmoothScrollArea
 
 
@@ -34,13 +35,56 @@ class IconButton(QPushButton):
         super().paintEvent(event);p=QPainter(self);pix=icon(self.name);p.drawPixmap((self.width()-pix.width())//2,(self.height()-pix.height())//2,pix);p.end()
 
 
+class CardSurface(QFrame):
+    def __init__(self,parent=None):
+        super().__init__(parent);self.setObjectName('panel');self.setProperty('component','card')
+        self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
+
+
+class StatusChip(QLabel):
+    def __init__(self,status,parent=None):
+        super().__init__(status,parent);self.setObjectName('statusChip')
+        self.setProperty('active',status in ('Jogando','Concluído','Disponível no Drive'))
+        self.setSizePolicy(QSizePolicy.Maximum,QSizePolicy.Fixed)
+
+
+class SectionHeader(QWidget):
+    def __init__(self,title,description='',callback=None,button='Ver tudo',parent=None):
+        super().__init__(parent)
+        from .ui_components import text,action
+        row=QHBoxLayout(self);row.setContentsMargins(0,0,0,0);row.setSpacing(SPACE['md'])
+        words=QVBoxLayout();words.setSpacing(SPACE['xxs']);words.addWidget(text(title,'sectionTitle'))
+        if description:words.addWidget(text(description,'muted'))
+        row.addLayout(words,1)
+        if callback:
+            control=action(button,callback);control.setProperty('variant','ghost');row.addWidget(control)
+        self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
+
+
+class ActionCard(CardSurface):
+    def __init__(self,name,title,description,callback,button,parent=None):
+        super().__init__(parent)
+        from .ui_components import text,action
+        layout=QVBoxLayout(self);layout.setContentsMargins(*([SPACE['lg']]*4));layout.setSpacing(SPACE['sm'])
+        layout.addWidget(Badge(name,40));layout.addWidget(text(title,'cardTitle'))
+        layout.addWidget(text(description,'secondary'));layout.addWidget(action(button,callback),0,Qt.AlignLeft)
+
+
 def empty_state(name,title,description,callback=None,button='Adicionar jogo'):
     from .ui_components import text,action
-    frame=QFrame();frame.setObjectName('emptyState');frame.setMinimumHeight(270);frame.setMaximumHeight(320);inside=QVBoxLayout(frame);inside.setContentsMargins(30,26,30,26);inside.setSpacing(12);inside.addStretch()
-    inside.addWidget(Badge(name,52),0,Qt.AlignHCenter)
+    descriptions={'library':'Reúna seus jogos, escolha o próximo e acompanhe sua jornada.',
+                  'wish':'Guarde os jogos que você quer jogar e acompanhe as ofertas.',
+                  'memories':'Capturas e anotações dos seus jogos ficam reunidas aqui.',
+                  'stats':'Jogue para começar a acompanhar seu tempo e suas conquistas.'}
+    frame=CardSurface();frame.setObjectName('emptyState');frame.setProperty('emptyState',True)
+    frame.setMinimumHeight(240);frame.setMaximumHeight(300)
+    inside=QVBoxLayout(frame);inside.setContentsMargins(*([SPACE['lg']]*4));inside.setSpacing(SPACE['sm'])
+    inside.addWidget(Badge(name,48),0,Qt.AlignHCenter)
     label=text(title,'sectionTitle');label.setAlignment(Qt.AlignCenter);inside.addWidget(label)
+    label=text(description or descriptions.get(name,'Explore sua biblioteca para começar.'),'emptyDescription')
+    label.setAlignment(Qt.AlignCenter);label.setMaximumWidth(480);inside.addWidget(label,0,Qt.AlignHCenter)
     if callback:inside.addWidget(action(button,callback,True),0,Qt.AlignHCenter)
-    inside.addStretch();return frame
+    return frame
 
 
 def page_scroll(outer,reserve_scrollbar=False):
