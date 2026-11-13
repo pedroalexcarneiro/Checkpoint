@@ -163,7 +163,7 @@ class GameTile(QPushButton):
             p.drawPixmap((self.width()-pix.width())//2,(self.art_height-pix.height())//2,pix)
             p.restore()
         else:
-            p.fillRect(art,QColor(colors['panel']));p.setPen(QColor(colors['muted']));font=QFont('Segoe UI');font.setPixelSize(24);p.setFont(font);p.drawText(art,Qt.AlignCenter,self.game['title'][:2].upper())
+            p.fillRect(art,QColor(colors['panel']));p.setPen(QColor(colors['muted']));font=QFont('Segoe UI');font.setPixelSize(13);p.setFont(font);p.drawText(art.adjusted(10,10,-10,-10),Qt.AlignCenter|Qt.TextWordWrap,self.game['title'])
         font=QFont('Segoe UI');font.setPixelSize(14);font.setWeight(QFont.DemiBold);p.setFont(font);p.setPen(QColor(colors['text']))
         p.drawText(QRectF(0,self.art_height+5,self.width(),20),Qt.AlignVCenter,p.fontMetrics().elidedText(self.game['title'],Qt.ElideRight,self.width()))
         font.setPixelSize(12);font.setWeight(QFont.Normal);p.setFont(font);p.setPen(QColor(colors['muted']))

@@ -236,7 +236,7 @@ class MainWindow(QMainWindow):
                 pix = QPixmap(174,232); pix.fill(Qt.GlobalColor.darkCyan)
                 from PySide6.QtGui import QPainter,QColor,QFont
                 painter = QPainter(pix); painter.fillRect(pix.rect(),QColor(self.theme.colors['selected'])); painter.setPen(QColor(self.theme.colors['accent']))
-                painter.setFont(QFont('Segoe UI',42)); painter.drawText(pix.rect(),Qt.AlignCenter,game['title'][:2].upper()); painter.end()
+                painter.setFont(QFont('Segoe UI',15)); painter.drawText(pix.rect().adjusted(12,12,-12,-12),Qt.AlignCenter|Qt.TextWordWrap,game['title']); painter.end()
             item = QListWidgetItem(QIcon(pix),('★ ' if game['favorite'] else '')+game['title']+'\n'+game['status'])
             item.setData(Qt.UserRole,game['id']);item.setData(Qt.UserRole+1,game);self.gallery.addItem(item)
             for col,key in enumerate(['title','platform','status','genre','rating']):

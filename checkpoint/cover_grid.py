@@ -29,8 +29,8 @@ class CoverDelegate(QStyledItemDelegate):
             painter.restore()
         else:
             painter.fillRect(art,QColor(colors['panel']))
-            painter.setPen(QColor(colors['accent']));font=QFont('Segoe UI');font.setPixelSize(34);font.setWeight(QFont.Light);painter.setFont(font)
-            painter.drawText(art,Qt.AlignCenter,(game.get('title') or '?')[:2].upper())
+            painter.setPen(QColor(colors['accent']));font=QFont('Segoe UI');font.setPixelSize(15);font.setWeight(QFont.DemiBold);painter.setFont(font)
+            painter.drawText(art.adjusted(14,14,-14,-14),Qt.AlignCenter|Qt.TextWordWrap,game.get('title') or 'Jogo sem imagem')
         font=QFont('Segoe UI');font.setPixelSize(14);font.setWeight(QFont.DemiBold);painter.setFont(font);painter.setPen(QColor(colors['text']))
         title=game.get('title') or index.data(Qt.DisplayRole).split('\n')[0]
         painter.drawText(QRectF(image_rect.x(),image_rect.bottom()+6,image_rect.width(),23),Qt.AlignLeft|Qt.AlignVCenter,painter.fontMetrics().elidedText(title,Qt.ElideRight,int(image_rect.width())))
@@ -57,8 +57,8 @@ class CoverGrid(QListWidget):
 
     def update_grid(self):
         self.art_ratio=1.5
-        width=max(1,self.viewport().width()-16);target=142 if self.compact else 180
-        columns=max(1,width//(150 if self.compact else 180));cell=max(100,min(170 if self.compact else 205,width//columns))
+        width=max(4,self.viewport().width()-16)
+        cell=max(1,width//4)
         size=QSize(cell,round((cell-20)*self.art_ratio)+54)
         if self.last_grid!=size:self.last_grid=size;self.setGridSize(size)
         self.viewport().update()
