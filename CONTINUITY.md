@@ -1,5 +1,19 @@
 # Continuidade do Checkpoint
 
+## Preparação da publicação 0.1.24 — 13/11/2026
+
+Publicação solicitada para a continuidade implementada em `5d33629` e documentada
+em `3f6ae049`, na branch `codex/design-fidelity-pt-br`. Versão do projeto e do
+aplicativo atualizadas em conjunto para 0.1.24; notas da release refletem Biblioteca
+vertical, wishlist com logos/preços, nove temas escuros, calendário e localização PT-BR.
+O workflow Windows release passa a aceitar esta branch e publicará a pre-release
+somente após os testes, build, smokes e revisão visual automatizada.
+
+A validação anterior de 216 testes Windows refere-se à fonte `5d33629`.
+Os resultados do novo pacote 0.1.24 ainda precisam ser observados no workflow;
+esta preparação não declara publicação, aprovação estética ou teste autenticado.
+`main`, tags existentes, schema 4 e dados pessoais permanecem preservados.
+
 ## Decisões finais desta continuidade — 12/11/2026
 
 - Modo claro removido por pedido expresso posterior do usuário. Permanecem nove

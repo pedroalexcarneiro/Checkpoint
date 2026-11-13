@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - codex/steam-library-import
+      - codex/design-fidelity-pt-br
     paths:
       - .github/workflows/windows-release.yml
       - .github/release-notes.md
@@ -126,5 +127,5 @@ jobs:
           fi
           gh release create "$RELEASE_TAG" release-assets/* \
             --verify-tag --prerelease \
-            --title "Checkpoint ${RELEASE_TAG#v} · Interface completa" \
+            --title "Checkpoint ${RELEASE_TAG#v} · Interface e PT-BR" \
             --notes-file .github/release-notes.md

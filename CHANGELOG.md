@@ -1,6 +1,6 @@
 # Changelog
 
-## Em revisão — continuidade após v0.1.23
+## 0.1.24 — interface e PT-BR (preparação para publicação)
 
 - Cadastro compacto, cabeçalhos e filtros reorganizados; capas ampliadas com título/status alinhados.
 - Ícones oficiais Steam/Drive e nove temas escuros; preferência clara antiga usa Verde.
