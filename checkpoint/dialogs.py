@@ -95,6 +95,8 @@ class GameDialog(QDialog):
         if library is not None and game is None:
             from .quick_add import QuickAdd
             self.quick_add=QuickAdd(self,outer,allow_steam)
+            from .add_dialog_visuals import style_add_dialog
+            style_add_dialog(self)
         elif game is not None:
             from .game_editor import build_editor
             build_editor(self,outer)
