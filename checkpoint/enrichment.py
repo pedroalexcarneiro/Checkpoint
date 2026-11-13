@@ -126,4 +126,9 @@ def complete_game(library, game_id, steam_provider=None, rawg_provider=None, cac
             failures += 1
     if not sources:
         return 'Ficha pendente: fonte de descrição indisponível. Identidade e dados existentes preservados.'
-    return 'Ficha: '+count_text(fields_saved,'campo')+' e '+count_text(images_saved,'imagem','imagens')+' preenchidos; '+count_text(failures,'consulta indisponível','consultas indisponíveis')+'. Campos existentes preservados.'
+    current=library.get(game_id) or {}
+    available=[label for field,label in (('developer','desenvolvedora'),('publisher','editora'),('description','descrição')) if current.get(field)]
+    message='Ficha preenchida: '+', '.join(available)+'.' if available else 'Não foi possível preencher a ficha automaticamente. Tente novamente.'
+    if images_saved:message+=' '+count_text(images_saved,'imagem adicionada','imagens adicionadas')+'.'
+    if failures:message+=' Algumas informações ou imagens não puderam ser obtidas. Tente novamente.'
+    return message

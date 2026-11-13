@@ -38,6 +38,11 @@ def complete_identity(library,game_id,result):
 
 def save_import(library,data,file_id=None,result=None):
     clean=clean_game_data(data)
+    if result:
+        values={'description':result.description,'developer':result.developer,'publisher':result.publisher,'genre':', '.join(result.genres),'release_date':result.release_date}
+        for field,value in values.items():
+            if value and not clean.get(field):clean[field]=value
+        if clean.get('source') in (None,'','Manual'):clean['source']='Busca'
     file=library.sql.execute('SELECT * FROM game_files WHERE id=?',(file_id,)).fetchone() if file_id is not None else None
     if file_id is not None and file is None: raise ValueError('A ROM selecionada não está mais no índice.')
     existing=None

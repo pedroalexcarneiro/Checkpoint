@@ -184,7 +184,7 @@ def test_nested_dialog_keeps_query_receiver_alive_until_job_finishes(library,app
     try:
         assert dialog.isVisible()
         assert dialog.quick_add.jobs
-        assert dialog.quick_add.closed
+        assert dialog.quick_add.finishing and not dialog.quick_add.closed
     finally:
         blocked.set();wait(app,lambda:not dialog.quick_add.jobs)
     assert dialog.result()==QDialog.Accepted and not dialog.isVisible()

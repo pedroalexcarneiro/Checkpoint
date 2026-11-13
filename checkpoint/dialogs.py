@@ -102,7 +102,10 @@ class GameDialog(QDialog):
     def finish_or_wait(self,result):
         quick=getattr(self,'quick_add',None)
         if quick and quick.jobs:
-            quick.deferred_result=result;quick.closed=True;quick.timer.stop()
+            # O receptor e os widgets vivem até finished, também nos diálogos do Drive.
+            quick.deferred_result=result;quick.finishing=True;quick.closed=result==QDialog.Rejected;quick.timer.stop();quick.pending_search=False
+            if quick.closed:quick.pending_details=None
+            quick.save.setEnabled(False);quick.query.setEnabled(False);quick.sources.setEnabled(False)
             quick.state.setText('Encerrando a consulta atual…');return
         self.done(result)
 
@@ -176,6 +179,7 @@ class GameDialog(QDialog):
     def apply_catalog(self,result):
         if hasattr(self,'quick_add'):self.quick_add.suspend=True
         self.catalog_result=result
+        if self.drive_file_id is None:self.fields['source'].setText('Busca')
         values={'title':result.title,'description':result.description,'genre':', '.join(result.genres),'developer':result.developer,'publisher':result.publisher,'release_date':result.release_date}
         for key,value in values.items():
             if value:

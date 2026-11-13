@@ -15,7 +15,7 @@ from .ui_components import text,action
 class QuickAdd(QObject):
     def __init__(self,dialog,outer,allow_steam):
         super().__init__(dialog);self.dialog=dialog;self.library=dialog.library
-        self.generation=0;self.jobs=[];self.suspend=False;self.closed=False;self.pending_show_lookup=False;self.pending_search=False;self.pending_details=None
+        self.generation=0;self.jobs=[];self.finishing=False;self.suspend=False;self.closed=False;self.pending_show_lookup=False;self.pending_search=False;self.pending_details=None
         self.candidates=[];self.local=[];self.owner=dialog
         while self.owner.parentWidget() is not None:self.owner=self.owner.parentWidget()
         while outer.count():
@@ -173,6 +173,7 @@ class QuickAdd(QObject):
         job=self.sender()
         if self.closed or job.property('generation')!=self.generation:return
         if job.property('operation')=='catalog_search':
+            if self.finishing:return
             self.candidates=[MetadataResult(**row) for row in payload['results']];self.local_results()
             self.results.blockSignals(True)
             for result in self.candidates:
@@ -205,12 +206,12 @@ class QuickAdd(QObject):
     def job_finished(self):
         job=self.sender();self.jobs.remove(job);job.deleteLater()
         self.busy.setVisible(bool(self.jobs))
-        if not self.jobs and hasattr(self,'deferred_result'):
-            self.dialog.done(self.deferred_result);return
-        if self.pending_search and not self.closed:self.lookup()
+        if self.pending_search and not self.closed and not self.finishing:self.lookup()
         if self.pending_details and not self.closed:
             generation,arguments=self.pending_details;self.pending_details=None
             if generation==self.generation:self.run('catalog_details',**arguments)
+        if not self.jobs and hasattr(self,'deferred_result'):
+            self.closed=True;self.dialog.done(self.deferred_result)
 
     @Slot(int)
     def choose(self,index):
@@ -225,7 +226,7 @@ class QuickAdd(QObject):
         self.run('catalog_details',provider=result.provider,identity=result.external_id,platform=self.dialog.fields['platform'].text())
 
     def show_result(self,result):
-        self.save.setEnabled(True);self.preview.show();self.results.hide();self.other.setVisible(bool(self.candidates));self.confirmed.show()
+        self.save.setEnabled(not self.finishing);self.preview.show();self.results.hide();self.other.setVisible(bool(self.candidates));self.confirmed.show()
         self.title.setText(result.title)
         details=[self.dialog.fields['platform'].text() or ' / '.join(result.platforms[:3]),result.developer,result.release_date[:4]]
         self.facts.setText(' · '.join(value for value in details if value));self.description.setText(result.description[:260])

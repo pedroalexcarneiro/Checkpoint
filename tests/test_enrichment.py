@@ -68,7 +68,7 @@ def test_download_failure_keeps_metadata_and_game(library, folder):
     identity = save_import(library, {'title': 'INSIDE'}, result=provider_result())
     provider = Mock(); provider.details.return_value = provider_result()
     cache = Mock(); cache.download.side_effect = IntegrationError('Unavailable')
-    assert '2 consultas indisponíveis' in complete_game(library, identity, steam_provider=provider, cache=cache)
+    assert 'Algumas informações ou imagens não puderam ser obtidas.' in complete_game(library, identity, steam_provider=provider, cache=cache)
     assert library.get(identity)['developer'] == 'Playdead'
     assert library.get(identity)['cover'] == ''
 
@@ -92,7 +92,7 @@ def test_wrong_identity_response_never_applied(library, folder):
     identity = save_import(library, {'title': 'INSIDE'}, result=provider_result())
     provider = Mock(); provider.details.return_value = MetadataResult('steam', '999', 'Other', developer='Wrong')
     complete_game(library, identity, steam_provider=provider, cache=Cache(folder))
-    assert library.get(identity)['developer'] == ''
+    assert library.get(identity)['developer'] == 'Playdead'
 
 
 def test_rawg_confirmed_rom_uses_its_own_identity(library, folder):

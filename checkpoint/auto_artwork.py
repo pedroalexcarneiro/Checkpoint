@@ -71,7 +71,7 @@ class AutoArtwork:
                         saved.append(kind)
             except (IntegrationError,OSError,ValueError): unavailable.append(kind)
         self.library.set_setting(f'artwork.checked.{game_id}',self.clock())
-        return count_text(len(saved),'imagem salva','imagens salvas')+'; '+count_text(len(unavailable),'tipo indisponível','tipos indisponíveis')+'. Imagens existentes preservadas.'
+        return count_text(len(saved),'imagem salva','imagens salvas')+'.' if saved else 'As imagens disponíveis já estão na ficha.' if not unavailable else 'Não foi possível obter todas as imagens. Tente novamente na ficha.'
 
 
 def obtain_artwork(library,game_id,force=False):
