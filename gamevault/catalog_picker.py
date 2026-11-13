@@ -1,3 +1,4 @@
+from .locale import date_display
 from PySide6.QtWidgets import QDialog,QVBoxLayout,QHBoxLayout,QLabel,QLineEdit,QComboBox,QPushButton,QListWidget
 from .credentials import CredentialVault
 from .integrations.metadata import SteamGridDbProvider,RawgProvider
@@ -46,7 +47,7 @@ class CatalogPicker(QDialog):
         self.run(fetch,self.show_results)
     def show_results(self,results):
         self.results=results;self.list.clear()
-        for result in results:self.list.addItem(result.title+(' · '+result.release_date if result.release_date else ''))
+        for result in results:self.list.addItem(result.title+(' · '+date_display(result.release_date) if result.release_date else ''))
         self.state.setText(f'{len(results)} resultados. Confirme o jogo e a edição corretos.')
     def choose(self):
         index=self.list.currentRow()

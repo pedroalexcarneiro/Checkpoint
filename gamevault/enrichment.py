@@ -21,7 +21,8 @@ def replaceable_steam_header(library,game,identity):
     except OSError:return False
 
 
-def complete_game(library, game_id, steam_provider=None, rawg_provider=None, cache=None):
+def complete_game(library, game_id, steam_provider=None, rawg_provider=None, cache=None, descriptions=None, art_provider=None):
+    live=steam_provider is None and rawg_provider is None and art_provider is None
     game = library.get(game_id)
     if not game:
         return 'Jogo indisponível; cadastro preservado.'
@@ -43,12 +44,36 @@ def complete_game(library, game_id, steam_provider=None, rawg_provider=None, cac
                 pass
         if rawg_provider:
             sources.append(('rawg', rawg_provider))
+    if not sources and 'steamgriddb' in identities:
+        try:
+            if art_provider is None:
+                from .credentials import CredentialVault
+                from .integrations.metadata import SteamGridDbProvider
+                art_provider=SteamGridDbProvider(CredentialVault().get('steamgriddb'))
+            sources.append(('steamgriddb',art_provider))
+        except Exception:pass
     fields_saved = images_saved = failures = 0
     for source, provider in sources:
         try:
-            result = provider.details(identities[source])
+            result = provider.details(identities[source]) if hasattr(provider,'details') else provider.game_by_id(identities[source])
             if result.provider != source or result.external_id != identities[source]:
                 raise IntegrationError('O provedor retornou outra identidade.')
+            original_description=result.description
+            if live or descriptions is not None:
+                from .integrations.descriptions import localize_result
+                result=localize_result(result,game['platform'],descriptions)
+            from .description_provenance import current,record
+            provenance=current(library,game)
+            expected_description=''
+            if game['description'] and result.description and result.description!=game['description']:
+                if provenance and provenance.get('language')=='en':expected_description=game['description']
+                elif source=='rawg' and original_description==game['description']:expected_description=game['description']
+                elif source=='steam' and isinstance(provider,SteamStoreProvider):
+                    # Legado sem proveniência: só substitui se ainda for exatamente o texto da fonte inglesa.
+                    try:
+                        english=provider.details(identities[source],language='english')
+                        if english.description==game['description']:expected_description=game['description']
+                    except IntegrationError:pass
             values = {'description': result.description, 'genre': ', '.join(result.genres),
                       'developer': result.developer, 'publisher': result.publisher,
                       'release_date': result.release_date}
@@ -57,11 +82,12 @@ def complete_game(library, game_id, steam_provider=None, rawg_provider=None, cac
                 for field, value in values.items():
                     if value:
                         cursor = library.sql.execute(
-                            f"UPDATE games SET {field}=?,updated_at=? WHERE id=? AND {field}='' "
+                            f"UPDATE games SET {field}=?,updated_at=? WHERE id=? AND {field}=? "
                             "AND deleted_at IS NULL AND EXISTS (SELECT 1 FROM external_identifiers "
                             "WHERE game_id=games.id AND provider=? AND external_id=?)",
-                            (value, now(), game_id, source, result.external_id))
+                            (value, now(), game_id, expected_description if field=='description' else '', source, result.external_id))
                         fields_saved += cursor.rowcount
+                record(library,game_id,result)
             for kind, url in result.images.items():
                 if kind not in ('cover', 'banner', 'logo'):
                     continue
@@ -98,5 +124,5 @@ def complete_game(library, game_id, steam_provider=None, rawg_provider=None, cac
         except Exception:
             failures += 1
     if not sources:
-        return 'Ficha pendente: selecione Steam ou RAWG no catálogo para obter dados detalhados.'
+        return 'Ficha pendente: fonte de descrição indisponível. Identidade e dados existentes preservados.'
     return f'Ficha: {fields_saved} campos e {images_saved} imagens preenchidos; {failures} consultas indisponíveis. Campos existentes preservados.'

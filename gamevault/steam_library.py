@@ -35,6 +35,8 @@ def import_games(library, account, games, links=None):
             else:
                 game_id = library.sql.execute("INSERT INTO games(title,platform,source) VALUES(?,'PC','Steam')", (game.title.strip(),)).lastrowid
                 created += 1
+            library.sql.execute('DELETE FROM wishlist WHERE game_id=?',(game_id,))
+            library.sql.execute('DELETE FROM settings WHERE key=?',(f'collection.unowned.{game_id}',))
             library.sql.execute("INSERT OR IGNORE INTO external_identifiers VALUES(?,'steam',?)", (game_id, identity))
             library.sql.execute('''INSERT INTO steam_owned_games(steam_id,app_id,game_id,title,minutes,checked_at)
                 VALUES(?,?,?,?,?,?) ON CONFLICT(steam_id,app_id) DO UPDATE SET

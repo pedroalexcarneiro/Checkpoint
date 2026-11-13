@@ -47,7 +47,9 @@ def build_editor(dialog,outer):
     for key,title in [('cover','Capa'),('banner','Banner'),('logo','Logo')]:row.addWidget(ImageEditor(dialog,key,title),1)
     images.addLayout(row);images.addWidget(text('Capa na biblioteca; banner e logo na página do jogo. As imagens originais são preservadas.','caption'));images.addStretch()
     form=QFormLayout();form.setSpacing(14)
-    for title,key in [('Status','status'),('Nota pessoal','rating'),('Favorito','favorite')]:form.addRow(title,dialog.fields[key])
+    for title,key in [('Status','status'),('Nota pessoal','rating'),('Favorito','favorite')]:
+        if key=='status' and not dialog.owned:dialog.fields[key].hide();continue
+        form.addRow(title,dialog.fields[key])
     personal.addLayout(form);personal.addWidget(text('Suas observações','cardTitle'));dialog.fields['notes'].setMaximumHeight(220);dialog.fields['notes'].setMinimumHeight(120);personal.addWidget(dialog.fields['notes']);personal.addStretch()
     outer.addWidget(tabs,1);dialog.error.show();outer.addWidget(dialog.error)
     footer=QHBoxLayout()

@@ -32,6 +32,9 @@ def complete_identity(library,game_id,result):
         for field,value in values.items():
             if value:library.sql.execute(f"UPDATE games SET {field}=?,updated_at=? WHERE id=? AND {field}='' AND deleted_at IS NULL",(value,now(),game_id))
 
+        from .description_provenance import record
+        record(library,game_id,result)
+
 
 def save_import(library,data,file_id=None,result=None):
     clean=clean_game_data(data)
@@ -67,7 +70,12 @@ def save_import(library,data,file_id=None,result=None):
                 values={'description':result.description,'genre':', '.join(result.genres),'developer':result.developer,'publisher':result.publisher,'release_date':result.release_date}
                 values={key:value for key,value in values.items() if value and not library.get(game_id)[key]}
                 if values:library.sql.execute(f'UPDATE games SET {",".join(key+"=?" for key in values)},updated_at=? WHERE id=?',[*values.values(),now(),game_id])
+        if result:
+            from .description_provenance import record
+            record(library,game_id,result)
         if file:
             library.sql.execute("UPDATE game_files SET game_id=?,review_state='confirmed' WHERE id=?",(game_id,file_id))
             library.sql.execute('INSERT OR IGNORE INTO rom_versions(file_id) VALUES(?)',(file_id,))
+        library.sql.execute('DELETE FROM wishlist WHERE game_id=?',(game_id,))
+        library.sql.execute('DELETE FROM settings WHERE key=?',(f'collection.unowned.{game_id}',))
     return game_id

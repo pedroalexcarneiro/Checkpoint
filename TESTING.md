@@ -1,5 +1,97 @@
 # Validação
 
+## Publicação confirmada — v0.1.27
+
+Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.27
+Fonte da tag: `6fad7bfa278d0cb2897588a7965d545c98fcdacf`.
+Workflow Windows release `43357748311`: completed/success.
+Windows/Python 3.12.10: **225 testes aprovados em 183,59 s**, zero falhas/erros/skips.
+Fonte e ZIP extraído: seis páginas, auxiliar, cadastro com imagem/SQLite e
+integridade aprovados; CheckpointUpdater.exe --check retornou 0.
+65 capturas Qt Windows geradas. Inspecionadas as páginas principais, conexões,
+perfil e lista Steam de 300 jogos; dados/artes dessas capturas são fixtures.
+Logos públicas reais também foram conferidas em biblioteca Linux isolada.
+Não equivale a autenticação de serviços nem aprovação estética do usuário.
+
+ZIP Windows: 84.082.193 bytes; SHA-256
+`8cf3e0c97c81f5962e3380c630fa3135a30c54c57a6766891e2d5bdba7af4768`.
+ZIP visual: 4.583.748 bytes; SHA-256
+`c3f8c1aafa31bbe7394b9988b6354ba81e1b397f4a3bc6159b7b8a568fb9824f`.
+Hash do ZIP visual baixado coincide com o digest GitHub; o hash Windows no
+relatório do empacotador coincide com o asset publicado. Tags antigas preservadas.
+
+
+## 0.1.27 — visibilidade final do cadastro
+
+A primeira execução Windows barrou publicação: o caso de 300 jogos excedeu a
+espera de 10 s, com 224 outros testes aprovados. Ajustada somente a tolerância
+de espera para 60 s; mantidas as verificações de rolagem, tamanho e resumo.
+
+14 testes focados passaram em 13,79 s após restringir Adicionar jogo a Início
+e Biblioteca. Suíte completa anterior de perfil/Steam/Desejos: 225 testes Linux
+aprovados em 131,98 s. Windows validará novamente o commit final integralmente.
+
+## 0.1.26 — pedidos adicionais
+
+Regressões para atualização automática da logo na wishlist, não repetição de
+consulta na sessão, importação Steam de 300 jogos com tamanho estável e resumo
+de uma linha; cadastro global adiciona posse mesmo ao partir de Desejos.
+Perfil verifica foto em cache local, original preservado, apelido persistente,
+cancelamento, remoção da foto e manutenção ao trocar tema/reabrir janela.
+36 testes focados passaram após a implementação do perfil. Suíte Linux completa:
+225 aprovados em 131,98 s, exit 0. Pacote Windows aguarda workflow separado.
+
+## 0.1.25 — correções de composição e navegação
+
+Linux: suíte completa com Qt offscreen, 221 testes aprovados em 133,17 s.
+Após os ajustes finais de calendário/disclosures, 27 testes focados aprovados
+em 47,71 s. Smokes das seis páginas e cadastro com auxiliar, imagem e SQLite
+passaram. Capturas reais geradas/inspecionadas em 1000, 1100 e 1920 px, incluindo
+artes públicas Steam somente em uma biblioteca isolada, estados vazios e temas.
+Não comprova integração autenticada nem validação Windows; resultado Windows
+será registrado separadamente após o workflow da nova versão.
+
+## Publicação confirmada — v0.1.24 — 13/11/2026
+
+Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.24
+Commit da tag: `425dd12ab7571b1bdc236321ef952d3eeff0c2d7`.
+Workflow [43347929302](https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43347929302)
+concluído com sucesso em build e publicação. Pre-release publicada com oito assets.
+
+Windows/Python 3.12.10: **216 testes aprovados em 94,04 s**, zero falhas/erros/skips.
+Build do aplicativo e atualizador; smokes das seis páginas, auxiliar isolado,
+cadastro com imagem/SQLite e integridade do banco passaram no fonte e no ZIP
+extraído. `CheckpointUpdater.exe --check` retornou 0. Revisão automatizada gerou
+48 capturas Qt e índice HTML com fixtures isoladas, sem dados pessoais.
+
+ZIP Windows: 84.074.384 bytes; SHA-256
+`fe66f68d334689dff5fbcd315d2a9dc249ea5167dda879107f7b303b7ef7290e`.
+O digest publicado pelo GitHub coincide com o registrado pelo empacotamento.
+ZIP visual: 3.255.466 bytes; SHA-256
+`3b3ff0e76c55a20e37e0206501695e681f0253b8bb0019b365aa9519eae37093`.
+
+Esta confirmação substitui a pendência de publicação na preparação abaixo.
+A versão publicada é 0.1.24; a fonte da continuidade permanece na branch
+`codex/design-fidelity-pt-br`, sem merge em `main` ou alteração de tags antigas.
+Não equivale a aprovação estética, inspeção manual de todas as novas capturas,
+sessão autenticada ou homologação interativa/DPI Windows 10/11.
+Schema 4 e dados pessoais preservados; monitoramento/alertas de preços,
+cobertura integral PT-BR e demais itens de ROADMAP continuam pendentes.
+
+## Preparação da publicação 0.1.24 — 13/11/2026
+
+Publicação solicitada para a continuidade implementada em `5d33629` e documentada
+em `3f6ae049`, na branch `codex/design-fidelity-pt-br`. Versão do projeto e do
+aplicativo atualizadas em conjunto para 0.1.24; notas da release refletem Biblioteca
+vertical, wishlist com logos/preços, nove temas escuros, calendário e localização PT-BR.
+O workflow Windows release passa a aceitar esta branch e publicará a pre-release
+somente após os testes, build, smokes e revisão visual automatizada.
+
+A validação anterior de 216 testes Windows refere-se à fonte `5d33629`.
+Os resultados do novo pacote 0.1.24 ainda precisam ser observados no workflow;
+esta preparação não declara publicação, aprovação estética ou teste autenticado.
+`main`, tags existentes, schema 4 e dados pessoais permanecem preservados.
+
 ## Publicação confirmada — v0.1.19
 
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.19
@@ -400,3 +492,53 @@ falhas/erros/skips e smokes aprovados. Capturas com fonte corrigida produzidas e
 PNG de Início/Biblioteca/Aparência inspecionados. ZIP visual possui 37 capturas
 e hash conferido; nenhum banco/log foi incluído. Resultado visual continua
 aberto a ajustes do usuário, sem confundir sucesso funcional com aprovação estética.
+
+## Continuidade após v0.1.23 — 12/11/2026
+
+Estado final: nove temas escuros (modo claro removido), Biblioteca vertical com
+capas ampliadas e legendas alinhadas, wishlist quadrada com logos e ações na mesma
+linha, calendário diário, PT-BR/datas e preços públicos BRL. A opção de Biblioteca
+quadrada foi descartada pelo usuário; não deve ser reintroduzida por esta revisão.
+
+Validação Linux final: **216 testes aprovados em 93,36 s, exit 0**, sem abort nativo:
+
+```sh
+QT_QPA_PLATFORM=offscreen .venv/bin/python -X faulthandler -m pytest tests -q -p no:cacheprovider -o faulthandler_timeout=90
+```
+
+Smokes executados via `scripts.package_windows_release.smoke` e `save_smoke`, com
+`sys.executable -m gamevault.app` e diretórios novos sob `work/`: seis páginas,
+integridade/schema SQLite, auxiliar `ping`, assets oficiais presentes e cadastro
+com imagem/SQLite aprovados. Nunca abriram a biblioteca pessoal. O wheel foi
+construído e inspecionado: contém os módulos e assets necessários, sem base/logs.
+Isso não equivale a empacotamento ou homologação Windows.
+
+`scripts/render_ui_review.py work/review-dark-final --art-dir work/reference-art
+--prices-file work/prices-for-review.json` gerou 48 capturas Qt, incluindo verde,
+roxo/azul, janelas 1100×740 e 1000×700, abas, diálogos, calendário e wishlist.
+Dados de jogos/sessões são fixtures; os arquivos opcionais trazem artes/snapshot
+públicos para revisão, sem autenticação de conta. O empacotador inclui somente
+capturas/índice, sem bases/logs. Inspeção visual Linux não é aprovação estética.
+
+Consultas públicas reais, separadas dos testes com transportes substituídos:
+Steam Store retornou descrição PT de Hollow Knight e data ISO 2017-02-24;
+MediaWiki retornou descrição PT de The Minish Cap para Game Boy Advance;
+GG.deals BR retornou Hollow Knight, mínimo R$ 46,99, lojas oficiais R$ 46,99 e
+keyshops R$ 47,46, com 11 ofertas carregadas e links originais. Esses valores são
+um snapshot da consulta, não promessa de preço futuro nem validação autenticada.
+Nenhum segredo foi lido. SteamGridDB/RAWG autenticados e cofre Windows não foram
+validados nesta nuvem.
+
+O novo workflow `Windows UI validation` valida PRs sem publicar releases ou tags.
+## Validação Windows desta revisão — 12/11/2026
+
+Fonte validada: `5d33629`; workflow [43326388407](https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43326388407), concluído com sucesso.
+Windows/Python 3.12.10: **216 testes, zero falhas/erros/skips**, 125,089 s.
+Build do aplicativo e atualizador, seis páginas, auxiliar isolado, cadastro com
+imagem/SQLite e integridade do banco passaram na origem e no executável extraído.
+`CheckpointUpdater.exe --check` retornou 0. Artefato de revisão contém pacote
+Windows e 48 capturas Qt com fixtures; Biblioteca, Desejos e Estatísticas foram
+inspecionados. Não equivale a aprovação estética, sessão autenticada ou homologação
+interativa de DPI em Windows 10/11. Nenhuma release/tag foi publicada.
+ZIP Windows SHA-256: `72157494dfbc9d68996b82ad45cf0bb4c3de9961573a8d8addae1ece0f215729`.
+ZIP visual SHA-256: `838d68435a16d5aaa74863551cd81ce5d420ad79ca2c1aeb4ec3fdf1ce3b20af`.

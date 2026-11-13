@@ -19,7 +19,7 @@ class RawgProvider:
     def details(self,external_id):
         if not str(external_id).isdigit(): raise ValueError('Identificador RAWG inválido.')
         row = self.http.json(f'https://api.rawg.io/api/games/{external_id}?'+urlencode({'key':self.key}))
-        return MetadataResult('rawg',str(row['id']),row['name'],description=row.get('description_raw',''),
+        return MetadataResult('rawg',str(row['id']),row['name'],description=row.get('description_raw',''),description_source=f'https://rawg.io/games/{row.get("slug",external_id)}',description_language='en',
             release_date=row.get('released') or '',genres=tuple(g['name'] for g in row.get('genres',[])),
             platforms=tuple(p['platform']['name'] for p in row.get('platforms') or []),
             images={'cover':row['background_image'],'banner':row['background_image']} if row.get('background_image') else {},
@@ -56,7 +56,7 @@ class SteamGridDbProvider:
     def artworks(self,game_id,kind='cover'):
         if not str(game_id).isdigit(): raise ValueError('Identificador inválido.')
         resource = {'cover':'grids','banner':'heroes','logo':'logos'}[kind]
-        query = '?dimensions=600x900' if kind=='cover' else ''
+        query = '?dimensions=600x900&types=static' if kind=='cover' else '?types=static'
         payload = self.http.json(f'https://www.steamgriddb.com/api/v2/{resource}/game/{game_id}'+query,
                                  {'Authorization':'Bearer '+self.key})
         return [r['url'] for r in sorted(payload.get('data',[]),key=lambda row:float(row.get('score') or 0),reverse=True)

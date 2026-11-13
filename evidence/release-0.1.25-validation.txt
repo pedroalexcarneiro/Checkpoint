@@ -1,0 +1,8 @@
+Checkpoint 0.1.25 — preparação de validação
+Linux, QT_QPA_PLATFORM=offscreen.
+Suíte completa: 221 passed in 133.17s, exit 0.
+Focados após os ajustes finais: 27 passed in 47.71s, exit 0.
+Smoke 6 páginas: SQLite integrity=ok, exit 0.
+Cadastro smoke: salvar, auxiliar, renderização e SQLite OK, exit 0.
+Capturas Qt inspecionadas com fixtures isoladas, incluindo artes públicas Steam.
+Nenhum dado pessoal/credencial lido; Windows aguardando workflow.

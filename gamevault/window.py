@@ -31,7 +31,8 @@ class MainWindow(QMainWindow):
         from PySide6.QtWidgets import QApplication
         from .theme import apply_theme,DEFAULT_THEME
         self.theme=apply_theme(QApplication.instance(),library.setting('appearance.theme',DEFAULT_THEME))
-        self.setWindowTitle('Checkpoint'); self.resize(1380,900); self.setMinimumSize(1000,700)
+        if library.setting('appearance.theme',DEFAULT_THEME)!=self.theme.key:library.set_setting('appearance.theme',self.theme.key)
+        self.setWindowTitle('Checkpoint'); self.resize(1100,740); self.setMinimumSize(1000,700)
         from .completion_queue import CompletionQueue
         self.completion_queue=CompletionQueue(library.db.path,self)
         self.completion_queue.updated.connect(self.game_completed)
@@ -44,13 +45,15 @@ class MainWindow(QMainWindow):
         self.status_timer=QTimer(self);self.status_timer.setSingleShot(True);self.status_timer.setInterval(6000)
         self.status_timer.timeout.connect(self.statusBar().clearMessage)
         self.statusBar().messageChanged.connect(self.status_message_changed)
-        self.hero_upgrade_attempted=set();self.current_page = 0; self.current_game = None; self.last_deleted = None; self.save_jobs = {}
+        from .price_queue import PriceQueue
+        self.price_queue=PriceQueue(library,self);self.price_queue.updated.connect(self.prices_updated)
+        self.hero_upgrade_attempted=set();self.description_upgrade_attempted=set();self.current_page = 0; self.current_game = None; self.last_deleted = None; self.save_jobs = {}
         root = QWidget(); root.setObjectName('root'); self.setCentralWidget(root)
         layout = QHBoxLayout(root); layout.setContentsMargins(0,0,0,0); layout.setSpacing(0)
         sidebar = QWidget(); sidebar.setObjectName('sidebar'); sidebar.setFixedWidth(198)
-        nav = QVBoxLayout(sidebar); nav.setContentsMargins(10,16,10,18)
+        nav = QVBoxLayout(sidebar); nav.setContentsMargins(10,10,10,12);nav.setSpacing(4)
         from .branding import SystemName,app_icon
-        self.brand=SystemName(self.theme);nav.addWidget(self.brand);nav.addSpacing(18)
+        self.brand=SystemName(self.theme);nav.addWidget(self.brand);nav.addSpacing(8)
         self.setWindowIcon(app_icon(self.theme));QApplication.instance().setWindowIcon(self.windowIcon())
         self.nav_names=['home','library','wish','memories','stats','settings']
         self.nav_buttons = []
@@ -59,40 +62,74 @@ class MainWindow(QMainWindow):
             from .ui_components import nav_icon
             item.setIcon(nav_icon(self.nav_names[index],self.theme.colors['muted']));item.setIconSize(QSize(21,21))
             self.nav_buttons.append(item)
-            if index==5:nav.addStretch()
+            if index==5:
+                nav.addStretch()
+                divider=QFrame();divider.setObjectName('sidebarDivider');divider.setFixedHeight(1);nav.addWidget(divider);nav.addSpacing(6)
             nav.addWidget(item)
         from . import __version__
-        separator=QFrame();separator.setFrameShape(QFrame.HLine);separator.setObjectName('sidebarDivider');nav.addWidget(separator)
+        # O divisor agrupa Configurações e perfil no rodapé da lateral.
         self.profile_button=button(self.library.setting('profile.name','Meu perfil'),self.open_profile);self.profile_button.setObjectName('profileButton');self.profile_button.setIcon(nav_icon('user',self.theme.colors['muted']));self.profile_button.setIconSize(QSize(22,22));self.profile_button.setToolTip('Perfil local e aparência');nav.addWidget(self.profile_button)
-        version=label('v'+__version__,'caption');version.setContentsMargins(12,0,0,0);nav.addWidget(version)
+        self.profile_button.setToolTip('Perfil local · Checkpoint v'+__version__)
+        self.refresh_profile()
         layout.addWidget(sidebar)
-        self.host = QVBoxLayout(); self.host.setContentsMargins(28,24,28,20); self.host.setSpacing(20)
-        layout.addLayout(self.host,1)
+        content=QWidget();content.setObjectName('mainContent');content.setMaximumWidth(1440)
+        self.host = QVBoxLayout(content); self.host.setContentsMargins(24,20,24,18); self.host.setSpacing(14)
+        main_area=QWidget();main_row=QHBoxLayout(main_area);main_row.setContentsMargins(0,0,0,0);main_row.setSpacing(0)
+        main_row.addWidget(content,1);layout.addWidget(main_area,1)
         self.header_widget=QWidget();self.header_widget.setFixedHeight(38);self.header = QHBoxLayout(self.header_widget);self.header.setContentsMargins(0,0,0,0); self.heading = label('','title'); self.header.addWidget(self.heading); self.header.addStretch()
-        self.add_button=button('+ Adicionar jogo',self.add_game,True);self.header.addWidget(self.add_button); self.host.addWidget(self.header_widget)
+        self.add_button=button('+ Adicionar jogo',self.add_library_game,True);self.header.addWidget(self.add_button); self.host.addWidget(self.header_widget)
         self.stack = QStackedWidget(); self.host.addWidget(self.stack,1)
         self.pages = []
         for _ in PAGES:
             page = QWidget(); self.pages.append(page); self.stack.addWidget(page)
         self.build_library()
-        self.library_filters.removeWidget(self.search);self.search.setMinimumWidth(220);self.search.setMaximumWidth(380)
-        self.header.insertWidget(2,self.search);self.header.setSpacing(22)
+        self.library_filters.removeWidget(self.search);self.search.setMinimumWidth(200);self.search.setMaximumWidth(280)
+        self.search.addAction(nav_icon('search',self.theme.colors['muted']),QLineEdit.LeadingPosition)
+        self.header.insertWidget(2,self.search);self.header.setSpacing(12)
         self.search.returnPressed.connect(self.search_library)
         self.library_filters.removeWidget(self.platform);self.library_options.insertWidget(1,self.platform)
-        self.platform.setMaximumWidth(210);self.sort.setMaximumWidth(160);self.view.setMaximumWidth(125)
+        self.platform.setObjectName('libraryPlatform');self.sort.setObjectName('librarySort');self.platform.setFixedWidth(165);self.sort.setFixedWidth(145)
+        from .design_system import IconButton
+        self.view_buttons=[]
+        for index,name in enumerate(('library','list')):
+            control=IconButton(name,'Mostrar capas' if index==0 else 'Mostrar lista',lambda checked=False,i=index:self.view.setCurrentIndex(i))
+            control.setCheckable(True);control.setChecked(index==self.view.currentIndex());self.header.insertWidget(3+index,control);self.view_buttons.append(control)
+        self.view.currentIndexChanged.connect(self.update_view_buttons)
         self.navigate(0)
         self.timer = QTimer(self); self.timer.timeout.connect(self.poll_sessions); self.timer.start(1000)
         self.statusBar().setSizeGripEnabled(False);self.statusBar().showMessage('');self.statusBar().hide()
 
+    def update_view_buttons(self,index):
+        for i,control in enumerate(self.view_buttons):control.setChecked(i==index)
+
     def open_profile(self):
-        self.settings_section=0;self.navigate(5)
+        from .profile_dialog import ProfileDialog
+        dialog=ProfileDialog(self.library,self)
+        if dialog.exec()==QDialog.Accepted:self.refresh_profile()
+
+    def refresh_profile(self):
+        from .profile_dialog import avatar_icon
+        from .ui_components import nav_icon
+        nickname=self.library.setting('profile.name','Meu perfil') or 'Meu perfil'
+        self.profile_button.setText(nickname);self.profile_button.setToolTip(nickname)
+        icon=avatar_icon(self.library.setting('profile.avatar',''),64)
+        self.profile_button.setIcon(icon if not icon.isNull() else nav_icon('user',self.theme.colors['muted']))
+        self.profile_button.setIconSize(QSize(28,28))
 
     def showEvent(self,event):
         super().showEvent(event)
         from .window_style import titlebar_theme
-        titlebar_theme(self,self.theme.key!='white')
+        titlebar_theme(self,True)
 
     def search_library(self):self.navigate(1)
+
+    def add_library_game(self):
+        self.navigate(1)
+        self.add_game()
+
+    def search_changed(self,value):
+        if self.current_page==0 and value.strip():self.navigate(1)
+        self.refresh_library()
 
     def guard(self,callback):
         try: return callback()
@@ -110,7 +147,8 @@ class MainWindow(QMainWindow):
     def navigate(self,index):
         self.current_page = index; self.current_game = None;self.header_widget.show()
         for i,b in enumerate(self.nav_buttons): b.setChecked(i==index)
-        self.heading.setText(PAGES[index]);self.add_button.setVisible(index in (0,1));self.search.setVisible(index in (0,1))
+        self.heading.show();self.heading.setText(PAGES[index]);self.add_button.setText('+ Adicionar jogo');self.add_button.setVisible(index in (0,1));self.search.setVisible(index in (0,1))
+        for control in self.view_buttons:control.setVisible(index==1)
         if index==0: self.home()
         elif index==1: self.refresh_library()
         elif index==2: self.wishlist()
@@ -136,7 +174,7 @@ class MainWindow(QMainWindow):
         for name in ('Todos','Favoritos','Jogando','Concluídos'):self.library_tabs.addTab(name)
         self.library_tabs.currentChanged.connect(self.library_tab_changed);layout.addWidget(self.library_tabs)
         filters = QHBoxLayout();self.library_filters=filters; self.search = QLineEdit(); self.search.setPlaceholderText('Buscar jogos…');self.search.setObjectName('headerSearch')
-        self.search.textChanged.connect(self.refresh_library); filters.addWidget(self.search,2)
+        self.search.textChanged.connect(self.search_changed); filters.addWidget(self.search,2)
         self.platform = QComboBox(); self.genre = QComboBox(); self.status = QComboBox()
         self.extra_filters=QWidget();extra_layout=QHBoxLayout(self.extra_filters);extra_layout.setContentsMargins(0,0,0,0)
         self.platform.addItem('Todas as plataformas',''); self.genre.addItem('Todos os gêneros','')
@@ -149,10 +187,11 @@ class MainWindow(QMainWindow):
         layout.addLayout(filters)
         options = QHBoxLayout();self.library_options=options; self.count = label('','muted'); options.addWidget(self.count); options.addStretch()
         self.favorites = QCheckBox('Favoritos',self.pages[1]); self.favorites.toggled.connect(self.refresh_library);self.favorites.hide()
-        filter_button=QPushButton('Filtros');filter_button.setCheckable(True);filter_button.toggled.connect(self.extra_filters.setVisible);options.addWidget(filter_button)
-        self.sort = QComboBox(); self.sort.addItem('Título','title'); self.sort.addItem('Mais recentes','recent'); self.sort.addItem('Maior nota','rating')
+        from .ui_components import nav_icon
+        filter_button=QPushButton();filter_button.setIcon(nav_icon('filter',self.theme.colors['muted']));filter_button.setFixedSize(32,32);filter_button.setToolTip('Mais filtros');filter_button.setAccessibleName('Mais filtros');filter_button.setCheckable(True);filter_button.toggled.connect(self.extra_filters.setVisible);options.addWidget(filter_button)
+        self.sort = QComboBox(); self.sort.addItem('Ordenar: A – Z','title'); self.sort.addItem('Mais recentes','recent'); self.sort.addItem('Maior nota','rating')
         self.sort.currentIndexChanged.connect(self.refresh_library); options.addWidget(self.sort)
-        self.view = QComboBox(); self.view.addItems(['Galeria','Lista']); self.view.currentIndexChanged.connect(self.refresh_library); options.addWidget(self.view)
+        self.view = QComboBox(); self.view.addItems(['Galeria','Lista']); self.view.currentIndexChanged.connect(self.refresh_library); self.view.hide()
         layout.addLayout(options);layout.addWidget(self.extra_filters);self.extra_filters.hide()
         from .cover_grid import CoverGrid
         self.gallery=CoverGrid(self.theme,self.pages[1]);self.gallery.setIconSize(QSize(174,232))
@@ -165,10 +204,11 @@ class MainWindow(QMainWindow):
         from .ui_components import ResponsiveToolbar
         layout.removeWidget(self.library_tabs);options.setSpacing(8);options.removeWidget(self.count)
         layout.removeItem(options);options.setParent(None);controls=QWidget();controls.setLayout(options)
-        layout.removeItem(filters);layout.insertWidget(0,ResponsiveToolbar(self.library_tabs,controls));layout.insertWidget(1,self.count)
+        layout.removeItem(filters);layout.insertWidget(0,ResponsiveToolbar(self.library_tabs,controls));self.count.hide()
+        layout.setSpacing(16)
         layout.addWidget(self.gallery,1); layout.addWidget(self.table,1)
         from .design_system import empty_state
-        self.library_empty=empty_state('search','Nenhum jogo por aqui','Adicione um jogo ou ajuste a busca e os filtros.',self.add_game,'Adicionar jogo');layout.addWidget(self.library_empty);self.library_empty.hide()
+        self.library_empty=empty_state('search','Nenhum jogo encontrado','',self.add_game,'Adicionar jogo');layout.addWidget(self.library_empty);self.library_empty.hide()
         self.gallery.setObjectName('coverGrid');self.gallery.setFrameShape(QFrame.NoFrame);self.gallery.setTextElideMode(Qt.ElideRight)
 
     @Slot(int)
@@ -181,15 +221,15 @@ class MainWindow(QMainWindow):
 
     def refresh_library(self,*args):
         if not hasattr(self,'gallery'): return
-        for combo,key,caption in [(self.platform,'platform','Todas as plataformas'),(self.genre,'genre','Todos os gêneros')]:
-            selected = combo.currentData(); values = sorted({value.strip() for g in self.library.games() for value in (g[key].split(',') if key=='genre' else [g[key]]) if value.strip()})
+        for combo,key,caption in [(self.platform,'platform','Plataforma: Todas'),(self.genre,'genre','Todos os gêneros')]:
+            selected = combo.currentData(); values = sorted({value.strip() for g in self.library.owned_games() for value in (g[key].split(',') if key=='genre' else [g[key]]) if value.strip()})
             combo.blockSignals(True); combo.clear(); combo.addItem(caption,'')
             for value in values: combo.addItem(value,value)
             index = combo.findData(selected); combo.setCurrentIndex(max(0,index)); combo.blockSignals(False)
-        games = self.library.games(self.search.text(),self.platform.currentData(),self.genre.currentData(),self.status.currentData(),self.favorites.isChecked(),self.sort.currentData())
+        games = self.library.owned_games(self.search.text(),self.platform.currentData(),self.genre.currentData(),self.status.currentData(),self.favorites.isChecked(),self.sort.currentData())
         compact=self.library.setting('appearance.density','comfortable')=='compact'
         self.gallery.setIconSize(QSize(138,184) if compact else QSize(174,232));self.gallery.theme=self.theme;self.gallery.set_density(compact)
-        self.gallery.clear(); self.table.setRowCount(len(games)); self.count.setText(f'{len(games)} jogos' if games else 'Nenhum jogo encontrado. Adicione um jogo ou ajuste os filtros.')
+        self.gallery.clear(); self.table.setRowCount(len(games)); self.count.setText(f'{len(games)} jogos')
         for row,game in enumerate(games):
             pix = QPixmap(game['cover']) if game['cover'] else QPixmap()
             if pix.isNull():
@@ -214,6 +254,7 @@ class MainWindow(QMainWindow):
         if item: self.detail(item.data(Qt.UserRole))
 
     def add_game(self):
+        wish=self.current_page==2
         dialog = GameDialog(self,library=self.library)
         result=dialog.exec()
         if dialog.steam_requested:
@@ -223,8 +264,12 @@ class MainWindow(QMainWindow):
                 from .trash_import import save_with_prompt
                 game_id=save_with_prompt(self,self.library,dialog.data(),dialog.drive_file_id,dialog.catalog_result)
                 if game_id is None:return
+                if wish:
+                    with self.library.sql:
+                        self.library.sql.execute('INSERT OR IGNORE INTO wishlist(game_id,target_cents) VALUES(?,0)',(game_id,))
+                        self.library.sql.execute('INSERT INTO settings VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value',(f'collection.unowned.{game_id}','true'))
                 self.refresh_library();self.detail(game_id)
-                self.statusBar().showMessage('Jogo salvo na biblioteca.')
+                self.statusBar().showMessage('Jogo adicionado aos desejos.' if wish else 'Jogo salvo na biblioteca.')
                 if dialog.complete_on_save.isChecked():
                     self.completion_queue.submit([game_id])
             self.guard(save)
@@ -259,6 +304,15 @@ class MainWindow(QMainWindow):
         from .detail_view import build_detail
         build_detail(self,game)
         self.upgrade_steam_banner(game)
+        self.upgrade_description(game)
+
+    def upgrade_description(self,game):
+        if not self.isVisible() or game['id'] in self.description_upgrade_attempted or not self.library.setting('artwork.auto',True):return
+        from .description_provenance import current
+        provenance=current(self.library,game)
+        if provenance.get('language') in ('pt','pt-BR'):return
+        if not self.library.sql.execute('SELECT 1 FROM external_identifiers WHERE game_id=?',(game['id'],)).fetchone():return
+        self.description_upgrade_attempted.add(game['id']);self.completion_queue.submit([game['id']])
 
     def upgrade_steam_banner(self,game):
         if game['id'] in self.hero_upgrade_attempted or not self.library.setting('artwork.auto',True):return
@@ -297,20 +351,30 @@ class MainWindow(QMainWindow):
         build_memories(self)
 
     def add_wish(self,game_id):
-        value,ok = QInputDialog.getDouble(self,'Lista de desejos','Preço desejado em R$:',0,0,100000,2)
-        if ok:
-            with self.library.sql:
-                self.library.sql.execute('INSERT INTO wishlist(game_id,target_cents) VALUES(?,?) ON CONFLICT(game_id) DO UPDATE SET target_cents=excluded.target_cents',(game_id,round(value*100)))
-            self.statusBar().showMessage('Jogo adicionado à lista de desejos.')
-            if self.current_page==2:self.wishlist()
+        with self.library.sql:
+            self.library.sql.execute('INSERT INTO settings VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value',(f'collection.unowned.{game_id}','true'))
+            self.library.sql.execute('INSERT OR IGNORE INTO wishlist(game_id,target_cents) VALUES(?,0)',(game_id,))
+        self.statusBar().showMessage('Jogo adicionado à lista de desejos.')
+        self.refresh_library()
+        if self.current_game==game_id:self.detail(game_id)
+        elif self.current_page==2:self.wishlist()
+
+    def prices_updated(self,game_id):
+        if self.current_game==game_id:self.detail(game_id)
+        elif self.current_page==2:self.wishlist()
 
     def wishlist(self):
         from .collection_views import build_wishlist
         build_wishlist(self)
 
     def remove_wish(self,game_id):
-        with self.library.sql: self.library.sql.execute('DELETE FROM wishlist WHERE game_id=?',(game_id,))
+        with self.library.sql:
+            self.library.sql.execute('INSERT INTO settings VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value',(f'collection.unowned.{game_id}','true'))
+            self.library.sql.execute('DELETE FROM wishlist WHERE game_id=?',(game_id,))
         self.navigate(2)
+
+    def acquire_wish(self,game_id):
+        self.library.acquire(game_id);self.refresh_library();self.detail(game_id)
 
     def statistics(self):
         from .statistics_view import build_statistics
@@ -365,6 +429,7 @@ class MainWindow(QMainWindow):
         self.refresh_library()
         if self.current_game==game_id and self.library.get(game_id):self.detail(game_id)
         elif self.current_page==0:self.home()
+        elif self.current_page==2:self.wishlist()
         self.statusBar().showMessage(message)
 
     @Slot(str)
@@ -380,14 +445,15 @@ class MainWindow(QMainWindow):
 
     def set_theme(self,key):
         from PySide6.QtWidgets import QApplication
-        from .theme import apply_theme
+        from .theme import apply_theme,get_theme
+        key=get_theme(key).key
         self.library.set_setting('appearance.theme',key)
         self.theme=apply_theme(QApplication.instance(),key)
         from .branding import app_icon
         from .ui_components import Hero,nav_icon
         from .window_style import titlebar_theme
-        titlebar_theme(self,self.theme.key!='white')
-        self.profile_button.setIcon(nav_icon('user',self.theme.colors['muted']))
+        titlebar_theme(self,True)
+        self.refresh_profile()
         self.brand.set_theme(self.theme);self.setWindowIcon(app_icon(self.theme));QApplication.instance().setWindowIcon(self.windowIcon())
         for item,name in zip(self.nav_buttons,self.nav_names):item.setIcon(nav_icon(name,self.theme.colors['muted']))
         for hero in self.findChildren(Hero):hero.set_theme(self.theme)
@@ -573,4 +639,4 @@ class MainWindow(QMainWindow):
         if self.launcher.active:
             if QMessageBox.question(self,'Sessões ativas','Fechar o Checkpoint? O jogo continuará aberto e a sessão precisará de revisão manual.')!=QMessageBox.Yes:
                 event.ignore(); return
-        self.timer.stop();self.status_timer.stop();self.launcher.interrupt();event.accept()
+        self.price_queue.stop();self.timer.stop();self.status_timer.stop();self.launcher.interrupt();event.accept()

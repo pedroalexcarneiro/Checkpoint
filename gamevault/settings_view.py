@@ -2,7 +2,7 @@
 from pathlib import Path
 from PySide6.QtCore import Qt,QUrl
 from PySide6.QtGui import QDesktopServices
-from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QTabWidget,QComboBox,QToolButton,QMessageBox,QLineEdit
+from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QTabWidget,QComboBox,QToolButton,QMessageBox,QLineEdit,QCheckBox,QSizePolicy
 from .ui_components import text,action,card,service_icon
 from .design_system import page_scroll,ThemeSwatch,Badge,CardGrid
 from .theme import THEMES
@@ -10,7 +10,7 @@ from .theme import THEMES
 
 class DisclosureButton(QToolButton):
     def __init__(self,title,parent=None):
-        super().__init__(parent);self.setText(title);self.setCheckable(True)
+        super().__init__(parent);self.setText(title);self.setCheckable(True);self.setObjectName('disclosure');self.setMinimumHeight(44);self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed)
         self.setToolButtonStyle(Qt.ToolButtonTextBesideIcon);self.setArrowType(Qt.RightArrow)
         self.toggled.connect(self.indicate)
     def indicate(self,expanded):self.setArrowType(Qt.DownArrow if expanded else Qt.RightArrow)
@@ -18,7 +18,7 @@ class DisclosureButton(QToolButton):
 
 def disclosure(title,content,parent_layout):
     toggle=DisclosureButton(title);toggle.toggled.connect(content.setVisible)
-    parent_layout.addWidget(toggle,0,Qt.AlignLeft);parent_layout.addWidget(content);content.hide();return toggle
+    parent_layout.addWidget(toggle);parent_layout.addWidget(content);content.hide();return toggle
 
 
 def folder_row(window,key,title):
@@ -33,31 +33,28 @@ def build_settings(window):
     for name in ('Aparência','Conexões','Downloads','Dados e backup'):
         page=QWidget();outer=QVBoxLayout(page);outer.setContentsMargins(0,18,0,0);pages.append(page_scroll(outer));tabs.addTab(page,name)
     appearance,connections,downloads,data=pages
-    frame,inside=card();head=QHBoxLayout();head.addWidget(Badge('user'));words=QVBoxLayout();words.addWidget(text('Seu perfil','sectionTitle'));words.addWidget(text('Personalize este espaço no seu computador.','muted'));head.addLayout(words,1);inside.addLayout(head)
-    row=QHBoxLayout();row.addWidget(text('Nome de exibição'));row.addStretch();profile_name=QLineEdit(window.library.setting('profile.name',''));profile_name.setPlaceholderText('Meu perfil');profile_name.setMaxLength(40);profile_name.setMaximumWidth(260)
-    def save_name():
-        value=profile_name.text().strip() or 'Meu perfil';window.library.set_setting('profile.name',value);window.profile_button.setText(value)
-    profile_name.editingFinished.connect(save_name);row.addWidget(profile_name);inside.addLayout(row);appearance.addWidget(frame)
     frame,inside=card();head=QHBoxLayout();head.addWidget(text('Tema de cores','sectionTitle'));head.addStretch();window.theme_selector=QComboBox();window.theme_selector.setObjectName('themeSelector')
     for key,theme in THEMES.items():window.theme_selector.addItem(theme.name,key)
     window.theme_selector.setCurrentIndex(window.theme_selector.findData(window.theme.key));window.theme_selector.currentIndexChanged.connect(window.theme_changed);head.addWidget(window.theme_selector);inside.addLayout(head)
     swatches=QHBoxLayout();swatches.setSpacing(10)
     for key,theme in THEMES.items():swatches.addWidget(ThemeSwatch(theme,lambda checked=False,k=key:window.theme_selector.setCurrentIndex(window.theme_selector.findData(k))))
     swatches.addStretch();inside.addLayout(swatches)
-    row=QHBoxLayout();row.addWidget(text('Densidade da biblioteca','muted'));row.addStretch();density=QComboBox();density.addItem('Confortável','comfortable');density.addItem('Compacta','compact');density.setCurrentIndex(max(0,density.findData(window.library.setting('appearance.density','comfortable'))));density.currentIndexChanged.connect(lambda index:window.set_density(density.itemData(index)));row.addWidget(density);inside.addLayout(row);appearance.addWidget(frame);appearance.addStretch()
-    grid=CardGrid(340)
+    row=QHBoxLayout();row.addWidget(text('Densidade da biblioteca','muted'));row.addStretch();density=QComboBox();density.addItem('Confortável','comfortable');density.addItem('Compacta','compact');density.setCurrentIndex(max(0,density.findData(window.library.setting('appearance.density','comfortable'))));density.currentIndexChanged.connect(lambda index:window.set_density(density.itemData(index)));row.addWidget(density);inside.addLayout(row)
+    appearance.addWidget(frame);appearance.addStretch()
+    grid=CardGrid(380,max_columns=2)
     for provider,callback in [('Steam',window.steam),('Google Drive',window.drive),('SteamGridDB',lambda:window.configure_key('steamgriddb')),('RAWG',lambda:window.configure_key('rawg'))]:
         frame,inside=card();head=QHBoxLayout();badge=text('');badge.setPixmap(service_icon(provider));badge.setFixedSize(48,48);head.addWidget(badge)
-        words=QVBoxLayout();words.addWidget(text(provider,'cardTitle'));configured=window.integration_status(provider).startswith('Credencial salva');words.addWidget(text('Configurado' if configured else 'Não configurado','muted'));head.addLayout(words,1);inside.addLayout(head)
-        row=QHBoxLayout();row.addWidget(text('Conexão e acesso' if provider in ('Steam','Google Drive') else 'Ficha e imagens','caption'));row.addStretch();row.addWidget(action('Gerenciar' if configured else 'Configurar',callback));inside.addLayout(row);grid.add_card(frame)
+        words=QVBoxLayout();words.addWidget(text(provider,'cardTitle'));configured=window.integration_status(provider).startswith('Credencial salva');words.addWidget(text('Configurado' if configured else 'Não configurado','muted'));head.addLayout(words,1);head.setSpacing(18);head.addWidget(action('Gerenciar' if configured else 'Conectar',callback,not configured));inside.addLayout(head);inside.setContentsMargins(18,16,18,16);grid.add_card(frame)
     connections.addWidget(grid)
-    help_button=action('Sobre as conexões',lambda:QMessageBox.information(window,'Conexões','Configurado indica uma credencial salva. Use Gerenciar para consultar o serviço e verificar o acesso. Chaves ficam no cofre do Windows.'));help_button.setObjectName('quiet');connections.addWidget(help_button,0,Qt.AlignLeft)
-    extra=QWidget();inside=QVBoxLayout(extra);inside.setContentsMargins(0,0,0,0);inside.addWidget(action('Completar fichas e imagens da biblioteca',window.complete_library));inside.addWidget(action('Pesquisar metadados manualmente',window.metadata));disclosure('Avançado',extra,connections);connections.addStretch()
+    help_button=action('Sobre as conexões',lambda:QMessageBox.information(window,'Conexões','Configurado indica uma credencial salva. Use Gerenciar para consultar o serviço e verificar o acesso. Chaves ficam no cofre do Windows.'));help_button.setObjectName('quiet');connections.addWidget(help_button,0,Qt.AlignRight)
+    extra=QWidget();inside=QVBoxLayout(extra);inside.setContentsMargins(0,0,0,0);inside.addWidget(action('Completar fichas e imagens da biblioteca',window.complete_library));inside.addWidget(action('Pesquisar metadados manualmente',window.metadata))
+    prices=QCheckBox('Consultar preços do GG.deals automaticamente');prices.setChecked(window.library.setting('prices.auto',True));prices.toggled.connect(lambda value:window.library.set_setting('prices.auto',value));inside.addWidget(prices)
+    disclosure('Avançado',extra,connections);connections.addStretch()
     for key,title in [('downloads','ROMs baixadas'),('captures','Capturas'),('save_backups','Backups de saves')]:downloads.addWidget(folder_row(window,key,title))
-    downloads.addWidget(text('Downloads de ROMs são iniciados somente quando você solicita.','caption'));downloads.addStretch()
+    downloads.addStretch()
     grid=CardGrid(330)
     for title,description,name,actions in [('Biblioteca','Seu banco de jogos e suas preferências.','library',[('Criar backup',window.backup_database),('Abrir pasta de dados',lambda:QDesktopServices.openUrl(QUrl.fromLocalFile(str(window.library.db.path.parent.resolve()))))]),('Saves tradicionais','Cópias de segurança dos saves configurados.','folder',[('Criar backup',window.backup_saves),('Restaurar saves',window.restore_saves)])]:
-        frame,inside=card();head=QHBoxLayout();head.addWidget(Badge(name));head.addWidget(text(title,'cardTitle'),1);inside.addLayout(head);inside.addWidget(text(description,'muted'))
+        frame,inside=card();head=QHBoxLayout();head.addWidget(Badge(name));head.addWidget(text(title,'cardTitle'),1);inside.addLayout(head)
         row=QHBoxLayout()
         for caption,callback in actions:row.addWidget(action(caption,callback))
         inside.addLayout(row);grid.add_card(frame)
@@ -67,5 +64,12 @@ def build_settings(window):
     if not removed:inside.addWidget(text('A lixeira está vazia.','muted'))
     for game in removed:
         line=QHBoxLayout();line.addWidget(text(game['title']),1);line.addWidget(action('Restaurar',lambda checked=False,g=game['id']:window.restore_game(g)));inside.addLayout(line)
-    disclosure(f'Lixeira · {len(removed)} jogos',trash,data);data.addStretch()
+    disclosure(f'Lixeira · {len(removed)} jogos',trash,data)
+    archived=[game for game in window.library.games() if not window.library.is_owned(game['id']) and not window.library.sql.execute('SELECT 1 FROM wishlist WHERE game_id=?',(game['id'],)).fetchone()]
+    if archived:
+        archive=QWidget();inside=QVBoxLayout(archive)
+        for game in archived:
+            line=QHBoxLayout();line.addWidget(text(game['title']),1);line.addWidget(action('Adicionar à biblioteca',lambda checked=False,g=game['id']:window.acquire_wish(g)));inside.addLayout(line)
+        disclosure(f'Desejos removidos · {len(archived)} jogos',archive,data)
+    data.addStretch()
     tabs.setCurrentIndex(min(getattr(window,'settings_section',0),3));tabs.currentChanged.connect(window.settings_section_changed);layout.addWidget(tabs)

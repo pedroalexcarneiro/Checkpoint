@@ -1,3 +1,4 @@
+from .locale import date_display
 from pathlib import Path
 from PySide6.QtWidgets import QDialog,QVBoxLayout,QLabel,QLineEdit,QPushButton,QListWidget,QListWidgetItem,QMessageBox,QComboBox
 from PySide6.QtCore import Qt
@@ -44,7 +45,7 @@ class MetadataDialog(QDialog):
 
     def show_results(self,results):
         self.results = results; self.list.clear()
-        for result in results: self.list.addItem(result.title+' · '+(result.release_date or 'Data desconhecida'))
+        for result in results: self.list.addItem(result.title+' · '+(date_display(result.release_date) or 'Data desconhecida'))
         self.state.setText(f'{len(results)} resultados. Escolha a edição correta antes de importar.')
 
     def import_selected(self):

@@ -1,0 +1,28 @@
+Checkpoint — continuidade de design/PT-BR (12/11/2026)
+Base: codex/steam-library-import @ d23439dd998bfb667f4bf1ae38de12c25a1243be
+Revisão: codex/design-fidelity-pt-br
+Release publicada preservada: v0.1.23; schema preservado: 4.
+Linux/Python 3.12.14/PySide6 6.8.3/Qt offscreen.
+Suíte final: 216 passed in 93.36s, exit 0, sem abort nativo.
+Comando: QT_QPA_PLATFORM=offscreen .venv/bin/python -X faulthandler -m pytest tests -q -p no:cacheprovider -o faulthandler_timeout=90
+Smokes isolados: 6 páginas, auxiliar, SQLite íntegro/schema 4 e cadastro com imagem, exit 0.
+Wheel inspecionado: módulos e assets oficiais incluídos; sem base/logs.
+Revisão Qt: 48 capturas + índice; verde/roxo/azul; fixtures isoladas e artes públicas opcionais.
+Pontos finais: 9 temas escuros; Biblioteca vertical; wishlist quadrada com logos; ações na mesma linha; calendário diário; DD/MM/AAAA; descrição PT quando disponível; preços BRL e links completos.
+Modo claro e opção de Biblioteca quadrada removidos por pedido do usuário.
+Prévias não representam biblioteca pessoal nem conta autenticada; não são aprovação final do design.
+GG.deals público: Hollow Knight, BRL mínimo 4699 centavos, retail 4699, keyshops 4746; 11 ofertas carregadas. Snapshot temporal, sujeito a alteração.
+Steam Store pública: descrição PT e data 2017-02-24; MediaWiki: PT Minish Cap/GBA.
+Autenticação SteamGridDB/RAWG, cofre Windows e biblioteca pessoal não acessados nesta nuvem.
+## Validação Windows desta revisão — 12/11/2026
+
+Fonte validada: `5d33629`; workflow [43326388407](https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43326388407), concluído com sucesso.
+Windows/Python 3.12.10: **216 testes, zero falhas/erros/skips**, 125,089 s.
+Build do aplicativo e atualizador, seis páginas, auxiliar isolado, cadastro com
+imagem/SQLite e integridade do banco passaram na origem e no executável extraído.
+`CheckpointUpdater.exe --check` retornou 0. Artefato de revisão contém pacote
+Windows e 48 capturas Qt com fixtures; Biblioteca, Desejos e Estatísticas foram
+inspecionados. Não equivale a aprovação estética, sessão autenticada ou homologação
+interativa de DPI em Windows 10/11. Nenhuma release/tag foi publicada.
+ZIP Windows SHA-256: `72157494dfbc9d68996b82ad45cf0bb4c3de9961573a8d8addae1ece0f215729`.
+ZIP visual SHA-256: `838d68435a16d5aaa74863551cd81ce5d420ad79ca2c1aeb4ec3fdf1ce3b20af`.

@@ -55,8 +55,9 @@ def test_library_shortcuts_density_and_theme_update(library,app):
 
 def test_add_sources_do_not_start_network_or_nested_loading(library,app):
     dialog=GameDialog(library=library)
-    assert dialog.minimumWidth()>=850 and dialog.quick_add.jobs==[]
-    assert dialog.source_tabs.isHidden() and dialog.form_scroll.isHidden()
+    assert 560<=dialog.minimumWidth()<=620 and dialog.quick_add.jobs==[]
+    assert not dialog.source_tabs.isHidden() and dialog.form_scroll.isHidden()
+    assert [dialog.source_tabs.tabText(i) for i in range(3)]==['Pesquisar jogo','ROM do Drive','Steam']
     assert dialog.quick_add.query is dialog.fields['title']
     dialog.request_steam();assert dialog.steam_requested and dialog.result()==QDialog.Rejected
     dialog.close()
@@ -66,7 +67,7 @@ def test_home_tiles_are_full_height_and_open_real_game(library,app):
     identity=library.save_game({'title':'Fixture','status':'Jogando'})
     window=MainWindow(library);window.show();app.processEvents()
     tiles=window.pages[0].findChildren(GameTile)
-    assert tiles and all(tile.height()>200 for tile in tiles)
+    assert tiles and all(tile.height()==tile.art_height+48 for tile in tiles)
     tiles[0].click();assert window.current_game==identity
     window.close()
 

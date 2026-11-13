@@ -21,6 +21,8 @@ class ImageCache:
             buffer = QBuffer(); buffer.setData(QByteArray(content)); buffer.open(QIODevice.ReadOnly)
             reader = QImageReader(buffer); reader.setDecideFormatFromContent(True)
             size = reader.size()
+            if bytes(reader.format()).lower()==b'gif' or reader.supportsAnimation() or reader.imageCount()>1:
+                raise IntegrationError('Use uma imagem estática PNG, JPEG ou WebP; GIFs e animações não são aceitos.')
             if size.width()<=0 or size.height()<=0 or size.width()*size.height()>60_000_000:
                 raise IntegrationError('Imagem inválida ou excede o limite de resolução.')
             if reader.read().isNull(): raise IntegrationError('Não foi possível decodificar a imagem.')

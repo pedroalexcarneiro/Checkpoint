@@ -1,15 +1,17 @@
 from pathlib import Path
 from PySide6.QtCore import Qt, QSize, QUrl
-from PySide6.QtGui import QPixmap, QDesktopServices
+from PySide6.QtGui import QPixmap, QDesktopServices,QImageReader
 from PySide6.QtWidgets import (QDialog,QDialogButtonBox,QFormLayout,QLineEdit,QTextEdit,QComboBox,
     QSpinBox,QCheckBox,QPushButton,QHBoxLayout,QVBoxLayout,QFileDialog,QLabel,QScrollArea,QWidget,QListWidget,QGroupBox,QMessageBox,QTabBar)
 from .library import STATUSES
+from .locale import date_display,date_storage
 
 class GameDialog(QDialog):
     def __init__(self, parent=None, game=None, library=None, allow_steam=True):
         super().__init__(parent)
         self.setWindowTitle('Editar jogo' if game else 'Adicionar jogo')
         self.resize(660,760 if game else 390)
+        self.owned=not (game and library and game.get('id') and not library.is_owned(game['id']))
         self.library=library;self.drive_file_id=None;self.catalog_result=None;self.drive_results=[]
         self.steam_requested=False
         outer = QVBoxLayout(self);outer.setContentsMargins(24,24,24,24);outer.setSpacing(14)
@@ -44,9 +46,10 @@ class GameDialog(QDialog):
         body = QWidget(); form = QFormLayout(body); form.setSpacing(14); self.form=form
         self.fields = {}
         for key,label in [('title','Nome *'),('platform','Plataforma'),('genre','Gênero'),('category','Categoria'),
-                          ('developer','Desenvolvedora'),('publisher','Publicadora'),('release_date','Lançamento (AAAA-MM-DD)'),
+                          ('developer','Desenvolvedora'),('publisher','Publicadora'),('release_date','Lançamento (DD/MM/AAAA)'),
                           ('source','Origem')]:
             widget = QLineEdit(); form.addRow(label,widget); self.fields[key] = widget
+        self.fields['release_date'].setPlaceholderText('DD/MM/AAAA')
         self.fields['title'].setPlaceholderText('Ex.: Hollow Knight');self.fields['title'].setClearButtonEnabled(True)
         self.fields['platform'].setText('PC'); self.fields['source'].setText('Manual')
         status = QComboBox(); status.addItems(STATUSES); form.addRow('Status',status); self.fields['status'] = status
@@ -85,7 +88,7 @@ class GameDialog(QDialog):
                 elif isinstance(widget,QSpinBox): widget.setValue(value if value is not None else -1)
                 elif isinstance(widget,QCheckBox): widget.setChecked(bool(value))
                 elif isinstance(widget,QTextEdit): widget.setPlainText(value or '')
-                else: widget.setText(value or '')
+                else: widget.setText(date_display(value) if key=='release_date' else value or '')
 
         if library is not None and game is None:
             from .quick_add import QuickAdd
@@ -153,7 +156,7 @@ class GameDialog(QDialog):
                 for key in ('genre','developer','publisher','release_date','description'):
                     widget=self.fields[key]
                     if isinstance(widget,QTextEdit):widget.setPlainText(existing[key] or '')
-                    else:widget.setText(existing[key] or '')
+                    else:widget.setText(date_display(existing[key]) if key=='release_date' else existing[key] or '')
         self.drive_info.setText('Selecionada: '+file['original_name']+'. Download somente quando solicitado.')
         if hasattr(self,'quick_add'):
             self.quick_add.suspend=False;self.quick_add.drive_loaded(file)
@@ -176,7 +179,7 @@ class GameDialog(QDialog):
             if value:
                 widget=self.fields[key]
                 if isinstance(widget,QTextEdit):widget.setPlainText(value)
-                else:widget.setText(value)
+                else:widget.setText(date_display(value) if key=='release_date' else value)
         if hasattr(self,'drive_info'):self.drive_info.setText('Título confirmado: '+result.title+'. A plataforma e o nome original da ROM foram preservados.')
         if hasattr(self,'quick_add'):self.quick_add.suspend=False
     def choose_field(self):
@@ -195,6 +198,7 @@ class GameDialog(QDialog):
             elif isinstance(w,QCheckBox): value = int(w.isChecked())
             elif isinstance(w,QTextEdit): value = w.toPlainText()
             else: value = w.text().strip()
+            if key=='release_date':value=date_storage(value)
             result[key] = value
         return result
 
@@ -203,16 +207,21 @@ class GameDialog(QDialog):
             self.error.setText('Informe o nome do jogo.'); return
         date = self.fields['release_date'].text().strip()
         if date:
-            from datetime import date as date_type
-            try: date_type.fromisoformat(date)
+            try: date_storage(date)
             except ValueError:
-                self.error.setText('Data inválida. Use AAAA-MM-DD.'); return
+                self.error.setText('Data inválida. Use DD/MM/AAAA.'); return
         for key in ['cover','banner','logo','executable']:
             value = self.fields[key].text().strip()
             if value and not Path(value).is_file():
                 self.error.setText('Arquivo não encontrado: '+key); return
             if value and key!='executable' and QPixmap(value).isNull():
                 self.error.setText('Imagem inválida: '+key); return
+        for key in ('cover','banner','logo'):
+            value=self.fields[key].text().strip()
+            if value:
+                reader=QImageReader(value)
+                if bytes(reader.format()).lower()==b'gif' or reader.supportsAnimation() or reader.imageCount()>1:
+                    self.error.setText('Use imagens estáticas PNG, JPEG ou WebP. GIFs e animações não são aceitos.');return
         self.accept()
 
 class ImageDialog(QDialog):

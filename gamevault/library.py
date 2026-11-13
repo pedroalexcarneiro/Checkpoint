@@ -60,6 +60,20 @@ class Library:
         rows = [dict(r) for r in self.sql.execute('SELECT * FROM games WHERE '+' AND '.join(clauses)+' ORDER BY '+order,args)]
         return [row for row in rows if not genre or genre in {part.strip() for part in row['genre'].split(',')}]
 
+    def is_owned(self,game_id):
+        return not self.sql.execute('SELECT 1 FROM wishlist WHERE game_id=?',(game_id,)).fetchone() and not self.setting(f'collection.unowned.{game_id}',False)
+
+    def owned_games(self,*args,**kwargs):
+        excluded={row[0] for row in self.sql.execute('SELECT game_id FROM wishlist')}
+        excluded.update(int(row[0].rsplit('.',1)[-1]) for row in self.sql.execute("SELECT key FROM settings WHERE key LIKE 'collection.unowned.%' AND value='true'") if row[0].rsplit('.',1)[-1].isdigit())
+        return [game for game in self.games(*args,**kwargs) if game['id'] not in excluded]
+
+    def acquire(self,game_id):
+        if not self.get(game_id):raise ValueError('Jogo indisponível.')
+        with self.sql:
+            self.sql.execute('DELETE FROM wishlist WHERE game_id=?',(game_id,))
+            self.sql.execute('DELETE FROM settings WHERE key=?',(f'collection.unowned.{game_id}',))
+
     def delete(self, game_id):
         with self.sql:
             self.sql.execute('UPDATE games SET deleted_at=? WHERE id=?',(now(),game_id))
@@ -97,8 +111,9 @@ class Library:
                              (game_id,str(path),caption,now(),'image' if extension in {'.png','.jpg','.jpeg','.webp'} else 'video'))
 
     def stats(self):
-        games = self.games()
+        games = self.owned_games()
         rows = self.sql.execute("SELECT s.*,g.title FROM play_sessions s JOIN games g ON g.id=s.game_id WHERE g.deleted_at IS NULL AND s.state='finished'").fetchall()
+        owned_ids={game['id'] for game in games};rows=[row for row in rows if row['game_id'] in owned_ids]
         durations = [r['duration_seconds'] for r in rows]
         today = datetime.now(timezone.utc).date()
         weekly, monthly, top = defaultdict(int), defaultdict(int), defaultdict(int)
@@ -130,5 +145,5 @@ class Library:
                 'seconds':sum(durations), 'sessions':len(rows), 'average':sum(durations)/len(rows) if rows else 0,
                 'platforms':{p:sum(g['platform']==p for g in games) for p in sorted({g['platform'] for g in games})},
                 'genres':dict(genres),'weekly':dict(sorted(weekly.items())[-8:]),'monthly':dict(sorted(monthly.items())[-12:]),
-                'completions':dict(sorted(completions.items())),
+                'completions':dict(sorted(completions.items())), 'daily':{day.isoformat():seconds for day,seconds in sorted(daily.items())},
                 'top':[{'id':key[0],'title':key[1],'seconds':value} for key,value in sorted(top.items(),key=lambda item:item[1],reverse=True)[:10]]}

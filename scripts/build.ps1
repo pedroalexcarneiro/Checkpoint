@@ -19,7 +19,7 @@ try {
     $iconPath = Join-Path $buildPath 'checkpoint.ico'
     & $Python scripts/create_icon.py $iconPath
     if ($LASTEXITCODE -ne 0) { throw 'Falha ao gerar ícone.' }
-    & $Python -m PyInstaller @runtimeTlsArgs --noconfirm --windowed --onedir --name Checkpoint --icon $iconPath --distpath $distributionDirectory --workpath $buildPath --specpath $buildPath --hidden-import keyring.backends.Windows --copy-metadata keyring run_gamevault.py
+    & $Python -m PyInstaller @runtimeTlsArgs --noconfirm --windowed --onedir --name Checkpoint --icon $iconPath --distpath $distributionDirectory --workpath $buildPath --specpath $buildPath --collect-data gamevault --hidden-import keyring.backends.Windows --copy-metadata keyring run_gamevault.py
     if ($LASTEXITCODE -ne 0) { throw 'Falha no empacotamento.' }
     $portable = Join-Path $distributionDirectory 'Checkpoint'
     & $Python -m PyInstaller --noconfirm --onedir --console --name CheckpointUpdater --distpath (Join-Path $buildPath 'helper-dist') --workpath (Join-Path $buildPath 'helper-build') --specpath $buildPath run_updater.py

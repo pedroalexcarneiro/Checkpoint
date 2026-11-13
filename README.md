@@ -1,12 +1,23 @@
 # Checkpoint
 
-0.1.19 revisa a composição visual em relação aos mockups e prioriza banners panorâmicos Steam. Capturas reais e detalhes estão na documentação de desenvolvimento; pacote publicado em https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.19 .
+Biblioteca pessoal de jogos para Windows em Python/PySide6 e SQLite.
+A última release publicada é a [v0.1.27](https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.27).
+225 testes Windows e smokes do pacote aprovados; revisão inclui Desejos, Steam e perfil local.
 
-Biblioteca pessoal de jogos para Windows em Python/PySide6 e SQLite. Versão **0.1.19 de desenvolvimento**.
+Início pessoal, Biblioteca com capas verticais inteiras e legendas alinhadas, ficha
+com banner/logo e cadastro compacto. Desejos usa cards quadrados com logos,
+menores preços atuais e acesso à comparação de ofertas. Horas aparecem em um
+calendário diário. Descrições priorizam português quando a fonte disponibiliza;
+datas são exibidas em DD/MM/AAAA. A revisão 0.1.25 restaura os dez temas, incluindo
+Branco, conforme o prompt reenviado, e corrige proporções, espaçamentos e navegação.
+Adicionar jogo fica somente no canto superior direito de Início e Biblioteca. O perfil local permite
+foto e apelido, mostrados na lateral. A importação Steam usa lista com rolagem
+e resumo compacto, sem relatório por jogo na interface.
 
-Interface renovada: Início com atividade pessoal, biblioteca com capas inteiras, ficha com banner/logo e abas, cadastro simples e Configurações compactas. Identidade checkpo//nt e dez temas adaptáveis. Salvar continua gravando o jogo imediatamente, com ficha/imagens em segundo plano. Pacote Windows publicado: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.18 .
-
-Já oferece biblioteca manual persistente, galeria 3:4 e lista, pesquisa e filtros, favoritos, edição, lixeira recuperável, páginas de jogos, diário, mídia referenciada, conquistas pessoais, estatísticas de sessões confirmadas, metas de compra e backup/restauração local de saves explicitamente selecionados.
+Pesquisa/filtros, favoritos, edição, lixeira recuperável, diário, mídia pessoal,
+conquistas e backup/restauração de saves tradicionais continuam disponíveis.
+Dados pessoais e identificadores legados GameVault são preservados. Consulte
+CONTINUITY.md, PROJECT_STATUS.md e TESTING.md para resultados e limitações atuais.
 
 Há fluxos de integração implementados para pesquisa RAWG, artes SteamGridDB e ROMs no Google Drive. OAuth e leitura real do Drive, pesquisa/títulos e obtenção dos três tipos de arte SteamGridDB foram validados. RAWG autenticado permanece pendente. O scanner não baixa ROMs; downloads acontecem apenas por solicitação. Nenhuma função remove arquivos no Drive.
 
@@ -42,7 +53,7 @@ python -m gamevault.app --data-dir ./dados-isolados
 
 O primeiro início é vazio. Dados de testes ficam em diretórios isolados e não são incluídos na biblioteca distribuída. Vídeos abrem no reprodutor padrão do Windows; imagens possuem visualização ampliada no aplicativo.
 
-![Início vazio do GameVault](preview.png)
+
 
 ## Atualização 0.1.5 — Checkpoint
 
@@ -50,6 +61,4 @@ Nome visível e executável alterados para Checkpoint. Removidos slogans da nave
 
 ## Temas de cores
 
-Escolha entre Azul, Verde, Amarelo, Vermelho, Preto, Branco, Roxo, Rosa, Laranja e Ciano em Configurações > Aparência > Tema. A preferência é salva e aplicada imediatamente.
-
-![Comparação das paletas](palettes.png)
+Escolha entre Azul, Verde, Amarelo, Vermelho, Preto, Roxo, Rosa, Laranja, Ciano e Branco em Configurações > Aparência > Tema. A preferência é salva e aplicada imediatamente.

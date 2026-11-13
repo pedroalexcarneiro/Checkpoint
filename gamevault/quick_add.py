@@ -3,7 +3,7 @@ from functools import partial
 from PySide6.QtCore import QObject,Qt,QTimer,Slot,QSize,QEvent
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import (QWidget,QVBoxLayout,QHBoxLayout,QLabel,QPushButton,
-    QListWidget,QListWidgetItem,QComboBox,QFrame,QDialogButtonBox)
+    QListWidget,QListWidgetItem,QLineEdit,QComboBox,QFrame,QDialogButtonBox)
 from .jobs import Job
 from .worker import run_isolated
 from .integrations import MetadataResult
@@ -20,42 +20,56 @@ class QuickAdd(QObject):
         while outer.count():
             item=outer.takeAt(0)
             if item.widget():item.widget().hide()
-        dialog.resize(1040,720);dialog.setMinimumSize(850,620)
+        dialog.resize(620,510);dialog.setMinimumSize(560,470);dialog.setObjectName('quickAddDialog')
         from .window_style import titlebar_theme
-        titlebar_theme(dialog,self.library.setting('appearance.theme','green')!='white')
-        outer.setContentsMargins(28,24,28,22);outer.setSpacing(18)
-        head=QHBoxLayout();head.addWidget(text('Adicionar jogo','pageTitle'));head.addStretch()
-        if allow_steam:
-            steam=action('Importar da Steam',dialog.request_steam);steam.setObjectName('quiet');head.addWidget(steam)
-        outer.addLayout(head)
-        search=QHBoxLayout();self.query=dialog.fields['title'];dialog.form.removeWidget(self.query)
-        self.query.setParent(dialog);self.query.setObjectName('gameSearch');self.query.setPlaceholderText('Qual jogo você quer adicionar?');self.query.show()
-        self.query.setMinimumHeight(46);search.addWidget(self.query,1)
+        from .ui_components import nav_icon,service_icon
+        from .theme import get_theme
+        from PySide6.QtGui import QIcon
+        from .settings_view import disclosure
+        titlebar_theme(dialog,True)
+        outer.setContentsMargins(22,20,22,18);outer.setSpacing(16)
+        outer.addWidget(text('Adicionar jogo','pageTitle'))
+        self.sources=dialog.source_tabs;self.sources.setParent(dialog);self.sources.show()
+        self.sources.setCurrentIndex(0);self.sources.setObjectName('sourceTabs')
+        color=get_theme(self.library.setting('appearance.theme','green')).colors['text']
+        self.sources.setTabIcon(0,nav_icon('search',color))
+        self.sources.setTabIcon(1,QIcon(service_icon('Google Drive')))
+        self.sources.setTabIcon(2,QIcon(service_icon('Steam')))
+        self.sources.setIconSize(QSize(22,22));outer.addWidget(self.sources)
+        self.query=dialog.fields['title'];dialog.form.removeWidget(self.query)
+        self.query.setParent(dialog);self.query.setObjectName('gameSearch');self.query.setPlaceholderText('Pesquisar jogo…');self.query.show()
+        self.query.setMinimumHeight(36);self.query.addAction(nav_icon('search',color),QLineEdit.LeadingPosition);outer.addWidget(self.query)
+        self.results=QListWidget();self.results.setObjectName('gameSearchResults');self.results.setSpacing(4);self.results.setMinimumHeight(100);self.results.setMaximumHeight(180);self.results.hide();outer.addWidget(self.results)
+        self.preview=QFrame();self.preview.setObjectName('addPreview');preview=QHBoxLayout(self.preview);preview.setContentsMargins(14,10,14,10);preview.setSpacing(16)
+        self.art=QLabel();self.art.setObjectName('addPreviewArt');self.art.setFixedSize(70,94);self.art.setAlignment(Qt.AlignCenter);self.art.setText('Sem capa');preview.addWidget(self.art)
+        words=QVBoxLayout();words.setSpacing(6);self.title=text('Nenhum jogo selecionado','sectionTitle');words.addWidget(self.title)
+        self.facts=text('','muted');words.addWidget(self.facts)
+        self.description=text('','bodyText');self.description.hide()
+        self.association=text('','caption');self.association.hide();words.addWidget(self.association);preview.addLayout(words,1)
+        self.confirmed=text('✓','selectedCheck');self.confirmed.setAlignment(Qt.AlignCenter);self.confirmed.setFixedSize(28,28);self.confirmed.hide();preview.addWidget(self.confirmed);outer.addWidget(self.preview)
+        self.other=action('Escolher outro resultado',self.show_choices);self.other.setObjectName('resultLink');self.other.hide();outer.addWidget(self.other,0,Qt.AlignHCenter)
+        from .task_status import BusyIndicator
+        self.state=text('','muted')
+        self.busy=BusyIndicator(get_theme(self.library.setting('appearance.theme','green')));self.busy.hide()
+        status=QHBoxLayout();status.addWidget(self.busy);status.addWidget(self.state,1);outer.addLayout(status)
+        self.steam_panel=dialog.steam_panel;self.steam_panel.setParent(dialog);outer.addWidget(self.steam_panel);self.steam_panel.hide()
+        self.drive_manage=action('Atualizar índice do Drive',self.manage_drive);self.drive_manage.setObjectName('quiet');outer.addWidget(self.drive_manage,0,Qt.AlignLeft);self.drive_manage.hide()
+        advanced=QWidget();advanced_row=QVBoxLayout(advanced);advanced_row.setContentsMargins(0,0,0,0);advanced_row.setSpacing(10)
         self.platform=QComboBox();self.platform.addItem('Todas as plataformas','')
         for name in sorted({row['platform'] for row in self.library.sql.execute('SELECT DISTINCT platform FROM game_files') if row['platform']}|{'PC','Nintendo Switch','Nintendo DS','Game Boy Advance','Super Nintendo','PlayStation','PlayStation 2'}):self.platform.addItem(name,name)
-        self.platform.setMinimumWidth(180);search.addWidget(self.platform)
-        button=action('Buscar',self.lookup,True);search.addWidget(button);outer.addLayout(search)
-        body=QHBoxLayout();body.setSpacing(24)
-        left=QWidget();column=QVBoxLayout(left);column.setContentsMargins(0,0,0,0);column.setSpacing(10)
-        column.addWidget(text('Resultados','cardTitle'));self.results=QListWidget();self.results.setObjectName('gameSearchResults');self.results.setMinimumWidth(330);self.results.setSpacing(4);column.addWidget(self.results,1)
-        self.state=text('Digite um nome. Ficha e imagens são buscadas automaticamente.','muted')
-        from .task_status import BusyIndicator
-        from .theme import get_theme
-        self.busy=BusyIndicator(get_theme(self.library.setting('appearance.theme','green')));self.busy.hide()
-        status=QHBoxLayout();status.addWidget(self.busy);status.addWidget(self.state,1);column.addLayout(status)
-        body.addWidget(left,3)
-        preview=QFrame();preview.setObjectName('addPreview');preview.setMinimumWidth(290);right=QVBoxLayout(preview);right.setContentsMargins(22,22,22,22);right.setSpacing(14)
-        self.art=QLabel();self.art.setObjectName('addPreviewArt');self.art.setFixedSize(150,225);self.art.setAlignment(Qt.AlignCenter);self.art.setText('Prévia');right.addWidget(self.art,0,Qt.AlignHCenter)
-        self.title=text('Seu próximo jogo','sectionTitle');right.addWidget(self.title)
-        self.facts=text('Selecione um resultado para conferir a ficha.','muted');right.addWidget(self.facts)
-        self.description=text('','bodyText');right.addWidget(self.description)
-        self.association=text('','caption');right.addWidget(self.association);right.addStretch()
-        self.edit=action('Ajustar detalhes',self.edit_details);self.edit.setObjectName('quiet');right.addWidget(self.edit)
-        body.addWidget(preview,2);outer.addLayout(body,1)
+        platform_row=QHBoxLayout();platform_row.addWidget(text('Plataforma'));platform_row.addWidget(self.platform,1);advanced_row.addLayout(platform_row)
+        self.edit=action('Ajustar detalhes',self.edit_details);self.edit.setObjectName('quiet');advanced_row.addWidget(self.edit,0,Qt.AlignLeft)
+        dialog.complete_on_save.setParent(advanced);dialog.complete_on_save.show();advanced_row.addWidget(dialog.complete_on_save)
+        self.advanced=disclosure('Opções avançadas',advanced,outer);self.advanced.setObjectName('addDisclosure');self.advanced.setMinimumWidth(dialog.minimumWidth()-44)
+        outer.addStretch()
         dialog.error.setWordWrap(True);dialog.error.show();outer.addWidget(dialog.error)
-        footer=QHBoxLayout();footer.addWidget(text('Capa, banner, logo e dados disponíveis são preenchidos ao adicionar.' if self.library.setting('artwork.auto',True) else 'Preenchimento de imagens desativado nas Configurações.','caption'),1)
         self.save=dialog.buttons.button(QDialogButtonBox.Save);self.cancel=dialog.buttons.button(QDialogButtonBox.Cancel)
-        dialog.buttons.setParent(dialog);dialog.buttons.show();footer.addWidget(dialog.buttons);outer.addLayout(footer)
+        # Ordem explícita: Cancelar à esquerda, ação principal à direita em todos os SO.
+        dialog.buttons.removeButton(self.save);dialog.buttons.removeButton(self.cancel)
+        self.save.setParent(dialog);self.cancel.setParent(dialog);self.save.clicked.connect(dialog.validate);self.cancel.clicked.connect(dialog.reject)
+        dialog.buttons.setParent(dialog);dialog.buttons.hide()
+        footer=QHBoxLayout();footer.addStretch();footer.addWidget(self.cancel);footer.addWidget(self.save);self.cancel.show();self.save.show();outer.addLayout(footer)
+        self.sources.currentChanged.connect(self.source_changed)
         for control in dialog.findChildren(QPushButton):control.setAutoDefault(False);control.setDefault(False)
         dialog.complete_on_save.setChecked(bool(self.library.setting('artwork.auto',True)))
         self.timer=QTimer(self);self.timer.setSingleShot(True);self.timer.setInterval(550);self.timer.timeout.connect(self.lookup)
@@ -67,8 +81,27 @@ class QuickAdd(QObject):
         dialog.finished.connect(self.finished);self.query.setFocus()
         dialog.fields['platform'].setText('')
 
+    def show_choices(self):
+        self.results.show();self.preview.hide();self.other.hide();self.confirmed.hide()
+        self.dialog.adjustSize()
+
+    @Slot(int)
+    def source_changed(self,index):
+        self.timer.stop();self.generation+=1;self.pending_search=False;self.pending_details=None
+        self.dialog.drive_file_id=None;self.dialog.catalog_result=None
+        self.query.setVisible(index!=2);self.preview.setVisible(index==0);self.results.setVisible(index==1)
+        self.steam_panel.setVisible(index==2);self.drive_manage.setVisible(index==1)
+        self.advanced.setVisible(index!=2);self.save.setVisible(index!=2);self.save.setEnabled(index==0);self.other.hide();self.confirmed.hide()
+        self.query.setPlaceholderText('Pesquisar ROM no índice do Drive…' if index==1 else 'Pesquisar jogo…')
+        if index!=2:self.changed(self.query.text())
+        else:self.state.clear()
+
+    def manage_drive(self):
+        self.dialog.manage_drive();self.local_results();self.results.show()
+
     def eventFilter(self,watched,event):
         if not hasattr(self,'dialog'):return False
+        if watched is self.dialog and event.type()==QEvent.Resize:self.advanced.setFixedWidth(max(0,event.size().width()-44))
         if watched is self.dialog and event.type()==QEvent.Show and self.pending_show_lookup:
             self.pending_show_lookup=False;QTimer.singleShot(0,self.lookup)
         if watched is self.query and event.type()==QEvent.KeyPress and event.key() in (Qt.Key_Return,Qt.Key_Enter):
@@ -86,11 +119,14 @@ class QuickAdd(QObject):
         for key in ('description','genre','developer','publisher','release_date','cover','banner','logo','executable'):
             self.dialog.fields[key].clear()
         self.dialog.fields['source'].setText('Manual');self.dialog.fields['platform'].setText(self.platform.currentData() or '')
-        self.title.setText(value.strip() or 'Seu próximo jogo');self.art.clear();self.art.setText('Prévia');self.facts.setText('Buscando pelo nome…' if len(value.strip())>=2 else 'Selecione um resultado para conferir a ficha.')
-        self.association.clear();self.description.clear();self.results.clear();self.candidates=[]
+        self.title.setText(value.strip() or 'Nenhum jogo selecionado');self.art.clear();self.art.setText('Prévia');self.facts.setText('Buscando…' if len(value.strip())>=2 else '')
+        self.association.clear();self.association.hide();self.description.clear();self.results.clear();self.candidates=[];self.confirmed.hide();self.other.hide();self.preview.setVisible(self.sources.currentIndex()==0)
         self.local_results()
-        if len(value.strip())>=2:self.timer.start()
-        else:self.timer.stop();self.state.setText('Digite pelo menos duas letras.')
+        if len(value.strip())>=2 and self.sources.currentIndex()==0:self.timer.start()
+        elif self.sources.currentIndex()==1:
+            self.save.setEnabled(False);self.results.show()
+            self.state.setText(f'{len(self.local)} ROMs' if self.local else 'Nenhuma ROM encontrada')
+        else:self.timer.stop();self.state.clear()
 
     @Slot(int)
     def platform_changed(self,index):
@@ -104,15 +140,18 @@ class QuickAdd(QObject):
         rows=self.library.sql.execute('SELECT * FROM game_files WHERE drive_id IS NOT NULL ORDER BY original_name')
         self.local=[dict(row) for row in rows if query and query in normalized(normalize_rom_name(row['original_name'])) and (not platform or platform==row['platform'])][:40]
         self.results.blockSignals(True);self.results.clear()
+        if self.sources.currentIndex()==0:self.local=[]
         for row in self.local:
-            item=QListWidgetItem(normalize_rom_name(row['original_name'])+'\nDisponível no Drive · '+(row['platform'] or 'Plataforma não definida'))
+            item=QListWidgetItem(row['original_name']+'\nDisponível no Drive · '+(row['platform'] or 'Plataforma não definida'))
             item.setSizeHint(QSize(0,60));item.setToolTip(row['original_name']);self.results.addItem(item)
         self.results.blockSignals(False)
+        if self.local:self.results.show()
 
     @Slot()
     def lookup(self):
         self.timer.stop()
         if self.closed or len(self.query.text().strip())<2:return
+        if self.sources.currentIndex()==1 and self.dialog.drive_file_id is None:self.local_results();return
         if not self.dialog.isVisible():self.pending_show_lookup=True;return
         if any(job.property('operation')=='catalog_search' for job in self.jobs):self.pending_search=True;return
         self.pending_search=False;self.state.setText('Buscando jogos e versões disponíveis…')
@@ -137,22 +176,23 @@ class QuickAdd(QObject):
                 platforms=' / '.join(result.platforms[:3]) or 'Jogo'
                 item=QListWidgetItem(result.title+'\n'+platforms+(' · '+result.release_date[:4] if result.release_date else ''));item.setSizeHint(QSize(0,60));self.results.addItem(item)
             self.results.blockSignals(False)
-            self.state.setText('Escolha o jogo ou a versão do Drive.' if self.candidates or self.local else 'Nenhum resultado disponível. Você pode adicionar pelo nome e completar depois.')
+            self.state.setText('' if self.candidates or self.local else 'Nenhum resultado')
             if payload.get('unavailable'):self.state.setText(self.state.text()+' Parte dos catálogos está indisponível.')
             # Nunca seleciona uma ROM automaticamente. Uma ficha inequívoca pode ser sugerida.
             match=best_match(self.query.text(),self.dialog.fields['platform'].text(),self.candidates)
             if self.dialog.drive_file_id is not None and match and normalized(match.title)!=normalized(self.query.text()):match=None
             if match:self.results.setCurrentRow(len(self.local)+self.candidates.index(match))
+            elif self.candidates or self.local:self.show_choices()
         else:
             result=MetadataResult(**payload['result']);self.dialog.apply_catalog(result)
             self.show_result(result)
             path=payload.get('preview',{}).get('cover')
             if path:self.art.setPixmap(QPixmap(path).scaled(self.art.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation))
-            self.state.setText('Ficha preenchida. Imagens disponíveis serão aplicadas ao adicionar.')
+            self.state.clear()
 
     @Slot(str)
     def failed(self,message):
-        if not self.closed and self.sender().property('generation')==self.generation:self.state.setText('A consulta não foi concluída. Você pode adicionar agora e tentar completar depois.')
+        if not self.closed and self.sender().property('generation')==self.generation:self.state.setText('Consulta indisponível')
 
     @Slot()
     def job_finished(self):
@@ -174,10 +214,11 @@ class QuickAdd(QObject):
         result=self.candidates[offset];self.generation+=1;self.art.clear();self.art.setText('Carregando prévia…')
         self.dialog.apply_catalog(result)
         if not self.dialog.fields['platform'].text() and result.platforms:self.dialog.fields['platform'].setText('PC' if 'PC' in result.platforms else result.platforms[0])
-        self.show_result(result);self.state.setText('Preenchendo ficha e prévia… Você já pode adicionar o jogo.')
+        self.show_result(result);self.state.setText('Carregando ficha…')
         self.run('catalog_details',provider=result.provider,identity=result.external_id,platform=self.dialog.fields['platform'].text())
 
     def show_result(self,result):
+        self.preview.show();self.results.hide();self.other.setVisible(bool(self.candidates));self.confirmed.show()
         self.title.setText(result.title)
         details=[self.dialog.fields['platform'].text() or ' / '.join(result.platforms[:3]),result.developer,result.release_date[:4]]
         self.facts.setText(' · '.join(value for value in details if value));self.description.setText(result.description[:260])
@@ -185,10 +226,10 @@ class QuickAdd(QObject):
     def drive_loaded(self,file):
         self.art.clear();self.art.setText('Prévia')
         self.generation+=1;self.title.setText(self.query.text());self.facts.setText(file['platform'] or 'Plataforma não definida');self.description.clear()
-        self.association.setText('ROM selecionada · '+file['original_name']);self.state.setText('ROM selecionada. Buscando a ficha para esta plataforma…');self.lookup()
+        self.save.setEnabled(True);self.association.setText('ROM selecionada · '+file['original_name']);self.association.show();self.preview.show();self.results.hide();self.state.setText('ROM selecionada. Buscando a ficha para esta plataforma…');self.lookup()
 
     def use_name(self):
-        self.timer.stop();self.generation+=1;self.state.setText('Pronto para adicionar. Ficha e imagens serão buscadas em segundo plano.');self.dialog.validate()
+        self.timer.stop();self.generation+=1;self.state.clear();self.dialog.validate()
 
     def edit_details(self):
         # Editor existente é opcional; nenhuma escolha de provedor é necessária.
@@ -202,6 +243,8 @@ class QuickAdd(QObject):
                 elif hasattr(widget,'setCurrentText'):widget.setCurrentText(value or '')
                 elif hasattr(widget,'setChecked'):widget.setChecked(bool(value))
                 elif hasattr(widget,'setValue'):widget.setValue(value if value is not None else -1)
-                else:widget.setText(value or '')
+                else:
+                    from .locale import date_display
+                    widget.setText(date_display(value) if key=='release_date' else value or '')
             if editor.catalog_result:self.dialog.catalog_result=editor.catalog_result
             self.suspend=False;self.title.setText(self.query.text())

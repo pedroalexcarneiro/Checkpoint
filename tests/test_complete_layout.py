@@ -6,14 +6,17 @@ from gamevault.dialogs import GameDialog
 from gamevault.design_system import CardGrid,IconButton,ThemeSwatch
 
 
-def test_wishlist_actions_update_price_and_remove_only_wish(library,app,monkeypatch):
+def test_wishlist_uses_current_prices_and_removal_preserves_game(library,app,monkeypatch):
     identity=library.save_game({'title':'Wishlist fixture','notes':'Preserve'})
     with library.sql:library.sql.execute('INSERT INTO wishlist(game_id,target_cents) VALUES(?,?)',(identity,5000))
     window=MainWindow(library);window.navigate(2);window.show();app.processEvents()
     assert len(window.pages[2].findChild(CardGrid,'wishlistGrid').cards)==1
     monkeypatch.setattr(QInputDialog,'getDouble',lambda *args:(39.9,True))
     window.add_wish(identity)
-    assert library.sql.execute('SELECT target_cents FROM wishlist').fetchone()[0]==3990
+    assert library.sql.execute('SELECT target_cents FROM wishlist').fetchone()[0]==5000
+    labels=[item.text() for item in window.pages[2].findChildren(QLabel)]
+    assert 'Menor preço' in labels and 'Meta de preço' not in labels
+    assert not library.is_owned(identity)
     window.pages[2].findChild(IconButton).click()
     assert library.sql.execute('SELECT count(*) FROM wishlist').fetchone()[0]==0
     assert library.get(identity)['notes']=='Preserve';window.close()
@@ -68,10 +71,10 @@ def test_layout_header_and_library_fit_small_window(library,app):
 
 def test_theme_swatches_and_profile_apply_without_losing_data(library,app):
     identity=library.save_game({'title':'Theme fixture'})
-    window=MainWindow(library);window.open_profile();window.show();app.processEvents()
+    window=MainWindow(library);window.navigate(5);window.show();app.processEvents()
     swatch=next(item for item in window.findChildren(ThemeSwatch) if item.theme.key=='purple');swatch.click()
     assert app.property('checkpointTheme')=='purple' and window.brand.theme.key=='purple'
-    field=next(item for item in window.settings_tabs.currentWidget().findChildren(QLineEdit) if item.placeholderText()=='Meu perfil')
-    field.setText('Jogador');field.editingFinished.emit()
+    from gamevault.profile_dialog import ProfileDialog
+    dialog=ProfileDialog(library,window);dialog.nickname.setText('Jogador');dialog.save();window.refresh_profile()
     assert library.setting('profile.name')=='Jogador' and window.profile_button.text()=='Jogador'
     assert library.get(identity)['title']=='Theme fixture';window.close()

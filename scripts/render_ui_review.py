@@ -4,6 +4,8 @@ Uso: QT_QPA_PLATFORM=offscreen python scripts/render_ui_review.py /tmp/revisao-n
 Os jogos e as artes são dados de teste, não integração autenticada nem mockup.
 """
 import sys
+import argparse
+import json
 from pathlib import Path
 from datetime import datetime,timezone,timedelta
 from PySide6.QtCore import Qt,QRectF,QPointF
@@ -20,7 +22,11 @@ from gamevault.emulator_dialog import EmulatorDialog
 from gamevault.integrations.drive import DriveScanner
 
 
-def artwork(root,index,title,color,kind,width,height):
+def artwork(root,index,title,color,kind,width,height,source=None):
+    if source:
+        for extension in (".png",".jpg",".webp"):
+            asset=source/f"{index}-{kind}{extension}"
+            if asset.is_file():return str(asset.resolve())
     image=QImage(width,height,QImage.Format_ARGB32);image.fill(Qt.transparent);p=QPainter(image);p.setRenderHint(QPainter.Antialiasing)
     if kind!='logo':
         gradient=QLinearGradient(0,0,width,height);gradient.setColorAt(0,QColor(color));gradient.setColorAt(1,QColor('#101825'));p.fillRect(image.rect(),gradient)
@@ -33,53 +39,96 @@ def artwork(root,index,title,color,kind,width,height):
 
 
 def main():
-    root=Path(sys.argv[1]).resolve();root.mkdir(parents=True,exist_ok=True)
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('output',type=Path);parser.add_argument('--prices-file',type=Path,help='Snapshot público opcional para revisão isolada.');parser.add_argument('--art-dir',type=Path,help='Artes locais opcionais; nunca consulta provedores ou contas.')
+    args=parser.parse_args();root=args.output.resolve();root.mkdir(parents=True,exist_ok=True)
     if (root/'review.sqlite').exists():raise SystemExit('Use um diretório novo: base existente preservada.')
     app=QApplication([]);app.setStyle('Fusion')
     from gamevault.fonts import install_fonts,verify_text_font
     install_fonts(app)
     if not verify_text_font():raise SystemExit('Fonte sem os glifos necessários; capturas bloqueadas.')
     db=Database(root/'review.sqlite');lib=Library(db)
-    names=['Hollow Knight','Celeste','INSIDE','Hades','The Legend of Zelda: Breath of the Wild','Ori and the Will of the Wisps','Returnal','Dead Cells']
-    colors=['#365d79','#a06388','#86474e','#9d5b43','#668771','#42888b','#4a687e','#71577c'];ids=[]
+    names=['Hollow Knight','Celeste','INSIDE','Hades','The Legend of Zelda: Breath of the Wild','Ori and the Will of the Wisps','Returnal','Dead Cells','Hades II','Hollow Knight: Silksong','Animal Well','Nine Sols']
+    colors=['#365d79','#a06388','#86474e','#9d5b43','#668771','#42888b','#4a687e','#71577c','#936657','#5d7391','#53776c','#81715f'];ids=[]
     for index,(title,color) in enumerate(zip(names,colors)):
-        cover=artwork(root,index,title,color,'cover',600,900)
-        banner=artwork(root,index,title,color,'banner',1600,450);logo=artwork(root,index,title,color,'logo',620,150)
+        cover=artwork(root,index,title,color,'cover',600,800,args.art_dir)
+        banner=artwork(root,index,title,color,'banner',1600,450,args.art_dir);logo=artwork(root,index,title,color,'logo',620,150,args.art_dir)
         identity=lib.save_game({'title':title,'platform':'PC','cover':cover,'banner':banner,'logo':logo,'status':'Jogando' if index<4 else 'Concluído' if index<6 else 'Não iniciado','developer':'Estúdio de teste','publisher':'Publicadora de teste','genre':'Aventura','release_date':'2024-01-12','description':'Dados de teste para conferir a interface: explore um mundo cheio de caminhos, encontros e descobertas. As artes desta captura são fixtures locais, sem acesso a contas pessoais.','favorite':int(index==0)});ids.append(identity)
         if index<4:
             lib.add_diary(identity,'Uma lembrança de teste para conferir a leitura, os espaçamentos e a navegação da interface.')
             lib.add_media(identity,banner,'Captura de teste · paisagem')
+            import shutil
+            second=root/f'{index}-capture{Path(banner).suffix}';shutil.copyfile(banner,second)
+            lib.add_media(identity,str(second),'Segunda captura de teste')
             start=(datetime.now(timezone.utc)-timedelta(days=index*7+1)).isoformat()
             with lib.sql:
                 lib.sql.execute("INSERT INTO play_sessions(game_id,started_at,ended_at,duration_seconds,state) VALUES(?,?,?,?, 'finished')",(identity,start,start,(index+1)*3600))
                 lib.sql.execute('INSERT INTO achievements(game_id,title,unlocked_at) VALUES(?,?,?)',(identity,'Primeiro caminho explorado',start))
-        if index>=4:
+        if index>=8:
             with lib.sql:lib.sql.execute('INSERT INTO wishlist(game_id,target_cents) VALUES(?,?)',(identity,9900+index*1000))
     DriveScanner(lib,None).record({'id':'fixture-rom','name':'Example (USA).gba'},'/GBA');lib.sql.commit()
-    lib.set_setting('artwork.auto',False);w=MainWindow(lib);w.integration_status=lambda provider:'Não configurada';w.resize(1440,960);w.show()
+    lib.set_setting('artwork.auto',False);lib.set_setting('prices.auto',False);w=MainWindow(lib);w.integration_status=lambda provider:'Não configurada';w.resize(1100,740);w.show()
     def capture(name,widget=w):
+        w.statusBar().clearMessage()
         for _ in range(4):app.processEvents()
         assert widget.grab().save(str(root/(name+'.png')))
     for page,name in enumerate(['home','library','wishlist','memories','statistics','settings']):w.navigate(page);capture(name)
+    w.resize(1920,1080)
+    for page,name in enumerate(['home','library','wishlist','memories','statistics','settings']):w.navigate(page);capture('desktop-'+name)
+    w.resize(1100,740)
     w.navigate(5)
     for index,name in enumerate(['appearance','connections','downloads','data']):w.settings_tabs.setCurrentIndex(index);capture('settings-'+name)
+    from gamevault.profile_dialog import ProfileDialog
+    profile=ProfileDialog(lib,w);profile.nickname.setText('Jogador');profile.preview(lib.get(ids[0])['cover']);profile.show();capture('profile',profile);profile.close()
     w.detail(ids[0])
     for index,name in enumerate(['overview','activity','memories','files']):w.detail_tabs.setCurrentIndex(index);capture('detail-'+name)
     for dialog,name in [(GameDialog(w,library=lib),'add'),(GameDialog(w,game=lib.get(ids[0]),library=lib),'edit'),(DriveDialog(lib,w),'drive'),(ArtworkDialog(lib,lib.get(ids[0]),w),'artwork'),(SteamDialog(lib,w),'steam'),(EmulatorDialog(lib,w),'emulators')]:
         dialog.show();capture(name,dialog)
+        if name=='add':
+            from gamevault.integrations import MetadataResult
+            quick=dialog.quick_add
+            quick.suspend=True;quick.query.setText('Hollow Knight');quick.suspend=False
+            result=MetadataResult('steam','367520','Hollow Knight',platforms=('PC',),developer='Team Cherry')
+            quick.candidates=[result];quick.show_result(result);quick.state.setText('Fixture de revisão: ficha selecionada, sem consulta autenticada.')
+            from PySide6.QtGui import QPixmap
+            quick.art.setPixmap(QPixmap(lib.get(ids[0])['cover']).scaled(quick.art.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation))
+            capture('add-selected',dialog)
+            quick.show_choices();quick.results.addItems(['Hollow Knight · PC','Hollow Knight: Silksong · PC']);capture('add-choices',dialog)
+            dialog.source_tabs.setCurrentIndex(1);capture('add-drive',dialog)
+            dialog.source_tabs.setCurrentIndex(2);capture('add-steam',dialog)
+            dialog.source_tabs.setCurrentIndex(0);quick.timer.stop();quick.advanced.setChecked(True);capture('add-advanced',dialog)
         if name=='edit':
             for index in range(4):dialog.editor_tabs.setCurrentIndex(index);capture('edit-'+str(index),dialog)
+        if name=='steam':
+            from gamevault.integrations.steam import SteamGame
+            dialog.show_games(('76561198000000000',[SteamGame(str(index+1),f'Jogo de teste {index+1}',index*60) for index in range(300)]))
+            capture('steam-large-list',dialog)
         dialog.close()
+    if args.prices_file:
+        from gamevault.library import now
+        value=json.loads(args.prices_file.read_text(encoding='utf-8'));value.update({'checked_at':now(),'attempted_at':now(),'state':'ready'})
+        lib.set_setting(f'prices.ggdeals.{ids[0]}',value)
+    w.add_wish(ids[0]);w.navigate(2);capture('wishlist-prices');w.detail(ids[0]);capture('wish-price-comparison')
+    w.detail_page.verticalScrollBar().setValue(w.detail_page.verticalScrollBar().maximum());capture('wish-prices-expanded')
+    lib.acquire(ids[0])
     original=[lib.get(identity)['cover'] for identity in ids]
     for index in (1,2):
         path=artwork(root,index,names[index],colors[index],'mixed-cover',600,800 if index==1 else 600)
         lib.save_game({'title':names[index],'cover':path},ids[index])
     w.navigate(1);capture('library-mixed-ratios')
     for identity,path in zip(ids,original):lib.save_game({'title':lib.get(identity)['title'],'cover':path},identity)
-    for theme in ('green','purple','white'):
+    for theme in ('green','purple','blue','white'):
         w.set_theme(theme);w.resize(1000,700)
-        for page,name in [(0,'home'),(1,'library'),(4,'statistics'),(5,'settings')]:w.navigate(page);capture(theme+'-small-'+name)
-    w.close();db.close();print(root)
+        for page,name in [(0,'home'),(1,'library'),(2,'wishlist'),(4,'statistics'),(5,'settings')]:w.navigate(page);capture(theme+'-small-'+name)
+    (root/'review-info.json').write_text(json.dumps({'platform':sys.platform,'window':'1920×1080, 1100×740 e 1000×700','artwork':'arquivos locais fornecidos em --art-dir e fixtures geradas' if args.art_dir else 'fixtures geradas localmente'},ensure_ascii=False),encoding='utf-8')
+    w.hide()
+    empty_db=Database(root/'empty-review.sqlite');empty_lib=Library(empty_db)
+    empty_lib.set_setting('artwork.auto',False);empty_lib.set_setting('prices.auto',False)
+    empty_window=MainWindow(empty_lib);empty_window.resize(1100,740);empty_window.show()
+    for page,name in [(0,'home'),(2,'wishlist'),(3,'memories'),(4,'statistics')]:
+        empty_window.navigate(page)
+        for _ in range(4):app.processEvents()
+        assert empty_window.grab().save(str(root/('empty-'+name+'.png')))
+    empty_window.close();empty_db.close();w.close();db.close();print(root)
 
 
 if __name__=='__main__':main()

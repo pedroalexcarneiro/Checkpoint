@@ -1,5 +1,215 @@
 # Continuidade do Checkpoint
 
+## Publicação confirmada — v0.1.27
+
+Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.27
+Fonte da tag: `6fad7bfa278d0cb2897588a7965d545c98fcdacf`.
+Workflow Windows release `43357748311`: completed/success.
+Windows/Python 3.12.10: **225 testes aprovados em 183,59 s**, zero falhas/erros/skips.
+Fonte e ZIP extraído: seis páginas, auxiliar, cadastro com imagem/SQLite e
+integridade aprovados; CheckpointUpdater.exe --check retornou 0.
+65 capturas Qt Windows geradas. Inspecionadas as páginas principais, conexões,
+perfil e lista Steam de 300 jogos; dados/artes dessas capturas são fixtures.
+Logos públicas reais também foram conferidas em biblioteca Linux isolada.
+Não equivale a autenticação de serviços nem aprovação estética do usuário.
+
+ZIP Windows: 84.082.193 bytes; SHA-256
+`8cf3e0c97c81f5962e3380c630fa3135a30c54c57a6766891e2d5bdba7af4768`.
+ZIP visual: 4.583.748 bytes; SHA-256
+`c3f8c1aafa31bbe7394b9988b6354ba81e1b397f4a3bc6159b7b8a568fb9824f`.
+Hash do ZIP visual baixado coincide com o digest GitHub; o hash Windows no
+relatório do empacotador coincide com o asset publicado. Tags antigas preservadas.
+
+
+## 0.1.27 — decisão final de visibilidade do cadastro
+
+Botão Adicionar jogo somente no topo direito de Início e Biblioteca, oculto
+em Desejos, Memórias, Estatísticas, Configurações e ficha. Sem duplicata lateral.
+Esta decisão mais recente substitui as instruções históricas de cadastro global.
+Inclui as correções de layout, logos, importação Steam e perfil da 0.1.26.
+
+## Complemento 0.1.26 — logos nos cards de Desejos
+
+Decisão final posterior: manter Adicionar jogo somente no topo direito; removida
+a duplicata da barra lateral. Esta decisão substitui o pedido de dois atalhos abaixo.
+
+Perfil: clicar no nick/Meu perfil abre diálogo próprio apenas com foto e apelido.
+Foto validada/copied para cache local ao salvar; original intacto. Preferências
+profile.name/profile.avatar, sem mudança de schema, conta ou envio remoto.
+Botão lateral mostra nick/foto e preserva ambos ao trocar tema. Nome removido
+da aba Aparência para manter a personalização dentro da opção de perfil.
+
+Pedidos adicionais: Adicionar jogo global no topo direito e na lateral, inclusive
+na ficha. Adicionar desejo separado dentro da wishlist. Frases instrutivas e
+promocionais retiradas de estados vazios/painéis/diálogos; dados de jogos mantidos.
+Importação Steam não acumula mensagens por jogo no QLabel: janela 960×640 com
+limites 760×520–1100×760, tabela rolável e estado de uma linha de altura fixa.
+Resultado com contagens e pendências; cancelamento e dados importados preservados.
+Regressão importa 300 jogos controlados e confirma tamanho estável e resumo curto.
+
+Usuário apontou ausência das logos na caixa. WishLogo tinha política vertical
+fixa herdada de QPushButton, reduzindo a imagem apesar do espaço livre: agora
+expande na área do card, com margens e proporção preservadas. Desejos solicita
+artes faltantes de jogos já identificados uma vez por sessão e respeita artwork.auto.
+game_completed atualiza a wishlist aberta ao concluir o auxiliar. Não exige
+alteração manual de capa nem inventa logo a partir do título. Captura isolada
+conferida com logos públicas reais de Animal Well, Hades II, Silksong e Nine Sols.
+A 0.1.26 inclui as correções de composição/navegação da 0.1.25 e preserva as tags.
+
+## Correção 0.1.25 — prompt e referências reenviados
+
+Revisão após rejeição visual da 0.1.24. O prompt reenviado exige dez temas:
+Branco foi restaurado, substituindo a remoção histórica abaixo. Biblioteca
+vertical com arte inteira, banner 220–300 px, logo maior, feed equilibrado e
+área principal limitada a 1440 px. Sidebar permanece na borda. Grade limita
+tamanho de capas, aproxima legendas e alinha foco à imagem. Cadastro global
+sempre abre a Biblioteca; busca do Início mostra resultados ao digitar.
+Estados vazios reservam espaço para texto, memórias não cortam por altura
+máxima e estatísticas reorganizam métricas/calendário por largura.
+Persistência, schema e proteções dos auxiliares preservados.
+
+Capturas Qt Linux inspecionadas em 1000/1100/1920 px: páginas, ficha, cadastro,
+conexões, temas e estados vazios, incluindo artes públicas Steam em biblioteca
+isolada. O workflow valida separadamente testes e pacote Windows antes de
+publicar. Registrar resultado efetivo após observação; não afirmar teste
+autenticado, aprovação do usuário ou homologação interativa Windows/DPI.
+
+## Correções após rejeição visual da 0.1.24
+
+Usuário rejeitou a composição da release e reenviou as referências aprovadas.
+Banner limitado a 220–300 px, preservando proporção da imagem; colunas do feed
+reequilibradas, grade com dimensões limitadas e legendas junto à arte visível.
+Atalho Adicionar jogo restaurado na lateral. Busca do Início abre resultados
+na Biblioteca ao digitar. Estado vazio reserva espaço para a descrição completa.
+Capturas Linux isoladas geradas e inspecionadas; isso não valida Windows/DPI.
+Design completo ainda não aprovado. Preservar banco/schema e proteções dos auxiliares.
+
+## Publicação confirmada — v0.1.24 — 13/11/2026
+
+Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.24
+Commit da tag: `425dd12ab7571b1bdc236321ef952d3eeff0c2d7`.
+Workflow [43347929302](https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43347929302)
+concluído com sucesso em build e publicação. Pre-release publicada com oito assets.
+
+Windows/Python 3.12.10: **216 testes aprovados em 94,04 s**, zero falhas/erros/skips.
+Build do aplicativo e atualizador; smokes das seis páginas, auxiliar isolado,
+cadastro com imagem/SQLite e integridade do banco passaram no fonte e no ZIP
+extraído. `CheckpointUpdater.exe --check` retornou 0. Revisão automatizada gerou
+48 capturas Qt e índice HTML com fixtures isoladas, sem dados pessoais.
+
+ZIP Windows: 84.074.384 bytes; SHA-256
+`fe66f68d334689dff5fbcd315d2a9dc249ea5167dda879107f7b303b7ef7290e`.
+O digest publicado pelo GitHub coincide com o registrado pelo empacotamento.
+ZIP visual: 3.255.466 bytes; SHA-256
+`3b3ff0e76c55a20e37e0206501695e681f0253b8bb0019b365aa9519eae37093`.
+
+Esta confirmação substitui a pendência de publicação na preparação abaixo.
+A versão publicada é 0.1.24; a fonte da continuidade permanece na branch
+`codex/design-fidelity-pt-br`, sem merge em `main` ou alteração de tags antigas.
+Não equivale a aprovação estética, inspeção manual de todas as novas capturas,
+sessão autenticada ou homologação interativa/DPI Windows 10/11.
+Schema 4 e dados pessoais preservados; monitoramento/alertas de preços,
+cobertura integral PT-BR e demais itens de ROADMAP continuam pendentes.
+
+## Preparação da publicação 0.1.24 — 13/11/2026
+
+Publicação solicitada para a continuidade implementada em `5d33629` e documentada
+em `3f6ae049`, na branch `codex/design-fidelity-pt-br`. Versão do projeto e do
+aplicativo atualizadas em conjunto para 0.1.24; notas da release refletem Biblioteca
+vertical, wishlist com logos/preços, nove temas escuros, calendário e localização PT-BR.
+O workflow Windows release passa a aceitar esta branch e publicará a pre-release
+somente após os testes, build, smokes e revisão visual automatizada.
+
+A validação anterior de 216 testes Windows refere-se à fonte `5d33629`.
+Os resultados do novo pacote 0.1.24 ainda precisam ser observados no workflow;
+esta preparação não declara publicação, aprovação estética ou teste autenticado.
+`main`, tags existentes, schema 4 e dados pessoais permanecem preservados.
+
+## Decisões finais desta continuidade — 12/11/2026
+
+- Modo claro removido por pedido expresso posterior do usuário. Permanecem nove
+  temas escuros e as preferências de cor existentes. Uma preferência legada `white`
+  passa para Verde ao abrir; dados da biblioteca não são alterados. Esta decisão
+  substitui os registros históricos de dez temas/tema Branco abaixo.
+
+- O usuário descartou o modo quadrado da **Biblioteca** porque não há garantia de
+  artes quadradas estáticas para todos os jogos. A Biblioteca mantém o formato
+  vertical com área ampliada para o pôster e as imagens inteiras, sem corte/deformação. Não há seletor de formato
+  quadrado nem obtenção paralela de artes quadradas nesta entrega.
+- **Wishlist:** cards quadrados com logos estáticas, proporção preservada, mesma
+  área de apresentação, título de uma linha, preço e ações alinhados. Ver ofertas, + e lixeira
+  ficam na mesma linha; logos maiores sem fundo preto próprio. Sem logo,
+  usa placeholder discreto e o título normal; não estica texto nem improvisa uma logo.
+- **Horas de jogo:** calendário diário no estilo GitHub, com intensidade e tooltip
+  de data/duração, últimos 12 meses ou ano escolhido. Usa sessões reais em UTC.
+- Retirada a repetição do nome do serviço dos textos de preço. Os botões de ofertas
+  continuam abrindo a comparação completa, com links originais preservados.
+- Downloads/cadastro de artes recusam GIFs e animações. Os vídeos pessoais em
+  Memórias continuam disponíveis; essa regra se refere às artes do jogo.
+
+## Validação Windows desta revisão — 12/11/2026
+
+Fonte validada: `5d33629`; workflow [43326388407](https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43326388407), concluído com sucesso.
+Windows/Python 3.12.10: **216 testes, zero falhas/erros/skips**, 125,089 s.
+Build do aplicativo e atualizador, seis páginas, auxiliar isolado, cadastro com
+imagem/SQLite e integridade do banco passaram na origem e no executável extraído.
+`CheckpointUpdater.exe --check` retornou 0. Artefato de revisão contém pacote
+Windows e 48 capturas Qt com fixtures; Biblioteca, Desejos e Estatísticas foram
+inspecionados. Não equivale a aprovação estética, sessão autenticada ou homologação
+interativa de DPI em Windows 10/11. Nenhuma release/tag foi publicada.
+ZIP Windows SHA-256: `72157494dfbc9d68996b82ad45cf0bb4c3de9961573a8d8addae1ece0f215729`.
+ZIP visual SHA-256: `838d68435a16d5aaa74863551cd81ce5d420ad79ca2c1aeb4ec3fdf1ce3b20af`.
+
+## Continuidade de design e PT-BR — revisão em 12/11/2026
+
+Esta revisão parte de `codex/steam-library-import` em `d23439d`, árvore inicialmente
+limpa. Implementação em `codex/design-fidelity-pt-br`, para revisão contra a branch
+de desenvolvimento. `main`, tags e releases existentes foram preservadas. A versão
+publicada continua v0.1.23. Esta revisão não declara o design aprovado/concluído.
+As imagens anexadas pelo usuário continuam sendo a especificação visual; os
+registros históricos de “interface completa” abaixo não representam sua aprovação.
+
+- Shell e cabeçalhos compactados; Início mantém continuidade/atividade lado a lado
+  em 1000 px; Biblioteca agrupa filtros sem perder lista, ordenação ou favoritos.
+  Cadastro passa a diálogo compacto com Pesquisar jogo / ROM do Drive / Steam,
+  sugestão em linha e configurações opcionais. Busca/enriquecimento continuam isolados.
+- Ícones Steam e Drive são arquivos oficiais, sem redesenho. Incluídos nos dados do
+  pacote Python e PyInstaller; origem em THIRD_PARTY_NOTICES.md. O smoke verifica assets.
+- Biblioteca vertical com capas inteiras; wishlist em cards quadrados com logos,
+  sem texto espremido e com preço/ações em posições comuns. O modo quadrado da
+  Biblioteca foi descartado por decisão explícita do usuário, conforme nota acima.
+- Steam solicita `brazilian`; datas localizadas da fonte são normalizadas em ISO.
+  Ficha/editor/catálogos exibem DD/MM/AAAA; SQLite e contratos permanecem ISO.
+  Publicadora, origem, categoria e nota existentes ficam sempre visíveis na ficha.
+- ROMs com identidade confirmada podem obter texto PT da Wikipédia quando há artigo
+  exato, plataforma compatível e tradução. Desambiguação, remake/ano incompatível e
+  ausência de PT não são associados. Fonte/licença ficam visíveis; hash de texto
+  protege edições locais. Inglês legado da Steam/RAWG só é substituído com comprovação
+  de que ainda coincide com a fonte automática. Sem tradução disponível não há texto
+  inventado nem promessa de cobertura integral. Fontes existentes são preservadas.
+- Desejos não exibem status de progresso e não contam como coleção possuída nas
+  estatísticas/Início/Biblioteca. “Adicionar à biblioteca” confirma aquisição.
+  Retirar dos desejos preserva o cadastro como não possuído, recuperável em Dados e
+  backup > Desejos removidos. Notas, histórico, status legado, artes e arquivos não
+  são apagados. O campo legado de meta de preço é preservado no banco, sem uso na UI.
+- Desejos mostra **menor preço atual do GG.deals**, não meta pessoal. A ficha apresenta
+  lojas oficiais/keyshops, ofertas carregadas e links originais; botão abre a página
+  brasileira com a comparação completa. Usa página pública BR identificada pelo
+  redirecionamento oficial de AppID, moeda BRL verificada, cache de uma hora e fila
+  espaçada em 6,5 s. Não precisa de chave de API. Falha não vira R$ 0: sinaliza
+  indisponibilidade/valor salvo e mantém link e última consulta. Lista local pode ser
+  parcial; todas as ofertas ficam acessíveis no GG.deals. Sem AppID/página confirmada,
+  oferece pesquisa no site sem presumir uma associação.
+- Estatísticas passam a calendário diário com intensidade e distribuição por barras,
+  sem pizza; sessões/períodos ausentes recebem zero no intervalo apresentado.
+  Totais continuam derivados do SQLite e horas Steam não duplicam sessões locais.
+
+Schema permanece 4. Nenhum banco pessoal, ROM, save, nota, credencial ou log privado
+foi lido, copiado ou versionado. Regressões cobrem edição manual, versão de ROM,
+origens do cadastro, datas, wishlist/posse, formatos e cache/preços em BRL.
+Windows tem workflow de validação de PR separado da publicação de releases.
+Resultados efetivos e limitações estão em TESTING.md e evidence/design-ptbr-validation.txt.
+
 ## Publicação confirmada — v0.1.23
 
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.23

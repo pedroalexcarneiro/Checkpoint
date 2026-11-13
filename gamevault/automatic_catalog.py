@@ -44,6 +44,7 @@ def best_match(title, platform, results):
 
 
 def resolve_title(title, platform='', providers=None):
+    live=providers is None
     if providers is None:
         from .credentials import CredentialVault
         providers = []
@@ -80,4 +81,8 @@ def resolve_title(title, platform='', providers=None):
     # Somente combinar provedores que retornaram o mesmo título, sem fundir edições.
     identities = {item.provider: item.external_id for item in matches
                   if normalized(item.title) == normalized(primary.title)}
-    return replace(primary, identifiers=identities)
+    result=replace(primary, identifiers=identities)
+    if live:
+        from .integrations.descriptions import localize_result
+        result=localize_result(result,platform)
+    return result
