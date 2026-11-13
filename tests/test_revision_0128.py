@@ -9,7 +9,7 @@ def drain(app):
     for _ in range(4):app.processEvents()
 
 
-def test_wishlist_one_and_five_cards_keep_same_fixed_vertical_art_area(library,app):
+def test_wishlist_one_and_five_cards_keep_same_fixed_square_art_area(library,app):
     library.set_setting('prices.auto',False);library.set_setting('artwork.auto',False)
     window=MainWindow(library);window.show();dimensions={}
     for total in (1,5):
@@ -23,6 +23,7 @@ def test_wishlist_one_and_five_cards_keep_same_fixed_vertical_art_area(library,a
             assert all(card.height()>card.width() and card.height()<height for card in cards)
             logos=[card.findChild(WishLogo) for card in cards]
             assert len({(logo.width(),logo.height()) for logo in logos})==1
+            assert all(logo.width()==logo.height() for logo in logos)
             assert all(card.rect().contains(logo.geometry()) for card,logo in zip(cards,logos))
             assert all(not first.geometry().intersects(second.geometry()) for index,first in enumerate(cards) for second in cards[index+1:])
             if total==1:dimensions[width]=(cards[0].size(),logos[0].size())
@@ -30,13 +31,13 @@ def test_wishlist_one_and_five_cards_keep_same_fixed_vertical_art_area(library,a
     assert any(label.text()=='5 jogos' for label in window.pages[2].findChildren(QLabel));window.close()
 
 
-def test_library_has_four_vertical_columns_at_minimum_and_full_hd(library,app):
+def test_library_has_responsive_vertical_columns_at_minimum_and_full_hd(library,app):
     for index in range(9):library.save_game({'title':f'Jogo {index}'})
     window=MainWindow(library);window.show();window.navigate(1)
     for width,height in ((1000,700),(1920,1080)):
         window.resize(width,height);drain(app);grid=window.gallery
         first=[grid.visualItemRect(grid.item(index)) for index in range(grid.count()) if grid.visualItemRect(grid.item(index)).top()==0]
-        assert len(first)==4 and all(rect.height()>rect.width() for rect in first)
+        assert len(first)==(6 if width==1920 else grid.columns) and all(rect.height()>rect.width() for rect in first)
         assert first[-1].right()<=grid.viewport().width()
     window.close()
 

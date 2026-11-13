@@ -3,7 +3,7 @@ from .locale import count_text
 from pathlib import Path
 from PySide6.QtCore import Qt,QUrl
 from PySide6.QtGui import QDesktopServices
-from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QTabWidget,QComboBox,QToolButton,QMessageBox,QLineEdit,QCheckBox,QSizePolicy
+from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QTabWidget,QComboBox,QToolButton,QMessageBox,QLineEdit,QCheckBox,QSizePolicy,QSlider
 from .ui_components import text,action,card,service_icon
 from .design_system import page_scroll,ThemeSwatch,Badge,CardGrid
 from .theme import THEMES
@@ -40,7 +40,12 @@ def build_settings(window):
     swatches=QHBoxLayout();swatches.setSpacing(10)
     for key,theme in THEMES.items():swatches.addWidget(ThemeSwatch(theme,lambda checked=False,k=key:window.theme_selector.setCurrentIndex(window.theme_selector.findData(k))))
     swatches.addStretch();inside.addLayout(swatches)
-    row=QHBoxLayout();row.addWidget(text('Densidade da biblioteca','muted'));row.addStretch();density=QComboBox();density.addItem('Confortável','comfortable');density.addItem('Compacta','compact');density.setCurrentIndex(max(0,density.findData(window.library.setting('appearance.density','comfortable'))));density.currentIndexChanged.connect(lambda index:window.set_density(density.itemData(index)));row.addWidget(density);inside.addLayout(row)
+    from .card_layout import cover_size
+    row=QHBoxLayout();row.addWidget(text('Tamanho das capas','muted'))
+    slider=QSlider(Qt.Horizontal);slider.setObjectName('coverSizeSlider');slider.setRange(70,150);slider.setValue(cover_size(window.library));slider.setMinimumWidth(180)
+    percentage=text(str(slider.value())+'%','muted');percentage.setFixedWidth(48)
+    slider.valueChanged.connect(lambda value:(percentage.setText(str(value)+'%'),window.set_cover_size(value)))
+    row.addWidget(slider,1);row.addWidget(percentage);inside.addLayout(row)
     appearance.addWidget(frame);appearance.addStretch()
     grid=CardGrid(320,max_columns=2);grid.setObjectName('connectionsGrid')
     for provider,callback in [('Steam',window.steam),('Google Drive',window.drive),('SteamGridDB',lambda:window.configure_key('steamgriddb')),('RAWG',lambda:window.configure_key('rawg'))]:

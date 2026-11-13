@@ -1,6 +1,6 @@
 """Desejos e memórias na mesma linguagem visual da biblioteca."""
 from pathlib import Path
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt,QSize
 from PySide6.QtWidgets import QLabel,QWidget,QVBoxLayout,QHBoxLayout,QTabWidget,QFrame,QSizePolicy,QPushButton
 from .ui_components import text,action,card,GameTile,relative_date
 from .design_system import CardGrid,page_scroll,empty_state,IconButton,ArtworkButton,Badge
@@ -8,10 +8,11 @@ from .design_system import CardGrid,page_scroll,empty_state,IconButton,ArtworkBu
 
 class WishLogo(QPushButton):
     def __init__(self,game):
-        super().__init__();self.setObjectName('wishLogo');self.game=game;self.setFixedSize(180,270);self.setSizePolicy(QSizePolicy.Fixed,QSizePolicy.Fixed);self.setAccessibleName(game['title'])
+        super().__init__();self.setObjectName('wishLogo');self.game=game;self.setFixedSize(180,180);self.setSizePolicy(QSizePolicy.Fixed,QSizePolicy.Fixed);self.setAccessibleName(game['title'])
         from PySide6.QtGui import QPixmap
-        self.pixmap=QPixmap(game.get('logo') or '')
-        if not self.pixmap.isNull() and self.pixmap.hasAlphaChannel():
+        self.pixmap=QPixmap(game.get('logo') or '');self.is_logo=not self.pixmap.isNull()
+        if not self.is_logo:self.pixmap=QPixmap(game.get('cover') or '')
+        if self.is_logo and self.pixmap.hasAlphaChannel():
             from PySide6.QtGui import QRegion
             bounds=QRegion(self.pixmap.mask()).boundingRect()
             if not bounds.isEmpty():self.pixmap=self.pixmap.copy(bounds)
@@ -21,9 +22,10 @@ class WishLogo(QPushButton):
         from .design_system import colors
         p=QPainter(self);p.setRenderHint(QPainter.Antialiasing)
         if not self.pixmap.isNull():
-            pix=self.pixmap.scaled(max(1,self.width()-32),max(1,self.height()-24),Qt.KeepAspectRatio,Qt.SmoothTransformation);p.drawPixmap((self.width()-pix.width())//2,(self.height()-pix.height())//2,pix)
+            p.setClipRect(self.rect())
+            pix=self.pixmap.scaled(self.size() if not self.is_logo else self.size()-QSize(24,24),Qt.KeepAspectRatio if self.is_logo else Qt.KeepAspectRatioByExpanding,Qt.SmoothTransformation);p.drawPixmap((self.width()-pix.width())//2,(self.height()-pix.height())//2,pix)
         else:
-            font=QFont('Segoe UI');font.setPixelSize(12);font.setWeight(QFont.Normal);p.setFont(font);p.setPen(QColor(colors()['muted']));p.drawText(QRectF(self.rect()),Qt.AlignCenter,'Sem logo disponível')
+            font=QFont('Segoe UI');font.setPixelSize(12);font.setWeight(QFont.Normal);p.setFont(font);p.setPen(QColor(colors()['muted']));p.drawText(QRectF(self.rect()),Qt.AlignCenter|Qt.TextWordWrap,self.game['title'])
         p.end()
 
 
@@ -48,17 +50,18 @@ class WishGrid(CardGrid):
         from PySide6.QtCore import QSize
         return QSize(0,0)
     def reflow(self):
-        self.columns=4
-        spacing=self.grid.spacing();width=max(1,(self.width()-spacing*3)//4)
-        art_width=max(1,width-24);art_height=round(art_width*1.5);height=art_height+146
+        from .card_layout import card_metrics
+        metrics=card_metrics(self.width(),getattr(self,'cover_percent',100))
+        self.columns=metrics.columns;spacing=metrics.gap;self.grid.setSpacing(spacing);width=metrics.width
+        art_width=max(1,width-24);art_height=art_width;height=art_height+146
         while self.grid.count():self.grid.takeAt(0)
-        for column in range(4):self.grid.setColumnStretch(column,1)
+        for column in range(self.columns):self.grid.setColumnStretch(column,1)
         for index,card in enumerate(self.cards):
             card.setFixedSize(width,height)
             logo=card.findChild(WishLogo)
             if logo:logo.setFixedSize(art_width,art_height)
-            self.grid.addWidget(card,index//4,index%4)
-        rows=(len(self.cards)+3)//4
+            self.grid.addWidget(card,index//self.columns,index%self.columns)
+        rows=(len(self.cards)+self.columns-1)//self.columns
         self.setFixedHeight(rows*height+max(0,rows-1)*spacing)
 
 
@@ -69,7 +72,8 @@ def build_wishlist(window):
         inside.addWidget(empty_state('wish','Nenhum desejo','',window.add_game,'Adicionar desejo'));inside.addStretch();return
     from .locale import count_text
     top=QHBoxLayout();top.addWidget(text(count_text(len(rows),'jogo'),'muted'));top.addStretch();top.addWidget(action('+ Adicionar desejo',window.add_game,True));inside.addLayout(top)
-    grid=WishGrid(260);grid.setObjectName('wishlistGrid')
+    from .card_layout import cover_size
+    grid=WishGrid(260);grid.cover_percent=cover_size(window.library);grid.setObjectName('wishlistGrid')
     from .price_view import price_summary,source_link
     for game in rows:
         panel=WishCard(game);body=QVBoxLayout(panel);body.setContentsMargins(12,12,12,12);body.setSpacing(6)

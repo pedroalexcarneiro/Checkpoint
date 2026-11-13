@@ -40,14 +40,14 @@ def test_settings_are_compact_and_restore_selected_section(library,app,monkeypat
     window.close()
 
 
-def test_library_shortcuts_density_and_theme_update(library,app):
+def test_library_shortcuts_size_and_theme_update(library,app):
     library.save_game({'title':'Favorite fixture','favorite':1})
     library.save_game({'title':'Playing fixture','status':'Jogando'})
     window=MainWindow(library);window.navigate(1)
     window.library_tabs.setCurrentIndex(1);assert window.gallery.count()==1
     window.library_tabs.setCurrentIndex(2);assert window.gallery.count()==1
     window.library_tabs.setCurrentIndex(0);assert window.gallery.count()==2
-    window.set_density('compact');assert window.gallery.iconSize().width()<174
+    window.set_cover_size(80);assert library.setting('appearance.cover_size')==80
     window.set_theme('purple');assert window.brand.theme.key=='purple'
     assert not app_icon(get_theme('purple')).pixmap(16,16).isNull()
     window.close()

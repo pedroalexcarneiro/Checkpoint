@@ -230,8 +230,8 @@ class MainWindow(QMainWindow):
             for value in values: combo.addItem(value,value)
             index = combo.findData(selected); combo.setCurrentIndex(max(0,index)); combo.blockSignals(False)
         games = self.library.owned_games(self.search.text(),self.platform.currentData(),self.genre.currentData(),self.status.currentData(),self.favorites.isChecked(),self.sort.currentData())
-        compact=self.library.setting('appearance.density','comfortable')=='compact'
-        self.gallery.setIconSize(QSize(138,184) if compact else QSize(174,232));self.gallery.theme=self.theme;self.gallery.set_density(compact)
+        from .card_layout import cover_size
+        self.gallery.theme=self.theme;self.gallery.set_cover_size(cover_size(self.library))
         self.gallery.clear(); self.table.setRowCount(len(games)); self.count.setText(count_text(len(games),'jogo'))
         for row,game in enumerate(games):
             pix = QPixmap(game['cover']) if game['cover'] else QPixmap()
@@ -424,8 +424,10 @@ class MainWindow(QMainWindow):
     @Slot(int)
     def settings_section_changed(self,index):self.settings_section=index
 
-    def set_density(self,density):
-        self.library.set_setting('appearance.density',density);self.refresh_library()
+    def set_cover_size(self,percent):
+        self.library.set_setting('appearance.cover_size',percent);self.refresh_library()
+        from .collection_views import build_wishlist
+        build_wishlist(self)
 
     def complete_library(self):
         ids=[row[0] for row in self.library.sql.execute('SELECT id FROM games WHERE deleted_at IS NULL')]

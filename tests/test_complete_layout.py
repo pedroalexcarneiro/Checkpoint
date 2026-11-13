@@ -65,7 +65,7 @@ def test_layout_header_and_library_fit_small_window(library,app):
         assert window.heading.geometry().top()>=0 and window.heading.geometry().bottom()<window.header_widget.height()
     window.navigate(1);app.processEvents();grid=window.gallery
     first=[grid.visualItemRect(grid.item(i)) for i in range(grid.count()) if grid.visualItemRect(grid.item(i)).top()==0]
-    assert len(first)>=4
+    assert len(first)==grid.columns and len(first)>=2
     assert first[-1].right()<=grid.viewport().width();window.close()
 
 

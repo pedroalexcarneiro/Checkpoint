@@ -10,7 +10,7 @@ class CoverDelegate(QStyledItemDelegate):
     def paint(self,painter,option,index):
         painter.save();painter.setRenderHint(QPainter.Antialiasing)
         colors=self.parent().theme.colors
-        rect=QRectF(option.rect).adjusted(0,0,-16,-8)
+        rect=QRectF(option.rect).adjusted(0,0,-self.parent().card_gap,-self.parent().card_gap)
         hovered=bool(option.state & QStyle.State_MouseOver)
         selected=bool(option.state & QStyle.State_Selected)
         painter.setPen(QPen(QColor(colors['accent']),1) if selected else Qt.NoPen)
@@ -46,20 +46,23 @@ class CoverDelegate(QStyledItemDelegate):
 
 class CoverGrid(QListWidget):
     def __init__(self,theme,parent=None):
-        super().__init__(parent);self.theme=theme;self.compact=False;self.last_grid=None;self.art_ratio=1.5
+        super().__init__(parent);self.theme=theme;self.cover_percent=100;self.last_grid=None;self.art_ratio=1.5;self.card_gap=20
         self.setItemDelegate(CoverDelegate(self));self.setMouseTracking(True)
         self.setViewMode(QListWidget.IconMode);self.setResizeMode(QListWidget.Adjust)
         self.setMovement(QListWidget.Static);self.setSpacing(0);self.setWordWrap(False)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
-    def set_density(self,compact):
-        self.compact=compact;self.update_grid()
+    def set_cover_size(self,percent):
+        self.cover_percent=percent;self.update_grid()
 
     def update_grid(self):
         self.art_ratio=1.5
-        width=max(4,self.viewport().width()-16)
-        cell=max(1,width//4)
-        size=QSize(cell,round((cell-20)*self.art_ratio)+54)
+        from .card_layout import card_metrics
+        metrics=card_metrics(self.viewport().width(),self.cover_percent)
+        self.columns=metrics.columns;self.card_gap=metrics.gap
+        cell=metrics.width
+        size=QSize(cell+metrics.gap,round((cell-4)*self.art_ratio)+54+metrics.gap)
+        self.setIconSize(QSize(max(1,cell),max(1,round(cell*self.art_ratio))))
         if self.last_grid!=size:self.last_grid=size;self.setGridSize(size)
         self.viewport().update()
 
