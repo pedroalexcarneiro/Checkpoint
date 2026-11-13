@@ -29,7 +29,7 @@ def test_official_api_without_saved_key_never_calls_transport():
     with pytest.raises(IntegrationError,match='não configurada'):provider.prices('42')
     fetch.assert_not_called()
 
-def test_wishlist_discount_sort_prices_and_scroll_survive_refresh(library,app):
+def test_wishlist_name_price_sort_and_scroll_survive_refresh(library,app):
     library.set_setting('prices.auto',False);library.set_setting('artwork.auto',False)
     ids=[]
     for index in range(30):
@@ -38,14 +38,17 @@ def test_wishlist_discount_sort_prices_and_scroll_survive_refresh(library,app):
         ids.append(identity)
     library.set_setting(f'prices.ggdeals.{ids[-1]}',{'lowest':6000,'current':6000,'original':10000,'discount':40,'currency':'BRL'})
     ordered=wishlist_order(library,library.games())
-    assert ordered[0]['id']==ids[-1] and ordered[1]['id']==ids[0]
+    assert ordered[0]['id']==ids[0]
+    assert wishlist_order(library,library.games(),'price')[0]['id']==ids[-1]
     assert wishlist_order(library,library.games(),'name')[0]['id']==ids[0]
     window=MainWindow(library);window.resize(1280,800);window.navigate(2);window.show()
+    for _ in range(5):app.processEvents()
+    combo=window.pages[2].findChild(QComboBox,'wishlistOrder');assert combo.currentData()=='name';combo.setCurrentIndex(1)
     for _ in range(5):app.processEvents()
     grid=window.pages[2].findChild(WishGrid,'wishlistGrid')
     assert grid.cards[0].game['id']==ids[-1]
     assert all(card.findChild(WishLogo).width()==card.findChild(WishLogo).height() for card in grid.cards)
-    price=price_summary(library,ordered[0]);labels=price.findChildren(QLabel)
+    price=price_summary(library,library.get(ids[-1]));labels=price.findChildren(QLabel)
     assert any(label.text()=='-40%' for label in labels)
     assert any(label.text()=='R$ 100,00' and label.font().strikeOut() for label in labels)
     window.wishlist_scroll.verticalScrollBar().setValue(250)
@@ -54,7 +57,7 @@ def test_wishlist_discount_sort_prices_and_scroll_survive_refresh(library,app):
     for _ in range(5):app.processEvents()
     assert window.wishlist_scroll.verticalScrollBar().value()==250
     assert window.pages[2].findChild(WishGrid,'wishlistGrid').cards[0].game['id']==ids[-2]
-    combo=window.pages[2].findChild(QComboBox,'wishlistOrder');combo.setCurrentIndex(1)
+    combo=window.pages[2].findChild(QComboBox,'wishlistOrder');combo.setCurrentIndex(0)
     for _ in range(5):app.processEvents()
     assert window.pages[2].findChild(WishGrid,'wishlistGrid').cards[0].game['id']==ids[0]
     window.close()

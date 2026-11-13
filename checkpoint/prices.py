@@ -4,7 +4,7 @@ from .library import now
 from .integrations import IntegrationError
 
 
-def money(value):return 'Sem oferta' if value is None else 'R$ '+f'{value/100:,.2f}'.replace(',','X').replace('.',',').replace('X','.')
+def money(value):return 'Indisponível' if type(value) is not int or value<=0 else 'R$ '+f'{value/100:,.2f}'.replace(',','X').replace('.',',').replace('X','.')
 
 
 def snapshot(library,game_id):return library.setting(f'prices.ggdeals.{game_id}',{})
@@ -54,11 +54,11 @@ def refresh_prices(library,game_id,provider=None):
         return str(error)
 
 
-def wishlist_order(library,games,order='discount'):
+def wishlist_order(library,games,order='name'):
     def key(game):
-        value=snapshot(library,game['id'])
-        discount=value.get('discount') if value.get('lowest',0) and value.get('lowest',0)>0 else None
-        return (-(discount or 0),game['title'].casefold()) if order=='discount' else (game['title'].casefold(),)
+        value=snapshot(library,game['id']);current=value.get('lowest')
+        usable=type(current) is int and current>0 and value.get('currency','BRL')=='BRL'
+        return (not usable,current if usable else 0,game['title'].casefold()) if order=='price' else (game['title'].casefold(),)
     return sorted(games,key=key)
 
 

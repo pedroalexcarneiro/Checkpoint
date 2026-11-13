@@ -53,7 +53,7 @@ class WishGrid(CardGrid):
         from .card_layout import card_metrics
         metrics=card_metrics(self.width(),getattr(self,'cover_percent',100))
         self.columns=metrics.columns;spacing=metrics.gap;self.grid.setSpacing(spacing);width=metrics.width
-        art_width=max(1,width-24);art_height=art_width;compact=width<200;height=art_height+(194 if compact else 164)
+        art_width=max(1,width-24);art_height=art_width;compact=width<200;height=art_height+(220 if compact else 190)
         while self.grid.count():self.grid.takeAt(0)
         for column in range(self.columns):self.grid.setColumnStretch(column,1)
         for index,card in enumerate(self.cards):
@@ -86,7 +86,11 @@ def build_wishlist(window):
     top=QHBoxLayout();top.addWidget(text(count_text(len(rows),'jogo'),'muted'));top.addStretch();top.addWidget(action('+ Adicionar desejo',window.add_game,True));inside.addLayout(top)
     from .card_layout import cover_size
     from .prices import wishlist_order
-    order=QComboBox();order.setObjectName('wishlistOrder');order.addItem('Maior desconto','discount');order.addItem('Nome A–Z','name');order.setCurrentIndex(max(0,order.findData(window.library.setting('wishlist.order','discount'))))
+    selected_order=window.library.setting('wishlist.order','name')
+    if selected_order not in ('name','price'):selected_order='name';window.library.set_setting('wishlist.order',selected_order)
+    order=QComboBox();order.setObjectName('wishlistOrder');order.addItem('Nome A–Z','name');order.addItem('Menor preço atual','price');order.setCurrentIndex(max(0,order.findData(selected_order)))
+    from .price_view import attribution_link
+    top.insertWidget(1,attribution_link())
     def change_order(index):
         window.library.set_setting('wishlist.order',order.itemData(index));window.wishlist()
     order.currentIndexChanged.connect(change_order);top.insertWidget(1,order)

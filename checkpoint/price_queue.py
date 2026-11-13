@@ -16,7 +16,7 @@ class PriceQueue(QObject):
         known=set(self.pending)
         if self.active:known.add(self.active.property('gameId'))
         for identity in ids:
-            if not self.library.sql.execute("SELECT 1 FROM external_identifiers WHERE game_id=? AND provider='steam'",(identity,)).fetchone() and not self.library.setting(f'prices.ggdeals.{identity}',{}).get('url'):continue
+            if not self.library.sql.execute("SELECT 1 FROM external_identifiers WHERE game_id=? AND provider='steam'",(identity,)).fetchone():continue
             if identity not in known and needs_update(self.library,identity):self.pending.append(identity);known.add(identity)
         if not self.active and not self.timer.isActive():self.timer.start(0)
     @Slot()

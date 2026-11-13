@@ -2,7 +2,7 @@
 from urllib.parse import urlencode
 from PySide6.QtCore import Qt,QUrl
 from PySide6.QtGui import QDesktopServices
-from PySide6.QtWidgets import QWidget,QHBoxLayout,QVBoxLayout
+from PySide6.QtWidgets import QWidget,QHBoxLayout,QVBoxLayout,QLabel
 from .ui_components import text,action,card
 from .prices import snapshot,money
 from .locale import datetime_display,date_display
@@ -19,23 +19,39 @@ def source_link(library,game,label='Ver ofertas ↗'):
     url=source_url(library,game);link=action(label,lambda:QDesktopServices.openUrl(QUrl(url)));link.setObjectName('quiet');link.setToolTip(url);return link
 
 
+def attribution_link():
+    label=QLabel('<a href="https://gg.deals/">Preços: GG.deals</a>');label.setObjectName('ggdealsAttribution');label.setTextFormat(Qt.RichText);label.setTextInteractionFlags(Qt.TextBrowserInteraction);label.setOpenExternalLinks(True);label.setAccessibleName('Preços: GG.deals');return label
+
+
+def has_steam_id(library,game):
+    return library.sql.execute("SELECT 1 FROM external_identifiers WHERE game_id=? AND provider='steam'",(game['id'],)).fetchone() is not None
+
+
 def price_summary(library,game):
-    value=snapshot(library,game['id']);frame=QWidget();frame.setFixedHeight(66);row=QVBoxLayout(frame);row.setContentsMargins(0,0,0,0);row.setSpacing(2)
-    label=text('Último preço salvo' if value.get('state')=='unavailable' and value.get('lowest') is not None else 'Menor preço atual','caption');label.setWordWrap(False);row.addWidget(label)
-    current=value.get('lowest');usable=isinstance(current,int) and current>0
-    prices=QHBoxLayout();prices.setSpacing(5)
-    amount=text(money(current) if usable else 'Indisponível','cardTitle');amount.setWordWrap(False);prices.addWidget(amount);prices.addStretch();row.addLayout(prices)
+    value=snapshot(library,game['id']);frame=QWidget();frame.setFixedHeight(92);row=QVBoxLayout(frame);row.setContentsMargins(0,0,0,0);row.setSpacing(2)
+    current=value.get('lowest');usable=type(current) is int and current>0 and value.get('currency','BRL')=='BRL'
+    stale=value.get('state') in ('unavailable','missing_steam_id') and usable
+    label=text('Último preço salvo' if stale else 'Menor preço atual','caption');label.setWordWrap(False);row.addWidget(label)
+    amount=text(money(current) if usable else 'Indisponível','cardTitle');amount.setWordWrap(False);row.addWidget(amount)
+    kind={'retail':'Loja oficial','keyshop':'Keyshop'}.get(value.get('current_kind'))
+    if kind and usable:row.addWidget(text(kind,'caption'))
     original=value.get('original');discount=value.get('discount')
-    if usable and isinstance(original,int) and original>current and discount:
+    if value.get('provider')!='api' and usable and type(original) is int and original>current and discount:
         detail=QHBoxLayout();before=text(money(original),'caption');font=before.font();font.setStrikeOut(True);before.setFont(font);detail.addWidget(before)
         badge=text('-'+str(discount)+'%','discountBadge');detail.addWidget(badge);detail.addStretch();row.addLayout(detail)
+    historical=value.get('historical')
+    if type(historical) is int and historical>0:row.addWidget(text('Menor histórico: '+money(historical),'caption'))
+    if not has_steam_id(library,game):row.addWidget(text('Sem ID da Steam para consulta','caption'))
+    row.addStretch()
     if value.get('checked_at'):
         stamp='Última consulta: '+datetime_display(value['checked_at']);frame.setToolTip(stamp);frame.setAccessibleDescription(stamp)
     return frame
 
 
 def comparison(window,game):
-    value=snapshot(window.library,game['id']);frame,inside=card();head=QHBoxLayout();head.addWidget(text('Últimos preços consultados' if value.get('state')=='unavailable' else 'Preços atuais','sectionTitle'));head.addStretch();head.addWidget(source_link(window.library,game,'Abrir comparação ↗'));inside.addLayout(head)
+    value=snapshot(window.library,game['id']);frame,inside=card();head=QHBoxLayout();head.addWidget(text('Últimos preços consultados' if value.get('state') in ('unavailable','missing_steam_id') else 'Preços atuais','sectionTitle'));head.addStretch();head.addWidget(source_link(window.library,game,'Abrir comparação ↗'));inside.addLayout(head);inside.addWidget(attribution_link(),0,Qt.AlignLeft)
+    if not has_steam_id(window.library,game):inside.addWidget(text('Sem ID da Steam para consulta','caption'))
+    if type(value.get('historical')) is int and value['historical']>0:inside.addWidget(text('Menor histórico: '+money(value['historical']),'muted'))
     for kind,title,key,anchor in [('retail','Lojas oficiais','retail','official-stores'),('keyshop','Lojas de chaves','keyshop','keyshops')]:
         row=QHBoxLayout();row.addWidget(text(title,'cardTitle'));row.addStretch();row.addWidget(text(money(value.get(key)),'cardTitle'));inside.addLayout(row)
         offers=[offer for offer in value.get('offers',[]) if offer['kind']==kind]
