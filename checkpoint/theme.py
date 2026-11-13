@@ -115,7 +115,8 @@ QTabBar::tab:hover {{ color: {c['text']}; background: {blend(c['panel'],c['accen
 QTabBar#libraryTabs {{ background: {c['panel']}; border: 1px solid {blend(c['border'],c['panel'],.4)}; border-radius: 8px; }}
 QTabBar#libraryTabs::tab {{ padding: 6px 12px; margin: 0; border: none; border-radius: 6px; }}
 QTabBar#libraryTabs::tab:selected {{ background: {c['accent']}; color: {c['on_accent']}; }}
-QTabWidget#settingsTabs QTabBar::tab {{ padding: 12px 18px; }}
+QTabWidget#settingsTabs QTabBar::tab {{ padding: {SPACE['xs']}px {SPACE['md']}px; font-size: {TYPE['body']}px; }}
+QTabWidget#settingsTabs QTabBar::tab:selected {{ color: {c['accent']}; font-weight: 600; }}
 QDialog#quickAddDialog {{ background: {c['panel']}; border: 1px solid {c['border']}; }}
 QTabBar#sourceTabs {{ border: 1px solid {c['border']}; border-radius: 8px; }}
 QTabBar#sourceTabs::tab {{ padding: 9px 14px; border: none; border-right: 1px solid {c['border']}; color: {c['text']}; }}

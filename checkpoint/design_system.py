@@ -111,11 +111,15 @@ class AdaptiveColumns(QWidget):
 class CardGrid(QWidget):
     def __init__(self,target=300,parent=None,max_columns=None):
         super().__init__(parent);self.target=target;self.max_columns=max_columns;self.cards=[];self.columns=0
-        self.grid=QGridLayout(self);self.grid.setContentsMargins(0,0,0,0);self.grid.setSpacing(20);self.grid.setAlignment(Qt.AlignTop)
+        self.grid=QGridLayout(self);self.grid.setContentsMargins(0,0,0,0);self.grid.setSpacing(SPACE['lg']);self.grid.setAlignment(Qt.AlignTop)
     def add_card(self,widget):self.cards.append(widget);self.reflow()
     def reflow(self):
         columns=max(1,self.width()//self.target)
         if self.max_columns:columns=min(columns,self.max_columns)
+        width=max(1,(self.width()-max(0,columns-1)*self.grid.spacing())//columns)
+        for widget in self.cards:
+            if hasattr(widget,'set_tile_width'):widget.set_tile_width(width)
+            else:widget.setFixedWidth(width)
         if columns==self.columns and self.grid.count()==len(self.cards):return
         self.columns=columns
         while self.grid.count():self.grid.takeAt(0)
