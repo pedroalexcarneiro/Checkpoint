@@ -2,9 +2,11 @@
 from urllib.parse import urlencode
 from PySide6.QtCore import Qt,QUrl
 from PySide6.QtGui import QDesktopServices
-from PySide6.QtWidgets import QWidget,QHBoxLayout,QVBoxLayout,QLabel
+from PySide6.QtWidgets import QWidget,QHBoxLayout,QVBoxLayout,QLabel,QSizePolicy
+from PySide6.QtGui import QFont,QFontMetrics
 from .ui_components import text,action,card
 from .prices import snapshot,money
+from .visual_tokens import SPACE,TYPE
 from .locale import datetime_display,date_display
 
 
@@ -32,14 +34,29 @@ def display_snapshot(library,game):
     return value if value.get('currency','BRL')=='BRL' else {}
 
 
+class PriceAmount(QLabel):
+    def __init__(self,value):
+        super().__init__(value);self.setObjectName('priceValue');self.setFixedHeight(32)
+        self.setMinimumWidth(0);self.setSizePolicy(QSizePolicy.Ignored,QSizePolicy.Fixed)
+    def resizeEvent(self,event):
+        super().resizeEvent(event);font=QFont(self.font());size=24
+        font.setPixelSize(size)
+        while size>16 and QFontMetrics(font).horizontalAdvance(self.text())>self.width():
+            size-=1;font.setPixelSize(size)
+        self.setStyleSheet('font-size: '+str(size)+'px; font-weight: 600;')
+
+
 def price_summary(library,game):
-    value=display_snapshot(library,game);frame=QWidget();frame.setFixedHeight(92);row=QVBoxLayout(frame);row.setContentsMargins(0,0,0,0);row.setSpacing(2)
+    value=display_snapshot(library,game);frame=QWidget();frame.setFixedHeight(132);row=QVBoxLayout(frame);row.setContentsMargins(0,0,0,0);row.setSpacing(SPACE['xxs'])
     current=value.get('lowest');usable=type(current) is int and current>0 and value.get('currency','BRL')=='BRL'
     stale=value.get('state') in ('unavailable','missing_steam_id') and usable
     label=text('Último preço salvo' if stale else 'Menor preço atual','caption');label.setWordWrap(False);row.addWidget(label)
-    amount=text(money(current) if usable else 'Indisponível','cardTitle');amount.setWordWrap(False);row.addWidget(amount)
+    amount=PriceAmount(money(current) if usable else 'Indisponível');row.addWidget(amount)
     kind={'retail':'Loja oficial','keyshop':'Keyshop'}.get(value.get('current_kind'))
-    if kind and usable:row.addWidget(text(kind,'caption'))
+    if kind and usable:
+        offers=[offer for offer in value.get('offers',[]) if offer.get('cents')==current]
+        shop=offers[0].get('shop','') if offers else ''
+        label=text(kind+(' · '+shop if shop else ''),'secondary');label.setToolTip(label.text());row.addWidget(label)
     original=value.get('original');discount=value.get('discount')
     if value.get('provider')!='api' and usable and type(original) is int and original>current and discount:
         detail=QHBoxLayout();before=text(money(original),'caption');font=before.font();font.setStrikeOut(True);before.setFont(font);detail.addWidget(before)

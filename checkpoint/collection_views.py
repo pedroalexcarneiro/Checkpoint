@@ -1,12 +1,15 @@
 """Desejos e memórias na mesma linguagem visual da biblioteca."""
 from pathlib import Path
+from .cover_art import CoverArtwork
+from .visual_tokens import SPACE
+from .design_system import CardSurface
 from PySide6.QtCore import Qt,QSize,QTimer
 from PySide6.QtWidgets import QLabel,QWidget,QVBoxLayout,QHBoxLayout,QBoxLayout,QTabWidget,QFrame,QSizePolicy,QPushButton,QComboBox
 from .ui_components import text,action,card,GameTile,relative_date
 from .design_system import CardGrid,page_scroll,empty_state,IconButton,ArtworkButton,Badge
 
 
-class WishLogo(QPushButton):
+class WishLogo(CoverArtwork):
     def __init__(self,game):
         super().__init__();self.setObjectName('wishLogo');self.game=game;self.setFixedSize(180,180);self.setSizePolicy(QSizePolicy.Fixed,QSizePolicy.Fixed);self.setAccessibleName(game['title'])
         from PySide6.QtGui import QPixmap
@@ -21,11 +24,7 @@ class WishLogo(QPushButton):
         from PySide6.QtCore import QRectF
         from .design_system import colors
         p=QPainter(self);p.setRenderHint(QPainter.Antialiasing)
-        if not self.pixmap.isNull():
-            p.setClipRect(self.rect())
-            pix=self.pixmap.scaled(self.size() if not self.is_logo else self.size()-QSize(24,24),Qt.KeepAspectRatio if self.is_logo else Qt.KeepAspectRatioByExpanding,Qt.SmoothTransformation);p.drawPixmap((self.width()-pix.width())//2,(self.height()-pix.height())//2,pix)
-        else:
-            font=QFont('Segoe UI');font.setPixelSize(12);font.setWeight(QFont.Normal);p.setFont(font);p.setPen(QColor(colors()['muted']));p.drawText(QRectF(self.rect()),Qt.AlignCenter|Qt.TextWordWrap,self.game['title'])
+        CoverArtwork.paint_art(p,QRectF(self.rect()),self.pixmap,self.game['title'],colors(),self.hasFocus() or self.underMouse(),padding=SPACE['md'] if self.is_logo else 0)
         p.end()
 
 
@@ -36,7 +35,7 @@ class WishTitle(QLabel):
         super().resizeEvent(event);self.setText(self.fontMetrics().elidedText(self.title,Qt.ElideRight,self.width()))
 
 
-class WishCard(QFrame):
+class WishCard(CardSurface):
     def __init__(self,game):
         super().__init__();self.game=game;self.setObjectName('panel');self.setSizePolicy(QSizePolicy.Fixed,QSizePolicy.Fixed);self.setAccessibleName(game['title']);self.setAccessibleDescription('Na lista de desejos')
 
@@ -53,7 +52,7 @@ class WishGrid(CardGrid):
         from .card_layout import card_metrics
         metrics=card_metrics(self.width(),getattr(self,'cover_percent',100))
         self.columns=metrics.columns;spacing=metrics.gap;self.grid.setSpacing(spacing);width=metrics.width
-        art_width=max(1,width-24);art_height=art_width;compact=width<200;height=art_height+(220 if compact else 190)
+        art_width=max(1,width-2*SPACE['md']);art_height=art_width;compact=width<200;height=art_height+(304 if compact else 272)
         while self.grid.count():self.grid.takeAt(0)
         for column in range(self.columns):self.grid.setColumnStretch(column,1)
         for index,card in enumerate(self.cards):
@@ -81,7 +80,7 @@ def build_wishlist(window):
     QTimer.singleShot(0,scroll,restore_position)
     rows=[dict(row) for row in window.library.sql.execute('SELECT g.*,w.target_cents FROM wishlist w JOIN games g ON g.id=w.game_id WHERE g.deleted_at IS NULL ORDER BY g.title COLLATE NOCASE')]
     if not rows:
-        inside.addWidget(empty_state('wish','Nenhum desejo','',window.add_game,'Adicionar desejo'));inside.addStretch();return
+        inside.addWidget(empty_state('wish','Nenhum desejo','Salve os jogos que você quer jogar para acompanhar suas ofertas.',window.add_game,'Adicionar desejo'));inside.addStretch();return
     from .locale import count_text
     top=QHBoxLayout();top.addWidget(text(count_text(len(rows),'jogo'),'muted'));top.addStretch();top.addWidget(action('+ Adicionar desejo',window.add_game,True));inside.addLayout(top)
     from .card_layout import cover_size
@@ -95,10 +94,10 @@ def build_wishlist(window):
         window.library.set_setting('wishlist.order',order.itemData(index));window.wishlist()
     order.currentIndexChanged.connect(change_order);top.insertWidget(1,order)
     rows=wishlist_order(window.library,rows,order.currentData())
-    grid=WishGrid(260);grid.cover_percent=cover_size(window.library);grid.setObjectName('wishlistGrid')
+    grid=WishGrid(260);grid.cover_percent=cover_size(window.library);grid.setObjectName('wishlistGrid');grid.setProperty('cardComponent','coverCard')
     from .price_view import price_summary,source_link
     for game in rows:
-        panel=WishCard(game);body=QVBoxLayout(panel);body.setContentsMargins(12,12,12,12);body.setSpacing(6)
+        panel=WishCard(game);body=QVBoxLayout(panel);body.setContentsMargins(*([SPACE['md']]*4));body.setSpacing(SPACE['sm'])
         logo=WishLogo(game);logo.clicked.connect(lambda checked=False,g=game['id']:window.detail(g));body.addWidget(logo,0,Qt.AlignHCenter)
         body.addWidget(WishTitle(game['title']))
         body.addWidget(price_summary(window.library,game))
