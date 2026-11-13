@@ -22,16 +22,21 @@ def main():
     if args.worker_request:
         from .worker import execute_request
         return execute_request(args.worker_request)
-    if args.save_smoke_test and (not args.data_dir or (args.data_dir/'checkpoint.sqlite').exists()):
-        parser.error('--save-smoke-test exige --data-dir novo, sem banco existente.')
-    # Preserve o armazenamento e a trava legados para manter bibliotecas existentes.
-    directory = args.data_dir or Path(os.environ.get('LOCALAPPDATA',str(Path.home()/'.local/share')))/'Checkpoint'
-    directory.mkdir(parents=True,exist_ok=True)
+    from .data_migration import prepare_data_directory,MigrationError,LEGACY_DATABASE
+    if (args.smoke_test or args.save_smoke_test) and (not args.data_dir or any((args.data_dir/name).exists() for name in ('checkpoint.sqlite',LEGACY_DATABASE))):
+        parser.error('Smoke exige --data-dir novo, sem banco existente.')
+    if args.smoke_test or args.save_smoke_test:os.environ['QT_QPA_PLATFORM']='offscreen'
+    app=QApplication(sys.argv[:1]);app.setApplicationName('Checkpoint');app.setStyle('Fusion');app.setStyleSheet(DARK)
+    from .fonts import install_fonts
+    install_fonts(app)
+    try:session=prepare_data_directory(args.data_dir,migrate_credentials=not (args.smoke_test or args.save_smoke_test or args.network_test))
+    except MigrationError as error:
+        QMessageBox.critical(None,'Dados preservados',error.user_message());return 2
+    directory=session.directory
     if args.network_test:
         from .integrations.network import probe_google_connection
-        result = probe_google_connection()
-        (directory/'network-test.txt').write_text(result,encoding='utf-8')
-        return 0
+        try:(directory/'network-test.txt').write_text(probe_google_connection(),encoding='utf-8');return 0
+        finally:session.close()
     handler = RotatingFileHandler(directory/'checkpoint.log',maxBytes=2_000_000,backupCount=3,encoding='utf-8')
     logging.basicConfig(level=logging.INFO,handlers=[handler],format='%(asctime)s %(levelname)s %(message)s')
     # O callback OAuth e o URL de autorização incluem códigos e estado privados.
@@ -44,12 +49,6 @@ def main():
     except OSError:
         logging.warning('Registro nativo indisponível; inicialização continua.')
     # O descritor permanece aberto até a saída para registrar também falhas no shutdown.
-    app = QApplication(sys.argv[:1]); app.setApplicationName('Checkpoint'); app.setStyle('Fusion'); app.setStyleSheet(DARK)
-    from .fonts import install_fonts
-    install_fonts(app)
-    lock = QLockFile(str(directory/'checkpoint.lock'))
-    if not lock.tryLock(100):
-        QMessageBox.warning(None,'Checkpoint','Esta biblioteca já está aberta em outra instância.'); return 1
     db = None
     try:
         db = Database(directory/'checkpoint.sqlite')
@@ -83,7 +82,7 @@ def main():
         QMessageBox.critical(None,'Checkpoint','Falha ao abrir a biblioteca. Consulte o log no diretório de dados.'); return 1
     finally:
         if db: db.close()
-        lock.unlock()
+        session.close()
 
 if __name__=='__main__':
     raise SystemExit(main())
