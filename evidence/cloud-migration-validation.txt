@@ -1,3 +1,4 @@
+REGISTRO HISTÓRICO — não representa a validação da revisão atual.
 Checkpoint 0.1.13 — preparação de continuidade, 2026-11-11
 
 Host: Windows; Python do venv de desenvolvimento existente.

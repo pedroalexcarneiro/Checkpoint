@@ -1,3 +1,4 @@
+REGISTRO HISTÓRICO — não representa a validação da revisão atual.
 Checkpoint 0.1.2 — saves por jogo
 28 testes passaram em 8,51 s.
 Inclui teste real de encerramento de sessão com backup em worker pela interface headless.

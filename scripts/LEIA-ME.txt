@@ -1,23 +1,20 @@
-CHECKPOINT 0.1.14 — VERSÃO DE DESENVOLVIMENTO
+CHECKPOINT 0.1.28
 
-Extraia a pasta Checkpoint inteira e abra Checkpoint.exe.
-Não remova a pasta _internal. Não é necessário instalar Python.
-A biblioteca começa vazia. Seus dados ficam em %LOCALAPPDATA%\Checkpoint.
+Para usar o pacote Windows, extraia a pasta inteira e abra Checkpoint.exe.
+Não abra o programa dentro do ZIP. Mantenha os arquivos da pasta juntos.
 
-Biblioteca, diário, mídia, sessões locais, metas de compra e backups
-locais manuais estão disponíveis. Integrações precisam de credenciais
-próprias e não foram validadas com contas reais nesta entrega.
-Steam: importe jogos em Configurações > Steam, com SteamID64 e chave pessoal.
-Horas e conquistas remotas ficam separadas dos registros locais. Validação com
-conta Steam real permanece pendente. RetroAchievements, preços automáticos e
-backup de saves no Drive continuam pendentes. O projeto completo não está concluído.
+Sua biblioteca fica em %LOCALAPPDATA%\Checkpoint, fora da instalação.
+Ao atualizar de uma edição antiga, o programa copia os dados compatíveis e
+verifica o banco. A pasta anterior é preservada. Se houver erro, a mensagem
+mostra onde estão os dados antigos. Não apague essa pasta.
 
-Antes de atualizar, feche o aplicativo e preserve uma cópia de
-%LOCALAPPDATA%\Checkpoint. Migração para schema 4 gera backup; versão 0.1.13
-não abre o banco novo. Não misture arquivos WAL de bancos diferentes.
+Para adicionar um jogo, pesquise o nome, escolha o resultado e salve.
+Ficha e imagens disponíveis são buscadas automaticamente. ROM do Drive e
+Steam ficam nas abas do cadastro. Conexões e aparência ficam em Configurações.
 
-Consulte PROJECT_STATUS.md, SETUP.md e INTEGRATIONS.md incluídos.
+São nove temas, com Verde como padrão. Capas são verticais.
+Credenciais são configuradas somente no aplicativo e ficam no cofre do Windows;
+não envie chaves pelo chat ou coloque-as em arquivos do projeto.
 
-Atualizações: Configurações > Atualizações do Checkpoint. Repositório privado exige
-token restrito ao Checkpoint com Contents: leitura, salvo no cofre do Windows.
-Mantenha a subpasta CheckpointUpdater inteira na pasta Checkpoint.
+Para desenvolver ou gerar um pacote, consulte SETUP.md na raiz.
+Esta revisão do código não cria uma nova release automaticamente.

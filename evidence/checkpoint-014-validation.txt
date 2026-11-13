@@ -1,3 +1,4 @@
+REGISTRO HISTÓRICO — não representa a validação da revisão atual.
 Checkpoint 0.1.4
 46 tests passed in 5.77s
 Gzip regression failed before the fix and passed after it.

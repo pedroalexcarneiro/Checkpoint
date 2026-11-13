@@ -79,6 +79,7 @@ def main():
     for index,name in enumerate(['appearance','connections','downloads','data']):w.settings_tabs.setCurrentIndex(index);capture('settings-'+name)
     from checkpoint.profile_dialog import ProfileDialog
     profile=ProfileDialog(lib,w);profile.nickname.setText('Jogador');profile.preview(lib.get(ids[0])['cover']);profile.show();capture('profile',profile);profile.close()
+    w.integration_status=lambda provider:'Credencial salva · fixture não verificada' if provider in ('Steam','RAWG') else 'Não configurada';w.navigate(5);w.settings_tabs.setCurrentIndex(1);capture('settings-connections-configured');w.integration_status=lambda provider:'Não configurada'
     w.detail(ids[0])
     for index,name in enumerate(['overview','activity','memories','files']):w.detail_tabs.setCurrentIndex(index);capture('detail-'+name)
     for dialog,name in [(GameDialog(w,library=lib),'add'),(GameDialog(w,game=lib.get(ids[0]),library=lib),'edit'),(DriveDialog(lib,w),'drive'),(ArtworkDialog(lib,lib.get(ids[0]),w),'artwork'),(SteamDialog(lib,w),'steam'),(EmulatorDialog(lib,w),'emulators')]:
@@ -88,7 +89,7 @@ def main():
             quick=dialog.quick_add
             quick.suspend=True;quick.query.setText('Hollow Knight');quick.suspend=False
             result=MetadataResult('steam','367520','Hollow Knight',platforms=('PC',),developer='Team Cherry')
-            quick.candidates=[result];quick.show_result(result);quick.state.setText('Fixture de revisão: ficha selecionada, sem consulta autenticada.')
+            dialog.apply_catalog(result);quick.candidates=[result];quick.show_result(result);quick.state.clear()
             from PySide6.QtGui import QPixmap
             quick.art.setPixmap(QPixmap(lib.get(ids[0])['cover']).scaled(quick.art.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation))
             capture('add-selected',dialog)
@@ -106,10 +107,11 @@ def main():
     if args.prices_file:
         from checkpoint.library import now
         value=json.loads(args.prices_file.read_text(encoding='utf-8'));value.update({'checked_at':now(),'attempted_at':now(),'state':'ready'})
-        lib.set_setting(f'prices.ggdeals.{ids[0]}',value)
-    w.add_wish(ids[0]);w.navigate(2);capture('wishlist-prices');w.detail(ids[0]);capture('wish-price-comparison')
+        lib.set_setting(f'prices.ggdeals.{ids[8]}',value)
+    with lib.sql:lib.sql.execute('INSERT OR IGNORE INTO wishlist(game_id,target_cents) VALUES(?,0)',(ids[7],))
+    w.add_wish(ids[8]);w.navigate(2);capture('wishlist-prices');w.detail(ids[8]);capture('wish-price-comparison')
     w.detail_page.verticalScrollBar().setValue(w.detail_page.verticalScrollBar().maximum());capture('wish-prices-expanded')
-    lib.acquire(ids[0])
+    lib.acquire(ids[8])
     original=[lib.get(identity)['cover'] for identity in ids]
     for index in (1,2):
         path=artwork(root,index,names[index],colors[index],'mixed-cover',600,800 if index==1 else 600)

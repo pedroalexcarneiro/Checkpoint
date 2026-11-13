@@ -1,64 +1,21 @@
 # Checkpoint
 
-Biblioteca pessoal de jogos para Windows em Python/PySide6 e SQLite.
-A última release publicada é a [v0.1.27](https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.27).
-225 testes Windows e smokes do pacote aprovados; revisão inclui Desejos, Steam e perfil local.
+Biblioteca pessoal de jogos para Windows, em português do Brasil. Código-fonte atual: **0.1.28**, Python 3.12, PySide6 e SQLite (schema 4). Esta revisão não publica release.
 
-Início pessoal, Biblioteca com capas verticais inteiras e legendas alinhadas, ficha
-com banner/logo e cadastro compacto. Desejos usa cards quadrados com logos,
-menores preços atuais e acesso à comparação de ofertas. Horas aparecem em um
-calendário diário. Descrições priorizam português quando a fonte disponibiliza;
-datas são exibidas em DD/MM/AAAA. A revisão 0.1.25 restaura os dez temas, incluindo
-Branco, conforme o prompt reenviado, e corrige proporções, espaçamentos e navegação.
-Adicionar jogo fica somente no canto superior direito de Início e Biblioteca. O perfil local permite
-foto e apelido, mostrados na lateral. A importação Steam usa lista com rolagem
-e resumo compacto, sem relatório por jogo na interface.
+A Biblioteca usa quatro colunas de capas verticais. Início reúne o jogo atual, continuidade e atividade pessoal; a ficha reúne banner, execução, informações e galeria. Desejos mostra artes contidas e ofertas disponíveis.
 
-Pesquisa/filtros, favoritos, edição, lixeira recuperável, diário, mídia pessoal,
-conquistas e backup/restauração de saves tradicionais continuam disponíveis.
-Dados pessoais e identificadores legados Checkpoint são preservados. Consulte
-CONTINUITY.md, PROJECT_STATUS.md e TESTING.md para resultados e limitações atuais.
+Os nove temas são Azul, Verde (padrão), Amarelo, Vermelho, Preto, Roxo, Rosa, Laranja e Ciano. Identidade: wordmark **checkpo//nt** e ícone próprio.
 
-Há fluxos de integração implementados para pesquisa RAWG, artes SteamGridDB e ROMs no Google Drive. OAuth e leitura real do Drive, pesquisa/títulos e obtenção dos três tipos de arte SteamGridDB foram validados. RAWG autenticado permanece pendente. O scanner não baixa ROMs; downloads acontecem apenas por solicitação. Nenhuma função remove arquivos no Drive.
-
-Steam: Configurações > Steam permite consultar a biblioteca, selecionar jogos para importar ou associar a cadastros existentes e consultar conquistas por jogo. Horas Steam ficam separadas das sessões locais. Requer chave Steam Web API e SteamID64; validação autenticada de conta Steam permanece separada dos testes controlados.
-
-Para continuar o desenvolvimento em outro dispositivo, leia [Continuidade](CONTINUITY.md),
-[Visão do produto](PRODUCT_VISION.md) e [Codex Cloud](CLOUD_SETUP.md). Código e documentação
-no branch padrão permitem reconstruir o ambiente; dados pessoais e credenciais ficam separados.
+Os dados ficam em `%LOCALAPPDATA%\Checkpoint`; na primeira abertura elegível, a pasta anterior é copiada com verificação do banco e a origem é preservada. Credenciais permanecem no cofre do Windows.
 
 ## Executar
 
-No ambiente de desenvolvimento, instale o projeto conforme SETUP.md e execute:
-
 ```powershell
-python -m checkpoint.app
+python -m pip install -r requirements-tested.txt
+python -m pip install --no-deps --no-build-isolation -e .
+python run_checkpoint.py
 ```
 
-O pacote portátil, quando gerado, fica em `dist/Checkpoint/Checkpoint.exe`. A pasta inteira `dist/Checkpoint` é necessária; não mova apenas o executável. Dados ficam em `%LOCALAPPDATA%/Checkpoint`, separados do programa. Para testar sem tocar na biblioteca principal:
+Consulte [SETUP.md](SETUP.md) para build e dados, [INTEGRATIONS.md](INTEGRATIONS.md) para serviços, [TESTING.md](TESTING.md) para validação e [RELATORIO_CORRECOES.md](RELATORIO_CORRECOES.md) para a revisão atual.
 
-```powershell
-python -m checkpoint.app --data-dir ./dados-isolados
-```
-
-## Documentação
-
-- [Estado e limitações](PROJECT_STATUS.md)
-- [Instalação e build](SETUP.md)
-- [Arquitetura](ARCHITECTURE.md)
-- [Plano de evolução](ROADMAP.md)
-- [Integrações e credenciais](INTEGRATIONS.md)
-- [Testes](TESTING.md)
-- [Alterações](CHANGELOG.md)
-
-O primeiro início é vazio. Dados de testes ficam em diretórios isolados e não são incluídos na biblioteca distribuída. Vídeos abrem no reprodutor padrão do Windows; imagens possuem visualização ampliada no aplicativo.
-
-
-
-## Atualização 0.1.5 — Checkpoint
-
-Nome visível e executável alterados para Checkpoint. Removidos slogans da navegação, do início e dos estados vazios. Os dados, a trava de instância e o cofre continuam usando os identificadores internos Checkpoint para abrir a biblioteca existente sem migração. O pacote Python e a pasta de fontes também permanecem com seus nomes internos. O usuário confirmou que os fluxos locais solicitados no teste anterior funcionaram; isso não valida integrações autenticadas.
-
-## Temas de cores
-
-Escolha entre Azul, Verde, Amarelo, Vermelho, Preto, Roxo, Rosa, Laranja, Ciano e Branco em Configurações > Aparência > Tema. A preferência é salva e aplicada imediatamente.
+Jogos Steam, ROMs e executáveis locais compartilham a Biblioteca. Uma seleção no catálogo permite buscar ficha e imagens automaticamente; resultados dependem dos provedores, das credenciais configuradas e da disponibilidade de arte. Downloads Drive são somente sob demanda; nenhum arquivo remoto é excluído.

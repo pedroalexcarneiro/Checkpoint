@@ -1,3 +1,4 @@
+REGISTRO HISTÓRICO — não representa a validação da revisão atual.
 Checkpoint — continuidade de design/PT-BR (12/11/2026)
 Base: codex/steam-library-import @ d23439dd998bfb667f4bf1ae38de12c25a1243be
 Revisão: codex/design-fidelity-pt-br
@@ -8,8 +9,6 @@ Comando: QT_QPA_PLATFORM=offscreen .venv/bin/python -X faulthandler -m pytest te
 Smokes isolados: 6 páginas, auxiliar, SQLite íntegro/schema 4 e cadastro com imagem, exit 0.
 Wheel inspecionado: módulos e assets oficiais incluídos; sem base/logs.
 Revisão Qt: 48 capturas + índice; verde/roxo/azul; fixtures isoladas e artes públicas opcionais.
-Pontos finais: 9 temas escuros; Biblioteca vertical; wishlist quadrada com logos; ações na mesma linha; calendário diário; DD/MM/AAAA; descrição PT quando disponível; preços BRL e links completos.
-Modo claro e opção de Biblioteca quadrada removidos por pedido do usuário.
 Prévias não representam biblioteca pessoal nem conta autenticada; não são aprovação final do design.
 GG.deals público: Hollow Knight, BRL mínimo 4699 centavos, retail 4699, keyshops 4746; 11 ofertas carregadas. Snapshot temporal, sujeito a alteração.
 Steam Store pública: descrição PT e data 2017-02-24; MediaWiki: PT Minish Cap/GBA.

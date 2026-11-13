@@ -27,5 +27,5 @@ print(f'Revisão visual: {len(images)} PNGs e índice HTML; bases e logs excluí
 review=output/f'Checkpoint-{__version__}-ui-review.zip'
 report=[f'Checkpoint {__version__} · Revisão visual',f'Plataforma: {sys.platform}',f'Commit: {os.environ.get("GITHUB_SHA","local")}',f'Capturas Qt: {len(images)}', 'Janelas: 1100x740 e 1000x700; editor, cadastro e diálogos em suas dimensões próprias.', 'Temas: verde, roxo e azul; demais cores disponíveis no seletor.', 'Fixtures isoladas: jogos, sessões, metas e artes. Nenhuma conta autenticada.', 'Conteúdo publicado: capturas PNG e index.html. Base, logs e artes auxiliares excluídos.',f'SHA-256 ui-review.zip: {hashlib.sha256(review.read_bytes()).hexdigest()}']
 report[4]='Janelas: '+metadata.get('window','1920×1080, 1100×740 e 1000×700')+'; editor, cadastro e diálogos em suas dimensões próprias.'
-report[5]='Temas: verde, roxo, azul e branco; demais cores disponíveis no seletor.'
+report[5]='Nove temas escuros, Verde padrão; capturas incluem verde, roxo e azul.'
 (output/f'Checkpoint-{__version__}-ui-review.txt').write_text('\n'.join(report)+'\n',encoding='utf-8')

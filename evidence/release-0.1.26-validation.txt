@@ -1,3 +1,4 @@
+REGISTRO HISTÓRICO — não representa a validação da revisão atual.
 Checkpoint 0.1.26 — preparação
 Linux, QT_QPA_PLATFORM=offscreen: 225 passed in 131.98s, exit 0.
 Focados após perfil: 36 passed in 23.53s, exit 0.

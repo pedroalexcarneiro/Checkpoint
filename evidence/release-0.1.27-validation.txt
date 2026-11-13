@@ -1,3 +1,4 @@
+REGISTRO HISTÓRICO — não representa a validação da revisão atual.
 Checkpoint 0.1.27 — preparação
 14 testes focados após decisão final de cadastro: passed, 13.79s, exit 0.
 Suíte completa imediatamente anterior: 225 passed in 131.98s, exit 0.

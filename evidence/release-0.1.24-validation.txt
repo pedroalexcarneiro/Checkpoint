@@ -1,3 +1,4 @@
+REGISTRO HISTÓRICO — não representa a validação da revisão atual.
 ## Publicação confirmada — v0.1.24 — 13/11/2026
 
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.24
