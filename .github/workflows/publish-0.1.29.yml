@@ -1,0 +1,122 @@
+name: Publish validated Checkpoint 0.1.29
+
+on:
+  push:
+    branches: [fix/0.1.29]
+    paths: [.github/workflows/publish-0.1.29.yml]
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: checkpoint-publish-0.1.29
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_REPO: pedroalexcarneiro/Checkpoint
+      SOURCE_SHA: 90dec8e168d822698e176e5c93dd98951e01ab09
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 90dec8e168d822698e176e5c93dd98951e01ab09
+          persist-credentials: false
+      - name: Confirm successful Windows validation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api repos/$GH_REPO/actions/runs/43465699815 > /tmp/checkpoint-run.json
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          run=json.loads(Path('/tmp/checkpoint-run.json').read_text())
+          assert run['conclusion']=='success' and run['head_sha']==os.environ['SOURCE_SHA']
+          PY
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: checkpoint-windows-ui-review
+          run-id: 43465699815
+          github-token: ${{ github.token }}
+          path: release-assets
+      - name: Verify package and prepare source evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd release-assets
+          sha256sum --check Checkpoint-0.1.29-windows-x64.zip.sha256
+          python - <<'PY'
+          import os,zipfile
+          from pathlib import Path
+          with zipfile.ZipFile('Checkpoint-0.1.29-windows-x64.zip') as source:
+              assert source.testzip() is None
+              assert 'Checkpoint/Checkpoint.exe' in source.namelist()
+          validation=Path('Checkpoint-0.1.29-validation.txt').read_text()
+          assert os.environ['SOURCE_SHA'] in validation
+          assert "'tests': 296" in validation
+          assert "'failures': 0" in validation and "'errors': 0" in validation
+          print(validation)
+          PY
+          cd ..
+          git archive --format=zip -o release-assets/checkpoint-0.1.29-entrega.zip "$SOURCE_SHA"
+          python - <<'PY'
+          import zipfile
+          from pathlib import Path
+          with zipfile.ZipFile('release-assets/checkpoint-0.1.29-evidencias.zip','w',zipfile.ZIP_DEFLATED) as archive:
+              paths=sorted(Path('evidence/ui-0.1.29').glob('*.png'))+sorted(Path('evidence/ui-0.1.29').glob('*.json'))
+              paths += [Path('RELATORIO_CORRECOES.md'),Path('RELATORIO_FLUXO_BUSCA_0.1.29.md')]
+              for path in paths: archive.write(path,path.as_posix())
+          for name in ('entrega','evidencias'):
+              with zipfile.ZipFile(f'release-assets/checkpoint-0.1.29-{name}.zip') as archive:
+                  assert archive.testzip() is None
+          PY
+          cd release-assets
+          sha256sum checkpoint-0.1.29-entrega.zip > checkpoint-0.1.29-entrega.zip.sha256
+          sha256sum checkpoint-0.1.29-evidencias.zip > checkpoint-0.1.29-evidencias.zip.sha256
+      - name: Publish validated prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view v0.1.29 >/dev/null 2>&1; then
+            echo 'A release já existe; nenhuma alteração será feita.' >&2
+            exit 1
+          fi
+          cat > /tmp/release-notes.md <<'NOTES'
+          ## Checkpoint 0.1.29
+
+          - Biblioteca com tamanho ajustável de capas, colunas responsivas e rolagem suave.
+          - Início com jogos em andamento; Desejos com preços atuais/históricos e ordenação.
+          - Cadastro pela busca preserva desenvolvedora, publicadora, descrição e origem Busca, inclusive ao salvar durante a consulta.
+          - Diálogos aguardam trabalhos ativos antes de concluir; schema 4 e migração preservados.
+
+          **Windows:** baixe `Checkpoint-0.1.29-windows-x64.zip`, extraia a pasta inteira e abra `Checkpoint/Checkpoint.exe`.
+          `checkpoint-0.1.29-entrega.zip` é código-fonte. `checkpoint-0.1.29-evidencias.zip` contém as capturas e relatórios versionados; as saídas dos testes de busca estão no relatório de fluxo. Este pacote de evidências foi reempacotado no CI e difere do ZIP anterior de /tmp.
+
+          Fonte: commit `90dec8e168d822698e176e5c93dd98951e01ab09`.
+          Validação Windows: 296 testes, compilação e smokes do fonte e do executável extraído passaram. Resultados e hashes estão nos arquivos validation.txt e .sha256.
+          Execução: https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43465699815
+
+          Testes/capturas de integrações usam fontes controladas. Contas reais, cofre do computador pessoal e diferentes DPIs não foram homologados. Sem dados pessoais ou credenciais nos pacotes.
+          NOTES
+          gh release create v0.1.29 \
+            release-assets/Checkpoint-0.1.29-windows-x64.zip \
+            release-assets/Checkpoint-0.1.29-windows-x64.zip.sha256 \
+            release-assets/Checkpoint-0.1.29-validation.txt \
+            release-assets/checkpoint-0.1.29-entrega.zip \
+            release-assets/checkpoint-0.1.29-entrega.zip.sha256 \
+            release-assets/checkpoint-0.1.29-evidencias.zip \
+            release-assets/checkpoint-0.1.29-evidencias.zip.sha256 \
+            --target "$SOURCE_SHA" --draft --prerelease \
+            --title 'Checkpoint 0.1.29 · Biblioteca e cadastro' \
+            --notes-file /tmp/release-notes.md
+          gh release view v0.1.29 --json assets --jq '.assets[].name' > /tmp/checkpoint-assets.txt
+          grep -Fx 'Checkpoint-0.1.29-windows-x64.zip' /tmp/checkpoint-assets.txt
+          grep -Fx 'checkpoint-0.1.29-entrega.zip' /tmp/checkpoint-assets.txt
+          grep -Fx 'checkpoint-0.1.29-evidencias.zip' /tmp/checkpoint-assets.txt
+          gh release edit v0.1.29 --draft=false --prerelease
