@@ -282,9 +282,12 @@ class MainWindow(QMainWindow):
 
     def search_game_data(self,game_id):
         file=self.library.sql.execute('SELECT * FROM game_files WHERE game_id=? AND drive_id IS NOT NULL ORDER BY id LIMIT 1',(game_id,)).fetchone()
-        if file:self.add_game(drive_file=dict(file))
+        if file:self.open_add_game(drive_file=dict(file))
 
-    def add_game(self,drive_file=None):
+    def add_game(self):
+        self.open_add_game()
+
+    def open_add_game(self,drive_file=None):
         wish=self.current_page==2
         owned_before={game['id'] for game in self.library.owned_games()}
         dialog = GameDialog(self,library=self.library,purpose='wish' if wish else 'library')
