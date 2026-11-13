@@ -45,7 +45,7 @@ class CoverGrid(SmoothScrollMixin,QListWidget):
         self.setItemDelegate(CoverDelegate(self));self.setMouseTracking(True)
         self.setViewMode(QListWidget.IconMode);self.setResizeMode(QListWidget.Adjust)
         self.setMovement(QListWidget.Static);self.setSpacing(0);self.setWordWrap(False)
-        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff);self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
 
     def set_cover_size(self,percent):
         self.cover_percent=percent;self.update_grid()

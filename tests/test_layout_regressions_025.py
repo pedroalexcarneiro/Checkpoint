@@ -16,10 +16,10 @@ def test_home_search_opens_library_results(library,app):
     window.close()
 
 
-def test_empty_state_omits_instructional_description(app):
+def test_empty_state_shows_instructional_description(app):
     widget=empty_state('wish','Sua lista de desejos','Guarde os jogos que você quer.')
     widget.resize(1000,440);widget.show();app.processEvents()
-    assert not any(label.text().startswith('Guarde') for label in widget.findChildren(QLabel))
+    assert any(label.text().startswith('Guarde') for label in widget.findChildren(QLabel))
     widget.close()
 
 

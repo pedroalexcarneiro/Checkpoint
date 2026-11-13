@@ -183,3 +183,18 @@ def test_empty_search_dialog_keeps_instruction_and_disabled_save(app,library):
         assert dialog.quick_add.query.isVisible()
         assert dialog.quick_add.cancel.isEnabled() and not dialog.quick_add.save.isEnabled()
     finally:dialog.reject();dispose(dialog,app)
+
+
+def test_reapplying_same_theme_does_not_repolish_all_widgets(app,monkeypatch):
+    from checkpoint.theme import apply_theme
+    apply_theme(app,'green')
+    calls=[]
+    original=app.setStyleSheet
+    def tracked(style):
+        calls.append(style)
+        original(style)
+    monkeypatch.setattr(app,'setStyleSheet',tracked)
+    apply_theme(app,'green')
+    assert calls==[]
+    apply_theme(app,'pink')
+    assert len(calls)==1

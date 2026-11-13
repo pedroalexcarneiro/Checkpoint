@@ -55,7 +55,7 @@ def test_library_shortcuts_size_and_theme_update(library,app):
 
 def test_add_sources_do_not_start_network_or_nested_loading(library,app):
     dialog=GameDialog(library=library)
-    assert 560<=dialog.minimumWidth()<=620 and dialog.quick_add.jobs==[]
+    assert 680<=dialog.minimumWidth()<=760 and dialog.quick_add.jobs==[]
     assert not dialog.source_tabs.isHidden() and dialog.form_scroll.isHidden()
     assert [dialog.source_tabs.tabText(i) for i in range(3)]==['Pesquisar jogo','ROM do Drive','Steam']
     assert dialog.quick_add.query is dialog.fields['title']

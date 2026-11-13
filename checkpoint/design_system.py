@@ -92,7 +92,7 @@ def page_scroll(outer,reserve_scrollbar=False):
     if reserve_scrollbar:
         scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn);scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
     scroll.setWidgetResizable(True);scroll.setFrameShape(QFrame.NoFrame)
-    body=QWidget();inside=QVBoxLayout(body);inside.setContentsMargins(0,0,4,8);inside.setSpacing(20)
+    body=QWidget();inside=QVBoxLayout(body);inside.setContentsMargins(0,0,0 if reserve_scrollbar else SPACE['xxs'],SPACE['xs']);inside.setSpacing(20)
     scroll.setWidget(body);outer.addWidget(scroll);inside.scroll_area=scroll;return inside
 
 

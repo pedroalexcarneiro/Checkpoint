@@ -54,7 +54,8 @@ class WishGrid(CardGrid):
         self.columns=metrics.columns;spacing=metrics.gap;self.grid.setSpacing(spacing);width=metrics.width
         art_width=max(1,width-2*SPACE['md']);art_height=art_width;compact=width<200;height=art_height+(304 if compact else 272)
         while self.grid.count():self.grid.takeAt(0)
-        for column in range(self.columns):self.grid.setColumnStretch(column,1)
+        self.grid.setAlignment(Qt.AlignTop|Qt.AlignLeft)
+        for column in range(self.grid.columnCount()):self.grid.setColumnStretch(column,0)
         for index,card in enumerate(self.cards):
             card.setFixedSize(width,height)
             if hasattr(card,'footer'):card.footer.setDirection(QBoxLayout.TopToBottom if compact else QBoxLayout.LeftToRight)

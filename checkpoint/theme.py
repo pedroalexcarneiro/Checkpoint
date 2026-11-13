@@ -178,7 +178,10 @@ def apply_theme(application,key):
     for role,color in roles.items(): palette.setColor(getattr(QPalette.ColorRole,role),QColor(c[color]))
     for role in [QPalette.ColorRole.Text,QPalette.ColorRole.ButtonText,QPalette.ColorRole.WindowText]:
         palette.setColor(QPalette.ColorGroup.Disabled,role,QColor(c['disabled']))
-    application.setPalette(palette); application.setStyleSheet(stylesheet(theme.key)); application.setProperty('checkpointTheme',theme.key)
+    style=stylesheet(theme.key)
+    if application.property('checkpointTheme')==theme.key and application.styleSheet()==style and application.palette()==palette:
+        return theme
+    application.setPalette(palette); application.setStyleSheet(style); application.setProperty('checkpointTheme',theme.key)
     return theme
 
 # Compatibilidade com ferramentas e testes que importavam o tema padrão.
