@@ -166,3 +166,26 @@ def test_drive_source_displays_versions_and_preserves_original(library,app,monke
     assert library.sql.execute('SELECT original_name FROM game_files WHERE id=?',(dialog.drive_file_id,)).fetchone()[0]=='Example (USA).gba'
     assert dialog.data()['source']=='Google Drive'
     quick.save.click();assert dialog.result()==QDialog.Accepted;window.close()
+
+
+def test_nested_dialog_keeps_query_receiver_alive_until_job_finishes(library,app,monkeypatch):
+    """Drive owns the dialog; accepting must not outlive its query receiver."""
+    from PySide6.QtWidgets import QDialog as ParentDialog
+    blocked=Event();started=Event()
+    def worker(*args,**kwargs):
+        started.set();blocked.wait(3)
+        return {'results':[],'unavailable':0}
+    monkeypatch.setattr('checkpoint.quick_add.run_isolated',worker)
+    parent=ParentDialog();dialog=GameDialog(parent,library=library);dialog.show()
+    dialog.fields['title'].setText('Example');dialog.quick_add.lookup()
+    wait(app,started.is_set)
+    result=MetadataResult('rawg','1','Example',developer='Studio')
+    dialog.apply_catalog(result);dialog.validate()
+    try:
+        assert dialog.isVisible()
+        assert dialog.quick_add.jobs
+        assert dialog.quick_add.closed
+    finally:
+        blocked.set();wait(app,lambda:not dialog.quick_add.jobs)
+    assert dialog.result()==QDialog.Accepted and not dialog.isVisible()
+    parent.close()

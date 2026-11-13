@@ -101,7 +101,7 @@ class GameDialog(QDialog):
 
     def finish_or_wait(self,result):
         quick=getattr(self,'quick_add',None)
-        if quick and quick.owner is self and quick.jobs:
+        if quick and quick.jobs:
             quick.deferred_result=result;quick.closed=True;quick.timer.stop()
             quick.state.setText('Encerrando a consulta atual…');return
         self.done(result)
