@@ -1,0 +1,75 @@
+name: Publish validated Checkpoint 0.1.28
+
+on:
+  push:
+    branches: [fix/rename-redesign-0.1.28]
+    paths: [.github/workflows/publish-0.1.28.yml]
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: checkpoint-publish-0.1.28
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_REPO: pedroalexcarneiro/Checkpoint
+      SOURCE_SHA: 21ca701f052855fec97032f56211f3ba6f536ffc
+      BUILD_SHA: 124daabcc6cfa81b994941e3d64adf5020254da6
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Confirm validated build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api repos/$GH_REPO/actions/runs/43368694510 > /tmp/checkpoint-run.json
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          run=json.loads(Path('/tmp/checkpoint-run.json').read_text())
+          assert run['conclusion']=='success' and run['head_sha']==os.environ['BUILD_SHA']
+          PY
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: checkpoint-windows-ui-review
+          run-id: 43368694510
+          github-token: ${{ github.token }}
+          path: release-assets
+      - name: Verify package and publish new release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd release-assets
+          sha256sum --check Checkpoint-0.1.28-windows-x64.zip.sha256
+          python - <<'PY'
+          import zipfile
+          from pathlib import Path
+          archive=Path('Checkpoint-0.1.28-windows-x64.zip')
+          with zipfile.ZipFile(archive) as source:
+              assert source.testzip() is None
+              assert 'Checkpoint/Checkpoint.exe' in source.namelist()
+          assert Path('Checkpoint-0.1.28-validation.txt').stat().st_size>0
+          PY
+          cd ..
+          if gh release view v0.1.28 >/dev/null 2>&1; then
+            echo 'A release já existe; nenhuma alteração será feita.' >&2
+            exit 1
+          fi
+          gh release create v0.1.28 release-assets/* \
+            --target "$SOURCE_SHA" --draft --prerelease \
+            --title 'Checkpoint 0.1.28 · Migração e interface' \
+            --notes-file .github/release-notes.md
+          gh release view v0.1.28 --json assets --jq '.assets[].name' > /tmp/checkpoint-assets.txt
+          grep -Fx 'Checkpoint-0.1.28-windows-x64.zip' /tmp/checkpoint-assets.txt
+          grep -Fx 'Checkpoint-0.1.28-windows-x64.zip.sha256' /tmp/checkpoint-assets.txt
+          gh release edit v0.1.28 --draft=false --prerelease
