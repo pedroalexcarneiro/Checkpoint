@@ -426,9 +426,10 @@ class MainWindow(QMainWindow):
     def settings_section_changed(self,index):self.settings_section=index
 
     def set_cover_size(self,percent):
-        self.library.set_setting('appearance.cover_size',percent);self.refresh_library()
-        from .collection_views import build_wishlist
-        build_wishlist(self)
+        self.library.set_setting('appearance.cover_size',percent);self.gallery.set_cover_size(percent)
+        from .collection_views import WishGrid
+        grid=self.pages[2].findChild(WishGrid,'wishlistGrid')
+        if grid:grid.cover_percent=percent;grid.reflow()
 
     def complete_library(self):
         ids=[row[0] for row in self.library.sql.execute('SELECT id FROM games WHERE deleted_at IS NULL')]

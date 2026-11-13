@@ -112,12 +112,17 @@ QTabBar#libraryTabs {{ background: {c['panel']}; border: 1px solid {blend(c['bor
 QTabBar#libraryTabs::tab {{ padding: 6px 12px; margin: 0; border: none; border-radius: 6px; }}
 QTabBar#libraryTabs::tab:selected {{ background: {c['accent']}; color: {c['on_accent']}; }}
 QTabWidget#settingsTabs QTabBar::tab {{ padding: 12px 18px; }}
-QDialog#quickAddDialog {{ background: {c['panel']}; }}
+QDialog#quickAddDialog {{ background: {c['panel']}; border: 1px solid {c['border']}; }}
 QTabBar#sourceTabs {{ border: 1px solid {c['border']}; border-radius: 8px; }}
 QTabBar#sourceTabs::tab {{ padding: 9px 14px; border: none; border-right: 1px solid {c['border']}; color: {c['text']}; }}
 QTabBar#sourceTabs::tab:selected {{ background: {c['selected']}; border: 1px solid {c['accent']}; border-radius: 7px; }}
 QPushButton#resultLink {{ background: transparent; border: none; color: {c['accent']}; text-decoration: underline; padding: 0; }}
 QLabel#selectedCheck {{ background: {c['accent']}; color: {c['on_accent']}; border-radius: 14px; font-size: 20px; }}
+QLabel#discountBadge {{ background: {c['selected']}; color: {c['accent']}; border-radius: 4px; font-size: 12px; font-weight: 600; padding: 2px 6px; }}
+QSlider::groove:horizontal {{ height: 4px; border: none; border-radius: 2px; background: {c['input']}; }}
+QSlider::sub-page:horizontal {{ background: {c['accent']}; border-radius: 2px; }}
+QSlider::handle:horizontal {{ width: 14px; margin: -5px 0; border-radius: 7px; background: {c['accent']}; }}
+QScrollBar::handle:disabled {{ background: transparent; }}
 QToolButton#addDisclosure {{ background: transparent; border: none; border-top: 1px solid {c['border']}; border-bottom: 1px solid {c['border']}; border-radius: 0; padding: 12px 0; text-align: left; }}
 QScrollArea, QScrollArea > QWidget > QWidget {{ background: transparent; border: none; }}
 QScrollBar:vertical {{ background: transparent; width: 6px; margin: 2px 0; }}

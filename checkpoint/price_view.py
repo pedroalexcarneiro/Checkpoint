@@ -28,7 +28,7 @@ def price_summary(library,game):
     original=value.get('original');discount=value.get('discount')
     if usable and isinstance(original,int) and original>current and discount:
         detail=QHBoxLayout();before=text(money(original),'caption');font=before.font();font.setStrikeOut(True);before.setFont(font);detail.addWidget(before)
-        badge=text('-'+str(discount)+'%','selectedCheck');detail.addWidget(badge);detail.addStretch();row.addLayout(detail)
+        badge=text('-'+str(discount)+'%','discountBadge');detail.addWidget(badge);detail.addStretch();row.addLayout(detail)
     if value.get('checked_at'):
         stamp='Última consulta: '+datetime_display(value['checked_at']);frame.setToolTip(stamp);frame.setAccessibleDescription(stamp)
     return frame

@@ -1,7 +1,7 @@
 """Desejos e memórias na mesma linguagem visual da biblioteca."""
 from pathlib import Path
 from PySide6.QtCore import Qt,QSize,QTimer
-from PySide6.QtWidgets import QLabel,QWidget,QVBoxLayout,QHBoxLayout,QTabWidget,QFrame,QSizePolicy,QPushButton,QComboBox
+from PySide6.QtWidgets import QLabel,QWidget,QVBoxLayout,QHBoxLayout,QBoxLayout,QTabWidget,QFrame,QSizePolicy,QPushButton,QComboBox
 from .ui_components import text,action,card,GameTile,relative_date
 from .design_system import CardGrid,page_scroll,empty_state,IconButton,ArtworkButton,Badge
 
@@ -53,11 +53,12 @@ class WishGrid(CardGrid):
         from .card_layout import card_metrics
         metrics=card_metrics(self.width(),getattr(self,'cover_percent',100))
         self.columns=metrics.columns;spacing=metrics.gap;self.grid.setSpacing(spacing);width=metrics.width
-        art_width=max(1,width-24);art_height=art_width;height=art_height+164
+        art_width=max(1,width-24);art_height=art_width;compact=width<200;height=art_height+(194 if compact else 164)
         while self.grid.count():self.grid.takeAt(0)
         for column in range(self.columns):self.grid.setColumnStretch(column,1)
         for index,card in enumerate(self.cards):
             card.setFixedSize(width,height)
+            if hasattr(card,'footer'):card.footer.setDirection(QBoxLayout.TopToBottom if compact else QBoxLayout.LeftToRight)
             logo=card.findChild(WishLogo)
             if logo:logo.setFixedSize(art_width,art_height)
             self.grid.addWidget(card,index//self.columns,index%self.columns)
@@ -97,8 +98,12 @@ def build_wishlist(window):
         logo=WishLogo(game);logo.clicked.connect(lambda checked=False,g=game['id']:window.detail(g));body.addWidget(logo,0,Qt.AlignHCenter)
         body.addWidget(WishTitle(game['title']))
         body.addWidget(price_summary(window.library,game))
-        line=QHBoxLayout();line.setSpacing(4);line.addWidget(source_link(window.library,game));line.addStretch();line.addWidget(IconButton('plus','Adicionar à biblioteca',lambda checked=False,g=game['id']:window.acquire_wish(g)));line.addWidget(IconButton('trash','Retirar dos desejos',lambda checked=False,g=game['id']:window.remove_wish(g)));
-        body.addLayout(line)
+        line=QBoxLayout(QBoxLayout.LeftToRight);line.setSpacing(4)
+        offers=source_link(window.library,game);line.addWidget(offers,1)
+        controls=QWidget();controls.setFixedSize(60,28);buttons=QHBoxLayout(controls);buttons.setContentsMargins(0,0,0,0);buttons.setSpacing(4)
+        buttons.addWidget(IconButton('plus','Adicionar à biblioteca',lambda checked=False,g=game['id']:window.acquire_wish(g)))
+        buttons.addWidget(IconButton('trash','Retirar dos desejos',lambda checked=False,g=game['id']:window.remove_wish(g)))
+        line.addWidget(controls,0,Qt.AlignRight);panel.footer=line;body.addLayout(line)
         for control in panel.findChildren(IconButton):control.setFixedSize(28,28)
         grid.add_card(panel)
     inside.addWidget(grid);inside.addStretch()

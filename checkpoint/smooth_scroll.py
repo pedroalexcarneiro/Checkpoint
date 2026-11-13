@@ -21,3 +21,5 @@ class SmoothScrollArea(SmoothScrollMixin,QScrollArea):
     def __init__(self,parent=None):
         super().__init__(parent);self.enable_smooth_scroll()
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        bar=self.verticalScrollBar();bar.setEnabled(bar.maximum()>bar.minimum())
+        bar.rangeChanged.connect(lambda minimum,maximum:bar.setEnabled(maximum>minimum))

@@ -28,3 +28,16 @@ def test_home_without_started_games_has_no_invented_hero(library,app):
     assert not window.pages[0].findChildren(Hero)
     assert not window.pages[0].findChildren(GameStrip)
     window.close()
+
+
+def test_home_hero_button_remains_inside_banner_after_resizing(library,app):
+    from PySide6.QtWidgets import QPushButton
+    library.save_game({'title':'Jogo atual','status':'Jogando','description':'Descrição curta. '*50})
+    window=MainWindow(library);window.show()
+    for width,height in ((1280,800),(1920,1080),(1280,800)):
+        window.resize(width,height)
+        for _ in range(5):app.processEvents()
+        hero=window.pages[0].findChild(Hero);button=hero.findChild(QPushButton)
+        assert hero.rect().contains(button.geometry())
+        assert button.geometry().bottom()<=hero.height()-12
+    window.close()

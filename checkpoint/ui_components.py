@@ -107,6 +107,7 @@ class Hero(QWidget):
         ratio=self.banner.width()/self.banner.height() if not self.banner.isNull() else 4.5
         height=max(220,min(300,round(event.size().width()/4)))
         if height!=self._hero_height:self._hero_height=height;self.setFixedHeight(height)
+        self.content.setGeometry(self.rect())
 
     def paintEvent(self, event):
         p=QPainter(self);p.setRenderHint(QPainter.Antialiasing)
