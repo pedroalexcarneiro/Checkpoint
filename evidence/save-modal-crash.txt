@@ -7,9 +7,9 @@ Antes (fonte 0.1.16, HEAD 56f4886):
 QT_QPA_PLATFORM=offscreen XDG_CACHE_HOME=/workspace/work/qt-cache .venv/bin/python -X faulthandler /workspace/work/repro_full_save.py
 Exit 139, reproduzido também removendo o download/decodificação das imagens.
 Fatal Python error: Segmentation fault
-  gamevault/window.py:183 in save (ArtworkProgress(...).exec())
-  gamevault/window.py:61 in guard
-  gamevault/window.py:185 in add_game
+  checkpoint/window.py:183 in save (ArtworkProgress(...).exec())
+  checkpoint/window.py:61 in guard
+  checkpoint/window.py:185 in add_game
 
 O caminho abria AutomaticLookup.exec dentro de GameDialog.validate e, em seguida,
 ArtworkProgress.exec após aceitar o formulário. A falha nativa aparecia na abertura

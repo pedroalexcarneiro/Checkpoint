@@ -543,7 +543,7 @@ class MainWindow(QMainWindow):
         if path: self.library.set_setting(key,path); self.navigate(5)
 
     def backup_database(self):
-        path,_ = QFileDialog.getSaveFileName(self,'Backup do banco','gamevault-backup.sqlite','SQLite (*.sqlite)')
+        path,_ = QFileDialog.getSaveFileName(self,'Backup do banco','checkpoint-backup.sqlite','SQLite (*.sqlite)')
         if path: self.guard(lambda:self.library.db.backup(Path(path)))
 
     def configure_saves(self,game_id):

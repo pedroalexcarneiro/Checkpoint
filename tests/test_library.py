@@ -1,8 +1,8 @@
 import sqlite3
 from contextlib import closing
 import pytest
-from gamevault.database import Database,MIGRATIONS
-from gamevault.library import STATUSES
+from checkpoint.database import Database,MIGRATIONS
+from checkpoint.library import STATUSES
 
 def test_crud_persistence_filters_and_recovery(library):
     game=library.save_game({'title':'  Metroid  ','platform':'SNES','genre':'Aventura','favorite':1,'rating':9})

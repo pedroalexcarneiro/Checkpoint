@@ -1,9 +1,9 @@
 from pathlib import Path
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QInputDialog,QLabel,QLineEdit
-from gamevault.window import MainWindow
-from gamevault.dialogs import GameDialog
-from gamevault.design_system import CardGrid,IconButton,ThemeSwatch
+from checkpoint.window import MainWindow
+from checkpoint.dialogs import GameDialog
+from checkpoint.design_system import CardGrid,IconButton,ThemeSwatch
 
 
 def test_wishlist_uses_current_prices_and_removal_preserves_game(library,app,monkeypatch):
@@ -74,7 +74,7 @@ def test_theme_swatches_and_profile_apply_without_losing_data(library,app):
     window=MainWindow(library);window.navigate(5);window.show();app.processEvents()
     swatch=next(item for item in window.findChildren(ThemeSwatch) if item.theme.key=='purple');swatch.click()
     assert app.property('checkpointTheme')=='purple' and window.brand.theme.key=='purple'
-    from gamevault.profile_dialog import ProfileDialog
+    from checkpoint.profile_dialog import ProfileDialog
     dialog=ProfileDialog(library,window);dialog.nickname.setText('Jogador');dialog.save();window.refresh_profile()
     assert library.setting('profile.name')=='Jogador' and window.profile_button.text()=='Jogador'
     assert library.get(identity)['title']=='Theme fixture';window.close()

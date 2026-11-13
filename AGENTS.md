@@ -3,8 +3,8 @@
 Leia primeiro `CONTINUITY.md`, depois o resumo atual de `PROJECT_STATUS.md`,
 `ARCHITECTURE.md`, `ROADMAP.md` e os documentos da área alterada.
 
-- O produto se chama **Checkpoint**. `gamevault` e o diretório de dados
-  `GameVault` são identificadores legados necessários à compatibilidade.
+- O produto se chama **Checkpoint**. `checkpoint` e o diretório de dados
+  `Checkpoint` são identificadores legados necessários à compatibilidade.
 - Desenvolva nos arquivos, com funcionalidades reais, estados vazios e erros úteis.
   Não apresente dados fictícios, APIs simuladas ou testes substituídos como validação real.
 - Preserve a separação entre interface PySide6, serviços, SQLite e provedores.

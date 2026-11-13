@@ -1,14 +1,14 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage,QColor
 from PySide6.QtWidgets import QLabel
-from gamevault.window import MainWindow
-from gamevault.ui_components import Hero
-from gamevault.statistics_view import TimeChart,StatusRing
+from checkpoint.window import MainWindow
+from checkpoint.ui_components import Hero
+from checkpoint.statistics_view import TimeChart,StatusRing
 
 
 def test_banner_is_bounded_at_desktop_width(library,app,tmp_path):
     image=QImage(900,240,QImage.Format_RGB32);image.fill(QColor('red'));path=tmp_path/'wide.png';image.save(str(path))
-    hero=Hero({'title':'Teste','banner':str(path)},__import__('gamevault.theme',fromlist=['get_theme']).get_theme('green'))
+    hero=Hero({'title':'Teste','banner':str(path)},__import__('checkpoint.theme',fromlist=['get_theme']).get_theme('green'))
     hero.resize(750,300);hero.show();app.processEvents()
     assert 220<=hero.height()<=300
     assert hero.grab().toImage().pixelColor(hero.width()-20,hero.height()//2).red()>240

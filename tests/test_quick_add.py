@@ -4,10 +4,10 @@ import time
 from PySide6.QtTest import QTest
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QDialog
-from gamevault.dialogs import GameDialog
-from gamevault.window import MainWindow
-from gamevault.integrations import MetadataResult
-from gamevault.unified_catalog import search_titles,selected_details
+from checkpoint.dialogs import GameDialog
+from checkpoint.window import MainWindow
+from checkpoint.integrations import MetadataResult
+from checkpoint.unified_catalog import search_titles,selected_details
 
 
 def wait(app,predicate):
@@ -50,7 +50,7 @@ def test_search_prefills_form_and_can_save_without_advanced_step(library,app,mon
     def worker(operation,database,**kwargs):
         if operation=='catalog_search':return {'results':[asdict(result)],'unavailable':0}
         return {'result':asdict(result),'preview':{}}
-    monkeypatch.setattr('gamevault.quick_add.run_isolated',worker)
+    monkeypatch.setattr('checkpoint.quick_add.run_isolated',worker)
     window=MainWindow(library);dialog=GameDialog(window,library=library);dialog.show()
     dialog.fields['title'].setText('Example');QTest.keyClick(dialog.quick_add.query,Qt.Key_Return)
     assert dialog.isVisible()
@@ -69,7 +69,7 @@ def test_stale_lookup_cannot_overwrite_new_query(library,app,monkeypatch):
         if operation=='catalog_search':return {'results':[asdict(result)],'unavailable':0}
         if kwargs['identity']=='1':started.set();blocked.wait(3)
         return {'result':asdict(result),'preview':{}}
-    monkeypatch.setattr('gamevault.quick_add.run_isolated',worker)
+    monkeypatch.setattr('checkpoint.quick_add.run_isolated',worker)
     window=MainWindow(library);dialog=GameDialog(window,library=library);dialog.show()
     dialog.fields['title'].setText('Old');dialog.quick_add.lookup();wait(app,started.is_set)
     dialog.fields['title'].setText('New');dialog.quick_add.lookup();blocked.set()
@@ -80,11 +80,11 @@ def test_stale_lookup_cannot_overwrite_new_query(library,app,monkeypatch):
 
 
 def test_drive_choice_preserves_original_and_searches_platform(library,app,monkeypatch):
-    from gamevault.integrations.drive import DriveScanner
+    from checkpoint.integrations.drive import DriveScanner
     DriveScanner(library,None).record({'id':'rom','name':'Example (USA).gba'},'/GBA');library.sql.commit()
     calls=[]
     def worker(operation,database,**kwargs):calls.append((operation,kwargs));return {'results':[],'unavailable':0}
-    monkeypatch.setattr('gamevault.quick_add.run_isolated',worker)
+    monkeypatch.setattr('checkpoint.quick_add.run_isolated',worker)
     window=MainWindow(library);dialog=GameDialog(window,library=library);dialog.show()
     file=dict(library.sql.execute('SELECT * FROM game_files').fetchone());dialog.load_drive_file(file)
     wait(app,lambda:not dialog.quick_add.jobs)
@@ -112,10 +112,10 @@ import time,sys
 from pathlib import Path
 from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QApplication
-from gamevault.database import Database
-from gamevault.library import Library
-from gamevault.dialogs import GameDialog
-import gamevault.quick_add as quick
+from checkpoint.database import Database
+from checkpoint.library import Library
+from checkpoint.dialogs import GameDialog
+import checkpoint.quick_add as quick
 app=QApplication([]);app.setQuitOnLastWindowClosed(False)
 db=Database(Path(sys.argv[1])/'standalone.sqlite')
 def query(*args,**kwargs):time.sleep(.08);return {'results':[],'unavailable':0}
@@ -136,7 +136,7 @@ def test_source_change_rejects_inflight_catalog_and_steam_uses_import(library,ap
     def worker(operation,database,**kwargs):
         started.set();blocked.wait(3)
         return {'results':[asdict(MetadataResult('steam','42','Old',platforms=('PC',)))],'unavailable':0}
-    monkeypatch.setattr('gamevault.quick_add.run_isolated',worker)
+    monkeypatch.setattr('checkpoint.quick_add.run_isolated',worker)
     window=MainWindow(library);dialog=GameDialog(window,library=library);dialog.show()
     quick=dialog.quick_add;quick.query.setText('Old');quick.lookup();wait(app,started.is_set)
     dialog.source_tabs.setCurrentIndex(2);blocked.set();wait(app,lambda:not quick.jobs)
@@ -150,13 +150,13 @@ def test_source_change_rejects_inflight_catalog_and_steam_uses_import(library,ap
 
 
 def test_drive_source_displays_versions_and_preserves_original(library,app,monkeypatch):
-    from gamevault.integrations.drive import DriveScanner
+    from checkpoint.integrations.drive import DriveScanner
     for region in ('USA','Europe'):
         DriveScanner(library,None).record({'id':region,'name':f'Example ({region}).gba'},'/GBA')
     library.sql.commit();calls=[]
     def worker(operation,database,**kwargs):
         calls.append(kwargs);return {'results':[],'unavailable':0}
-    monkeypatch.setattr('gamevault.quick_add.run_isolated',worker)
+    monkeypatch.setattr('checkpoint.quick_add.run_isolated',worker)
     window=MainWindow(library);dialog=GameDialog(window,library=library);dialog.show()
     dialog.source_tabs.setCurrentIndex(1);quick=dialog.quick_add;quick.query.setText('Example');app.processEvents()
     assert quick.results.count()==2 and calls==[] and dialog.drive_file_id is None

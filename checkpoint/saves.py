@@ -49,7 +49,7 @@ class SaveBackupService:
                         raise ValueError('Save alterado durante a leitura.')
                     archive.writestr(name,content)
                     manifest[name] = info[2]
-                archive.writestr('gamevault-manifest.json',json.dumps({'created_at':now(),'files':manifest}))
+                archive.writestr('checkpoint-manifest.json',json.dumps({'created_at':now(),'files':manifest}))
             after = [p for p in source.rglob('*') if p.is_file() and not p.is_symlink()
                      and p.suffix.lower() not in FORBIDDEN
                      and any(fnmatch.fnmatch(p.name, pattern) for pattern in patterns)]
@@ -68,7 +68,7 @@ class SaveBackupService:
         if digest(archive_path) != expected_sha256:
             raise ValueError('O backup falhou na verificação SHA-256.')
         with zipfile.ZipFile(archive_path) as archive:
-            manifest = json.loads(archive.read('gamevault-manifest.json'))['files']
+            manifest = json.loads(archive.read('checkpoint-manifest.json'))['files']
             contents = {}
             for name, checksum in manifest.items():
                 path = (destination/name).resolve()
@@ -86,7 +86,7 @@ class SaveBackupService:
                         previous.write(path,path.relative_to(destination).as_posix())
             for path, content in contents.items():
                 path.parent.mkdir(parents=True,exist_ok=True)
-                temporary = path.with_name(path.name+'.gamevault-'+uuid4().hex)
+                temporary = path.with_name(path.name+'.checkpoint-'+uuid4().hex)
                 temporary.write_bytes(content)
                 temporary.replace(path)
             return recovery

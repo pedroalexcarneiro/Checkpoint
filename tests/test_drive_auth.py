@@ -2,8 +2,8 @@ import logging
 from types import SimpleNamespace
 from unittest.mock import Mock
 import pytest
-from gamevault.integrations.drive import GoogleDriveClient
-from gamevault.integrations import IntegrationError
+from checkpoint.integrations.drive import GoogleDriveClient
+from checkpoint.integrations import IntegrationError
 
 
 def test_token_exchange_failure_reports_stage_without_secrets(monkeypatch, caplog):

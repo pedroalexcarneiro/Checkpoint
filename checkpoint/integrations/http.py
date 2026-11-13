@@ -9,7 +9,7 @@ class HttpClient:
     def __init__(self,timeout=20,attempts=3):
         self.timeout=timeout;self.attempts=attempts
     def json(self,url,headers=None,data=None,method=None):
-        request = Request(url,data=data,headers={'User-Agent':'GameVault/0.1',**(headers or {})},method=method)
+        request = Request(url,data=data,headers={'User-Agent':'Checkpoint/0.1',**(headers or {})},method=method)
         for attempt in range(self.attempts):
             try:
                 with urlopen(request,timeout=self.timeout) as response:

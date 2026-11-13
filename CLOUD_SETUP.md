@@ -4,7 +4,7 @@ O desenvolvimento 0.1.19 está na branch `codex/steam-library-import` de
 `pedroalexcarneiro/Checkpoint`, ainda não incorporado à `main`. Use o checkout
 existente ou essa branch ao retomar esta implementação; não use somente o ZIP de
 uma release anterior. Confira `pyproject.toml` (0.1.19)
-e a presença de `AGENTS.md`, `CONTINUITY.md` e `gamevault/game_import.py`.
+e a presença de `AGENTS.md`, `CONTINUITY.md` e `checkpoint/game_import.py`.
 
 O ambiente Linux foi preparado e validado nesta nuvem. Na 0.1.14, 29 testes focados
 de Steam, migrações, biblioteca e UI passaram com exit 0; smoke atualizado abriu
@@ -26,7 +26,7 @@ sudo apt-get install -y libegl1 libopengl0 libgl1 libglib2.0-0 libxkbcommon0 lib
 python3.12 -m venv --copies .venv
 .venv/bin/python -m pip install -e . pytest
 QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest tests -q -p no:cacheprovider
-QT_QPA_PLATFORM=offscreen .venv/bin/python -m gamevault.app --smoke-test --data-dir .cloud-smoke
+QT_QPA_PLATFORM=offscreen .venv/bin/python -m checkpoint.app --smoke-test --data-dir .cloud-smoke
 ```
 
 Os comandos Linux são instruções de preparação, não uma afirmação de execução neste

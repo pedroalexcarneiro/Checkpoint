@@ -22,17 +22,17 @@ def main():
     if args.worker_request:
         from .worker import execute_request
         return execute_request(args.worker_request)
-    if args.save_smoke_test and (not args.data_dir or (args.data_dir/'gamevault.sqlite').exists()):
+    if args.save_smoke_test and (not args.data_dir or (args.data_dir/'checkpoint.sqlite').exists()):
         parser.error('--save-smoke-test exige --data-dir novo, sem banco existente.')
     # Preserve o armazenamento e a trava legados para manter bibliotecas existentes.
-    directory = args.data_dir or Path(os.environ.get('LOCALAPPDATA',str(Path.home()/'.local/share')))/'GameVault'
+    directory = args.data_dir or Path(os.environ.get('LOCALAPPDATA',str(Path.home()/'.local/share')))/'Checkpoint'
     directory.mkdir(parents=True,exist_ok=True)
     if args.network_test:
         from .integrations.network import probe_google_connection
         result = probe_google_connection()
         (directory/'network-test.txt').write_text(result,encoding='utf-8')
         return 0
-    handler = RotatingFileHandler(directory/'gamevault.log',maxBytes=2_000_000,backupCount=3,encoding='utf-8')
+    handler = RotatingFileHandler(directory/'checkpoint.log',maxBytes=2_000_000,backupCount=3,encoding='utf-8')
     logging.basicConfig(level=logging.INFO,handlers=[handler],format='%(asctime)s %(levelname)s %(message)s')
     # O callback OAuth e o URL de autorização incluem códigos e estado privados.
     logging.getLogger('google_auth_oauthlib.flow').setLevel(logging.WARNING)
@@ -47,12 +47,12 @@ def main():
     app = QApplication(sys.argv[:1]); app.setApplicationName('Checkpoint'); app.setStyle('Fusion'); app.setStyleSheet(DARK)
     from .fonts import install_fonts
     install_fonts(app)
-    lock = QLockFile(str(directory/'gamevault.lock'))
+    lock = QLockFile(str(directory/'checkpoint.lock'))
     if not lock.tryLock(100):
         QMessageBox.warning(None,'Checkpoint','Esta biblioteca já está aberta em outra instância.'); return 1
     db = None
     try:
-        db = Database(directory/'gamevault.sqlite')
+        db = Database(directory/'checkpoint.sqlite')
         window = MainWindow(Library(db)); window.show()
         if args.save_smoke_test:
             from .save_smoke import start_save_smoke

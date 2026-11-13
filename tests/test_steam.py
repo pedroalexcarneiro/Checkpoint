@@ -7,10 +7,10 @@ from urllib.parse import parse_qs, urlsplit
 
 import pytest
 
-from gamevault.database import Database, MIGRATIONS
-from gamevault.integrations import IntegrationError
-from gamevault.integrations.steam import SteamAchievement, SteamGame, SteamProvider
-from gamevault.steam_library import game_accounts, import_games, save_achievements
+from checkpoint.database import Database, MIGRATIONS
+from checkpoint.integrations import IntegrationError
+from checkpoint.integrations.steam import SteamAchievement, SteamGame, SteamProvider
+from checkpoint.steam_library import game_accounts, import_games, save_achievements
 
 
 ACCOUNT = '76561198000000000'
@@ -155,8 +155,8 @@ def test_v3_upgrade_keeps_library_and_creates_recoverable_backup(folder):
 def test_dialog_async_query_selection_import_achievements_and_account_change(app, library, monkeypatch):
     from PySide6.QtCore import Qt
     from PySide6.QtTest import QTest
-    import gamevault.steam_dialog as module
-    from gamevault.window import MainWindow
+    import checkpoint.steam_dialog as module
+    from checkpoint.window import MainWindow
     main_thread = threading.get_ident()
     class Vault:
         def get(self, name):
@@ -171,7 +171,7 @@ def test_dialog_async_query_selection_import_achievements_and_account_change(app
         def achievements(self, account, identity):
             assert threading.get_ident() != main_thread
             return [SteamAchievement('A', 'Marco Steam', '')]
-    monkeypatch.setattr('gamevault.worker.run_isolated', lambda *args, **kwargs: 'Ficha e imagens verificadas')
+    monkeypatch.setattr('checkpoint.worker.run_isolated', lambda *args, **kwargs: 'Ficha e imagens verificadas')
     monkeypatch.setattr(module, 'CredentialVault', Vault)
     monkeypatch.setattr(module, 'SteamProvider', Provider)
     monkeypatch.setattr(module.QInputDialog, 'getItem', lambda *args: (args[3][0], True))

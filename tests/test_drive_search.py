@@ -1,5 +1,5 @@
-from gamevault.drive_dialog import DriveDialog
-from gamevault.integrations.drive import DriveScanner
+from checkpoint.drive_dialog import DriveDialog
+from checkpoint.integrations.drive import DriveScanner
 
 
 def test_rom_search_platform_and_literal_query(library,app):

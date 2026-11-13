@@ -2,7 +2,7 @@ import hashlib
 import json
 import zipfile
 import pytest
-from gamevault.saves import SaveBackupService,digest
+from checkpoint.saves import SaveBackupService,digest
 
 def test_backup_restore_preserves_previous_and_ignores_states(folder):
     source=folder/'saves'; source.mkdir(); (source/'game.sav').write_bytes(b'original')
@@ -23,6 +23,6 @@ def test_rejects_traversal_and_broad_patterns(folder):
     bad=folder/'bad.zip'; content=b'attack'
     with zipfile.ZipFile(bad,'w') as archive:
         archive.writestr('../escape.sav',content)
-        archive.writestr('gamevault-manifest.json',json.dumps({'files':{'../escape.sav':hashlib.sha256(content).hexdigest()}}))
+        archive.writestr('checkpoint-manifest.json',json.dumps({'files':{'../escape.sav':hashlib.sha256(content).hexdigest()}}))
     with pytest.raises(ValueError): service.restore(bad,source,digest(bad))
     assert not (folder/'escape.sav').exists()

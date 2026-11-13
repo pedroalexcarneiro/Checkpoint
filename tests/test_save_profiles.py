@@ -1,5 +1,5 @@
 import pytest
-from gamevault.save_profiles import SaveProfiles
+from checkpoint.save_profiles import SaveProfiles
 
 def test_profiles_persist_and_reject_states(library,folder):
     game=library.save_game({'title':'Save profile'})

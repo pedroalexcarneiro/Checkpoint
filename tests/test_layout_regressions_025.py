@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QLabel
-from gamevault.window import MainWindow
-from gamevault.design_system import empty_state
+from checkpoint.window import MainWindow
+from checkpoint.design_system import empty_state
 
 
 def test_home_search_opens_library_results(library,app):
@@ -51,9 +51,9 @@ def test_large_steam_import_keeps_dialog_bounded_without_per_game_log(library,ap
     import time
     from PySide6.QtCore import Qt
     from PySide6.QtTest import QTest
-    from gamevault.steam_dialog import SteamDialog
-    from gamevault.integrations.steam import SteamGame
-    monkeypatch.setattr('gamevault.worker.run_isolated',lambda *a,**kw:'Ficha e imagens verificadas '+('detalhe '*100))
+    from checkpoint.steam_dialog import SteamDialog
+    from checkpoint.integrations.steam import SteamGame
+    monkeypatch.setattr('checkpoint.worker.run_isolated',lambda *a,**kw:'Ficha e imagens verificadas '+('detalhe '*100))
     dialog=SteamDialog(library);dialog.show()
     games=[SteamGame(str(index+1),f'Jogo {index} '+('título longo '*10),0) for index in range(300)]
     dialog.show_games(('76561198000000000',games));app.processEvents()
@@ -74,7 +74,7 @@ def test_large_steam_import_keeps_dialog_bounded_without_per_game_log(library,ap
 
 def test_wishlist_fetches_missing_logo_once_and_updates_card(library,app,monkeypatch,tmp_path):
     from PySide6.QtGui import QImage,QColor
-    from gamevault.collection_views import WishLogo
+    from checkpoint.collection_views import WishLogo
     identity=library.save_game({'title':'Logo fixture'})
     with library.sql:
         library.sql.execute('INSERT INTO wishlist(game_id,target_cents) VALUES(?,0)',(identity,))

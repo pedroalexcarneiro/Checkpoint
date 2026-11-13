@@ -10,11 +10,11 @@ requires-python = ">=3.12"
 dependencies = ["PySide6==6.8.3", "keyring>=25,<26", "google-api-python-client>=2,<3", "google-auth-oauthlib>=1,<2", "requests>=2.32,<3"]
 
 [project.scripts]
-checkpoint = "gamevault.app:main"
+checkpoint = "checkpoint.app:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["gamevault*"]
+include = ["checkpoint*"]
 
 [tool.setuptools.package-data]
-gamevault = ["assets/services/*"]
+checkpoint = ["assets/services/*"]

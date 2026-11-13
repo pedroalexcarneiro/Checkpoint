@@ -1,7 +1,7 @@
 import hashlib
 import pytest
-from gamevault.integrations.drive import DriveScanner,normalize_rom_name
-from gamevault.integrations import IntegrationError
+from checkpoint.integrations.drive import DriveScanner,normalize_rom_name
+from checkpoint.integrations import IntegrationError
 
 class FakeDrive:
     def __init__(self): self.downloads=0
@@ -71,7 +71,7 @@ def test_full_rescan_marks_missing_without_deleting_local(library,folder):
  (r'C:\ROMs\Nintendo 3DS','Nintendo 3DS'),
 ])
 def test_folder_platform_aliases(path,expected):
-    from gamevault.integrations.drive import platform_for
+    from checkpoint.integrations.drive import platform_for
     assert platform_for(path)==expected
 
 

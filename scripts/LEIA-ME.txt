@@ -2,7 +2,7 @@ CHECKPOINT 0.1.14 — VERSÃO DE DESENVOLVIMENTO
 
 Extraia a pasta Checkpoint inteira e abra Checkpoint.exe.
 Não remova a pasta _internal. Não é necessário instalar Python.
-A biblioteca começa vazia. Seus dados ficam em %LOCALAPPDATA%\GameVault.
+A biblioteca começa vazia. Seus dados ficam em %LOCALAPPDATA%\Checkpoint.
 
 Biblioteca, diário, mídia, sessões locais, metas de compra e backups
 locais manuais estão disponíveis. Integrações precisam de credenciais
@@ -13,7 +13,7 @@ conta Steam real permanece pendente. RetroAchievements, preços automáticos e
 backup de saves no Drive continuam pendentes. O projeto completo não está concluído.
 
 Antes de atualizar, feche o aplicativo e preserve uma cópia de
-%LOCALAPPDATA%\GameVault. Migração para schema 4 gera backup; versão 0.1.13
+%LOCALAPPDATA%\Checkpoint. Migração para schema 4 gera backup; versão 0.1.13
 não abre o banco novo. Não misture arquivos WAL de bancos diferentes.
 
 Consulte PROJECT_STATUS.md, SETUP.md e INTEGRATIONS.md incluídos.

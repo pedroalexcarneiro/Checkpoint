@@ -4,17 +4,17 @@ import shutil
 from pathlib import Path
 from uuid import uuid4
 import pytest
-from gamevault.database import Database
-from gamevault.library import Library
+from checkpoint.database import Database
+from checkpoint.library import Library
 
 @pytest.fixture
 def folder():
     # tempfile cria diretórios sem acesso neste host; mkdir usa ACL herdada.
-    path=Path(os.environ.get('GAMEVAULT_TEST_ROOT','.test-data'))/uuid4().hex
+    path=Path(os.environ.get('CHECKPOINT_TEST_ROOT','.test-data'))/uuid4().hex
     path.mkdir(parents=True)
     yield path
     resolved=path.resolve()
-    assert Path(os.environ.get('GAMEVAULT_TEST_ROOT','.test-data')).resolve() in resolved.parents
+    assert Path(os.environ.get('CHECKPOINT_TEST_ROOT','.test-data')).resolve() in resolved.parents
     shutil.rmtree(resolved)
 
 @pytest.fixture
@@ -28,7 +28,7 @@ def library(folder):
 def app():
     from PySide6.QtWidgets import QApplication
     from PySide6.QtGui import QFontDatabase
-    from gamevault.theme import DARK
+    from checkpoint.theme import DARK
     application=QApplication.instance() or QApplication([])
     font=Path('C:/Windows/Fonts/segoeui.ttf')
     if font.exists(): QFontDatabase.addApplicationFont(str(font))

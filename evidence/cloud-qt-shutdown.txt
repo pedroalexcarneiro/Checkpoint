@@ -22,7 +22,7 @@ QT_QPA_PLATFORM=offscreen .venv/bin/python -X faulthandler -m pytest tests -q -p
 136 passed in 9.62s; exit 0.
 
 Smoke:
-QT_QPA_PLATFORM=offscreen .venv/bin/python -m gamevault.app --smoke-test --data-dir .cloud-smoke
+QT_QPA_PLATFORM=offscreen .venv/bin/python -m checkpoint.app --smoke-test --data-dir .cloud-smoke
 Checkpoint smoke: 6 pages OK; SQLite integrity=ok
 exit 0.
 

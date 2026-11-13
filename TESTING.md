@@ -242,7 +242,7 @@ ou autenticação. Nenhuma credencial foi lida ou exposta pela sessão.
 
 ```sh
 QT_QPA_PLATFORM=offscreen XDG_CACHE_HOME=/workspace/work/qt-cache .venv/bin/python -m pytest tests -q -p no:cacheprovider
-QT_QPA_PLATFORM=offscreen XDG_CACHE_HOME=/workspace/work/qt-cache .venv/bin/python -m gamevault.app --smoke-test --data-dir /workspace/work/checkpoint-0115-smoke-CrnYuU
+QT_QPA_PLATFORM=offscreen XDG_CACHE_HOME=/workspace/work/qt-cache .venv/bin/python -m checkpoint.app --smoke-test --data-dir /workspace/work/checkpoint-0115-smoke-CrnYuU
 ```
 
 Dez regressões novas cobrem parsing da ficha pública por AppID, identidade errada,
@@ -299,10 +299,10 @@ Windows 10 build 19045 do ambiente Codex (identificado pelo PyInstaller), Python
 
 ```powershell
 python -m pytest tests -q -p no:cacheprovider
-python -m gamevault.app --smoke-test --data-dir ./dados-smoke
+python -m checkpoint.app --smoke-test --data-dir ./dados-smoke
 ```
 
-A suíte cria bancos e arquivos isolados. Por padrão usa `.test-data` abaixo do diretório atual; `GAMEVAULT_TEST_ROOT` permite escolher uma área temporária. O fixture verifica o destino antes de remover sua própria pasta UUID. Não usa a biblioteca real do usuário nem serviços autenticados.
+A suíte cria bancos e arquivos isolados. Por padrão usa `.test-data` abaixo do diretório atual; `CHECKPOINT_TEST_ROOT` permite escolher uma área temporária. O fixture verifica o destino antes de remover sua própria pasta UUID. Não usa a biblioteca real do usuário nem serviços autenticados.
 
 ## Cobertura de comportamento
 
@@ -507,7 +507,7 @@ QT_QPA_PLATFORM=offscreen .venv/bin/python -X faulthandler -m pytest tests -q -p
 ```
 
 Smokes executados via `scripts.package_windows_release.smoke` e `save_smoke`, com
-`sys.executable -m gamevault.app` e diretórios novos sob `work/`: seis páginas,
+`sys.executable -m checkpoint.app` e diretórios novos sob `work/`: seis páginas,
 integridade/schema SQLite, auxiliar `ping`, assets oficiais presentes e cadastro
 com imagem/SQLite aprovados. Nunca abriram a biblioteca pessoal. O wheel foi
 construído e inspecionado: contém os módulos e assets necessários, sem base/logs.

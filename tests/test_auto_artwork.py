@@ -1,9 +1,9 @@
 from pathlib import Path
 from unittest.mock import Mock
 import pytest
-from gamevault.auto_artwork import AutoArtwork,obtain_artwork
-from gamevault.integrations import IntegrationError,MetadataResult
-from gamevault.integrations.metadata import SteamGridDbProvider
+from checkpoint.auto_artwork import AutoArtwork,obtain_artwork
+from checkpoint.integrations import IntegrationError,MetadataResult
+from checkpoint.integrations.metadata import SteamGridDbProvider
 
 class Provider:
     def __init__(self):self.calls=[]
@@ -109,17 +109,17 @@ def test_background_failure_does_not_raise_into_rom_operation(library,monkeypatc
 
 
 def test_missing_key_is_explicit_and_does_not_mutate_game(library,folder,monkeypatch):
-    import gamevault.credentials
+    import checkpoint.credentials
     game=library.save_game({'title':'Game'})
     service=AutoArtwork(library,cache=Cache(folder));service.confirm_identity(game,'42')
     vault=Mock();vault.get.return_value=None
-    monkeypatch.setattr(gamevault.credentials,'CredentialVault',lambda:vault)
+    monkeypatch.setattr(checkpoint.credentials,'CredentialVault',lambda:vault)
     assert 'Configure a chave' in service.obtain(game)
     assert library.get(game)['cover']==''
 
 
 def test_identifying_dialog_has_automatic_action_and_preference(library,app):
-    from gamevault.artwork_dialog import ArtworkDialog
+    from checkpoint.artwork_dialog import ArtworkDialog
     game=library.save_game({'title':'Game'})
     dialog=ArtworkDialog(library,library.get(game))
     assert dialog.identify.text().startswith('Confirmar jogo')

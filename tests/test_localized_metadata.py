@@ -2,14 +2,14 @@ from dataclasses import replace
 from unittest.mock import Mock
 from urllib.parse import parse_qs,urlsplit
 import pytest
-from gamevault.integrations import MetadataResult
-from gamevault.integrations.descriptions import PortugueseDescriptions,localize_result
-from gamevault.integrations.steam_store import SteamStoreProvider
-from gamevault.game_import import save_import
-from gamevault.enrichment import complete_game
-from gamevault.description_provenance import current
-from gamevault.dialogs import GameDialog
-from gamevault.window import MainWindow
+from checkpoint.integrations import MetadataResult
+from checkpoint.integrations.descriptions import PortugueseDescriptions,localize_result
+from checkpoint.integrations.steam_store import SteamStoreProvider
+from checkpoint.game_import import save_import
+from checkpoint.enrichment import complete_game
+from checkpoint.description_provenance import current
+from checkpoint.dialogs import GameDialog
+from checkpoint.window import MainWindow
 from PySide6.QtWidgets import QLabel
 
 
@@ -87,7 +87,7 @@ def test_release_date_roundtrip_and_information_always_visible(library,app):
 
 def test_legacy_steam_english_is_replaced_only_on_exact_source_match(library,folder):
     from urllib.parse import parse_qs,urlsplit
-    from gamevault.integrations import IntegrationError
+    from checkpoint.integrations import IntegrationError
     def payload(url):
         language=parse_qs(urlsplit(url).query)['l'][0]
         return {'42':{'success':True,'data':{'steam_appid':42,'name':'Example',
@@ -104,13 +104,13 @@ def test_legacy_steam_english_is_replaced_only_on_exact_source_match(library,fol
 
 def test_enrichment_fetches_rom_description_even_when_all_art_exists(library,folder,app,monkeypatch):
     import json
-    from gamevault.worker import execute_request
+    from checkpoint.worker import execute_request
     identity=save_import(library,{'title':'Example','platform':'Game Boy Advance',
         'cover':'existing-cover','banner':'existing-banner','logo':'existing-logo'},result=MetadataResult('steamgriddb','42','Example'))
     result=MetadataResult('steamgriddb','42','Example',description='Uma aventura.',
         description_source='https://pt.wikipedia.org/?curid=2',description_language='pt')
-    details=Mock(return_value=result);monkeypatch.setattr('gamevault.unified_catalog.selected_details',details)
-    monkeypatch.setattr('gamevault.auto_artwork.obtain_artwork',lambda *args,**kwargs:'Preservado')
+    details=Mock(return_value=result);monkeypatch.setattr('checkpoint.unified_catalog.selected_details',details)
+    monkeypatch.setattr('checkpoint.auto_artwork.obtain_artwork',lambda *args,**kwargs:'Preservado')
     request=folder/'request.json';response=folder/'response.json'
     request.write_text(json.dumps({'operation':'enrich','database':str(library.db.path.resolve()),
         'response':str(response.resolve()),'arguments':{'game_id':identity,'force':True}}),encoding='utf-8')

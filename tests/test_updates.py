@@ -3,8 +3,8 @@ import hashlib
 import zipfile
 from pathlib import Path
 import pytest
-from gamevault.updates import select_update,GitHubUpdates,UpdateError
-from gamevault.update_installer import extract_package,swap_install
+from checkpoint.updates import select_update,GitHubUpdates,UpdateError
+from checkpoint.update_installer import extract_package,swap_install
 
 def asset_release(tag='v0.1.4',preview=False):
     return {'tag_name':tag,'prerelease':preview,'assets':[{'name':'Checkpoint-'+tag[1:]+'-windows-x64.zip','state':'uploaded','id':1,'size':10,'digest':'sha256:'+'a'*64}]}
@@ -38,7 +38,7 @@ def test_unsafe_archives_rejected(folder,name):
     assert not (folder/'outside.exe').exists()
 
 def test_copy_failure_rolls_back(folder,monkeypatch):
-    import gamevault.update_installer as module
+    import checkpoint.update_installer as module
     old=folder/'Checkpoint'; old.mkdir(); (old/'Checkpoint.exe').write_bytes(b'old')
     staged=folder/'staged'; staged.mkdir(); (staged/'Checkpoint.exe').write_bytes(b'new')
     def broken(source,target):
@@ -56,7 +56,7 @@ class Response:
     def iter_content(self,size): yield self.data
 
 def test_private_download_strips_token_on_cdn_and_verifies(folder,monkeypatch):
-    import gamevault.updates as module
+    import checkpoint.updates as module
     data=package(folder/'source.zip').read_bytes(); calls=[]
     def get(url,**kwargs):
         calls.append((url,kwargs))
@@ -70,7 +70,7 @@ def test_private_download_strips_token_on_cdn_and_verifies(folder,monkeypatch):
     assert 'headers' not in calls[1][1]
 
 def test_corrupt_download_never_extracts(folder,monkeypatch):
-    import gamevault.updates as module
+    import checkpoint.updates as module
     monkeypatch.setattr(module.requests,'get',lambda *a,**k:Response(200,b'bad'))
     with pytest.raises(UpdateError): GitHubUpdates().prepare({'asset_id':1,'size':3,'sha256':'a'*64},folder/'updates')
     assert not list((folder/'updates').rglob('Checkpoint.exe'))
@@ -79,7 +79,7 @@ def test_corrupt_download_never_extracts(folder,monkeypatch):
 def test_check_decodes_gzip_response_before_json(monkeypatch):
     import gzip,json,requests
     from urllib3.response import HTTPResponse
-    import gamevault.updates as module
+    import checkpoint.updates as module
     response=requests.Response(); response.status_code=200
     payload=json.dumps([asset_release()]).encode()
     response.raw=HTTPResponse(body=io.BytesIO(gzip.compress(payload)),headers={'Content-Encoding':'gzip'},preload_content=False,decode_content=False)
@@ -90,7 +90,7 @@ def test_check_decodes_gzip_response_before_json(monkeypatch):
     ('ProxyError','proxy'),('SSLError','certificado'),('Timeout','demorou'),('ConnectionError','firewall')])
 def test_connection_errors_are_specific_and_hide_secrets(monkeypatch,error,expected):
     import requests
-    import gamevault.updates as module
+    import checkpoint.updates as module
     def fail(*a,**k): raise getattr(requests.exceptions,error)('https://secret-token@example.invalid')
     monkeypatch.setattr(module.requests,'get',fail)
     with pytest.raises(UpdateError) as caught: GitHubUpdates('test-token').check('0.1.3')
@@ -99,6 +99,6 @@ def test_connection_errors_are_specific_and_hide_secrets(monkeypatch,error,expec
 
 
 def test_invalid_json_reports_response_not_network(monkeypatch):
-    import gamevault.updates as module
+    import checkpoint.updates as module
     monkeypatch.setattr(module.requests,'get',lambda *a,**k:Response(200,b'<html>invalid</html>'))
     with pytest.raises(UpdateError,match='conteúdo inválido'): GitHubUpdates().check('0.1.3')

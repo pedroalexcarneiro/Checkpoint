@@ -8,9 +8,9 @@ class CredentialVault:
         if keyring.get_keyring().priority <= 0:
             raise RuntimeError('Armazenamento seguro de credenciais indisponível.')
     def get(self,name):
-        return self.keyring.get_password('GameVault',name)
+        return self.keyring.get_password('Checkpoint',name)
     def set(self,name,value):
-        self.keyring.set_password('GameVault',name,value)
+        self.keyring.set_password('Checkpoint',name,value)
     def delete(self,name):
-        try: self.keyring.delete_password('GameVault',name)
+        try: self.keyring.delete_password('Checkpoint',name)
         except self.keyring.errors.PasswordDeleteError: pass

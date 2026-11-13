@@ -1,7 +1,7 @@
 import time
 from PySide6.QtTest import QTest
-from gamevault.completion_queue import CompletionQueue
-from gamevault.integrations import IntegrationError
+from checkpoint.completion_queue import CompletionQueue
+from checkpoint.integrations import IntegrationError
 
 
 def wait(queue):
@@ -16,7 +16,7 @@ def test_queue_is_serial_and_continues_after_failure(library,app,monkeypatch):
         calls.append(args['game_id'])
         if args['game_id']==1:raise IntegrationError('Consulta indisponível; jogo preservado.')
         return 'done'
-    monkeypatch.setattr('gamevault.completion_queue.run_isolated',run)
+    monkeypatch.setattr('checkpoint.completion_queue.run_isolated',run)
     queue=CompletionQueue(library.db.path)
     queue.updated.connect(lambda identity,message:messages.append((identity,message)))
     queue.busy_changed.connect(counts.append)
@@ -31,7 +31,7 @@ def test_cancel_drops_pending_games_without_destroying_running_job(library,app,m
     calls=[]
     def run(operation,database,**args):
         calls.append(args['game_id']);time.sleep(.02);return 'done'
-    monkeypatch.setattr('gamevault.completion_queue.run_isolated',run)
+    monkeypatch.setattr('checkpoint.completion_queue.run_isolated',run)
     queue=CompletionQueue(library.db.path)
     queue.submit([1,2,3])
     queue.cancel_pending()

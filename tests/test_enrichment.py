@@ -1,9 +1,9 @@
 from unittest.mock import Mock
 import pytest
-from gamevault.enrichment import complete_game
-from gamevault.integrations import IntegrationError, MetadataResult
-from gamevault.integrations.steam_store import SteamStoreProvider
-from gamevault.game_import import save_import
+from checkpoint.enrichment import complete_game
+from checkpoint.integrations import IntegrationError, MetadataResult
+from checkpoint.integrations.steam_store import SteamStoreProvider
+from checkpoint.game_import import save_import
 
 
 class Cache:
@@ -108,7 +108,7 @@ def test_rawg_confirmed_rom_uses_its_own_identity(library, folder):
 
 
 def test_form_saves_without_network_or_nested_loading_dialog(library, app, monkeypatch):
-    from gamevault.dialogs import GameDialog
+    from checkpoint.dialogs import GameDialog
     from PySide6.QtWidgets import QDialog
     nested=Mock(side_effect=AssertionError('Salvar não deve abrir outro loop modal'))
     monkeypatch.setattr(QDialog,'exec',nested)
@@ -128,7 +128,7 @@ def test_form_saves_without_network_or_nested_loading_dialog(library, app, monke
 
 
 def test_unknown_game_form_saves_without_mandatory_catalog(library, app):
-    from gamevault.dialogs import GameDialog
+    from checkpoint.dialogs import GameDialog
     from PySide6.QtWidgets import QDialog
     dialog=GameDialog(library=library)
     dialog.fields['title'].setText('Unknown ROM')
@@ -139,10 +139,10 @@ def test_unknown_game_form_saves_without_mandatory_catalog(library, app):
 
 
 def test_batch_cancellation_keeps_existing_library(library, app, monkeypatch):
-    from gamevault.artwork_progress import ArtworkProgress
+    from checkpoint.artwork_progress import ArtworkProgress
     identity = library.save_game({'title': 'Keep me'})
     obtain = Mock()
-    monkeypatch.setattr('gamevault.worker.run_isolated', obtain)
+    monkeypatch.setattr('checkpoint.worker.run_isolated', obtain)
     dialog = ArtworkProgress(library, [identity])
     dialog.cancel.click()
     dialog.exec()

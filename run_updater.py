@@ -1,2 +1,2 @@
-from gamevault.update_installer import main
+from checkpoint.update_installer import main
 raise SystemExit(main())

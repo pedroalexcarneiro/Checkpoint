@@ -1,7 +1,7 @@
 import sqlite3
 from contextlib import closing
 import pytest
-from gamevault.database import Database,MIGRATIONS
+from checkpoint.database import Database,MIGRATIONS
 
 def test_upgrade_v1_keeps_user_data(folder):
     path=folder/'v1.sqlite'
@@ -20,7 +20,7 @@ def test_newer_schema_refused_without_mutation(folder):
     with closing(sqlite3.connect(path)) as sql: assert sql.execute('PRAGMA user_version').fetchone()[0]==999
 
 def test_failed_migration_rolls_back_all_ddl(folder,monkeypatch):
-    import gamevault.database as module
+    import checkpoint.database as module
     path=folder/'rollback.sqlite'
     db=Database(path); db.close()
     monkeypatch.setattr(module,'MIGRATIONS',MIGRATIONS+["CREATE TABLE should_rollback(id INTEGER); INVALID SQL;"])

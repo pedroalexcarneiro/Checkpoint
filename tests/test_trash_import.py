@@ -1,7 +1,7 @@
 import pytest
-from gamevault.game_import import save_import
-from gamevault.integrations import MetadataResult
-from gamevault.trash_import import removed_match,save_decision
+from checkpoint.game_import import save_import
+from checkpoint.integrations import MetadataResult
+from checkpoint.trash_import import removed_match,save_decision
 
 
 def previous(library):

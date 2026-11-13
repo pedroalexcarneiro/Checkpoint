@@ -16,7 +16,7 @@ e resumo compacto, sem relatório por jogo na interface.
 
 Pesquisa/filtros, favoritos, edição, lixeira recuperável, diário, mídia pessoal,
 conquistas e backup/restauração de saves tradicionais continuam disponíveis.
-Dados pessoais e identificadores legados GameVault são preservados. Consulte
+Dados pessoais e identificadores legados Checkpoint são preservados. Consulte
 CONTINUITY.md, PROJECT_STATUS.md e TESTING.md para resultados e limitações atuais.
 
 Há fluxos de integração implementados para pesquisa RAWG, artes SteamGridDB e ROMs no Google Drive. OAuth e leitura real do Drive, pesquisa/títulos e obtenção dos três tipos de arte SteamGridDB foram validados. RAWG autenticado permanece pendente. O scanner não baixa ROMs; downloads acontecem apenas por solicitação. Nenhuma função remove arquivos no Drive.
@@ -32,13 +32,13 @@ no branch padrão permitem reconstruir o ambiente; dados pessoais e credenciais 
 No ambiente de desenvolvimento, instale o projeto conforme SETUP.md e execute:
 
 ```powershell
-python -m gamevault.app
+python -m checkpoint.app
 ```
 
-O pacote portátil, quando gerado, fica em `dist/Checkpoint/Checkpoint.exe`. A pasta inteira `dist/Checkpoint` é necessária; não mova apenas o executável. Dados ficam em `%LOCALAPPDATA%/GameVault`, separados do programa. Para testar sem tocar na biblioteca principal:
+O pacote portátil, quando gerado, fica em `dist/Checkpoint/Checkpoint.exe`. A pasta inteira `dist/Checkpoint` é necessária; não mova apenas o executável. Dados ficam em `%LOCALAPPDATA%/Checkpoint`, separados do programa. Para testar sem tocar na biblioteca principal:
 
 ```powershell
-python -m gamevault.app --data-dir ./dados-isolados
+python -m checkpoint.app --data-dir ./dados-isolados
 ```
 
 ## Documentação
@@ -57,7 +57,7 @@ O primeiro início é vazio. Dados de testes ficam em diretórios isolados e nã
 
 ## Atualização 0.1.5 — Checkpoint
 
-Nome visível e executável alterados para Checkpoint. Removidos slogans da navegação, do início e dos estados vazios. Os dados, a trava de instância e o cofre continuam usando os identificadores internos GameVault para abrir a biblioteca existente sem migração. O pacote Python e a pasta de fontes também permanecem com seus nomes internos. O usuário confirmou que os fluxos locais solicitados no teste anterior funcionaram; isso não valida integrações autenticadas.
+Nome visível e executável alterados para Checkpoint. Removidos slogans da navegação, do início e dos estados vazios. Os dados, a trava de instância e o cofre continuam usando os identificadores internos Checkpoint para abrir a biblioteca existente sem migração. O pacote Python e a pasta de fontes também permanecem com seus nomes internos. O usuário confirmou que os fluxos locais solicitados no teste anterior funcionaram; isso não valida integrações autenticadas.
 
 ## Temas de cores
 

@@ -1,5 +1,5 @@
 import pytest
-from gamevault.rom_catalog import RomCatalog
+from checkpoint.rom_catalog import RomCatalog
 
 def test_catalog_exact_checksum_platform_and_import_idempotence(library,folder):
     dat=folder/'catalog.dat'

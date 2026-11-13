@@ -6,7 +6,7 @@ import hashlib
 import os
 import sys
 import zipfile
-from gamevault import __version__
+from checkpoint import __version__
 
 source=Path(sys.argv[1]);output=Path(sys.argv[2]);output.mkdir(parents=True,exist_ok=True)
 images=sorted(path for path in source.glob('*.png') if not path.stem[0].isdigit())

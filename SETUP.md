@@ -12,7 +12,7 @@ Na pasta do projeto:
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -e .
 .\.venv\Scripts\python.exe -m pip install pytest pyinstaller
-.\.venv\Scripts\python.exe -m gamevault.app
+.\.venv\Scripts\python.exe -m checkpoint.app
 ```
 
 Se o Python do Windows abrir o gerenciador de instalações, use um interpretador 3.12 já instalado explicitamente. Neste ambiente Codex, o interpretador utilizável estava no runtime do Codex. `venv/ensurepip` e `pip` esbarraram em permissões dos temporários; a instalação foi realizada com `uv pip --python` em um venv dentro de `work`. Essa limitação do host não exige alterar o código do produto.
@@ -21,16 +21,16 @@ As versões efetivas usadas estão em `requirements-tested.txt`. Para reproduzir
 
 ## Dados e recuperação
 
-Padrão: `%LOCALAPPDATA%/GameVault`. Inclui `gamevault.sqlite`, WAL, lock e logs rotativos. Artes baixadas ficam em `images`. ROMs, capturas e backups usam diretórios escolhidos pelo usuário. Credenciais são mantidas no Windows Credential Manager (serviço GameVault); não são incluídas no backup do SQLite.
+Padrão: `%LOCALAPPDATA%/Checkpoint`. Inclui `checkpoint.sqlite`, WAL, lock e logs rotativos. Artes baixadas ficam em `images`. ROMs, capturas e backups usam diretórios escolhidos pelo usuário. Credenciais são mantidas no Windows Credential Manager (serviço Checkpoint); não são incluídas no backup do SQLite.
 
 ```powershell
-python -m gamevault.app --data-dir ./dados-teste
-python -m gamevault.app --smoke-test --data-dir ./dados-smoke
+python -m checkpoint.app --data-dir ./dados-teste
+python -m checkpoint.app --smoke-test --data-dir ./dados-smoke
 ```
 
 O modo smoke abre as seis páginas sem exibir janela, verifica integridade SQLite e salva `smoke-home.png`. Utilize sempre uma pasta isolada: abrir a aplicação recupera sessões active como interrupted.
 
-Para restaurar o banco, feche todas as instâncias, preserve o diretório atual inteiro e copie uma cópia SQLite íntegra para `gamevault.sqlite` em uma pasta de dados nova. Não misture arquivos WAL antigos com um banco restaurado. Abra com `--data-dir` para conferir antes de adotá-la. A restauração de banco ainda não possui assistente gráfico.
+Para restaurar o banco, feche todas as instâncias, preserve o diretório atual inteiro e copie uma cópia SQLite íntegra para `checkpoint.sqlite` em uma pasta de dados nova. Não misture arquivos WAL antigos com um banco restaurado. Abra com `--data-dir` para conferir antes de adotá-la. A restauração de banco ainda não possui assistente gráfico.
 
 ## Empacotar
 
@@ -77,7 +77,7 @@ Vídeos dependem do reprodutor e codecs do Windows. Capturas são referências a
 
 ## Atualização 0.1.3 — Checkpoint
 
-Nome visível e executável alterados para Checkpoint. Removidos slogans da navegação, do início e dos estados vazios. Os dados, a trava de instância e o cofre continuam usando os identificadores internos GameVault para abrir a biblioteca existente sem migração. O pacote Python e a pasta de fontes também permanecem com seus nomes internos. O usuário confirmou que os fluxos locais solicitados no teste anterior funcionaram; isso não valida integrações autenticadas.
+Nome visível e executável alterados para Checkpoint. Removidos slogans da navegação, do início e dos estados vazios. Os dados, a trava de instância e o cofre continuam usando os identificadores internos Checkpoint para abrir a biblioteca existente sem migração. O pacote Python e a pasta de fontes também permanecem com seus nomes internos. O usuário confirmou que os fluxos locais solicitados no teste anterior funcionaram; isso não valida integrações autenticadas.
 
 
 ## Checkpoint 0.1.3 — saves por jogo

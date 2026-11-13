@@ -3,12 +3,12 @@ from pathlib import Path
 import pytest
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel,QComboBox
-from gamevault.integrations import IntegrationError,MetadataResult
-from gamevault.integrations.ggdeals import parse_prices,GgDealsProvider
-from gamevault.prices import refresh_prices,snapshot,needs_update
-from gamevault.game_import import save_import
-from gamevault.window import MainWindow
-from gamevault.ui_components import GameTile
+from checkpoint.integrations import IntegrationError,MetadataResult
+from checkpoint.integrations.ggdeals import parse_prices,GgDealsProvider
+from checkpoint.prices import refresh_prices,snapshot,needs_update
+from checkpoint.game_import import save_import
+from checkpoint.window import MainWindow
+from checkpoint.ui_components import GameTile
 
 
 HTML='''<html><link rel="canonical" href="https://gg.deals/br/game/example/">
@@ -40,7 +40,7 @@ def test_prices_cache_failure_keeps_last_good_price(library):
 def test_wishlist_has_no_owned_status_and_is_excluded_from_owned_statistics(library,app):
     identity=library.save_game({'title':'Wish fixture','status':'Concluído','notes':'Keep notes'})
     window=MainWindow(library);window.add_wish(identity);window.navigate(2);window.show();app.processEvents()
-    from gamevault.collection_views import SquareWishCard,WishLogo
+    from checkpoint.collection_views import SquareWishCard,WishLogo
     tile=window.pages[2].findChild(SquareWishCard)
     assert tile.accessibleDescription()=='Na lista de desejos' and tile.width()==tile.height()
     assert tile.findChild(WishLogo) is not None and tile.findChild(GameTile) is None
@@ -57,7 +57,7 @@ def test_wishlist_has_no_owned_status_and_is_excluded_from_owned_statistics(libr
 
 def test_heatmap_uses_real_daily_sessions_and_has_calendar_tooltips(library,app):
     from datetime import datetime,timezone,timedelta
-    from gamevault.activity_heatmap import ActivityHeatmap
+    from checkpoint.activity_heatmap import ActivityHeatmap
     identity=library.save_game({'title':'Daily fixture'})
     start=(datetime.now(timezone.utc)-timedelta(days=2)).replace(hour=23,minute=30,second=0,microsecond=0)
     with library.sql:library.sql.execute("INSERT INTO play_sessions(game_id,started_at,ended_at,duration_seconds,state) VALUES(?,?,?,?, 'finished')",(identity,start.isoformat(),(start+timedelta(hours=1)).isoformat(),3600))
@@ -72,7 +72,7 @@ def test_heatmap_uses_real_daily_sessions_and_has_calendar_tooltips(library,app)
 
 def test_wishlist_logos_titles_and_prices_share_fixed_alignment(library,app,folder):
     from PySide6.QtGui import QImage,QColor
-    from gamevault.collection_views import SquareWishCard,WishLogo,WishTitle
+    from checkpoint.collection_views import SquareWishCard,WishLogo,WishTitle
     for index in range(4):
         logo=''
         if index<3:
@@ -95,6 +95,6 @@ def test_wishlist_logos_titles_and_prices_share_fixed_alignment(library,app,fold
 
 def test_artwork_cache_rejects_gif(library,folder):
     import base64
-    from gamevault.integrations.images import ImageCache
+    from checkpoint.integrations.images import ImageCache
     gif=base64.b64decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')
     with pytest.raises(IntegrationError,match='estática'):ImageCache(folder/'cache').store(gif)

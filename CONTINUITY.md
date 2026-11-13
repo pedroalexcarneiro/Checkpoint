@@ -599,7 +599,7 @@ um projeto de terceiros. A visão original e prioridades estão em `PRODUCT_VISI
 
 ## Decisões aceitas
 
-- Nome público Checkpoint (antes GameVault). Não renomear pacote/cofre/base legados sem
+- Nome público Checkpoint (antes Checkpoint). Não renomear pacote/cofre/base legados sem
   migração explícita, pois a biblioteca existente precisa continuar abrindo.
 - Python >=3.12, PySide6 6.8.3, SQLite direto com migrações e transações. Sem SQLAlchemy
   por enquanto. Banco local, serviços modulares e APIs por provedores.
@@ -679,7 +679,7 @@ um projeto de terceiros. A visão original e prioridades estão em `PRODUCT_VISI
 
 ## Arquivos importantes
 
-- `gamevault/app.py`, `window.py`, `dialogs.py`: entrada, navegação e cadastro.
+- `checkpoint/app.py`, `window.py`, `dialogs.py`: entrada, navegação e cadastro.
 - `database.py`, `library.py`: migrações e operações locais.
 - `drive_dialog.py`, `folder_platform_dialog.py`, `integrations/drive.py`, `rom_catalog.py`.
 - `game_import.py`, `catalog_picker.py`, `auto_artwork.py`, `artwork_progress.py`,
@@ -692,7 +692,7 @@ um projeto de terceiros. A visão original e prioridades estão em `PRODUCT_VISI
 
 - O cofre `CredentialVault` é Windows-only. Não substituir por arquivo em texto claro para
   fazer Linux funcionar. Fluxos sem autenticação e provedores substituídos podem ser testados.
-- Diretório legado de dados: `%LOCALAPPDATA%/GameVault`. Banco/configurações/ROMs locais,
+- Diretório legado de dados: `%LOCALAPPDATA%/Checkpoint`. Banco/configurações/ROMs locais,
   mídias, saves e tokens não são transportados por GitHub ou pelo histórico de chat.
 - A atualização 0.1.8 corrigiu dado TLS omitido por um runtime específico do Codex:
   `codex-rejected-cas.pem`, quando existente junto a ssl.py, deve ser incluído pelo build.

@@ -4,8 +4,8 @@ from pathlib import Path
 import struct
 from PySide6.QtCore import QBuffer,QIODevice
 from PySide6.QtGui import QGuiApplication
-from gamevault.branding import app_icon
-from gamevault.theme import get_theme
+from checkpoint.branding import app_icon
+from checkpoint.theme import get_theme
 
 
 def main():

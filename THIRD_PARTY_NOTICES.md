@@ -1,6 +1,6 @@
 # Componentes de terceiros
 
-O projeto não recebeu uma licença de código aberto nesta entrega. A decisão de licenciamento do código GameVault pertence ao responsável pelo projeto.
+O projeto não recebeu uma licença de código aberto nesta entrega. A decisão de licenciamento do código Checkpoint pertence ao responsável pelo projeto.
 
 O ambiente/pacote utiliza componentes com licenças próprias, entre eles:
 
@@ -19,10 +19,10 @@ Esta lista é um inventário inicial, não substitui os textos integrais nem uma
 Assets originais obtidos em 12/11/2026, sem redesenho ou recoloração. A interface
 apenas redimensiona proporcionalmente os arquivos para identificar integrações:
 
-- Steam / Valve: `gamevault/assets/services/steam.ico`, favicon oficial de
+- Steam / Valve: `checkpoint/assets/services/steam.ico`, favicon oficial de
   https://store.steampowered.com/favicon.ico . Steam e seu logotipo são marcas
   da Valve Corporation. Referência de marca: https://partner.steamgames.com/doc/marketing/branding .
-- Google Drive / Google: `gamevault/assets/services/google-drive.png`, PNG oficial de
+- Google Drive / Google: `checkpoint/assets/services/google-drive.png`, PNG oficial de
   https://www.gstatic.com/images/branding/product/2x/drive_2020q4_48dp.png .
   Google Drive e seu logotipo são marcas da Google LLC.
   Referência: https://about.google/brand-resource-center/ .

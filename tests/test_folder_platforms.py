@@ -1,5 +1,5 @@
 import pytest
-from gamevault.integrations.drive import DriveScanner,platform_for
+from checkpoint.integrations.drive import DriveScanner,platform_for
 
 
 def seed(library):
@@ -59,9 +59,9 @@ def test_create_confirmed_game_and_link_version(library):
 
 
 def test_folder_dialog_saves_rule_and_gallery_has_cover_icons(library,app,folder):
-    from gamevault.folder_platform_dialog import FolderPlatformDialog
+    from checkpoint.folder_platform_dialog import FolderPlatformDialog
     from PySide6.QtGui import QImage,QColor
-    from gamevault.window import MainWindow
+    from checkpoint.window import MainWindow
     seed(library)
     dialog=FolderPlatformDialog(library)
     dialog.folder.setCurrentIndex(dialog.folder.findData('custom'));dialog.platform.setCurrentText('PlayStation 2');dialog.apply()

@@ -39,7 +39,7 @@ class ImageCache:
         if parsed.scheme!='https' or parsed.hostname not in allowed:
             raise IntegrationError('Origem de imagem não autorizada.')
         try:
-            with urlopen(Request(url,headers={'User-Agent':'GameVault/0.1'}),timeout=self.timeout) as response:
+            with urlopen(Request(url,headers={'User-Agent':'Checkpoint/0.1'}),timeout=self.timeout) as response:
                 if urlsplit(response.url).hostname not in allowed: raise IntegrationError('Redirecionamento de imagem não autorizado.')
                 return self.store(response.read(25_000_001))
         except OSError:

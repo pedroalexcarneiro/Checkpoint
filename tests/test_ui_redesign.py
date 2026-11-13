@@ -2,11 +2,11 @@ from pathlib import Path
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage,QColor
 from PySide6.QtWidgets import QLabel,QDialog
-from gamevault.window import MainWindow
-from gamevault.ui_components import Hero,GameTile
-from gamevault.branding import app_icon
-from gamevault.theme import get_theme
-from gamevault.dialogs import GameDialog
+from checkpoint.window import MainWindow
+from checkpoint.ui_components import Hero,GameTile
+from checkpoint.branding import app_icon
+from checkpoint.theme import get_theme
+from checkpoint.dialogs import GameDialog
 
 
 def art(folder,name,color):

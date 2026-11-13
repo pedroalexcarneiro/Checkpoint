@@ -620,8 +620,8 @@ Validar a consulta privada do atualizador 0.1.4 após o usuário salvar a creden
 
 ## Atualização 0.1.1 — Checkpoint
 
-Nome visível e executável alterados para Checkpoint. Removidos slogans da navegação, do início e dos estados vazios. Os dados, a trava de instância e o cofre continuam usando os identificadores internos GameVault para abrir a biblioteca existente sem migração. O pacote Python e a pasta de fontes também permanecem com seus nomes internos. O usuário confirmou que os fluxos locais solicitados no teste anterior funcionaram; isso não valida integrações autenticadas.
-Validação 0.1.1: 23 testes passaram. Executável Checkpoint.exe abriu as seis páginas em modo smoke, retornou saída 0 e preservou integralmente um cadastro em biblioteca legada isolada (%LOCALAPPDATA%/GameVault). Integridade SQLite ok. Início sem slogans inspecionado visualmente.
+Nome visível e executável alterados para Checkpoint. Removidos slogans da navegação, do início e dos estados vazios. Os dados, a trava de instância e o cofre continuam usando os identificadores internos Checkpoint para abrir a biblioteca existente sem migração. O pacote Python e a pasta de fontes também permanecem com seus nomes internos. O usuário confirmou que os fluxos locais solicitados no teste anterior funcionaram; isso não valida integrações autenticadas.
+Validação 0.1.1: 23 testes passaram. Executável Checkpoint.exe abriu as seis páginas em modo smoke, retornou saída 0 e preservou integralmente um cadastro em biblioteca legada isolada (%LOCALAPPDATA%/Checkpoint). Integridade SQLite ok. Início sem slogans inspecionado visualmente.
 
 ## Continuação — configuração de saves por jogo
 

@@ -1,9 +1,9 @@
 import pytest
 from PySide6.QtWidgets import QApplication,QLabel,QPushButton
-from gamevault.theme import THEMES,DEFAULT_THEME,get_theme
-from gamevault.window import MainWindow
-from gamevault.database import Database
-from gamevault.library import Library
+from checkpoint.theme import THEMES,DEFAULT_THEME,get_theme
+from checkpoint.window import MainWindow
+from checkpoint.database import Database
+from checkpoint.library import Library
 
 def luminance(color):
     channels=[int(color[i:i+2],16)/255 for i in (1,3,5)]

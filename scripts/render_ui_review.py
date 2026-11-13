@@ -11,15 +11,15 @@ from datetime import datetime,timezone,timedelta
 from PySide6.QtCore import Qt,QRectF,QPointF
 from PySide6.QtGui import QImage,QPainter,QColor,QFont,QLinearGradient,QPolygonF
 from PySide6.QtWidgets import QApplication
-from gamevault.database import Database
-from gamevault.library import Library
-from gamevault.window import MainWindow
-from gamevault.dialogs import GameDialog
-from gamevault.drive_dialog import DriveDialog
-from gamevault.artwork_dialog import ArtworkDialog
-from gamevault.steam_dialog import SteamDialog
-from gamevault.emulator_dialog import EmulatorDialog
-from gamevault.integrations.drive import DriveScanner
+from checkpoint.database import Database
+from checkpoint.library import Library
+from checkpoint.window import MainWindow
+from checkpoint.dialogs import GameDialog
+from checkpoint.drive_dialog import DriveDialog
+from checkpoint.artwork_dialog import ArtworkDialog
+from checkpoint.steam_dialog import SteamDialog
+from checkpoint.emulator_dialog import EmulatorDialog
+from checkpoint.integrations.drive import DriveScanner
 
 
 def artwork(root,index,title,color,kind,width,height,source=None):
@@ -43,7 +43,7 @@ def main():
     args=parser.parse_args();root=args.output.resolve();root.mkdir(parents=True,exist_ok=True)
     if (root/'review.sqlite').exists():raise SystemExit('Use um diretório novo: base existente preservada.')
     app=QApplication([]);app.setStyle('Fusion')
-    from gamevault.fonts import install_fonts,verify_text_font
+    from checkpoint.fonts import install_fonts,verify_text_font
     install_fonts(app)
     if not verify_text_font():raise SystemExit('Fonte sem os glifos necessários; capturas bloqueadas.')
     db=Database(root/'review.sqlite');lib=Library(db)
@@ -77,14 +77,14 @@ def main():
     w.resize(1100,740)
     w.navigate(5)
     for index,name in enumerate(['appearance','connections','downloads','data']):w.settings_tabs.setCurrentIndex(index);capture('settings-'+name)
-    from gamevault.profile_dialog import ProfileDialog
+    from checkpoint.profile_dialog import ProfileDialog
     profile=ProfileDialog(lib,w);profile.nickname.setText('Jogador');profile.preview(lib.get(ids[0])['cover']);profile.show();capture('profile',profile);profile.close()
     w.detail(ids[0])
     for index,name in enumerate(['overview','activity','memories','files']):w.detail_tabs.setCurrentIndex(index);capture('detail-'+name)
     for dialog,name in [(GameDialog(w,library=lib),'add'),(GameDialog(w,game=lib.get(ids[0]),library=lib),'edit'),(DriveDialog(lib,w),'drive'),(ArtworkDialog(lib,lib.get(ids[0]),w),'artwork'),(SteamDialog(lib,w),'steam'),(EmulatorDialog(lib,w),'emulators')]:
         dialog.show();capture(name,dialog)
         if name=='add':
-            from gamevault.integrations import MetadataResult
+            from checkpoint.integrations import MetadataResult
             quick=dialog.quick_add
             quick.suspend=True;quick.query.setText('Hollow Knight');quick.suspend=False
             result=MetadataResult('steam','367520','Hollow Knight',platforms=('PC',),developer='Team Cherry')
@@ -99,12 +99,12 @@ def main():
         if name=='edit':
             for index in range(4):dialog.editor_tabs.setCurrentIndex(index);capture('edit-'+str(index),dialog)
         if name=='steam':
-            from gamevault.integrations.steam import SteamGame
+            from checkpoint.integrations.steam import SteamGame
             dialog.show_games(('76561198000000000',[SteamGame(str(index+1),f'Jogo de teste {index+1}',index*60) for index in range(300)]))
             capture('steam-large-list',dialog)
         dialog.close()
     if args.prices_file:
-        from gamevault.library import now
+        from checkpoint.library import now
         value=json.loads(args.prices_file.read_text(encoding='utf-8'));value.update({'checked_at':now(),'attempted_at':now(),'state':'ready'})
         lib.set_setting(f'prices.ggdeals.{ids[0]}',value)
     w.add_wish(ids[0]);w.navigate(2);capture('wishlist-prices');w.detail(ids[0]);capture('wish-price-comparison')

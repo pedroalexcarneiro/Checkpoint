@@ -40,7 +40,7 @@ jobs:
       - name: Test on Windows
         shell: pwsh
         run: |
-          $env:GAMEVAULT_TEST_ROOT = Join-Path $env:RUNNER_TEMP 'checkpoint-ui-tests'
+          $env:CHECKPOINT_TEST_ROOT = Join-Path $env:RUNNER_TEMP 'checkpoint-ui-tests'
           python -X faulthandler -m pytest tests -q -p no:cacheprovider --junitxml=.ci-results/pytest.xml
           if ($LASTEXITCODE -ne 0) { throw 'Testes Windows falharam.' }
       - name: Build desktop with bundled brand assets

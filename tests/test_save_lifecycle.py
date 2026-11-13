@@ -11,16 +11,16 @@ import json,sys
 from pathlib import Path
 from PySide6.QtCore import QBuffer,QByteArray,QIODevice
 from PySide6.QtGui import QImage,QColor
-from gamevault.worker import execute_request
-from gamevault.integrations import MetadataResult
-import gamevault.automatic_catalog as catalog
-import gamevault.auto_artwork as artwork
+from checkpoint.worker import execute_request
+from checkpoint.integrations import MetadataResult
+import checkpoint.automatic_catalog as catalog
+import checkpoint.auto_artwork as artwork
 request=Path(sys.argv[1])
 payload=json.loads(request.read_text(encoding='utf-8'))
 game_id=payload['arguments']['game_id']
 catalog.resolve_title=lambda title,platform:MetadataResult('rawg',str(game_id),title,developer='Fixture studio',publisher='Fixture publisher')
 def images(lib,identity,force=False):
- from gamevault.integrations.images import ImageCache
+ from checkpoint.integrations.images import ImageCache
  image=QImage(120,180,QImage.Format_RGB32);image.fill(QColor('blue'))
  data=QByteArray();buffer=QBuffer(data);buffer.open(QIODevice.WriteOnly)
  assert image.save(buffer,'PNG');buffer.close()
@@ -37,15 +37,15 @@ import json,sys
 from pathlib import Path
 from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QApplication
-from gamevault.database import Database
-from gamevault.library import Library
-from gamevault.window import MainWindow
-from gamevault.dialogs import GameDialog
-from gamevault.drive_dialog import DriveDialog
-from gamevault.integrations.drive import DriveScanner
-from gamevault.worker import run_isolated
-import gamevault.completion_queue as completion
-import gamevault.worker as worker
+from checkpoint.database import Database
+from checkpoint.library import Library
+from checkpoint.window import MainWindow
+from checkpoint.dialogs import GameDialog
+from checkpoint.drive_dialog import DriveDialog
+from checkpoint.integrations.drive import DriveScanner
+from checkpoint.worker import run_isolated
+import checkpoint.completion_queue as completion
+import checkpoint.worker as worker
 root=Path(sys.argv[1]);mode=sys.argv[2];child=sys.argv[3]
 app=QApplication([]);app.setQuitOnLastWindowClosed(False)
 db=Database(root/'library.sqlite');lib=Library(db)
@@ -111,9 +111,9 @@ def test_full_save_and_loading_process_exits_cleanly(folder,mode):
 
 
 def test_save_smoke_refuses_existing_database(folder):
-    database=folder/'gamevault.sqlite'
+    database=folder/'checkpoint.sqlite'
     database.write_bytes(b'preserve-existing-data')
-    result=subprocess.run([sys.executable,'-m','gamevault.app','--save-smoke-test','--data-dir',str(folder)],
+    result=subprocess.run([sys.executable,'-m','checkpoint.app','--save-smoke-test','--data-dir',str(folder)],
                           env={**os.environ,'QT_QPA_PLATFORM':'offscreen'},capture_output=True,text=True,timeout=10)
     assert result.returncode==2
     assert database.read_bytes()==b'preserve-existing-data'

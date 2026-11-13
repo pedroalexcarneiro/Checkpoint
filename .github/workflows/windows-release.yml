@@ -43,7 +43,7 @@ jobs:
         id: version
         shell: pwsh
         run: |
-          $version = python -c 'import tomllib; from pathlib import Path; from gamevault import __version__; assert tomllib.loads(Path("pyproject.toml").read_text())["project"]["version"] == __version__; print(__version__)'
+          $version = python -c 'import tomllib; from pathlib import Path; from checkpoint import __version__; assert tomllib.loads(Path("pyproject.toml").read_text())["project"]["version"] == __version__; print(__version__)'
           if ($LASTEXITCODE -ne 0) { throw 'Falha ao ler a versão.' }
           if ($version -notmatch '^\d+\.\d+\.\d+$') { throw 'Versão inválida.' }
           "version=$version" >> $env:GITHUB_OUTPUT
@@ -59,7 +59,7 @@ jobs:
       - name: Test on Windows
         shell: pwsh
         run: |
-          $env:GAMEVAULT_TEST_ROOT = Join-Path $env:RUNNER_TEMP 'checkpoint-tests'
+          $env:CHECKPOINT_TEST_ROOT = Join-Path $env:RUNNER_TEMP 'checkpoint-tests'
           python -X faulthandler -m pytest tests -q -p no:cacheprovider --junitxml=.ci-results/pytest.xml
           if ($LASTEXITCODE -ne 0) { throw 'Testes Windows falharam.' }
       - name: Build desktop and updater

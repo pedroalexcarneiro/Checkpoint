@@ -1,13 +1,13 @@
 from pathlib import Path
 from PySide6.QtGui import QImage,QColor
-from gamevault.profile_dialog import ProfileDialog
-from gamevault.window import MainWindow
+from checkpoint.profile_dialog import ProfileDialog
+from checkpoint.window import MainWindow
 
 
 def test_nickname_and_photo_are_local_persistent_and_preserve_original(library,app,tmp_path,monkeypatch):
     image=QImage(160,100,QImage.Format_RGB32);image.fill(QColor('red'))
     original=tmp_path/'photo.png';image.save(str(original));content=original.read_bytes()
-    monkeypatch.setattr('gamevault.profile_dialog.QFileDialog.getOpenFileName',lambda *a,**k:(str(original),''))
+    monkeypatch.setattr('checkpoint.profile_dialog.QFileDialog.getOpenFileName',lambda *a,**k:(str(original),''))
     dialog=ProfileDialog(library);dialog.nickname.setText('MeuNick');dialog.choose_photo()
     assert library.setting('profile.avatar','')==''
     dialog.save()

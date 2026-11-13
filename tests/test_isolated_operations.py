@@ -9,23 +9,23 @@ from unittest.mock import Mock
 import pytest
 from PySide6.QtTest import QTest
 
-from gamevault.integrations import IntegrationError, MetadataResult
-from gamevault.integrations.drive import DriveScanner
-from gamevault.worker import run_isolated
-from gamevault.automatic_catalog import best_match, resolve_title
-from gamevault.game_import import save_import, complete_identity
+from checkpoint.integrations import IntegrationError, MetadataResult
+from checkpoint.integrations.drive import DriveScanner
+from checkpoint.worker import run_isolated
+from checkpoint.automatic_catalog import best_match, resolve_title
+from checkpoint.game_import import save_import, complete_identity
 
 
 TRANSFER = b'isolated transfer fixture'
 DOWNLOAD_SCRIPT = '''
 import sys
 from pathlib import Path
-from gamevault.worker import execute_request
-import gamevault.credentials
-from gamevault.integrations.drive import GoogleDriveClient
+from checkpoint.worker import execute_request
+import checkpoint.credentials
+from checkpoint.integrations.drive import GoogleDriveClient
 class Client:
  def download(self,file_id,target):target.write_bytes(b'isolated transfer fixture')
-gamevault.credentials.CredentialVault=lambda:None
+checkpoint.credentials.CredentialVault=lambda:None
 GoogleDriveClient.authenticate=classmethod(lambda cls,*args:Client())
 raise SystemExit(execute_request(Path(sys.argv[1])))
 '''
@@ -66,8 +66,8 @@ def test_real_transfer_child_adds_library_preserves_original_and_local_file(libr
 
 
 def test_drive_ui_survives_art_child_failure_after_real_transfer(library,folder,app,monkeypatch):
-    import gamevault.worker as worker
-    from gamevault.drive_dialog import DriveDialog
+    import checkpoint.worker as worker
+    from checkpoint.drive_dialog import DriveDialog
     library.set_setting('downloads',str(folder/'downloads'))
     identity=add_file(library)
     original=worker.run_isolated
@@ -134,7 +134,7 @@ def test_binding_automatic_result_keeps_personal_fields(library):
 
 
 def test_new_game_form_keeps_optional_configuration_collapsed(library,app):
-    from gamevault.dialogs import GameDialog
+    from checkpoint.dialogs import GameDialog
     dialog=GameDialog(library=library)
     assert dialog.quick_add.query is dialog.fields['title']
     assert dialog.form_scroll.isHidden() and dialog.advanced.isHidden()
@@ -161,8 +161,8 @@ def test_transfer_child_exit_preserves_partial_without_publishing_corrupt_rom(li
 def test_main_window_close_waits_for_child_operation(library,app,monkeypatch):
     from threading import Event
     from PySide6.QtWidgets import QMessageBox
-    from gamevault.jobs import Job
-    from gamevault.window import MainWindow
+    from checkpoint.jobs import Job
+    from checkpoint.window import MainWindow
     window=MainWindow(library);window.show()
     release=Event()
     job=Job(lambda:release.wait(3),window)

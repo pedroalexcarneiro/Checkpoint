@@ -1,6 +1,6 @@
 import pytest
-from gamevault.game_saves import GameSaveBackups,run_save_operation
-from gamevault.save_profiles import SaveProfiles
+from checkpoint.game_saves import GameSaveBackups,run_save_operation
+from checkpoint.save_profiles import SaveProfiles
 
 def test_game_backup_worker_history_restore_and_profile_versions(library,folder):
     game=library.save_game({'title':'Saves'})
@@ -27,7 +27,7 @@ def test_missing_profile_or_destination_is_explicit(library,folder):
     with pytest.raises(ValueError): GameSaveBackups(library).create(game)
 
 def test_changing_save_does_not_publish_backup(folder,monkeypatch):
-    import gamevault.saves as module
+    import checkpoint.saves as module
     source=folder/'progress'; source.mkdir(); save=source/'game.sav'; save.write_bytes(b'first')
     service=module.SaveBackupService(folder/'versions')
     monkeypatch.setattr(module.time,'sleep',lambda seconds:save.write_bytes(b'changed'))

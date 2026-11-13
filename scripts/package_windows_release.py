@@ -13,10 +13,10 @@ from tempfile import TemporaryDirectory
 import xml.etree.ElementTree as ET
 import zipfile
 
-from gamevault import __version__
-from gamevault.database import MIGRATIONS
-from gamevault.update_installer import extract_package
-from gamevault.updates import MAX_DOWNLOAD
+from checkpoint import __version__
+from checkpoint.database import MIGRATIONS
+from checkpoint.update_installer import extract_package
+from checkpoint.updates import MAX_DOWNLOAD
 
 
 def smoke(command, directory):
@@ -25,7 +25,7 @@ def smoke(command, directory):
     screenshot = directory / 'smoke-home.png'
     if not screenshot.is_file() or screenshot.read_bytes()[:8] != b'\x89PNG\r\n\x1a\n':
         raise RuntimeError('Smoke não gerou uma captura PNG válida.')
-    with closing(sqlite3.connect((directory / 'gamevault.sqlite').as_uri() + '?mode=ro', uri=True)) as sql:
+    with closing(sqlite3.connect((directory / 'checkpoint.sqlite').as_uri() + '?mode=ro', uri=True)) as sql:
         if sql.execute('PRAGMA integrity_check').fetchone()[0] != 'ok':
             raise RuntimeError('Integridade SQLite falhou.')
         if sql.execute('PRAGMA user_version').fetchone()[0] != len(MIGRATIONS):
@@ -34,7 +34,7 @@ def smoke(command, directory):
             raise RuntimeError('Smoke deve começar com biblioteca vazia.')
     request=directory/'worker-request.json'
     response=directory/'worker-response.json'
-    request.write_text(json.dumps({'operation':'ping','database':str(directory/'gamevault.sqlite'),
+    request.write_text(json.dumps({'operation':'ping','database':str(directory/'checkpoint.sqlite'),
                                   'response':str(response),'arguments':{}}),encoding='utf-8')
     subprocess.run([*command,'--worker-request',str(request)],check=True,timeout=30)
     if json.loads(response.read_text(encoding='utf-8')) != {'ok':True,'result':{'worker':'ok','schema':len(MIGRATIONS)}}:
@@ -47,7 +47,7 @@ def save_smoke(command,directory):
                    check=True,timeout=60,env={**os.environ,'QT_QPA_PLATFORM':'offscreen'})
     if not (directory/'save-smoke.png').is_file():
         raise RuntimeError('Cadastro completo não gerou captura.')
-    with closing(sqlite3.connect(directory/'gamevault.sqlite')) as sql:
+    with closing(sqlite3.connect(directory/'checkpoint.sqlite')) as sql:
         if sql.execute('PRAGMA integrity_check').fetchone()[0]!='ok' or sql.execute('SELECT count(*) FROM games').fetchone()[0]!=1:
             raise RuntimeError('Cadastro completo não preservou a fixture isolada.')
 
@@ -85,8 +85,8 @@ def main():
         raise RuntimeError('ZIP excede o limite aceito pelo atualizador.')
     with TemporaryDirectory(prefix='checkpoint-release-') as temporary:
         temporary = Path(temporary).resolve()
-        smoke([sys.executable, '-m', 'gamevault.app'], temporary / 'source-smoke')
-        save_smoke([sys.executable, '-m', 'gamevault.app'], temporary / 'source-save-smoke')
+        smoke([sys.executable, '-m', 'checkpoint.app'], temporary / 'source-smoke')
+        save_smoke([sys.executable, '-m', 'checkpoint.app'], temporary / 'source-save-smoke')
         extracted = extract_package(archive_path, temporary / 'extracted')
         smoke([str(extracted / 'Checkpoint.exe')], temporary / 'portable-smoke')
         save_smoke([str(extracted / 'Checkpoint.exe')], temporary / 'portable-save-smoke')

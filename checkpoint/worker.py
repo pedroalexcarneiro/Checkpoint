@@ -26,7 +26,7 @@ def run_isolated(operation, database, *, command_factory=None, **arguments):
         elif getattr(sys, 'frozen', False):
             command = [sys.executable, '--worker-request', str(request)]
         else:
-            command = [sys.executable, '-m', 'gamevault.app', '--worker-request', str(request)]
+            command = [sys.executable, '-m', 'checkpoint.app', '--worker-request', str(request)]
         try:
             result = subprocess.run(command, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL,
                                     stderr=subprocess.DEVNULL,

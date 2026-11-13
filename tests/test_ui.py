@@ -5,11 +5,11 @@ from PySide6.QtCore import Qt,QBuffer,QIODevice
 from PySide6.QtGui import QFontDatabase,QImage
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication,QDialog,QLineEdit
-from gamevault.window import MainWindow
-from gamevault.dialogs import GameDialog
-from gamevault.theme import DARK
-from gamevault.integrations.images import ImageCache
-from gamevault.integrations import IntegrationError
+from checkpoint.window import MainWindow
+from checkpoint.dialogs import GameDialog
+from checkpoint.theme import DARK
+from checkpoint.integrations.images import ImageCache
+from checkpoint.integrations import IntegrationError
 
 
 def test_navigate_and_game_detail_with_real_database(app,library,folder):
@@ -73,9 +73,9 @@ def test_parentless_game_form_process_exits_cleanly(folder):
 import sys
 from pathlib import Path
 from PySide6.QtWidgets import QApplication
-from gamevault.database import Database
-from gamevault.library import Library
-from gamevault.dialogs import GameDialog
+from checkpoint.database import Database
+from checkpoint.library import Library
+from checkpoint.dialogs import GameDialog
 app=QApplication([])
 db=Database(Path(sys.argv[1])/'shutdown.sqlite')
 def open_and_close():
@@ -102,8 +102,8 @@ def test_image_cache_validates_and_deduplicates(app,folder):
 
 def test_session_end_triggers_background_game_backup(app,library,folder):
     import sys
-    from gamevault.save_profiles import SaveProfiles
-    from gamevault.game_saves import GameSaveBackups
+    from checkpoint.save_profiles import SaveProfiles
+    from checkpoint.game_saves import GameSaveBackups
     game=library.save_game({'title':'Background saves'})
     source=folder/'progress'; source.mkdir(); (source/'game.sav').write_bytes(b'progress')
     SaveProfiles(library).configure(game,source,['*.sav'])
@@ -125,14 +125,14 @@ def test_session_end_triggers_background_game_backup(app,library,folder):
     window.close()
 
 def test_updates_dialog_starts_without_network_or_credentials(app,folder):
-    from gamevault.updates_dialog import UpdatesDialog
+    from checkpoint.updates_dialog import UpdatesDialog
     dialog=UpdatesDialog(folder)
     assert not dialog.download.isEnabled() and not dialog.install.isEnabled()
     assert dialog.token.text()==''
     dialog.reject()
 
 def test_updates_require_saving_typed_credential_before_network(app,folder):
-    from gamevault.updates_dialog import UpdatesDialog
+    from checkpoint.updates_dialog import UpdatesDialog
     dialog=UpdatesDialog(folder); dialog.token.setText('test-not-saved')
     dialog.check_updates()
     assert not dialog.jobs

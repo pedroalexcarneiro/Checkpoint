@@ -3,8 +3,8 @@ import sys
 import time
 from pathlib import Path
 import pytest
-from gamevault.launcher import Launcher,EmulatorCommand
-from gamevault.integrations.metadata import RawgProvider
+from checkpoint.launcher import Launcher,EmulatorCommand
+from checkpoint.integrations.metadata import RawgProvider
 
 def test_metadata_requires_selection_and_parses_without_network():
     class Http:

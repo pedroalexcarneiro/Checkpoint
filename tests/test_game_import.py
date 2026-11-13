@@ -1,7 +1,7 @@
 import pytest
-from gamevault.game_import import save_import
-from gamevault.integrations import MetadataResult
-from gamevault.integrations.drive import DriveScanner
+from checkpoint.game_import import save_import
+from checkpoint.integrations import MetadataResult
+from checkpoint.integrations.drive import DriveScanner
 
 
 def rom(library,file_id='rom',name='Zelda - the Minish Cap (USA).gba'):
@@ -44,7 +44,7 @@ def test_failed_import_does_not_create_orphan(library):
 
 
 def test_add_form_drive_search_and_metadata_prefill(library,app):
-    from gamevault.dialogs import GameDialog
+    from checkpoint.dialogs import GameDialog
     file_id=rom(library)
     dialog=GameDialog(library=library)
     dialog.drive_query.setText('minish');assert len(dialog.drive_results)==1
@@ -64,7 +64,7 @@ def test_add_form_drive_search_and_metadata_prefill(library,app):
 
 def test_fit_preserves_entire_vertical_art(app):
     from PySide6.QtGui import QPixmap,QImage,QColor,QPainter
-    from gamevault.artwork_render import fit_artwork
+    from checkpoint.artwork_render import fit_artwork
     original=QImage(120,180,QImage.Format_RGB32);original.fill(QColor('green'))
     painter=QPainter(original);painter.fillRect(0,0,120,10,QColor('red'));painter.fillRect(0,170,120,10,QColor('blue'));painter.end()
     fitted=fit_artwork(QPixmap.fromImage(original),174,232,'#202020').toImage()
@@ -75,12 +75,12 @@ def test_fit_preserves_entire_vertical_art(app):
 
 
 def test_artwork_progress_finishes_and_closes(library,app,monkeypatch):
-    from gamevault.artwork_progress import ArtworkProgress
+    from checkpoint.artwork_progress import ArtworkProgress
     from PySide6.QtWidgets import QDialog
     from PySide6.QtCore import QTimer
-    import gamevault.auto_artwork
+    import checkpoint.auto_artwork
     game=library.save_game({'title':'Test'})
-    monkeypatch.setattr('gamevault.worker.run_isolated',lambda *args,**kwargs:'done safely')
+    monkeypatch.setattr('checkpoint.worker.run_isolated',lambda *args,**kwargs:'done safely')
     dialog=ArtworkProgress(library,game)
     QTimer.singleShot(5000,lambda:dialog.accept() if dialog.isVisible() else None)
     assert dialog.exec()==QDialog.Accepted
@@ -88,7 +88,7 @@ def test_artwork_progress_finishes_and_closes(library,app,monkeypatch):
 
 
 def test_catalog_selection_closes_with_confirmed_result(app):
-    from gamevault.catalog_picker import CatalogPicker
+    from checkpoint.catalog_picker import CatalogPicker
     from PySide6.QtWidgets import QDialog
     dialog=CatalogPicker('Zelda')
     result=MetadataResult('steamgriddb','42','The Legend of Zelda: The Minish Cap')

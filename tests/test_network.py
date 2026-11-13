@@ -4,7 +4,7 @@ from unittest.mock import Mock
 import pytest
 import requests
 from urllib3 import exceptions as ue
-from gamevault.integrations.network import connection_diagnosis, probe_google_connection
+from checkpoint.integrations.network import connection_diagnosis, probe_google_connection
 
 @pytest.mark.parametrize('error,category', [
  (requests.exceptions.ProxyError('secret'), 'proxy'),
@@ -47,7 +47,7 @@ def test_probe_reports_tls_without_error_contents(monkeypatch):
 
 
 def test_safe_details_exclude_exception_messages():
- from gamevault.integrations.network import safe_transport_details
+ from checkpoint.integrations.network import safe_transport_details
  error = requests.exceptions.ConnectionError(OSError(10013, 'private-token URL code=secret'))
  result = safe_transport_details(error)
  assert '10013' in result and 'OSError' in result
