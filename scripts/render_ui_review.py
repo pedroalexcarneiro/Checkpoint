@@ -110,11 +110,19 @@ def main():
         lib.save_game({'title':names[index],'cover':path},ids[index])
     w.navigate(1);capture('library-mixed-ratios')
     for identity,path in zip(ids,original):lib.save_game({'title':lib.get(identity)['title'],'cover':path},identity)
-    for theme in ('green','purple','blue'):
+    for theme in ('green','purple','blue','white'):
         w.set_theme(theme);w.resize(1000,700)
         for page,name in [(0,'home'),(1,'library'),(2,'wishlist'),(4,'statistics'),(5,'settings')]:w.navigate(page);capture(theme+'-small-'+name)
-    (root/'review-info.json').write_text(json.dumps({'platform':sys.platform,'window':'1100×740 e 1000×700','artwork':'arquivos locais fornecidos em --art-dir e fixtures geradas' if args.art_dir else 'fixtures geradas localmente'},ensure_ascii=False),encoding='utf-8')
-    w.close();db.close();print(root)
+    (root/'review-info.json').write_text(json.dumps({'platform':sys.platform,'window':'1920×1080, 1100×740 e 1000×700','artwork':'arquivos locais fornecidos em --art-dir e fixtures geradas' if args.art_dir else 'fixtures geradas localmente'},ensure_ascii=False),encoding='utf-8')
+    w.hide()
+    empty_db=Database(root/'empty-review.sqlite');empty_lib=Library(empty_db)
+    empty_lib.set_setting('artwork.auto',False);empty_lib.set_setting('prices.auto',False)
+    empty_window=MainWindow(empty_lib);empty_window.resize(1100,740);empty_window.show()
+    for page,name in [(0,'home'),(2,'wishlist'),(3,'memories'),(4,'statistics')]:
+        empty_window.navigate(page)
+        for _ in range(4):app.processEvents()
+        assert empty_window.grab().save(str(root/('empty-'+name+'.png')))
+    empty_window.close();empty_db.close();w.close();db.close();print(root)
 
 
 if __name__=='__main__':main()

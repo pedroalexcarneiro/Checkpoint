@@ -1,5 +1,23 @@
 # Continuidade do Checkpoint
 
+## Correção 0.1.25 — prompt e referências reenviados
+
+Revisão após rejeição visual da 0.1.24. O prompt reenviado exige dez temas:
+Branco foi restaurado, substituindo a remoção histórica abaixo. Biblioteca
+vertical com arte inteira, banner 220–300 px, logo maior, feed equilibrado e
+área principal limitada a 1440 px. Sidebar permanece na borda. Grade limita
+tamanho de capas, aproxima legendas e alinha foco à imagem. Cadastro global
+sempre abre a Biblioteca; busca do Início mostra resultados ao digitar.
+Estados vazios reservam espaço para texto, memórias não cortam por altura
+máxima e estatísticas reorganizam métricas/calendário por largura.
+Persistência, schema e proteções dos auxiliares preservados.
+
+Capturas Qt Linux inspecionadas em 1000/1100/1920 px: páginas, ficha, cadastro,
+conexões, temas e estados vazios, incluindo artes públicas Steam em biblioteca
+isolada. O workflow valida separadamente testes e pacote Windows antes de
+publicar. Registrar resultado efetivo após observação; não afirmar teste
+autenticado, aprovação do usuário ou homologação interativa Windows/DPI.
+
 ## Correções após rejeição visual da 0.1.24
 
 Usuário rejeitou a composição da release e reenviou as referências aprovadas.

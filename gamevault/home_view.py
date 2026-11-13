@@ -14,7 +14,7 @@ def activity(window,layout):
         events.extend((dict(row),kind) for row in window.library.sql.execute(query) if window.library.is_owned(row['id']))
     events.sort(key=lambda item:item[0]['time'] or '',reverse=True)
     if not events:
-        frame,inside=card();inside.addWidget(text('Seu histórico começa ao jogar','cardTitle'));inside.addWidget(text('Sessões, conquistas e memórias ficam reunidas aqui.','muted'));layout.addWidget(frame)
+        frame,inside=card();inside.addWidget(text('Nenhuma atividade recente.','muted'));layout.addWidget(frame)
     for event,kind in events[:2]:
         frame,inside=card();frame.setObjectName('activityCard');inside.setContentsMargins(12,10,12,10)
         contents=QHBoxLayout();contents.setSpacing(14)

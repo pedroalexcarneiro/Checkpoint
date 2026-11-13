@@ -4,7 +4,7 @@ from PySide6.QtGui import QPainter,QPen,QColor,QFont,QPainterPath,QLinearGradien
 from PySide6.QtWidgets import QWidget,QScrollArea,QVBoxLayout,QHBoxLayout,QGridLayout,QComboBox,QProgressBar
 from .ui_components import text,card,action
 from .theme import blend
-from .design_system import AdaptiveColumns,colors as current_colors,Badge
+from .design_system import AdaptiveColumns,colors as current_colors,Badge,CardGrid
 
 
 from .activity_heatmap import ActivityHeatmap as TimeChart
@@ -35,9 +35,9 @@ def metric(title,value,subtitle=''):
 
 def build_statistics(window):
     outer=window.clear_page(4);scroll=QScrollArea();scroll.setWidgetResizable(True);body=QWidget();layout=QVBoxLayout(body);layout.setContentsMargins(0,0,8,0);layout.setSpacing(20)
-    stats=window.library.stats();row=QHBoxLayout();row.setSpacing(16)
-    for title,value,subtitle in [('Jogos',str(stats['total']),'Na biblioteca'),('Tempo registrado',f"{stats['seconds']/3600:.1f} h".replace('.',','),'Sessões locais confirmadas'),('Sessões',str(stats['sessions']),f"Média de {stats['average']/60:.0f} min"),('Concluídos',str(stats['statuses']['Concluído']),'Jogos finalizados')]:row.addWidget(metric(title,value,subtitle))
-    layout.addLayout(row)
+    stats=window.library.stats();row=CardGrid(180,max_columns=4);row.setObjectName('statisticsMetrics')
+    for title,value,subtitle in [('Jogos',str(stats['total']),'Na biblioteca'),('Tempo registrado',f"{stats['seconds']/3600:.1f} h".replace('.',','),'Sessões locais confirmadas'),('Sessões',str(stats['sessions']),f"Média de {stats['average']/60:.0f} min"),('Concluídos',str(stats['statuses']['Concluído']),'Jogos finalizados')]:row.add_card(metric(title,value,subtitle))
+    layout.addWidget(row)
     charts_left=None;charts_right=None
     frame,inside=card();heading=QHBoxLayout();heading.addWidget(text('Seu ritmo de jogo','sectionTitle'));heading.addStretch();period=QComboBox();period.addItem('Últimos 12 meses',None)
     from datetime import datetime,timezone
@@ -45,7 +45,7 @@ def build_statistics(window):
     for year in sorted(years,reverse=True):period.addItem(str(year),year)
     heading.addWidget(period);inside.addLayout(heading)
     chart=TimeChart(stats['daily'],window.theme);period.currentIndexChanged.connect(lambda index:chart.set_year(period.itemData(index)));inside.addWidget(chart)
-    inside.addWidget(text('Cada quadrado representa um dia · passe o cursor para ver as horas','caption'));layout.addWidget(frame)
+    layout.addWidget(frame)
     bottom_left=None;bottom_right=None
     frame,inside=card();inside.addWidget(text('Mais jogados','sectionTitle'))
     if not stats['top']:inside.addWidget(text('Registre uma sessão para começar seu histórico.','muted'))

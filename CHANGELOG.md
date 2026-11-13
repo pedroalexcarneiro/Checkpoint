@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.25
+
+- Corrigidos banners expansivos, tamanho de logos e espaçamento das capas/legendas.
+- Cadastro na lateral e busca do Início com resultados ao digitar.
+- Estados vazios sem corte, estatísticas adaptativas e memórias sem limite de texto.
+- Área principal limitada em telas grandes; dez temas conforme prompt reenviado.
+- Revisão visual inclui Full HD, estados vazios e tema claro.
+
 ## 0.1.24 — interface e PT-BR — publicada em 13/11/2026
 
 - Cadastro compacto, cabeçalhos e filtros reorganizados; capas ampliadas com título/status alinhados.

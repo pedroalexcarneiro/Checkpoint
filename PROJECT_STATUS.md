@@ -1,5 +1,13 @@
 # Estado do projeto — Checkpoint
 
+## 0.1.25 — correções após rejeição da 0.1.24
+
+Banner limitado e logo maior; grade com legendas próximas; cadastro global na
+lateral e busca imediata; estados vazios sem corte; estatísticas adaptativas;
+memórias sem limite que corte o texto; dez temas conforme prompt reenviado.
+Área principal limitada em telas largas. Capturas Linux reais inspecionadas
+com dados isolados. Testes/publicação Windows aguardam resultado do workflow.
+
 ## Correções visuais em andamento após 0.1.24
 
 Correções de banner expansivo, grade/captions, equilíbrio do feed, texto de

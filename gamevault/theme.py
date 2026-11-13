@@ -34,6 +34,13 @@ THEMES={theme.key:theme for theme in [
 ]}
 DEFAULT_THEME='green'
 
+# Tema claro mantido como opção; a seleção do usuário continua persistente.
+THEMES['white']=Theme('white','Branco',{
+    'background':'#f2f3f4','sidebar':'#e9edef','panel':'#ffffff','input':'#f6f7f8',
+    'button':'#e2e7e9','hover':'#d9e2db','border':'#bec7ca','text':'#20272b',
+    'muted':'#505d65','accent':'#365e3b','on_accent':'#ffffff','selected':'#dce8db',
+    'error':'#a22d26','disabled':'#68747b'})
+
 def get_theme(key): return THEMES.get(key,THEMES[DEFAULT_THEME]) if isinstance(key,str) else THEMES[DEFAULT_THEME]
 
 def stylesheet(key):
@@ -95,6 +102,7 @@ QListWidget#gameSearchResults::item {{ background: {c['panel']}; border: 1px sol
 QListWidget#gameSearchResults::item:selected {{ background: {c['selected']}; border-color: {c['accent']}; }}
 QFrame#panel, QFrame#activityCard, QFrame#addPreview, QFrame#emptyState {{ background: qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 {blend(c['panel'],c['text'],.016)},stop:1 {c['panel']}); border: 1px solid {blend(c['border'],c['panel'],.36)}; border-radius: 11px; }}
 QFrame#emptyState {{ border: 1px dashed {c['border']}; }}
+QToolButton#disclosure {{ background: transparent; border: none; border-top: 1px solid {c['border']}; border-bottom: 1px solid {c['border']}; border-radius: 0; padding: 10px 12px; text-align: left; }}
 QLabel#iconBadge, QLabel#activityBadge, QLabel#serviceBadge {{ background: {c['selected']}; border-radius: 12px; }}
 QLabel#connectionDot {{ color: {c['accent']}; }}
 QWidget#detailGallery {{ border-left: 1px solid {c['border']}; }}

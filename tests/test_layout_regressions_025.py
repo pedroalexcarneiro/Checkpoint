@@ -22,3 +22,23 @@ def test_empty_description_has_room_for_wrapped_text(app):
     description=next(label for label in widget.findChildren(QLabel) if label.text().startswith('Guarde'))
     assert description.height()>=description.heightForWidth(description.width())
     widget.close()
+
+
+def test_sidebar_and_page_bounds_at_full_hd(library,app):
+    library.save_game({'title':'Layout'})
+    window=MainWindow(library);window.resize(1920,1080);window.show()
+    for page in range(6):
+        window.navigate(page);app.processEvents()
+        sidebar=window.centralWidget().findChild(__import__('PySide6.QtWidgets',fromlist=['QWidget']).QWidget,'sidebar')
+        assert sidebar.x()==0
+        assert window.header_widget.width()<=1392
+        assert window.header_widget.width()>=700
+    window.close()
+
+
+def test_global_add_uses_library_even_from_wishlist(library,app,monkeypatch):
+    window=MainWindow(library);window.navigate(2)
+    pages=[];monkeypatch.setattr(window,'add_game',lambda:pages.append(window.current_page))
+    window.sidebar_add.click()
+    assert pages==[1]
+    window.close()

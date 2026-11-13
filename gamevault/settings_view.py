@@ -2,7 +2,7 @@
 from pathlib import Path
 from PySide6.QtCore import Qt,QUrl
 from PySide6.QtGui import QDesktopServices
-from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QTabWidget,QComboBox,QToolButton,QMessageBox,QLineEdit,QCheckBox
+from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QTabWidget,QComboBox,QToolButton,QMessageBox,QLineEdit,QCheckBox,QSizePolicy
 from .ui_components import text,action,card,service_icon
 from .design_system import page_scroll,ThemeSwatch,Badge,CardGrid
 from .theme import THEMES
@@ -10,7 +10,7 @@ from .theme import THEMES
 
 class DisclosureButton(QToolButton):
     def __init__(self,title,parent=None):
-        super().__init__(parent);self.setText(title);self.setCheckable(True)
+        super().__init__(parent);self.setText(title);self.setCheckable(True);self.setObjectName('disclosure');self.setMinimumHeight(44);self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed)
         self.setToolButtonStyle(Qt.ToolButtonTextBesideIcon);self.setArrowType(Qt.RightArrow)
         self.toggled.connect(self.indicate)
     def indicate(self,expanded):self.setArrowType(Qt.DownArrow if expanded else Qt.RightArrow)
@@ -18,7 +18,7 @@ class DisclosureButton(QToolButton):
 
 def disclosure(title,content,parent_layout):
     toggle=DisclosureButton(title);toggle.toggled.connect(content.setVisible)
-    parent_layout.addWidget(toggle,0,Qt.AlignLeft);parent_layout.addWidget(content);content.hide();return toggle
+    parent_layout.addWidget(toggle);parent_layout.addWidget(content);content.hide();return toggle
 
 
 def folder_row(window,key,title):

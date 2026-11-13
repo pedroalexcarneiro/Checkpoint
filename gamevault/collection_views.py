@@ -76,7 +76,7 @@ def memory_card(window,record):
     panel,inside=card();head=QHBoxLayout();head.addWidget(Badge('memories' if record['kind']=='diary' else 'play' if record['kind']=='video' else 'memories',32))
     title=action(record['title'],lambda checked=False,g=record['game_id']:window.detail(g));title.setObjectName('activityLink');head.addWidget(title,1);inside.addLayout(head)
     if record['kind']=='diary':
-        content=text(record['text'],'bodyText');content.setMaximumHeight(130);inside.addWidget(content);inside.addStretch()
+        content=text(record['text'],'bodyText');content.setToolTip(record['text']);inside.addWidget(content);inside.addStretch()
     else:
         inside.addWidget(ArtworkButton(record['path'],record['caption'] or Path(record['path']).name,lambda checked=False,m=record:window.show_media(m),height=160))
         if record['caption']:inside.addWidget(text(record['caption'],'muted'))

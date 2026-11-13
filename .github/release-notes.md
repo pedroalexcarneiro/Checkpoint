@@ -1,17 +1,18 @@
-Checkpoint 0.1.24 — continuidade de interface e PT-BR.
+Checkpoint 0.1.25 — correções de proporção, navegação e apresentação.
 
-- Cadastro compacto por origem, cabeçalhos e filtros reorganizados; Início com continuidade e atividade lado a lado.
-- Biblioteca vertical com capas inteiras ampliadas e legendas alinhadas; nove temas escuros. Preferência antiga de modo claro passa para Verde.
-- Desejos separados da posse, com cards quadrados, logos estáticas, título e ações alinhados. Menor preço atual em BRL, ofertas de lojas/keyshops e links para a comparação completa no GG.deals; cache preservado em falhas.
-- Ícones oficiais Steam/Drive, datas DD/MM/AAAA e informações da ficha sempre visíveis.
-- Descrições em português quando uma fonte confirma identidade/plataforma e disponibiliza tradução; edições manuais preservadas.
-- Estatísticas com calendário diário de horas e distribuição em barras, sem contabilizar desejos como coleção possuída.
-- Artes GIF/animadas recusadas; vídeos pessoais em Memórias continuam disponíveis.
+- Início e ficha com banner de altura limitada, logo legível e imagem sem deformação ou corte; feed e atividade em colunas equilibradas.
+- Biblioteca com dimensões limitadas, quatro colunas na janela de 1000 px, legendas junto à arte e foco alinhado à imagem. Originais preservados.
+- Adicionar jogo restaurado no menu lateral, acessível de todas as páginas e sempre direcionado à Biblioteca.
+- Busca do Início abre os resultados da Biblioteca ao digitar.
+- Estados vazios compactos com descrição completa; memórias sem limite que corte o texto.
+- Estatísticas com cards adaptativos e calendário dimensionado à largura disponível.
+- Dez temas disponíveis, incluindo Branco, conforme o prompt reenviado; preferências persistentes.
+- Área principal com largura máxima para evitar expansão desproporcional em telas grandes. Cadastro, editor, conexões e demais diálogos mantêm seus fluxos existentes.
 
-Baixe **Checkpoint-0.1.24-windows-x64.zip**, extraia a pasta completa e abra Checkpoint.exe. Preserve `_internal` e `CheckpointUpdater`.
+Baixe **Checkpoint-0.1.25-windows-x64.zip**, extraia a pasta completa e abra **Checkpoint.exe**. Mantenha `_internal` e `CheckpointUpdater`.
 
-**Revisão visual:** **Checkpoint-0.1.24-ui-review.zip** contém capturas Qt geradas no Windows e index.html para abrir localmente. As capturas usam fixtures isoladas; não representam dados pessoais ou contas autenticadas.
+O ZIP de revisão visual contém capturas reais Qt geradas no Windows: seis páginas, ficha, cadastro, editor, integrações, estados vazios, formatos diferentes, telas de 1000/1100/1920 px e quatro temas. Jogos e sessões são fixtures isoladas, sem acesso à biblioteca pessoal ou contas autenticadas.
 
-O workflow publica somente após testes Windows, build, smokes no fonte e no executável extraído, verificação SQLite, cadastro com imagens e teste do atualizador. Consulte **Checkpoint-0.1.24-validation.txt** para os resultados efetivos e os arquivos SHA-256 para integridade.
+Consulte **Checkpoint-0.1.25-validation.txt** para os testes Windows e os smokes do fonte, executável extraído, SQLite, auxiliar e atualizador. Avaliação visual e validação de integrações autenticadas são distintas desses testes.
 
-Schema 4, dados existentes, arquivos originais e releases anteriores preservados. A publicação disponibiliza a revisão atual; aprovação estética e homologação interativa/DPI Windows 10/11 permanecem separadas. Consultas públicas não comprovam autenticação Steam/RAWG/SteamGridDB. Preços não incluem monitoramento ou alertas automáticos; descrições PT dependem da cobertura segura das fontes.
+Banco/schema 4, notas, histórico, credenciais, imagens e arquivos pessoais preservados. Tags e releases anteriores não foram alteradas.

@@ -13,6 +13,12 @@ class ActivityHeatmap(QWidget):
     def __init__(self,values,theme,parent=None):
         super().__init__(parent);self.theme=theme;self.year=None;self.cells=[];self.setMinimumHeight(166);self.setMouseTracking(True);self.set_values(values)
     def sizeHint(self):return QSize(740,166)
+    def cell_size(self,columns):return max(3,min(20,(self.width()-34)//columns-3))
+    def resizeEvent(self,event):
+        first,last=self.interval();start=first-timedelta(days=first.weekday());columns=(last-start).days//7+1
+        height=28+7*(self.cell_size(columns)+3)+42
+        if self.height()!=height:self.setFixedHeight(height)
+        super().resizeEvent(event)
     def set_values(self,values):
         self.values=values;self.setAccessibleName('Horas de jogo por dia')
         self.setAccessibleDescription('; '.join(f'{day}: {seconds/3600:.1f} horas' for day,seconds in values.items()) or 'Nenhuma sessão registrada');self.update()
@@ -24,7 +30,7 @@ class ActivityHeatmap(QWidget):
     def paintEvent(self,event):
         p=QPainter(self);p.setRenderHint(QPainter.Antialiasing);c=colors();font=QFont('Segoe UI');font.setPixelSize(11);p.setFont(font)
         first,last=self.interval();start=first-timedelta(days=first.weekday());columns=(last-start).days//7+1
-        gap=3;cell=max(3,min(12,(self.width()-34)//columns-gap));stride=cell+gap;left=32;top=28
+        gap=3;cell=self.cell_size(columns);stride=cell+gap;left=32;top=28
         shades=[blend(c['panel'],c['text'],.055),blend(c['panel'],c['accent'],.24),blend(c['panel'],c['accent'],.46),blend(c['panel'],c['accent'],.72),c['accent']]
         self.cells=[];months=set()
         for column in range(columns):

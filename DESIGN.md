@@ -1,5 +1,13 @@
 # Direção visual do Checkpoint
 
+## Revisão 0.1.25
+
+O prompt reenviado solicita dez temas: Branco restaurado substitui a decisão
+histórica de remoção abaixo. Banners limitados a 220–300 px e área principal
+a 1440 px; arte inteira, logos legíveis, legendas próximas, grade adaptativa,
+cadastro global. Estados vazios com espaço textual e métricas/calendário
+adaptativos. Referências do usuário são a especificação visual.
+
 ## Decisões finais desta continuidade — 12/11/2026
 
 - Modo claro removido por pedido expresso posterior do usuário. Permanecem nove

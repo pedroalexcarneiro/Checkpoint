@@ -1,5 +1,15 @@
 # Validação
 
+## 0.1.25 — correções de composição e navegação
+
+Linux: suíte completa com Qt offscreen, 221 testes aprovados em 133,17 s.
+Após os ajustes finais de calendário/disclosures, 27 testes focados aprovados
+em 47,71 s. Smokes das seis páginas e cadastro com auxiliar, imagem e SQLite
+passaram. Capturas reais geradas/inspecionadas em 1000, 1100 e 1920 px, incluindo
+artes públicas Steam somente em uma biblioteca isolada, estados vazios e temas.
+Não comprova integração autenticada nem validação Windows; resultado Windows
+será registrado separadamente após o workflow da nova versão.
+
 ## Publicação confirmada — v0.1.24 — 13/11/2026
 
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.24

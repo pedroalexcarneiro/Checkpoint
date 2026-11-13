@@ -17,7 +17,7 @@ class TwoLineLabel(QLabel):
     def resizeEvent(self,event):
         super().resizeEvent(event);metrics=self.fontMetrics();words=self.full_text.split();line=''
         while words and metrics.horizontalAdvance((line+' '+words[0]).strip())<=self.width():line=(line+' '+words.pop(0)).strip()
-        self.setText(line+'\n'+metrics.elidedText(' '.join(words),Qt.ElideRight,self.width()))
+        self.setText(line+('\n'+metrics.elidedText(' '.join(words),Qt.ElideRight,self.width()) if words else ''))
 
 
 def action(title, callback, primary=False):
@@ -110,11 +110,16 @@ class Hero(QWidget):
         p.fillRect(rect,QColor('#15191e'))
         if not self.banner.isNull():
             pix=self.banner.scaled(rect.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation)
-            p.drawPixmap(rect.right()-pix.width()+1,(rect.height()-pix.height())//2,pix)
+            image_left=rect.right()-pix.width()+1
+            p.drawPixmap(image_left,(rect.height()-pix.height())//2,pix)
+            if image_left>0:
+                edge=QLinearGradient(image_left,0,image_left+100,0)
+                edge.setColorAt(0,QColor('#15191e'));edge.setColorAt(1,QColor(21,25,30,0))
+                p.fillRect(QRectF(image_left,0,100,self.height()),edge)
         shade=QLinearGradient(0,0,self.width()*.7,0)
         shade.setColorAt(0,QColor(9,12,17,210));shade.setColorAt(.65,QColor(9,12,17,65));shade.setColorAt(1,QColor(9,12,17,0));p.fillRect(rect,shade)
         x=26;top=62 if self.detail_mode else 22
-        identity_height=min(90 if self.detail_mode else 70,max(30,self.height()*.32))
+        identity_height=min(100,max(60,self.height()*.34))
         if not self.logo.isNull():
             logo=self.logo.scaled(min(300 if self.detail_mode else 245,self.width()-52),round(identity_height),Qt.KeepAspectRatio,Qt.SmoothTransformation)
             p.drawPixmap(x,top,logo)

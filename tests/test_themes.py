@@ -22,7 +22,7 @@ def test_palette_normal_text_contrast(key):
 
 def test_theme_selection_is_immediate_and_survives_reopening(app,library):
     window=MainWindow(library); window.navigate(5)
-    assert window.theme_selector.count()==9
+    assert window.theme_selector.count()==10
     for key in THEMES:
         window.theme_selector.setCurrentIndex(window.theme_selector.findData(key)); app.processEvents()
         assert app.property('checkpointTheme')==key
@@ -39,12 +39,12 @@ def test_unknown_theme_falls_back_to_green():
     assert get_theme(None).key==DEFAULT_THEME
 
 
-def test_removed_light_theme_falls_back_and_preserves_library(app,library):
+def test_light_theme_remains_available_and_preserves_library(app,library):
     identity=library.save_game({'title':'Legacy theme fixture','notes':'Preserve notes'})
     library.set_setting('appearance.theme','white')
     window=MainWindow(library);window.navigate(5)
-    assert 'white' not in THEMES and window.theme_selector.findData('white')==-1
-    assert window.theme.key==DEFAULT_THEME and library.setting('appearance.theme')==DEFAULT_THEME
+    assert 'white' in THEMES and window.theme_selector.findData('white')>=0
+    assert window.theme.key=='white' and library.setting('appearance.theme')=='white'
     assert library.get(identity)['notes']=='Preserve notes'
-    window.set_theme('white');assert window.theme.key==DEFAULT_THEME
+    window.set_theme('white');assert window.theme.key=='white'
     window.close()

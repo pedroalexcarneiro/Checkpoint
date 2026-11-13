@@ -55,7 +55,7 @@ class MainWindow(QMainWindow):
         from .branding import SystemName,app_icon
         self.brand=SystemName(self.theme);nav.addWidget(self.brand);nav.addSpacing(8)
         self.setWindowIcon(app_icon(self.theme));QApplication.instance().setWindowIcon(self.windowIcon())
-        self.sidebar_add=button('+ Adicionar jogo',self.add_game,True);nav.addWidget(self.sidebar_add);nav.addSpacing(8)
+        self.sidebar_add=button('+ Adicionar jogo',self.add_library_game,True);nav.addWidget(self.sidebar_add);nav.addSpacing(8)
         self.nav_names=['home','library','wish','memories','stats','settings']
         self.nav_buttons = []
         for index,title in enumerate(PAGES):
@@ -72,8 +72,10 @@ class MainWindow(QMainWindow):
         self.profile_button=button(self.library.setting('profile.name','Meu perfil'),self.open_profile);self.profile_button.setObjectName('profileButton');self.profile_button.setIcon(nav_icon('user',self.theme.colors['muted']));self.profile_button.setIconSize(QSize(22,22));self.profile_button.setToolTip('Perfil local e aparência');nav.addWidget(self.profile_button)
         self.profile_button.setToolTip('Perfil local · Checkpoint v'+__version__)
         layout.addWidget(sidebar)
-        self.host = QVBoxLayout(); self.host.setContentsMargins(24,20,24,18); self.host.setSpacing(14)
-        layout.addLayout(self.host,1)
+        content=QWidget();content.setObjectName('mainContent');content.setMaximumWidth(1440)
+        self.host = QVBoxLayout(content); self.host.setContentsMargins(24,20,24,18); self.host.setSpacing(14)
+        main_area=QWidget();main_row=QHBoxLayout(main_area);main_row.setContentsMargins(0,0,0,0);main_row.setSpacing(0)
+        main_row.addWidget(content,1);layout.addWidget(main_area,1)
         self.header_widget=QWidget();self.header_widget.setFixedHeight(38);self.header = QHBoxLayout(self.header_widget);self.header.setContentsMargins(0,0,0,0); self.heading = label('','title'); self.header.addWidget(self.heading); self.header.addStretch()
         self.add_button=button('+ Adicionar jogo',self.add_game,True);self.header.addWidget(self.add_button); self.host.addWidget(self.header_widget)
         self.stack = QStackedWidget(); self.host.addWidget(self.stack,1)
@@ -109,6 +111,10 @@ class MainWindow(QMainWindow):
         titlebar_theme(self,True)
 
     def search_library(self):self.navigate(1)
+
+    def add_library_game(self):
+        self.navigate(1)
+        self.add_game()
 
     def search_changed(self,value):
         if self.current_page==0 and value.strip():self.navigate(1)
