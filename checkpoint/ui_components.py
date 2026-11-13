@@ -1,5 +1,7 @@
 from PySide6.QtCore import Qt, QSize, QRectF, QPointF
 from PySide6.QtGui import QPixmap, QPainter, QColor, QLinearGradient, QFont, QIcon, QPen, QPolygonF, QRegion, QPainterPath
+from .visual_tokens import SPACE,TYPE,RADIUS
+from .cover_art import CoverArtwork,paint_art
 from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QFrame, QTabWidget, QSizePolicy
 
 
@@ -101,7 +103,7 @@ class Hero(QWidget):
             bounds=QRegion(self.logo.mask()).boundingRect()
             if not bounds.isEmpty():self.logo=self.logo.copy(bounds)
         self.setObjectName('gameHero');self._hero_height=0
-        self.content = QVBoxLayout(self);self.content.setContentsMargins(26,12,26,18)
+        self.content = QVBoxLayout(self);self.content.setContentsMargins(SPACE['xl'],SPACE['md'],SPACE['xl'],SPACE['lg'])
         self.content.addStretch()
 
     def set_theme(self, theme):self.theme = theme;self.update()
@@ -109,16 +111,16 @@ class Hero(QWidget):
     def resizeEvent(self,event):
         super().resizeEvent(event)
         ratio=self.banner.width()/self.banner.height() if not self.banner.isNull() else 4.5
-        height=max(220,min(300,round(event.size().width()/4)))
+        height=max(240,min(300,round(event.size().width()/4))) if self.detail_mode else max(300,min(360,round(event.size().width()/3.5)))
         if height!=self._hero_height:self._hero_height=height;self.setFixedHeight(height)
         self.content.setGeometry(self.rect())
 
     def paintEvent(self, event):
         p=QPainter(self);p.setRenderHint(QPainter.Antialiasing)
-        rect=self.rect();clip=QPainterPath();clip.addRoundedRect(QRectF(rect),10,10);p.setClipPath(clip)
-        p.fillRect(rect,QColor('#15191e'))
+        rect=self.rect();clip=QPainterPath();clip.addRoundedRect(QRectF(rect),RADIUS['card'],RADIUS['card']);p.setClipPath(clip)
+        p.fillRect(rect,QColor(self.theme.colors['elevated']))
         if not self.banner.isNull():
-            pix=self.banner.scaled(rect.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation)
+            pix=self.banner.scaled(rect.size(),Qt.KeepAspectRatioByExpanding,Qt.SmoothTransformation)
             image_left=rect.right()-pix.width()+1
             p.drawPixmap(image_left,(rect.height()-pix.height())//2,pix)
             if image_left>0:
@@ -126,29 +128,32 @@ class Hero(QWidget):
                 edge.setColorAt(0,QColor('#15191e'));edge.setColorAt(1,QColor(21,25,30,0))
                 p.fillRect(QRectF(image_left,0,100,self.height()),edge)
         shade=QLinearGradient(0,0,self.width()*.7,0)
-        shade.setColorAt(0,QColor(9,12,17,210));shade.setColorAt(.65,QColor(9,12,17,65));shade.setColorAt(1,QColor(9,12,17,0));p.fillRect(rect,shade)
-        x=26;top=62 if self.detail_mode else 22
+        shade.setColorAt(0,QColor(9,12,17,245));shade.setColorAt(.65,QColor(9,12,17,185));shade.setColorAt(1,QColor(9,12,17,0));p.fillRect(rect,shade)
+        x=SPACE['xl'];top=64 if self.detail_mode else 56
+        if not self.detail_mode:
+            font=QFont('Segoe UI');font.setPixelSize(TYPE['caption']);font.setWeight(QFont.DemiBold);p.setFont(font);p.setPen(QColor('#e4edf2'))
+            p.drawText(QRectF(x,20,self.width()-2*x,20),Qt.AlignVCenter,' · '.join(filter(None,(self.game.get('platform'),self.game.get('status')))))
         identity_height=min(100,max(60,self.height()*.34))
         if not self.logo.isNull():
             logo=self.logo.scaled(min(300 if self.detail_mode else 245,self.width()-52),round(identity_height),Qt.KeepAspectRatio,Qt.SmoothTransformation)
             p.drawPixmap(x,top,logo)
         else:
-            p.setPen(QColor('#ffffff'));font=QFont('Segoe UI');font.setPixelSize(28);font.setWeight(QFont.DemiBold);p.setFont(font)
+            p.setPen(QColor('#ffffff'));font=QFont('Segoe UI');font.setPixelSize(TYPE['display']);font.setWeight(QFont.DemiBold);p.setFont(font)
             p.drawText(QRectF(x,top,min(self.width()-52,360),identity_height),Qt.AlignLeft|Qt.AlignVCenter|Qt.TextWordWrap,self.game['title'])
         if not self.detail_mode and self.game.get('description'):
             font=QFont('Segoe UI');font.setPixelSize(13);p.setFont(font);p.setPen(QColor('#f0f1f3'))
             width=round(min(340,self.width()*.46));words=self.game['description'].replace('\n',' ').split()
             y=round(top+identity_height+12);available=self.height()-y-64
-            for index in range(min(3,max(0,available//17))):
+            for index in range(min(2,max(0,available//20))):
                 line=''
                 while words and p.fontMetrics().horizontalAdvance((line+' '+words[0]).strip())<=width:line=(line+' '+words.pop(0)).strip()
                 if not line:break
-                if index==min(3,max(0,available//17))-1 and words:line=p.fontMetrics().elidedText(line+' '+' '.join(words),Qt.ElideRight,width)
-                p.drawText(QRectF(x,y+index*17,width,17),Qt.AlignVCenter,line)
+                if index==min(2,max(0,available//20))-1 and words:line=p.fontMetrics().elidedText(line+' '+' '.join(words),Qt.ElideRight,width)
+                p.drawText(QRectF(x,y+index*20,width,20),Qt.AlignVCenter,line)
         p.end()
 
 
-class GameTile(QPushButton):
+class GameTile(CoverArtwork):
     """Mesmo desenho e posições em todos os DPI; sem layout dentro do botão."""
     def __init__(self, game, callback, width=148, parent=None):
         super().__init__(parent);self.setObjectName('gameTile');self.setFixedWidth(width)
@@ -166,13 +171,7 @@ class GameTile(QPushButton):
         colors=get_theme(QApplication.instance().property('checkpointTheme')).colors
         p=QPainter(self);p.setRenderHint(QPainter.Antialiasing)
         art=QRectF(0,0,self.width(),self.art_height)
-        if not self.pixmap.isNull():
-            pix=self.pixmap.scaled(art.size().toSize(),Qt.KeepAspectRatio,Qt.SmoothTransformation)
-            p.save();clip=QPainterPath();clip.addRoundedRect(QRectF((self.width()-pix.width())//2,(self.art_height-pix.height())//2,pix.width(),pix.height()),7,7);p.setClipPath(clip)
-            p.drawPixmap((self.width()-pix.width())//2,(self.art_height-pix.height())//2,pix)
-            p.restore()
-        else:
-            p.fillRect(art,QColor(colors['panel']));p.setPen(QColor(colors['muted']));font=QFont('Segoe UI');font.setPixelSize(13);p.setFont(font);p.drawText(art.adjusted(10,10,-10,-10),Qt.AlignCenter|Qt.TextWordWrap,self.game['title'])
+        paint_art(p,art,self.pixmap,self.game['title'],colors,self.hasFocus() or self.underMouse())
         font=QFont('Segoe UI');font.setPixelSize(14);font.setWeight(QFont.DemiBold);p.setFont(font);p.setPen(QColor(colors['text']))
         p.drawText(QRectF(0,self.art_height+5,self.width(),20),Qt.AlignVCenter,p.fontMetrics().elidedText(self.game['title'],Qt.ElideRight,self.width()))
         font.setPixelSize(12);font.setWeight(QFont.Normal);p.setFont(font);p.setPen(QColor(colors['muted']))

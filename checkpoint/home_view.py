@@ -1,3 +1,5 @@
+from .visual_tokens import SPACE
+from .design_system import SectionHeader,ActionCard,CardGrid
 from .locale import count_text
 """Composição do início: hero, continuidade e atividade lado a lado."""
 from PySide6.QtCore import Qt,QSize
@@ -6,7 +8,7 @@ from .ui_components import Hero,GameTile,text,action,card,nav_icon,relative_date
 
 
 def activity(window,layout):
-    layout.addWidget(text('Sua atividade','sectionTitle'))
+    layout.addWidget(SectionHeader('Sua atividade','Conquistas, sessões e memórias recentes.'))
     events=[]
     queries=[("SELECT g.id,g.title,d.created_at AS time,d.text AS message FROM diary_entries d JOIN games g ON g.id=d.game_id WHERE g.deleted_at IS NULL AND NOT EXISTS (SELECT 1 FROM wishlist w WHERE w.game_id=g.id) AND NOT EXISTS (SELECT 1 FROM settings t WHERE t.key='collection.unowned.'||g.id AND t.value='true') ORDER BY d.created_at DESC LIMIT 3",'Memória'),
              ("SELECT g.id,g.title,a.unlocked_at AS time,a.title AS message FROM achievements a JOIN games g ON g.id=a.game_id WHERE g.deleted_at IS NULL AND NOT EXISTS (SELECT 1 FROM wishlist w WHERE w.game_id=g.id) AND NOT EXISTS (SELECT 1 FROM settings t WHERE t.key='collection.unowned.'||g.id AND t.value='true') ORDER BY a.unlocked_at DESC LIMIT 3",'Marco'),
@@ -15,7 +17,7 @@ def activity(window,layout):
         events.extend((dict(row),kind) for row in window.library.sql.execute(query) if window.library.is_owned(row['id']))
     events.sort(key=lambda item:item[0]['time'] or '',reverse=True)
     if not events:
-        frame,inside=card();inside.addWidget(text('Nenhuma atividade recente.','muted'));layout.addWidget(frame)
+        layout.addWidget(ActionCard('clock','Sua história começa ao jogar','Suas sessões, conquistas e anotações aparecerão aqui.',lambda:window.navigate(1),'Abrir biblioteca'))
     selected=[]
     for preferred in ('Marco','Memória'):
         match=next((item for item in events if item[1]==preferred),None)
@@ -24,7 +26,7 @@ def activity(window,layout):
         if len(selected)>=2:break
         if item not in selected:selected.append(item)
     for event,kind in selected:
-        frame,inside=card();frame.setObjectName('activityCard');inside.setContentsMargins(12,10,12,10)
+        frame,inside=card();frame.setObjectName('activityCard');inside.setContentsMargins(*([SPACE['md']]*4))
         contents=QHBoxLayout();contents.setSpacing(14)
         badge=QLabel();badge.setFixedSize(36,36);badge.setObjectName('activityBadge')
         badge.setPixmap(nav_icon('memories' if kind=='Memória' else 'trophy' if kind=='Marco' else 'clock',window.theme.colors['accent']).pixmap(22,22));badge.setAlignment(Qt.AlignCenter);contents.addWidget(badge,0,Qt.AlignTop)
@@ -54,7 +56,7 @@ class GameStrip(QScrollArea):
 
 
 def game_strip(window,layout,title,games,maximum=4):
-    layout.addWidget(text(title,'sectionTitle'))
+    layout.addWidget(SectionHeader(title,'Retome de onde você parou.',lambda:window.navigate(1)))
     layout.addWidget(GameStrip(window,games,maximum))
 
 
@@ -66,11 +68,11 @@ def in_progress(library):
 
 def build_home(window):
     outer=window.clear_page(0);scroll=QScrollArea();scroll.setWidgetResizable(True);scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-    body=QWidget();layout=QVBoxLayout(body);layout.setContentsMargins(0,0,8,0);layout.setSpacing(16)
+    body=QWidget();layout=QVBoxLayout(body);layout.setContentsMargins(0,0,8,0);layout.setSpacing(SPACE['lg'])
     games=window.library.owned_games(sort='recent')
     if not games:
         from .design_system import empty_state
-        layout.addWidget(empty_state('library','Biblioteca vazia','',window.add_library_game,'Adicionar jogo'))
+        layout.addWidget(empty_state('library','Sua biblioteca começa aqui','Adicione um jogo para reunir capas, progresso e memórias em um só lugar.',window.add_library_game,'Adicionar jogo'))
         activity(window,layout)
     else:
         continuing=in_progress(window.library)
@@ -83,13 +85,17 @@ def build_home(window):
             buttons.addWidget(play);buttons.addStretch();hero.content.addLayout(buttons);layout.addWidget(hero)
         else:
             from .design_system import empty_state
-            layout.addWidget(empty_state('library','Nenhum jogo em andamento. Escolha um jogo na Biblioteca.','',lambda:window.navigate(1),'Biblioteca'))
+            layout.addWidget(empty_state('library','Escolha seu próximo jogo','Abra a biblioteca e marque um jogo como Jogando para tê-lo em destaque aqui.',lambda:window.navigate(1),'Abrir biblioteca'))
         from .design_system import AdaptiveColumns
         left=QWidget();left.setObjectName('homeContinuation');left.setMinimumWidth(280);left_layout=QVBoxLayout(left);left_layout.setContentsMargins(0,0,0,0);left_layout.setSpacing(14)
         if continuing:game_strip(window,left_layout,'Continuar jogando',continuing)
-        else:left_layout.addWidget(text('Continuar jogando','sectionTitle'));left_layout.addWidget(text('Nenhum jogo em andamento.','muted'))
+        else:
+            left_layout.addWidget(SectionHeader('Na sua biblioteca','Jogos prontos para a sua próxima escolha.'))
+            previews=CardGrid(150,max_columns=4)
+            for game in games[:4]:previews.add_card(GameTile(game,window.detail,width=132))
+            left_layout.addWidget(previews)
         left_layout.addStretch()
-        left.setMaximumWidth(720)
+        left.setMaximumWidth(780)
         right=QWidget();right.setObjectName('homeActivity');right.setMinimumWidth(240);right_layout=QVBoxLayout(right);right_layout.setContentsMargins(0,0,0,0);right_layout.setSpacing(12);activity(window,right_layout)
         layout.addWidget(AdaptiveColumns(left,right,(3,2),breakpoint=640))
     interrupted=window.library.sql.execute("SELECT count(*) FROM play_sessions WHERE state='interrupted'").fetchone()[0]
