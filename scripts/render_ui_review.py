@@ -41,6 +41,7 @@ def artwork(root,index,title,color,kind,width,height,source=None):
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('output',type=Path);parser.add_argument('--prices-file',type=Path,help='Snapshot público opcional para revisão isolada.');parser.add_argument('--art-dir',type=Path,help='Artes locais opcionais; nunca consulta provedores ou contas.')
     parser.add_argument('--reference-sizes',action='store_true',help='Captura as seis telas de referência em 1280×800 e 1920×1080.')
+    parser.add_argument('--visual-review',action='store_true',help='Matriz 0.1.32: Verde/Rosa, duas resoluções e estados vazios.')
     args=parser.parse_args();root=args.output.resolve();root.mkdir(parents=True,exist_ok=True)
     if (root/'review.sqlite').exists():raise SystemExit('Use um diretório novo: base existente preservada.')
     app=QApplication([]);app.setStyle('Fusion')
@@ -51,7 +52,7 @@ def main():
     names=['Hollow Knight','Celeste','INSIDE','Hades','The Legend of Zelda: Breath of the Wild','Ori and the Will of the Wisps','Returnal','Dead Cells','Hades II','Hollow Knight: Silksong','Animal Well','Nine Sols','Journey']
     colors=['#365d79','#a06388','#86474e','#9d5b43','#668771','#42888b','#4a687e','#71577c','#936657','#5d7391','#53776c','#81715f','#785c72'];ids=[]
     for index,(title,color) in enumerate(zip(names,colors)):
-        cover=artwork(root,index,title,color,'cover',600,900 if args.reference_sizes else 800,args.art_dir)
+        cover=artwork(root,index,title,color,'cover',600,900 if args.reference_sizes or args.visual_review else 800,args.art_dir)
         banner=artwork(root,index,title,color,'banner',1600,450,args.art_dir);logo=artwork(root,index,title,color,'logo',620,150,args.art_dir)
         identity=lib.save_game({'title':title,'platform':'PC','cover':cover,'banner':banner,'logo':logo,'status':'Jogando' if index<4 else 'Concluído' if index<6 else 'Não iniciado','developer':'Estúdio de teste','publisher':'Publicadora de teste','source':'Busca','genre':'Aventura','release_date':'2024-01-12','description':'Dados de teste para conferir a interface: explore um mundo cheio de caminhos, encontros e descobertas. As artes desta captura são fixtures locais, sem acesso a contas pessoais.','favorite':int(index==0)});ids.append(identity)
         if index<4:
@@ -75,6 +76,9 @@ def main():
         for _ in range(4):app.processEvents()
         QTest.qWait(30)
         assert widget.grab().save(str(root/(name+'.png')))
+    if args.visual_review:
+        from visual_review import render
+        render(app,w,lib,ids,root);db.close();return
     if args.reference_sizes:
         # Valores e artes de teste declarados, sem consultar contas ou provedores.
         from checkpoint.integrations.ggdeals_api import parse_api_prices
