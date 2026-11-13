@@ -18,3 +18,8 @@ def datetime_display(value):
     if not value:return ''
     try:return datetime.fromisoformat(value.replace('Z','+00:00')).strftime('%d/%m/%Y %H:%M')
     except ValueError:return str(value)
+
+
+def count_text(value,singular,plural=None):
+    amount=int(value)
+    return f'{amount} {singular if amount==1 else plural or singular+"s"}'

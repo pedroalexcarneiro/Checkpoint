@@ -20,8 +20,8 @@ def source_link(library,game,label='Ver ofertas ↗'):
 
 
 def price_summary(library,game):
-    value=snapshot(library,game['id']);frame=QWidget();frame.setFixedHeight(22);row=QHBoxLayout(frame);row.setContentsMargins(0,0,0,0);row.setSpacing(6)
-    label=text('Preço salvo' if value.get('state')=='unavailable' and value.get('lowest') is not None else 'Menor preço','muted');label.setWordWrap(False);row.addWidget(label);row.addStretch()
+    value=snapshot(library,game['id']);frame=QWidget();frame.setFixedHeight(48);row=QVBoxLayout(frame);row.setContentsMargins(0,0,0,0);row.setSpacing(2)
+    label=text('Último preço salvo' if value.get('state')=='unavailable' and value.get('lowest') is not None else 'Menor preço atual','caption');label.setWordWrap(False);row.addWidget(label)
     amount=text(money(value.get('lowest')) if value.get('lowest') is not None else 'Indisponível','cardTitle');amount.setWordWrap(False);row.addWidget(amount)
     if value.get('checked_at'):
         stamp='Última consulta: '+datetime_display(value['checked_at']);frame.setToolTip(stamp);frame.setAccessibleDescription(stamp)

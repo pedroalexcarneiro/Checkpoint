@@ -15,7 +15,7 @@ def test_wishlist_uses_current_prices_and_removal_preserves_game(library,app,mon
     window.add_wish(identity)
     assert library.sql.execute('SELECT target_cents FROM wishlist').fetchone()[0]==5000
     labels=[item.text() for item in window.pages[2].findChildren(QLabel)]
-    assert 'Menor preço' in labels and 'Meta de preço' not in labels
+    assert 'Menor preço atual' in labels and 'Meta de preço' not in labels
     assert not library.is_owned(identity)
     window.pages[2].findChild(IconButton).click()
     assert library.sql.execute('SELECT count(*) FROM wishlist').fetchone()[0]==0

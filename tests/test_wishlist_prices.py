@@ -40,9 +40,9 @@ def test_prices_cache_failure_keeps_last_good_price(library):
 def test_wishlist_has_no_owned_status_and_is_excluded_from_owned_statistics(library,app):
     identity=library.save_game({'title':'Wish fixture','status':'Concluído','notes':'Keep notes'})
     window=MainWindow(library);window.add_wish(identity);window.navigate(2);window.show();app.processEvents()
-    from checkpoint.collection_views import SquareWishCard,WishLogo
-    tile=window.pages[2].findChild(SquareWishCard)
-    assert tile.accessibleDescription()=='Na lista de desejos' and tile.width()==tile.height()
+    from checkpoint.collection_views import WishCard,WishLogo
+    tile=window.pages[2].findChild(WishCard)
+    assert tile.accessibleDescription()=='Na lista de desejos' and tile.height()>tile.width()
     assert tile.findChild(WishLogo) is not None and tile.findChild(GameTile) is None
     assert library.stats()['total']==0 and library.stats()['statuses']['Concluído']==0
     window.detail(identity);app.processEvents()
@@ -72,7 +72,7 @@ def test_heatmap_uses_real_daily_sessions_and_has_calendar_tooltips(library,app)
 
 def test_wishlist_logos_titles_and_prices_share_fixed_alignment(library,app,folder):
     from PySide6.QtGui import QImage,QColor
-    from checkpoint.collection_views import SquareWishCard,WishLogo,WishTitle
+    from checkpoint.collection_views import WishCard,WishLogo,WishTitle
     for index in range(4):
         logo=''
         if index<3:
@@ -81,15 +81,15 @@ def test_wishlist_logos_titles_and_prices_share_fixed_alignment(library,app,fold
         with library.sql:library.sql.execute('INSERT INTO wishlist(game_id,target_cents) VALUES(?,0)',(identity,))
     window=MainWindow(library);window.navigate(2);window.show()
     for _ in range(3):app.processEvents()
-    cards=window.pages[2].findChildren(SquareWishCard);assert len(cards)==4
-    assert all(card.width()==card.height() for card in cards)
+    cards=window.pages[2].findChildren(WishCard);assert len(cards)==4
+    assert all(card.height()>card.width() for card in cards)
     assert len({card.findChild(WishLogo).geometry().height() for card in cards})==1
     assert len({card.findChild(WishTitle).height() for card in cards})==1
-    assert all(not title.wordWrap() and title.alignment()==Qt.AlignCenter for card in cards for title in card.findChildren(WishTitle))
+    assert all(not title.wordWrap() and bool(title.alignment() & Qt.AlignLeft) for card in cards for title in card.findChildren(WishTitle))
     window.set_theme('blue');window.resize(1000,700)
     for _ in range(4):app.processEvents()
     assert all(not a.geometry().intersects(b.geometry()) for index,a in enumerate(cards) for b in cards[index+1:])
-    assert all(card.width()==card.height() for card in cards)
+    assert all(card.height()>card.width() for card in cards)
     window.close()
 
 

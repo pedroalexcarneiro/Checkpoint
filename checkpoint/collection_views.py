@@ -8,7 +8,7 @@ from .design_system import CardGrid,page_scroll,empty_state,IconButton,ArtworkBu
 
 class WishLogo(QPushButton):
     def __init__(self,game):
-        super().__init__();self.setObjectName('wishLogo');self.game=game;self.setMinimumHeight(72);self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Expanding);self.setAccessibleName(game['title'])
+        super().__init__();self.setObjectName('wishLogo');self.game=game;self.setFixedSize(180,270);self.setSizePolicy(QSizePolicy.Fixed,QSizePolicy.Fixed);self.setAccessibleName(game['title'])
         from PySide6.QtGui import QPixmap
         self.pixmap=QPixmap(game.get('logo') or '')
         if not self.pixmap.isNull() and self.pixmap.hasAlphaChannel():
@@ -29,29 +29,30 @@ class WishLogo(QPushButton):
 
 class WishTitle(QLabel):
     def __init__(self,title):
-        super().__init__();self.title=title;self.setObjectName('caption');self.setSizePolicy(QSizePolicy.Ignored,QSizePolicy.Fixed);self.setMinimumWidth(0);self.setFixedHeight(20);self.setAlignment(Qt.AlignCenter);self.setToolTip(title);self.setWordWrap(False)
+        super().__init__();self.title=title;self.setObjectName('cardTitle');self.setSizePolicy(QSizePolicy.Ignored,QSizePolicy.Fixed);self.setMinimumWidth(0);self.setFixedHeight(20);self.setAlignment(Qt.AlignLeft|Qt.AlignVCenter);self.setToolTip(title);self.setWordWrap(False)
     def resizeEvent(self,event):
         super().resizeEvent(event);self.setText(self.fontMetrics().elidedText(self.title,Qt.ElideRight,self.width()))
 
 
-class SquareWishCard(QFrame):
+class WishCard(QFrame):
     def __init__(self,game):
-        super().__init__();self.game=game;self.setObjectName('panel');self.setMinimumWidth(232);self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed);self.setAccessibleName(game['title']);self.setAccessibleDescription('Na lista de desejos')
-    def resizeEvent(self,event):
-        super().resizeEvent(event)
-        if self.height()!=self.width():self.setFixedHeight(self.width())
+        super().__init__();self.game=game;self.setObjectName('panel');self.setSizePolicy(QSizePolicy.Fixed,QSizePolicy.Fixed);self.setAccessibleName(game['title']);self.setAccessibleDescription('Na lista de desejos')
 
 
 class WishGrid(CardGrid):
     def reflow(self):
-        super().reflow()
-        if not self.cards:return
-        columns=max(1,self.columns);spacing=self.grid.spacing();height=(self.width()-spacing*(columns-1)+columns-1)//columns
-        for row in range(self.grid.rowCount()):self.grid.setRowMinimumHeight(row,0)
-        for card in self.cards:card.setFixedHeight(height)
-        rows=(len(self.cards)+columns-1)//columns
-        for row in range(rows):self.grid.setRowMinimumHeight(row,height)
-        self.setMinimumHeight(rows*height+max(0,rows-1)*spacing);self.grid.invalidate()
+        self.columns=4
+        spacing=self.grid.spacing();width=max(1,(self.width()-spacing*3)//4)
+        art_width=max(1,width-24);art_height=round(art_width*1.5);height=art_height+146
+        while self.grid.count():self.grid.takeAt(0)
+        for column in range(4):self.grid.setColumnStretch(column,1)
+        for index,card in enumerate(self.cards):
+            card.setFixedSize(width,height)
+            logo=card.findChild(WishLogo)
+            if logo:logo.setFixedSize(art_width,art_height)
+            self.grid.addWidget(card,index//4,index%4)
+        rows=(len(self.cards)+3)//4
+        self.setFixedHeight(rows*height+max(0,rows-1)*spacing)
 
 
 def build_wishlist(window):
@@ -59,15 +60,19 @@ def build_wishlist(window):
     rows=[dict(row) for row in window.library.sql.execute('SELECT g.*,w.target_cents FROM wishlist w JOIN games g ON g.id=w.game_id WHERE g.deleted_at IS NULL ORDER BY g.title COLLATE NOCASE')]
     if not rows:
         inside.addWidget(empty_state('wish','Nenhum desejo','',window.add_game,'Adicionar desejo'));inside.addStretch();return
-    top=QHBoxLayout();top.addWidget(text(f'{len(rows)} jogos','muted'));top.addStretch();top.addWidget(action('+ Adicionar desejo',window.add_game));inside.addLayout(top)
+    from .locale import count_text
+    top=QHBoxLayout();top.addWidget(text(count_text(len(rows),'jogo'),'muted'));top.addStretch();top.addWidget(action('+ Adicionar desejo',window.add_game));inside.addLayout(top)
     grid=WishGrid(260);grid.setObjectName('wishlistGrid')
     from .price_view import price_summary,source_link
     for game in rows:
-        panel=SquareWishCard(game);body=QVBoxLayout(panel);body.setContentsMargins(16,12,16,12);body.setSpacing(6)
-        logo=WishLogo(game);logo.clicked.connect(lambda checked=False,g=game['id']:window.detail(g));body.addWidget(logo,1)
+        panel=WishCard(game);body=QVBoxLayout(panel);body.setContentsMargins(12,12,12,12);body.setSpacing(6)
+        logo=WishLogo(game);logo.clicked.connect(lambda checked=False,g=game['id']:window.detail(g));body.addWidget(logo,0,Qt.AlignHCenter)
         body.addWidget(WishTitle(game['title']))
         body.addWidget(price_summary(window.library,game))
-        line=QHBoxLayout();line.setSpacing(8);line.addWidget(source_link(window.library,game));line.addStretch();line.addWidget(IconButton('plus','Adicionar à biblioteca',lambda checked=False,g=game['id']:window.acquire_wish(g)));line.addWidget(IconButton('trash','Retirar dos desejos',lambda checked=False,g=game['id']:window.remove_wish(g)));body.addLayout(line);grid.add_card(panel)
+        line=QHBoxLayout();line.setSpacing(4);line.addWidget(source_link(window.library,game));line.addStretch();line.addWidget(IconButton('plus','Adicionar à biblioteca',lambda checked=False,g=game['id']:window.acquire_wish(g)));line.addWidget(IconButton('trash','Retirar dos desejos',lambda checked=False,g=game['id']:window.remove_wish(g)));
+        body.addLayout(line)
+        for control in panel.findChildren(IconButton):control.setFixedSize(28,28)
+        grid.add_card(panel)
     inside.addWidget(grid);inside.addStretch()
     if window.isVisible() and window.library.setting('artwork.auto',True):
         requested=getattr(window,'wish_logos_requested',set())
