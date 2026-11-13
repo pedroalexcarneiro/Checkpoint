@@ -140,9 +140,10 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self,'Checkpoint',str(error))
 
     def clear_page(self,index):
-        old = self.pages[index]
+        old = self.pages[index];was_current=self.stack.currentWidget() is old
         self.stack.removeWidget(old); old.deleteLater()
         page = QWidget(); self.pages[index] = page; self.stack.insertWidget(index,page)
+        if was_current:self.stack.setCurrentWidget(page)
         layout = QVBoxLayout(page); layout.setContentsMargins(0,0,0,0); layout.setSpacing(18)
         return layout
 

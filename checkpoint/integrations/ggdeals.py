@@ -61,7 +61,7 @@ def parse_prices(content):
             currency=payload['offers'].get('priceCurrency');title=payload.get('name','')
             try:
                 amount=Decimal(str(payload['offers'].get('lowPrice')))*100
-                if amount.is_finite() and 0<=amount<=1_000_000_000:aggregate=int(amount)
+                if amount.is_finite() and 0<amount<=1_000_000_000:aggregate=int(amount)
             except (InvalidOperation,ValueError):pass
     if currency!='BRL':raise IntegrationError('A fonte não retornou preços em reais. Nenhum valor foi convertido ou apresentado como BRL.')
     offers=[]
@@ -70,26 +70,35 @@ def parse_prices(content):
         for row in section.find(lambda n:n.has('game-list-item') and n.attrs.get('data-shop-name')):
             price=next((cents(n.text()) for n in row.find(lambda n:n.has('price') and not n.has('price-old')) if cents(n.text()) is not None),None)
             link=next((n.attrs.get('href') for n in row.find(lambda n:n.tag=='a' and n.has('shop-link'))),None)
-            if price is None or not link:continue
+            if price is None or price<=0 or not link:continue
             link=urljoin('https://gg.deals',link);parsed=urlsplit(link)
             if parsed.scheme!='https' or parsed.netloc!='gg.deals' or not parsed.path.startswith('/br/redirect/'):continue
             drm=next((n.text().replace('DRM:','').strip() for n in row.find(lambda n:n.has('tag-drm'))),'')
-            offers.append({'shop':row.attrs['data-shop-name'],'cents':price,'url':link,'kind':kind,'drm':drm})
+            original=next((cents(n.text()) for n in row.find(lambda n:n.has('price-old')) if cents(n.text()) is not None),None)
+            if original is not None and original<=price:original=None
+            discount=round((original-price)*100/original) if original else None
+            offers.append({'shop':row.attrs['data-shop-name'],'cents':price,'original':original,'discount':discount,'url':link,'kind':kind,'drm':drm})
     offers.sort(key=lambda row:row['cents'])
     minima={kind:min((row['cents'] for row in offers if row['kind']==kind),default=None) for kind in ('retail','keyshop')}
     for kind,anchor in [('retail','#official-stores'),('keyshop','#keyshops')]:
         for node in page.find(lambda n:n.tag=='a' and n.has('game-header-price') and n.attrs.get('href')==anchor):
             value=cents(node.text())
-            if value is not None:minima[kind]=value;break
+            if value is not None and value>0:minima[kind]=value;break
     valid=[value for value in minima.values() if value is not None]
     if aggregate is None and not valid:raise IntegrationError('Nenhuma oferta em reais foi carregada. Confira a página do GG.deals.')
-    return {'url':url,'currency':'BRL','title':title,'offers':offers,
+    lowest=aggregate if aggregate is not None else min(valid)
+    best=next((offer for offer in offers if offer['cents']==lowest),{})
+    return {'current':lowest,'original':best.get('original'),'discount':best.get('discount'),'stores':offers,
+        'url':url,'currency':'BRL','title':title,'offers':offers,
         'retail':minima['retail'],'keyshop':minima['keyshop'],
-        'lowest':aggregate if aggregate is not None else min(valid)}
+        'lowest':lowest}
 
 
 
-class GgDealsProvider:
+from .price_provider import PriceProvider
+
+
+class GgDealsProvider(PriceProvider):
     def __init__(self,fetch=None):self.fetch=fetch or self.download
     def download(self,url):
         try:

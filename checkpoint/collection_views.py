@@ -1,7 +1,7 @@
 """Desejos e memórias na mesma linguagem visual da biblioteca."""
 from pathlib import Path
-from PySide6.QtCore import Qt,QSize
-from PySide6.QtWidgets import QLabel,QWidget,QVBoxLayout,QHBoxLayout,QTabWidget,QFrame,QSizePolicy,QPushButton
+from PySide6.QtCore import Qt,QSize,QTimer
+from PySide6.QtWidgets import QLabel,QWidget,QVBoxLayout,QHBoxLayout,QTabWidget,QFrame,QSizePolicy,QPushButton,QComboBox
 from .ui_components import text,action,card,GameTile,relative_date
 from .design_system import CardGrid,page_scroll,empty_state,IconButton,ArtworkButton,Badge
 
@@ -53,7 +53,7 @@ class WishGrid(CardGrid):
         from .card_layout import card_metrics
         metrics=card_metrics(self.width(),getattr(self,'cover_percent',100))
         self.columns=metrics.columns;spacing=metrics.gap;self.grid.setSpacing(spacing);width=metrics.width
-        art_width=max(1,width-24);art_height=art_width;height=art_height+146
+        art_width=max(1,width-24);art_height=art_width;height=art_height+164
         while self.grid.count():self.grid.takeAt(0)
         for column in range(self.columns):self.grid.setColumnStretch(column,1)
         for index,card in enumerate(self.cards):
@@ -66,13 +66,30 @@ class WishGrid(CardGrid):
 
 
 def build_wishlist(window):
-    outer=window.clear_page(2);inside=page_scroll(outer,reserve_scrollbar=True)
+    old=getattr(window,'wishlist_scroll',None)
+    position=old.verticalScrollBar().value() if old else 0
+    outer=window.clear_page(2);inside=page_scroll(outer,reserve_scrollbar=True);window.wishlist_scroll=inside.scroll_area
+    scroll=window.wishlist_scroll
+    bar=scroll.verticalScrollBar()
+    restored=False
+    def restore_position(*args):
+        nonlocal restored
+        if not restored and bar.maximum()>0:
+            restored=True;bar.rangeChanged.disconnect(restore_position);bar.setValue(min(position,bar.maximum()))
+    bar.rangeChanged.connect(restore_position)
+    QTimer.singleShot(0,scroll,restore_position)
     rows=[dict(row) for row in window.library.sql.execute('SELECT g.*,w.target_cents FROM wishlist w JOIN games g ON g.id=w.game_id WHERE g.deleted_at IS NULL ORDER BY g.title COLLATE NOCASE')]
     if not rows:
         inside.addWidget(empty_state('wish','Nenhum desejo','',window.add_game,'Adicionar desejo'));inside.addStretch();return
     from .locale import count_text
     top=QHBoxLayout();top.addWidget(text(count_text(len(rows),'jogo'),'muted'));top.addStretch();top.addWidget(action('+ Adicionar desejo',window.add_game,True));inside.addLayout(top)
     from .card_layout import cover_size
+    from .prices import wishlist_order
+    order=QComboBox();order.setObjectName('wishlistOrder');order.addItem('Maior desconto','discount');order.addItem('Nome A–Z','name');order.setCurrentIndex(max(0,order.findData(window.library.setting('wishlist.order','discount'))))
+    def change_order(index):
+        window.library.set_setting('wishlist.order',order.itemData(index));window.wishlist()
+    order.currentIndexChanged.connect(change_order);top.insertWidget(1,order)
+    rows=wishlist_order(window.library,rows,order.currentData())
     grid=WishGrid(260);grid.cover_percent=cover_size(window.library);grid.setObjectName('wishlistGrid')
     from .price_view import price_summary,source_link
     for game in rows:

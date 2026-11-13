@@ -20,9 +20,15 @@ def source_link(library,game,label='Ver ofertas ↗'):
 
 
 def price_summary(library,game):
-    value=snapshot(library,game['id']);frame=QWidget();frame.setFixedHeight(48);row=QVBoxLayout(frame);row.setContentsMargins(0,0,0,0);row.setSpacing(2)
+    value=snapshot(library,game['id']);frame=QWidget();frame.setFixedHeight(66);row=QVBoxLayout(frame);row.setContentsMargins(0,0,0,0);row.setSpacing(2)
     label=text('Último preço salvo' if value.get('state')=='unavailable' and value.get('lowest') is not None else 'Menor preço atual','caption');label.setWordWrap(False);row.addWidget(label)
-    amount=text(money(value.get('lowest')) if value.get('lowest') is not None else 'Indisponível','cardTitle');amount.setWordWrap(False);row.addWidget(amount)
+    current=value.get('lowest');usable=isinstance(current,int) and current>0
+    prices=QHBoxLayout();prices.setSpacing(5)
+    amount=text(money(current) if usable else 'Indisponível','cardTitle');amount.setWordWrap(False);prices.addWidget(amount);prices.addStretch();row.addLayout(prices)
+    original=value.get('original');discount=value.get('discount')
+    if usable and isinstance(original,int) and original>current and discount:
+        detail=QHBoxLayout();before=text(money(original),'caption');font=before.font();font.setStrikeOut(True);before.setFont(font);detail.addWidget(before)
+        badge=text('-'+str(discount)+'%','selectedCheck');detail.addWidget(badge);detail.addStretch();row.addLayout(detail)
     if value.get('checked_at'):
         stamp='Última consulta: '+datetime_display(value['checked_at']);frame.setToolTip(stamp);frame.setAccessibleDescription(stamp)
     return frame
