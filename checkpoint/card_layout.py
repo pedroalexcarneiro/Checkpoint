@@ -1,5 +1,6 @@
 """Tamanho de cards compartilhado; preferências sem mudar o schema."""
 from dataclasses import dataclass
+from .visual_tokens import SPACE
 
 @dataclass(frozen=True)
 class CardMetrics:
@@ -9,7 +10,7 @@ class CardMetrics:
 
 def card_metrics(available,percent=100):
     scale=max(70,min(150,int(percent)))/100
-    gap=round(20*scale)
+    gap=round(SPACE['lg']*scale)
     target=round(200*scale)
     columns=max(1,(max(1,int(available))+gap)//(target+gap))
     width=max(1,max(1,int(available)-16)//columns-gap)

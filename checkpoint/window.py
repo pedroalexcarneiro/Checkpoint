@@ -1,3 +1,4 @@
+from .visual_tokens import SPACE,HEIGHT
 from .locale import count_text
 import json
 import logging
@@ -75,10 +76,10 @@ class MainWindow(QMainWindow):
         self.refresh_profile()
         layout.addWidget(sidebar)
         content=QWidget();content.setObjectName('mainContent');content.setMaximumWidth(1440)
-        self.host = QVBoxLayout(content); self.host.setContentsMargins(24,20,24,18); self.host.setSpacing(12)
+        self.host = QVBoxLayout(content); self.host.setContentsMargins(*([SPACE['lg']]*4)); self.host.setSpacing(SPACE['md'])
         main_area=QWidget();main_row=QHBoxLayout(main_area);main_row.setContentsMargins(0,0,0,0);main_row.setSpacing(0)
         main_row.addWidget(content,1);layout.addWidget(main_area,1)
-        self.header_widget=QWidget();self.header_widget.setFixedHeight(38);self.header = QHBoxLayout(self.header_widget);self.header.setContentsMargins(0,0,0,0); self.heading = label('','title'); self.header.addWidget(self.heading); self.header.addStretch()
+        self.header_widget=QWidget();self.header_widget.setFixedHeight(HEIGHT['button']+SPACE['xs']);self.header = QHBoxLayout(self.header_widget);self.header.setContentsMargins(0,0,0,0); self.heading = label('','title'); self.header.addWidget(self.heading); self.header.addStretch()
         self.add_button=button('+ Adicionar jogo',self.add_library_game,True);self.header.addWidget(self.add_button); self.host.addWidget(self.header_widget)
         self.stack = QStackedWidget(); self.host.addWidget(self.stack,1)
         self.pages = []
@@ -209,7 +210,7 @@ class MainWindow(QMainWindow):
         layout.removeWidget(self.library_tabs);options.setSpacing(8);options.removeWidget(self.count)
         layout.removeItem(options);options.setParent(None);controls=QWidget();controls.setLayout(options)
         layout.removeItem(filters);layout.insertWidget(0,ResponsiveToolbar(self.library_tabs,controls));self.count.hide()
-        layout.setSpacing(12)
+        layout.setSpacing(SPACE['lg'])
         layout.addWidget(self.gallery,1); layout.addWidget(self.table,1)
         from .design_system import empty_state
         self.library_empty=empty_state('library','Biblioteca vazia','',self.add_library_game,'Adicionar jogo');layout.addWidget(self.library_empty);self.library_empty.hide()
@@ -268,6 +269,8 @@ class MainWindow(QMainWindow):
             title={1:'Nenhum favorito ainda',2:'Nenhum jogo em andamento',3:'Nenhum jogo concluído ainda'}[tab];caption='Ver todos os jogos';callback=self.clear_library_filters
         else:title='Nenhum resultado';caption='Limpar filtros';callback=self.clear_library_filters
         self.library_empty.findChild(QLabel,'sectionTitle').setText(title)
+        description='Adicione um jogo para começar a organizar sua coleção.' if not owned else 'Tente outro termo ou ajuste os filtros para encontrar seus jogos.'
+        self.library_empty.findChild(QLabel,'emptyDescription').setText(description)
         action_button=self.library_empty.findChild(QPushButton);action_button.setText(caption)
         try:action_button.clicked.disconnect()
         except RuntimeError:pass
