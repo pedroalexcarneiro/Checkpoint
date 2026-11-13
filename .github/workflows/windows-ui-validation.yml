@@ -1,6 +1,15 @@
 name: Windows UI validation
 
 on:
+  push:
+    branches: [fix/rename-redesign-0.1.28]
+    paths:
+      - checkpoint/**
+      - tests/**
+      - scripts/**
+      - pyproject.toml
+      - requirements-tested.txt
+      - .github/workflows/windows-ui-validation.yml
   pull_request:
     branches: [main, codex/steam-library-import]
   workflow_dispatch:
