@@ -1,0 +1,132 @@
+name: Publish validated Checkpoint 0.1.30
+
+on:
+  push:
+    branches: [fix/0.1.30]
+    paths: [.github/workflows/publish-0.1.30.yml]
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: checkpoint-publish-0.1.30
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_REPO: pedroalexcarneiro/Checkpoint
+      SOURCE_SHA: c51c2456f8479f208d73a1281eb0dfada8ee7213
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: c51c2456f8479f208d73a1281eb0dfada8ee7213
+          persist-credentials: false
+      - name: Confirm successful Windows validation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api repos/$GH_REPO/actions/runs/43482592085 > /tmp/checkpoint-run.json
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          run=json.loads(Path('/tmp/checkpoint-run.json').read_text())
+          assert run['conclusion']=='success' and run['head_sha']==os.environ['SOURCE_SHA']
+          PY
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: checkpoint-windows-ui-review
+          run-id: 43482592085
+          github-token: ${{ github.token }}
+          path: release-assets
+      - name: Verify package and prepare source evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd release-assets
+          sha256sum --check Checkpoint-0.1.30-windows-x64.zip.sha256
+          python - <<'PY'
+          import os,zipfile
+          from pathlib import Path
+          with zipfile.ZipFile('Checkpoint-0.1.30-windows-x64.zip') as source:
+              assert source.testzip() is None
+              assert 'Checkpoint/Checkpoint.exe' in source.namelist()
+          validation=Path('Checkpoint-0.1.30-validation.txt').read_text()
+          assert os.environ['SOURCE_SHA'] in validation
+          assert "'tests': 303" in validation
+          assert "'failures': 0" in validation and "'errors': 0" in validation
+          assert "'skipped': 0" in validation
+          print(validation)
+          PY
+          cd ..
+          git archive --format=zip -o release-assets/checkpoint-0.1.30-entrega.zip "$SOURCE_SHA"
+          python - <<'PY'
+          import zipfile
+          from pathlib import Path
+          with zipfile.ZipFile('release-assets/checkpoint-0.1.30-evidencias.zip','w',zipfile.ZIP_DEFLATED) as archive:
+              paths=[Path('RELATORIO_0130_DRIVE.md'),Path('SETUP.md')]
+              paths += [Path('release-assets/Checkpoint-0.1.30-ui-review.zip'),Path('release-assets/Checkpoint-0.1.30-ui-review.txt'),Path('release-assets/Checkpoint-0.1.30-validation.txt')]
+              for path in paths:
+                  assert path.is_file()
+              for path in paths: archive.write(path,path.name)
+          for name in ('entrega','evidencias'):
+              with zipfile.ZipFile(f'release-assets/checkpoint-0.1.30-{name}.zip') as archive:
+                  assert archive.testzip() is None
+          PY
+          cd release-assets
+          sha256sum checkpoint-0.1.30-entrega.zip > checkpoint-0.1.30-entrega.zip.sha256
+          sha256sum checkpoint-0.1.30-evidencias.zip > checkpoint-0.1.30-evidencias.zip.sha256
+      - name: Publish validated prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view v0.1.30 >/dev/null 2>&1; then
+            echo 'A release já existe; nenhuma alteração será feita.' >&2
+            exit 1
+          fi
+          if existing=$(gh api "repos/$GH_REPO/git/ref/tags/v0.1.30" --jq '.object.type + ":" + .object.sha' 2>/dev/null); then
+            if [[ "$existing" != "commit:$SOURCE_SHA" ]]; then
+              echo 'A tag já existe em outro commit; não será alterada.' >&2
+              exit 1
+            fi
+          fi
+          cat > /tmp/release-notes.md <<'NOTES'
+          ## Checkpoint 0.1.30 — correção do cadastro Drive
+
+          - Selecionar ROM pesquisa o nome limpo no catálogo, preservando nome original, plataforma e vínculo do arquivo.
+          - Salvar aguarda pesquisa e detalhes. Textos de RAWG/Steam são persistidos com origem Busca; artes automáticas de ROM vêm do SteamGridDB.
+          - Sem dados: aviso persistente e botão Pesquisar manualmente. A recuperação reutiliza o mesmo cadastro, sem duplicar o jogo nem baixar a ROM.
+          - Assinatura dos botões de cadastro preservada, incluindo Adicionar desejo. Schema 4 e dados existentes mantidos.
+
+          **Windows:** baixe `Checkpoint-0.1.30-windows-x64.zip`, extraia a pasta inteira e abra `Checkpoint/Checkpoint.exe`.
+          `checkpoint-0.1.30-entrega.zip` é código-fonte; `checkpoint-0.1.30-evidencias.zip` contém o relatório Drive e a revisão visual Windows com fixtures, sem dados pessoais.
+
+          Fonte: commit `c51c2456f8479f208d73a1281eb0dfada8ee7213`.
+          Validação Windows: 303 testes sem falhas, erros ou skips; compilação e smokes do fonte e do executável extraído passaram. Detalhes e hashes nos arquivos validation.txt e .sha256.
+          Execução: https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43482592085
+
+          Testes de integrações usam fontes controladas; capturas usam fixtures e não comprovam acesso a contas reais. Contas reais, cofre do computador pessoal e diferentes DPIs não foram homologados.
+          Uma queda isolada no GC em rodada parcial Linux está registrada em RELATORIO_0130_DRIVE.md; repetição e suítes completas passaram, sem alegação de causa resolvida.
+          NOTES
+          gh release create v0.1.30 \
+            release-assets/Checkpoint-0.1.30-windows-x64.zip \
+            release-assets/Checkpoint-0.1.30-windows-x64.zip.sha256 \
+            release-assets/Checkpoint-0.1.30-validation.txt \
+            release-assets/checkpoint-0.1.30-entrega.zip \
+            release-assets/checkpoint-0.1.30-entrega.zip.sha256 \
+            release-assets/checkpoint-0.1.30-evidencias.zip \
+            release-assets/checkpoint-0.1.30-evidencias.zip.sha256 \
+            --target "$SOURCE_SHA" --draft --prerelease \
+            --title 'Checkpoint 0.1.30 · Ficha de ROMs do Drive' \
+            --notes-file /tmp/release-notes.md
+          gh release view v0.1.30 --json assets --jq '.assets[].name' > /tmp/checkpoint-assets.txt
+          grep -Fx 'Checkpoint-0.1.30-windows-x64.zip' /tmp/checkpoint-assets.txt
+          grep -Fx 'checkpoint-0.1.30-entrega.zip' /tmp/checkpoint-assets.txt
+          grep -Fx 'checkpoint-0.1.30-evidencias.zip' /tmp/checkpoint-assets.txt
+          gh release edit v0.1.30 --draft=false --prerelease
