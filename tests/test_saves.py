@@ -26,3 +26,14 @@ def test_rejects_traversal_and_broad_patterns(folder):
         archive.writestr('checkpoint-manifest.json',json.dumps({'files':{'../escape.sav':hashlib.sha256(content).hexdigest()}}))
     with pytest.raises(ValueError): service.restore(bad,source,digest(bad))
     assert not (folder/'escape.sav').exists()
+
+
+def test_legacy_backup_manifest_remains_readable(folder):
+    from checkpoint.data_migration import LEGACY_PRODUCT
+    destination=folder/'saves';destination.mkdir();content=b'save preservado'
+    archive_path=folder/'legacy-backup.zip'
+    with zipfile.ZipFile(archive_path,'w') as archive:
+        archive.writestr('jogo.sav',content)
+        archive.writestr(LEGACY_PRODUCT.lower()+'-manifest.json',json.dumps({'files':{'jogo.sav':hashlib.sha256(content).hexdigest()}}))
+    SaveBackupService(folder/'backups').restore(archive_path,destination,digest(archive_path))
+    assert (destination/'jogo.sav').read_bytes()==content

@@ -68,7 +68,11 @@ class SaveBackupService:
         if digest(archive_path) != expected_sha256:
             raise ValueError('O backup falhou na verificação SHA-256.')
         with zipfile.ZipFile(archive_path) as archive:
-            manifest = json.loads(archive.read('checkpoint-manifest.json'))['files']
+            from .data_migration import LEGACY_PRODUCT
+            names=('checkpoint-manifest.json',LEGACY_PRODUCT.lower()+'-manifest.json')
+            manifest_name=next((name for name in names if name in archive.namelist()),None)
+            if manifest_name is None:raise ValueError('Manifesto do backup não encontrado.')
+            manifest = json.loads(archive.read(manifest_name))['files']
             contents = {}
             for name, checksum in manifest.items():
                 path = (destination/name).resolve()

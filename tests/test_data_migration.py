@@ -133,3 +133,10 @@ def test_running_legacy_instance_blocks_copy(folder):
         with pytest.raises(MigrationError):prepare_data_directory(local_root=folder)
         assert not (folder/'Checkpoint').exists()
     finally:lock.unlock()
+
+
+def test_regular_files_with_similar_names_are_not_discarded(folder):
+    old,db,_,_=old_library(folder);db.close()
+    (old/'TokenAdventure.gba').write_bytes(b'arquivo de teste sem credenciais')
+    with prepare_data_directory(local_root=folder) as session:
+        assert (session.directory/'TokenAdventure.gba').read_bytes()==b'arquivo de teste sem credenciais'

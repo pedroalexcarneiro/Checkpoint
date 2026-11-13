@@ -83,7 +83,7 @@ def _copy_directory(source,staging,destination):
         ignored=[]
         for name in names:
             file=Path(folder)/name;lower=name.lower()
-            secret=any(fnmatch.fnmatch(lower,pattern) for pattern in ('credentials*','token*','client_secret*','.env*'))
+            secret=any(fnmatch.fnmatch(lower,pattern) for pattern in ('credentials*.json','token*.json','client_secret*.json','.env','.env.*'))
             if file in databases or lower.endswith(('-wal','-shm','.lock')) or secret:ignored.append(name)
         return ignored
     shutil.copytree(source,staging,ignore=ignore,symlinks=True)
