@@ -64,8 +64,21 @@ def test_unknown_game_never_searches_by_name(library):
     provider.search.assert_not_called()
 
 
-def test_download_failure_keeps_metadata_and_game(library, folder):
-    identity = save_import(library, {'title': 'INSIDE'}, result=provider_result())
+def add_inside_through_search(app, library, folder, *, images_unavailable=False):
+    from scripts.search_flow_support import INSIDE, save_via_search
+    window, game = save_via_search(app, library, folder / 'inside-search',
+                                  {**INSIDE, 'images_unavailable': images_unavailable})
+    try:
+        assert game['developer'] == 'Playdead'
+        assert game['source'] == 'Busca'
+        return game['id']
+    finally:
+        window.close()
+        app.processEvents()
+
+
+def test_download_failure_keeps_metadata_and_game(library, folder, app):
+    identity = add_inside_through_search(app, library, folder, images_unavailable=True)
     provider = Mock(); provider.details.return_value = provider_result()
     cache = Mock(); cache.download.side_effect = IntegrationError('Unavailable')
     assert 'Algumas informações ou imagens não puderam ser obtidas.' in complete_game(library, identity, steam_provider=provider, cache=cache)
@@ -88,8 +101,8 @@ def test_concurrent_edit_during_download_is_preserved(library, folder):
     assert library.sql.execute("SELECT count(*) FROM artwork_assets WHERE kind='cover'").fetchone()[0] == 0
 
 
-def test_wrong_identity_response_never_applied(library, folder):
-    identity = save_import(library, {'title': 'INSIDE'}, result=provider_result())
+def test_wrong_identity_response_never_applied(library, folder, app):
+    identity = add_inside_through_search(app, library, folder)
     provider = Mock(); provider.details.return_value = MetadataResult('steam', '999', 'Other', developer='Wrong')
     complete_game(library, identity, steam_provider=provider, cache=Cache(folder))
     assert library.get(identity)['developer'] == 'Playdead'
