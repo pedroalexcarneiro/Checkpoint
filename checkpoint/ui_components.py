@@ -56,6 +56,10 @@ def nav_icon(name, color):
         p.drawPolygon(QPolygonF(points));p.drawEllipse(QRectF(8.5,8.5,7,7))
     elif name in ('wish','heart'):
         path=QPainterPath(QPointF(12,21));path.cubicTo(8,17,2,13,2,8);path.cubicTo(2,2,9,1,12,6);path.cubicTo(15,1,22,2,22,8);path.cubicTo(22,13,16,17,12,21);p.drawPath(path)
+    elif name=='help':
+        p.drawEllipse(QRectF(3,3,18,18));font=QFont('Segoe UI');font.setPixelSize(16);p.setFont(font);p.drawText(QRectF(2,1,20,21),Qt.AlignCenter,'?')
+    elif name=='platform':
+        p.drawRoundedRect(QRectF(3,4,18,13),1.5,1.5);p.drawLine(12,17,12,21);p.drawLine(8,21,16,21)
     elif name=='clock':
         p.drawEllipse(QRectF(3,3,18,18));p.drawLine(12,6,12,12);p.drawLine(12,12,16,14)
     elif name=='user':
@@ -236,3 +240,13 @@ def relative_date(value):
         if seconds<172800:return 'ontem'
         return date.strftime('%d/%m/%Y')
     except (ValueError,AttributeError):return str(value or '')[:10]
+
+
+class ProfileButton(QPushButton):
+    def __init__(self,title,callback,parent=None):
+        super().__init__(title,parent);self.clicked.connect(callback)
+    def paintEvent(self,event):
+        super().paintEvent(event)
+        from .design_system import colors
+        p=QPainter(self);p.setPen(QPen(QColor(colors()['muted']),1.6,Qt.SolidLine,Qt.RoundCap,Qt.RoundJoin));x=self.width()-15;y=self.height()/2
+        p.drawPolyline(QPolygonF([QPointF(x-3,y-2),QPointF(x,y+1),QPointF(x+3,y-2)]));p.end()

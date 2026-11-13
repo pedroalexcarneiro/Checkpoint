@@ -68,12 +68,13 @@ class MainWindow(QMainWindow):
             nav.addWidget(item)
         from . import __version__
         # O divisor agrupa Configurações e perfil no rodapé da lateral.
-        self.profile_button=button(self.library.setting('profile.name','Meu perfil'),self.open_profile);self.profile_button.setObjectName('profileButton');self.profile_button.setIcon(nav_icon('user',self.theme.colors['muted']));self.profile_button.setIconSize(QSize(22,22));self.profile_button.setToolTip('Perfil local e aparência');nav.addWidget(self.profile_button)
+        from .ui_components import ProfileButton
+        self.profile_button=ProfileButton(self.library.setting('profile.name','Meu perfil'),self.open_profile);self.profile_button.setObjectName('profileButton');self.profile_button.setIcon(nav_icon('user',self.theme.colors['muted']));self.profile_button.setIconSize(QSize(22,22));self.profile_button.setToolTip('Perfil local e aparência');nav.addWidget(self.profile_button)
         self.profile_button.setToolTip('Perfil local · Checkpoint v'+__version__)
         self.refresh_profile()
         layout.addWidget(sidebar)
         content=QWidget();content.setObjectName('mainContent');content.setMaximumWidth(1440)
-        self.host = QVBoxLayout(content); self.host.setContentsMargins(24,20,24,18); self.host.setSpacing(14)
+        self.host = QVBoxLayout(content); self.host.setContentsMargins(24,20,24,18); self.host.setSpacing(12)
         main_area=QWidget();main_row=QHBoxLayout(main_area);main_row.setContentsMargins(0,0,0,0);main_row.setSpacing(0)
         main_row.addWidget(content,1);layout.addWidget(main_area,1)
         self.header_widget=QWidget();self.header_widget.setFixedHeight(38);self.header = QHBoxLayout(self.header_widget);self.header.setContentsMargins(0,0,0,0); self.heading = label('','title'); self.header.addWidget(self.heading); self.header.addStretch()
@@ -205,7 +206,7 @@ class MainWindow(QMainWindow):
         layout.removeWidget(self.library_tabs);options.setSpacing(8);options.removeWidget(self.count)
         layout.removeItem(options);options.setParent(None);controls=QWidget();controls.setLayout(options)
         layout.removeItem(filters);layout.insertWidget(0,ResponsiveToolbar(self.library_tabs,controls));self.count.hide()
-        layout.setSpacing(16)
+        layout.setSpacing(12)
         layout.addWidget(self.gallery,1); layout.addWidget(self.table,1)
         from .design_system import empty_state
         self.library_empty=empty_state('search','Nenhum jogo encontrado','',self.add_game,'Adicionar jogo');layout.addWidget(self.library_empty);self.library_empty.hide()

@@ -41,12 +41,15 @@ def build_settings(window):
     swatches.addStretch();inside.addLayout(swatches)
     row=QHBoxLayout();row.addWidget(text('Densidade da biblioteca','muted'));row.addStretch();density=QComboBox();density.addItem('Confortável','comfortable');density.addItem('Compacta','compact');density.setCurrentIndex(max(0,density.findData(window.library.setting('appearance.density','comfortable'))));density.currentIndexChanged.connect(lambda index:window.set_density(density.itemData(index)));row.addWidget(density);inside.addLayout(row)
     appearance.addWidget(frame);appearance.addStretch()
-    grid=CardGrid(380,max_columns=2)
+    grid=CardGrid(320,max_columns=2);grid.setObjectName('connectionsGrid')
     for provider,callback in [('Steam',window.steam),('Google Drive',window.drive),('SteamGridDB',lambda:window.configure_key('steamgriddb')),('RAWG',lambda:window.configure_key('rawg'))]:
         frame,inside=card();head=QHBoxLayout();badge=text('');badge.setPixmap(service_icon(provider));badge.setFixedSize(48,48);head.addWidget(badge)
-        words=QVBoxLayout();words.addWidget(text(provider,'cardTitle'));configured=window.integration_status(provider).startswith('Credencial salva');words.addWidget(text('Configurado' if configured else 'Não configurado','muted'));head.addLayout(words,1);head.setSpacing(18);head.addWidget(action('Gerenciar' if configured else 'Conectar',callback,not configured));inside.addLayout(head);inside.setContentsMargins(18,16,18,16);grid.add_card(frame)
+        words=QVBoxLayout();words.addWidget(text(provider,'cardTitle'));configured=window.integration_status(provider).startswith('Credencial salva');state=QHBoxLayout();dot=text('●');dot.setObjectName('connectionStateDot');dot.setFixedWidth(12);dot.setProperty('configured',configured)
+        from .theme import get_theme
+        dot.setStyleSheet('color: '+(get_theme('green').colors['accent'] if configured else window.theme.colors['muted']));state.addWidget(dot);state.addWidget(text('Configurado' if configured else 'Não configurado','muted'));state.addStretch();words.addLayout(state);head.addLayout(words,1);head.setSpacing(18);head.addWidget(action('Gerenciar' if configured else 'Conectar',callback,not configured));inside.addLayout(head);inside.setContentsMargins(18,16,18,16);grid.add_card(frame)
     connections.addWidget(grid)
-    help_button=action('Sobre as conexões',lambda:QMessageBox.information(window,'Conexões','Configurado indica uma credencial salva. Use Gerenciar para consultar o serviço e verificar o acesso. Chaves ficam no cofre do Windows.'));help_button.setObjectName('quiet');connections.addWidget(help_button,0,Qt.AlignRight)
+    from .design_system import IconButton
+    help_row=QHBoxLayout();help_row.addStretch();help_button=IconButton('help','Ajuda sobre conexões',lambda:QMessageBox.information(window,'Conexões','Configurado indica uma credencial salva. Use Gerenciar para verificar o acesso.'));help_row.addWidget(help_button);connections.insertLayout(0,help_row)
     extra=QWidget();inside=QVBoxLayout(extra);inside.setContentsMargins(0,0,0,0);inside.addWidget(action('Completar fichas e imagens da biblioteca',window.complete_library));inside.addWidget(action('Pesquisar metadados manualmente',window.metadata))
     prices=QCheckBox('Consultar preços do GG.deals automaticamente');prices.setChecked(window.library.setting('prices.auto',True));prices.toggled.connect(lambda value:window.library.set_setting('prices.auto',value));inside.addWidget(prices)
     disclosure('Avançado',extra,connections);connections.addStretch()

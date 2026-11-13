@@ -62,14 +62,14 @@ def build_home(window):
         featured=(playing or [game for game in games if game['favorite']] or games)[0]
         hero=Hero(featured,window.theme);hero.setMinimumHeight(0)
         buttons=QHBoxLayout()
-        if featured['executable']:play=action('▶ Continuar jogando' if featured['status']=='Jogando' else '▶ Jogar',lambda:window.start_game(featured),True)
-        else:play=action('Ver jogo',lambda:window.detail(featured['id']),True)
+        play=action('Continuar jogando',lambda:window.start_game(featured) if featured['executable'] else window.detail(featured['id']),True)
+        play.setObjectName('primary');play.setAccessibleName('Continuar jogando')
         buttons.addWidget(play);buttons.addStretch();hero.content.addLayout(buttons);layout.addWidget(hero)
         continuing=[dict(row) for row in window.library.sql.execute("SELECT g.*,MAX(s.started_at) AS last_played,SUM(CASE WHEN s.state='finished' THEN s.duration_seconds ELSE 0 END) AS seconds FROM games g JOIN play_sessions s ON s.game_id=g.id WHERE g.deleted_at IS NULL AND NOT EXISTS (SELECT 1 FROM wishlist w WHERE w.game_id=g.id) AND NOT EXISTS (SELECT 1 FROM settings t WHERE t.key='collection.unowned.'||g.id AND t.value='true') GROUP BY g.id ORDER BY last_played DESC LIMIT 6")] or playing
         continuing=[game for game in continuing if window.library.is_owned(game['id'])]
         from .design_system import AdaptiveColumns
         left=QWidget();left.setObjectName('homeContinuation');left.setMinimumWidth(280);left_layout=QVBoxLayout(left);left_layout.setContentsMargins(0,0,0,0);left_layout.setSpacing(14)
-        game_strip(window,left_layout,'Continuar jogando' if continuing else 'Sua biblioteca',continuing or games)
+        game_strip(window,left_layout,'Continuar jogando',continuing or games)
         left_layout.addStretch()
         left.setMaximumWidth(720)
         right=QWidget();right.setObjectName('homeActivity');right.setMinimumWidth(240);right_layout=QVBoxLayout(right);right_layout.setContentsMargins(0,0,0,0);right_layout.setSpacing(12);activity(window,right_layout)

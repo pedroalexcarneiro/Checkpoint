@@ -27,13 +27,12 @@ def build_detail(window,game):
     available=[f for f in files if f['available']]
     owned=window.library.is_owned(game_id)
     if not owned:bar.addWidget(action('Adicionar à biblioteca',lambda:window.acquire_wish(game_id),True))
-    elif game['executable']:bar.addWidget(action('▶ Jogar',lambda:window.start_game(game),True))
-    elif available:bar.addWidget(action('▶ Jogar',lambda:window.launch_rom(game_id,available[0]),True))
-    elif files:bar.addWidget(action('Baixar ROM',window.drive,True))
-    else:bar.addWidget(action('Configurar execução',lambda:window.edit_game(game_id),True))
+    elif game['executable']:bar.addWidget(action('Jogar',lambda:window.start_game(game),True))
+    else:bar.addWidget(action('Configurar execução',lambda:window.edit_game(game_id)))
     seconds=window.library.sql.execute("SELECT COALESCE(SUM(duration_seconds),0) FROM play_sessions WHERE game_id=? AND state='finished'",(game_id,)).fetchone()[0]
     if owned:
-        bar.addWidget(text('● '+game['status'],'muted'));bar.addWidget(text(f'{seconds/3600:.1f} h registradas','muted'))
+        status_row=QHBoxLayout();dot=text('●');dot.setObjectName('gameStatusDot');dot.setStyleSheet('color: '+(window.theme.colors['accent'] if game['status'] in ('Jogando','Concluído') else window.theme.colors['muted']));status_row.addWidget(dot);status_row.addWidget(text(game['status'],'muted'));bar.addLayout(status_row)
+        bar.addWidget(text('Tempo jogado: '+f'{seconds/3600:g}'.replace('.',',')+' h','muted'))
     else:bar.addWidget(text('Na lista de desejos' if window.library.sql.execute('SELECT 1 FROM wishlist WHERE game_id=?',(game_id,)).fetchone() else 'Desejo arquivado','muted'))
     bar.addStretch()
     bar.addWidget(IconButton('heart','Retirar dos favoritos' if game['favorite'] else 'Marcar como favorito',lambda:window.toggle_favorite(game_id)))
@@ -64,8 +63,8 @@ def build_detail(window,game):
     fields=[('Desenvolvedora',game['developer']),('Plataforma',game['platform']),('Gênero',game['genre']),('Lançamento',date_display(game['release_date']))]
     facts=QGridLayout();facts.setHorizontalSpacing(36);facts.setVerticalSpacing(16)
     for index,(caption,value) in enumerate((pair for pair in fields if pair[1])):
-        item=QWidget();inside=QVBoxLayout(item);inside.setContentsMargins(0,0,0,0);inside.setSpacing(4)
-        inside.addWidget(text(caption,'caption'));inside.addWidget(text(value));facts.addWidget(item,index//2,index%2)
+        item=QWidget();row=QHBoxLayout(item);row.setContentsMargins(0,0,0,0);row.setSpacing(10);row.addWidget(Badge('platform' if caption=='Plataforma' else 'settings' if caption=='Desenvolvedora' else 'clock' if caption=='Lançamento' else 'library',30))
+        words=QVBoxLayout();words.setSpacing(3);words.addWidget(text(caption,'caption'));words.addWidget(text(value));row.addLayout(words,1);facts.addWidget(item,index//2,index%2)
     about_layout.addLayout(facts)
     extra=QWidget();extra_layout=QVBoxLayout(extra);extra_layout.setContentsMargins(0,4,0,0)
     other=[('Publicadora',game['publisher']),('Origem',game['source']),('Categoria',game['category']),('Sua nota',str(game['rating'])+'/10' if game['rating'] is not None else '')]
