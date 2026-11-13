@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.24 — interface e PT-BR (preparação para publicação)
+## 0.1.24 — interface e PT-BR — publicada em 13/11/2026
 
 - Cadastro compacto, cabeçalhos e filtros reorganizados; capas ampliadas com título/status alinhados.
 - Ícones oficiais Steam/Drive e nove temas escuros; preferência clara antiga usa Verde.
@@ -9,6 +9,9 @@
 - Calendário diário de horas, descrições PT quando disponíveis e datas DD/MM/AAAA.
 - Informações adicionais da ficha sempre visíveis; GIFs/animações recusados nas artes.
 - Dados, arquivos, schema 4 e proteções de processos/QThreads preservados.
+- Publicada como pre-release após 216 testes Windows em 94,04 s, sem falhas/erros/skips;
+  smokes do fonte/ZIP extraído e atualizador aprovados; 48 capturas Qt com fixtures.
+- Workflow 43347929302; tag em 425dd12. Aprovação estética/DPI e contas autenticadas separadas.
 
 ## 0.1.19 — composição visual e banners Steam
 

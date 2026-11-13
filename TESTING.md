@@ -1,5 +1,32 @@
 # Validação
 
+## Publicação confirmada — v0.1.24 — 13/11/2026
+
+Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.24
+Commit da tag: `425dd12ab7571b1bdc236321ef952d3eeff0c2d7`.
+Workflow [43347929302](https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43347929302)
+concluído com sucesso em build e publicação. Pre-release publicada com oito assets.
+
+Windows/Python 3.12.10: **216 testes aprovados em 94,04 s**, zero falhas/erros/skips.
+Build do aplicativo e atualizador; smokes das seis páginas, auxiliar isolado,
+cadastro com imagem/SQLite e integridade do banco passaram no fonte e no ZIP
+extraído. `CheckpointUpdater.exe --check` retornou 0. Revisão automatizada gerou
+48 capturas Qt e índice HTML com fixtures isoladas, sem dados pessoais.
+
+ZIP Windows: 84.074.384 bytes; SHA-256
+`fe66f68d334689dff5fbcd315d2a9dc249ea5167dda879107f7b303b7ef7290e`.
+O digest publicado pelo GitHub coincide com o registrado pelo empacotamento.
+ZIP visual: 3.255.466 bytes; SHA-256
+`3b3ff0e76c55a20e37e0206501695e681f0253b8bb0019b365aa9519eae37093`.
+
+Esta confirmação substitui a pendência de publicação na preparação abaixo.
+A versão publicada é 0.1.24; a fonte da continuidade permanece na branch
+`codex/design-fidelity-pt-br`, sem merge em `main` ou alteração de tags antigas.
+Não equivale a aprovação estética, inspeção manual de todas as novas capturas,
+sessão autenticada ou homologação interativa/DPI Windows 10/11.
+Schema 4 e dados pessoais preservados; monitoramento/alertas de preços,
+cobertura integral PT-BR e demais itens de ROADMAP continuam pendentes.
+
 ## Preparação da publicação 0.1.24 — 13/11/2026
 
 Publicação solicitada para a continuidade implementada em `5d33629` e documentada

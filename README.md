@@ -1,9 +1,9 @@
 # Checkpoint
 
 Biblioteca pessoal de jogos para Windows em Python/PySide6 e SQLite.
-A última release publicada é a [v0.1.23](https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.23).
-Esta branch prepara a publicação 0.1.24 da continuidade de interface e PT-BR;
-o resultado do workflow deve confirmar a publicação. Não representa aprovação final do design.
+A última release publicada é a [v0.1.24](https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.24).
+Continuidade de interface e PT-BR validada com 216 testes Windows e smokes do pacote.
+Esta publicação não representa aprovação final do design.
 
 Início pessoal, Biblioteca com capas verticais inteiras e legendas alinhadas, ficha
 com banner/logo e cadastro compacto. Desejos usa cards quadrados com logos,
