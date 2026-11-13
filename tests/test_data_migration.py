@@ -1,4 +1,5 @@
 import json
+from contextlib import closing
 import sqlite3
 from pathlib import Path
 import pytest
@@ -36,7 +37,7 @@ def test_first_open_copies_complete_library_and_wal_snapshot(folder):
     try:
         with prepare_data_directory(local_root=folder) as session:
             assert session.directory==folder/'Checkpoint'
-            with sqlite3.connect(session.directory/DATABASE_NAME) as copy:
+            with closing(sqlite3.connect(session.directory/DATABASE_NAME)) as copy:
                 assert copy.execute('PRAGMA integrity_check').fetchone()[0]=='ok'
                 assert copy.execute('PRAGMA user_version').fetchone()[0]==4
                 assert copy.execute('SELECT notes FROM games WHERE id=?',(identity,)).fetchone()[0]=='Minha nota'
@@ -58,7 +59,7 @@ def test_existing_new_directory_is_not_overwritten(folder):
     old,db,_,_=old_library(folder);db.close()
     destination=folder/'Checkpoint';destination.mkdir();new_db=Database(destination/DATABASE_NAME);Library(new_db).save_game({'title':'Já estava aqui'});new_db.close()
     with prepare_data_directory(local_root=folder) as session:
-        with sqlite3.connect(session.directory/DATABASE_NAME) as copy:assert copy.execute('SELECT title FROM games').fetchone()[0]=='Já estava aqui'
+        with closing(sqlite3.connect(session.directory/DATABASE_NAME)) as copy:assert copy.execute('SELECT title FROM games').fetchone()[0]=='Já estava aqui'
     assert (old/LEGACY_DATABASE).exists()
 
 
@@ -90,7 +91,7 @@ def test_credentials_copy_without_overwriting_or_logging_values(folder,caplog):
 def test_legacy_light_preference_becomes_default_without_losing_others(folder):
     _,db,_,_=old_library(folder);db.close()
     with prepare_data_directory(local_root=folder) as session:
-        with sqlite3.connect(session.directory/DATABASE_NAME) as copy:
+        with closing(sqlite3.connect(session.directory/DATABASE_NAME)) as copy:
             preferences={key:json.loads(value) for key,value in copy.execute('SELECT key,value FROM settings')}
             assert preferences['appearance.theme']=='green' and preferences['other.preference']=={'keep':True}
 
