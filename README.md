@@ -1,6 +1,6 @@
 # Checkpoint
 
-Biblioteca pessoal de jogos para Windows, em português do Brasil. Código-fonte atual: **0.1.30**, Python 3.12, PySide6 e SQLite (schema 4). A 0.1.30 está em desenvolvimento, sem release. A [pré-release 0.1.29](https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.29) permanece disponível.
+Biblioteca pessoal de jogos para Windows, em português do Brasil. Código-fonte atual: **0.1.32**, Python 3.12, PySide6 e SQLite (schema 4). A revisão visual 0.1.32 está na branch `fix/0.1.32-visual`, sem release. A [pré-release 0.1.29](https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.29) permanece disponível.
 
 A Biblioteca tem capas verticais e tamanho ajustável entre 70% e 150%, com seis colunas no padrão em janela larga. Desejos tem arte 1:1, logos contidas, preços atuais e menores históricos quando disponíveis. A ordenação padrão é Nome A–Z, com alternativa por menor preço atual. Início reúne jogos em andamento e atividade pessoal; a ficha reúne banner, execução, informações e galeria.
 
@@ -23,3 +23,5 @@ Jogos Steam, ROMs e executáveis locais compartilham a Biblioteca. Uma seleção
 GG.deals usa a [API oficial](https://gg.deals/api/prices/) quando há chave configurada em Conexões, salva apenas no cofre do Windows. Sem chave, a página pública pode ser usada conforme a preferência. Histórico não é preço original; a API não fornece porcentagem de desconto. Toda tela de preços apresenta atribuição ativa ao GG.deals.
 
 Cadastro pelo Drive: o nome limpo da ROM é pesquisado no catálogo; textos vêm de RAWG/Steam e artes salvas vêm do SteamGridDB. O arquivo é somente vinculado, sem download automático. Fichas incompletas mostram um aviso e a ação Pesquisar manualmente. Provas e limitações: [RELATORIO_0130_DRIVE.md](RELATORIO_0130_DRIVE.md).
+
+Revisão visual: [relatório 0.1.32](RELATORIO_0132_VISUAL.md), com 72 capturas Verde/Rosa em duas resoluções, limites de validação e preservação do cadastro Drive.

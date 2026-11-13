@@ -2,6 +2,13 @@
 
 Registros anteriores descrevem o estado de cada versão; não são instruções atuais.
 
+## 0.1.32 — revisão visual (sem release)
+
+- Tokens de contraste, superfícies, tipografia e espaçamento comuns aos nove temas.
+- Início, Biblioteca, Desejos, Ficha e Configurações com componentes alinhados e estados vazios acionáveis.
+- Estilo do cadastro e cards de ROM do Drive, sem alteração funcional ou dos testes Drive.
+- Matriz de 72 capturas e contratos de contraste/geometria/preservação; relatório RELATORIO_0132_VISUAL.md.
+
 ## 0.1.30 — ficha e pesquisa de ROM do Drive (sem release)
 
 - Pesquisa usa o nome limpo da ROM e preserva plataforma, nome original e vínculo.
