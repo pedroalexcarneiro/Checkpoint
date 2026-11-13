@@ -8,7 +8,7 @@ from uuid import uuid4
 from . import IntegrationError
 
 ROM_EXTENSIONS = {'.3ds','.cia','.nds','.gba','.gb','.gbc','.sfc','.smc','.nes','.n64','.z64','.v64',
-                  '.iso','.cso','.chd','.cue','.bin','.wbfs','.wud','.wux','.rpx','.nsp','.xci','.zip','.7z','.rvz'}
+                  '.md','.gen','.sms','.gg','.iso','.cso','.chd','.cue','.bin','.wbfs','.wud','.wux','.rpx','.nsp','.xci','.zip','.7z','.rvz'}
 # Aliases explícitos: não infere plataforma por extensão compartilhada (.zip/.iso).
 PLATFORMS = {
     'nintendo 3ds':'Nintendo 3DS', '3ds':'Nintendo 3DS',
@@ -48,13 +48,19 @@ def rom_identity(name):
         platform=PLATFORMS.get(suffix.group(1).strip().casefold(),'')
         if platform:stem=stem[:suffix.start()]
     if not platform:
-        platform={'.gba':'Game Boy Advance','.nds':'Nintendo DS','.gb':'Game Boy','.gbc':'Game Boy Color','.nes':'NES','.sfc':'SNES','.smc':'SNES','.3ds':'Nintendo 3DS','.xci':'Nintendo Switch','.nsp':'Nintendo Switch'}.get(extension,'')
+        platform={'.md':'Mega Drive','.gen':'Mega Drive','.sms':'Master System','.gg':'Game Gear','.gba':'Game Boy Advance','.nds':'Nintendo DS','.gb':'Game Boy','.gbc':'Game Boy Color','.nes':'NES','.sfc':'SNES','.smc':'SNES','.3ds':'Nintendo 3DS','.xci':'Nintendo Switch','.nsp':'Nintendo Switch'}.get(extension,'')
     def remove_tag(match):
         tag=(match.group(1) or match.group(2)).strip()
-        known=r'(?:USA|Europe|Japan|World|Brazil|Australia|En|Fr|De|Es|It|Pt|Ja|Rev(?:ision)?[ ._-]*\d[^)]*|v\d[^)]*|[!bofh]\d*|T[+-].*|Disc \d+)'
+        known=r'(?:USA(?:, Australia)?|Europe|Japan|World|Brazil|Australia|En|Fr|De|Es|It|Pt|Ja|Rev(?:ision)?[ ._-]*\d[^)]*|v\d[^)]*|[!bofh]\d*|T[+-].*|Disc \d+)'
         return '' if re.fullmatch(known,tag,re.IGNORECASE) or re.fullmatch(r'(?:En|Fr|De|Es|It|Pt|Ja)(?:,(?:En|Fr|De|Es|It|Pt|Ja))+',tag,re.IGNORECASE) else match.group(0)
     stem=re.sub(r'\(([^)]*)\)|\[([^]]*)\]',remove_tag,stem)
-    return re.sub(r'\s+',' ',stem.replace('_',' ')).strip(),platform
+    stem=re.sub(r'\s+',' ',stem.replace('_',' ')).strip()
+    # Artigo No-Intro pertence ao título principal, nunca ao subtítulo.
+    stem=re.sub(r'^(.+?),\s*(The|An|A)(?=\s+-\s+|:|$)',lambda m:m[2]+' '+m[1],stem,flags=re.IGNORECASE)
+    # Yu-Gi-Oh! usa o hífen como parte do título oficial (decisão explícita).
+    if not stem.casefold().startswith('yu-gi-oh!'):
+        stem=stem.replace(' - ',': ')
+    return stem,platform
 
 
 def normalize_rom_name(name):return rom_identity(name)[0]

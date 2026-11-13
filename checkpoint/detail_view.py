@@ -23,6 +23,11 @@ def build_detail(window,game):
     hero=Hero(game,window.theme);hero.detail_mode=True;hero.compact=not any(game[field] for field in ('description','developer','publisher'))
     back=QHBoxLayout();back_button=action('←',lambda:window.navigate(1));back_button.setFixedSize(32,32);back_button.setObjectName('heroBack');back_button.setAccessibleName('Voltar à biblioteca');back_button.setToolTip('Voltar à biblioteca');back.addWidget(back_button);back.addStretch();hero.content.insertLayout(0,back)
     layout.addWidget(hero)
+    if hero.compact or (hero.banner.isNull() and hero.logo.isNull()):
+        if hero.banner.isNull() and hero.logo.isNull():hero.hide()
+        heading=QHBoxLayout();heading.addWidget(action('←',lambda:window.navigate(1)))
+        title=text(game['title'],'sectionTitle');title.setObjectName('gameDetailTitle')
+        heading.addWidget(title,1);layout.addLayout(heading)
     actions_frame=QWidget();actions_frame.setObjectName('gameActions');actions_frame.setFixedHeight(HEIGHT['actions']);actions_frame.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed);bar=QHBoxLayout(actions_frame);bar.setContentsMargins(14,8,14,8);bar.setSpacing(20)
     files=[dict(r) for r in window.library.sql.execute('SELECT * FROM game_files WHERE game_id=? ORDER BY original_name',(game_id,))]
     available=[f for f in files if f['available']]

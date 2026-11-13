@@ -137,7 +137,7 @@ class Hero(QWidget):
         if not self.logo.isNull():
             logo=self.logo.scaled(min(300 if self.detail_mode else 245,self.width()-52),round(identity_height),Qt.KeepAspectRatio,Qt.SmoothTransformation)
             p.drawPixmap(x,top,logo)
-        else:
+        elif not (self.detail_mode and getattr(self,'compact',False)):
             p.setPen(QColor('#ffffff'));font=QFont('Segoe UI');font.setPixelSize(TYPE['display']);font.setWeight(QFont.DemiBold);p.setFont(font)
             p.drawText(QRectF(x,top,min(self.width()-52,360),identity_height),Qt.AlignLeft|Qt.AlignVCenter|Qt.TextWordWrap,self.game['title'])
         if not self.detail_mode and self.game.get('description'):

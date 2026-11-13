@@ -239,6 +239,8 @@ class QuickAdd(QObject):
     def show_result(self,result):
         self.metadata_unavailable=False;self.manual.hide()
         self.save.setEnabled(not self.finishing);self.preview.show();self.results.hide();self.other.setVisible(bool(self.candidates));self.confirmed.show()
+        if self.dialog.drive_file_id is not None and self.candidates:
+            self.results.show();self.preview.hide()
         self.title.setText(result.title)
         details=[self.dialog.fields['platform'].text() or ' / '.join(result.platforms[:3]),result.developer,result.release_date[:4]]
         self.facts.setText(' · '.join(value for value in details if value));self.description.setText(result.description[:260])
@@ -250,7 +252,7 @@ class QuickAdd(QObject):
         self.association.setText('ROM selecionada · '+file['original_name']);self.association.show();self.preview.show();self.results.hide();self.state.setText('ROM selecionada. Buscando a ficha para esta plataforma…');self.lookup()
 
     def show_missing_metadata(self):
-        self.metadata_unavailable=True;self.preview.show();self.save.setEnabled(not self.finishing)
+        self.metadata_unavailable=True;self.preview.show();self.results.hide();self.save.setEnabled(not self.finishing)
         self.state.setText('Não encontramos dados para este jogo. Pesquise manualmente.')
         self.manual.show()
 

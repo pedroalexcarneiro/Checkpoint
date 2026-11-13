@@ -86,7 +86,7 @@ class ResultEmptyOverlay(QFrame):
         quick=self.quick_ref()
         if quick is None or not isValid(quick) or not isValid(quick.sources) or not isValid(quick.results):return
         self.setGeometry(quick.results.viewport().rect())
-        self.setVisible(quick.sources.currentIndex()==1 and quick.results.count()==0)
+        self.setVisible(quick.sources.currentIndex()==1 and quick.dialog.drive_file_id is None and quick.results.count()==0)
     def eventFilter(self,watched,event):
         if event.type()==QEvent.Resize:self.sync()
         return False

@@ -129,14 +129,15 @@ def test_library_and_wishes_reuse_art_component_and_dimensions(app,visual_window
 def test_protected_drive_and_registration_logic_is_unchanged():
     import ast,subprocess
     from pathlib import Path
-    # Todos os métodos de QuickAdd e as rotinas funcionais do cadastro são idênticos.
+    # A 0.1.33 muda somente a apresentação dos candidatos e da ausência de dados.
+    # Os demais métodos e os caminhos de persistência/lifecycle continuam congelados.
     names={'apply_catalog','validate','finish_or_wait','accept','reject','load_drive_file','source_changed','data'}
     for filename in ('checkpoint/quick_add.py','checkpoint/dialogs.py'):
         original=ast.parse(subprocess.check_output(['git','show',f'c51c245:{filename}'],text=True))
         current=ast.parse(Path(filename).read_text())
         def methods(tree):
             return {node.name:ast.dump(node,include_attributes=False) for node in ast.walk(tree)
-                    if isinstance(node,ast.FunctionDef) and (filename.endswith('quick_add.py') or node.name in names)}
+                    if isinstance(node,ast.FunctionDef) and ((filename.endswith('quick_add.py') and node.name not in {'show_result','show_missing_metadata'}) or node.name in names)}
         assert methods(original)==methods(current),filename
     for filename in ('tests/test_drive_search_flow.py','scripts/drive_search_flow_support.py','tests/test_drive_metadata_policy.py','checkpoint/game_import.py','checkpoint/worker.py','checkpoint/enrichment.py','checkpoint/completion_queue.py'):
         assert subprocess.check_output(['git','show',f'c51c245:{filename}'])==Path(filename).read_bytes()
