@@ -1,5 +1,12 @@
 # Estado do projeto — Checkpoint
 
+## Correções visuais em andamento após 0.1.24
+
+Correções de banner expansivo, grade/captions, equilíbrio do feed, texto de
+estado vazio e busca do Início; atalho global de cadastro restaurado.
+18 testes focados passaram no Linux; nova suíte completa em verificação.
+Capturas Qt isoladas inspecionadas. Windows/DPI e fidelidade completa pendentes.
+
 ## Publicação confirmada — v0.1.24 — 13/11/2026
 
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.24

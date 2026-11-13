@@ -10,7 +10,7 @@ class CoverDelegate(QStyledItemDelegate):
     def paint(self,painter,option,index):
         painter.save();painter.setRenderHint(QPainter.Antialiasing)
         colors=self.parent().theme.colors
-        rect=QRectF(option.rect).adjusted(0,0,-24,-16)
+        rect=QRectF(option.rect).adjusted(0,0,-16,-8)
         hovered=bool(option.state & QStyle.State_MouseOver)
         selected=bool(option.state & QStyle.State_Selected)
         painter.setPen(QPen(QColor(colors['accent']),1) if selected else Qt.NoPen)
@@ -23,7 +23,7 @@ class CoverDelegate(QStyledItemDelegate):
             # O recorte suave acompanha a própria imagem, sem moldura lateral.
             bounds=art
             pix=icon.pixmap(bounds.size().toSize()).scaled(bounds.size().toSize(),Qt.KeepAspectRatio,Qt.SmoothTransformation)
-            image_rect=QRectF(bounds.center().x()-pix.width()/2,bounds.bottom()-pix.height(),pix.width(),pix.height())
+            image_rect=QRectF(bounds.x(),bounds.y(),pix.width(),pix.height())
             painter.save();clip=QPainterPath();clip.addRoundedRect(image_rect,7,7);painter.setClipPath(clip)
             painter.drawPixmap(round(image_rect.x()),round(image_rect.y()),pix)
             painter.restore()
@@ -33,14 +33,14 @@ class CoverDelegate(QStyledItemDelegate):
             painter.drawText(art,Qt.AlignCenter,(game.get('title') or '?')[:2].upper())
         font=QFont('Segoe UI');font.setPixelSize(14);font.setWeight(QFont.DemiBold);painter.setFont(font);painter.setPen(QColor(colors['text']))
         title=game.get('title') or index.data(Qt.DisplayRole).split('\n')[0]
-        painter.drawText(QRectF(image_rect.x(),art.bottom()+6,image_rect.width(),23),Qt.AlignLeft|Qt.AlignVCenter,painter.fontMetrics().elidedText(title,Qt.ElideRight,int(image_rect.width())))
+        painter.drawText(QRectF(image_rect.x(),image_rect.bottom()+6,image_rect.width(),23),Qt.AlignLeft|Qt.AlignVCenter,painter.fontMetrics().elidedText(title,Qt.ElideRight,int(image_rect.width())))
         font.setPixelSize(12);font.setWeight(QFont.Normal);painter.setFont(font)
         if hovered or selected:
             painter.setPen(QPen(QColor(colors['accent']),2 if selected else 1));painter.setBrush(Qt.NoBrush);painter.drawRoundedRect(image_rect,7,7)
         status=game.get('status','');active=status=='Jogando'
         painter.setPen(Qt.NoPen);painter.setBrush(QColor(colors['accent'] if active else colors['muted']))
         # Status sem marcador duplicado.
-        painter.setPen(QColor(colors['muted']));painter.drawText(QRectF(image_rect.x(),art.bottom()+26,image_rect.width(),20),Qt.AlignVCenter,status)
+        painter.setPen(QColor(colors['muted']));painter.drawText(QRectF(image_rect.x(),image_rect.bottom()+26,image_rect.width(),20),Qt.AlignVCenter,status)
         painter.restore()
 
 
@@ -58,8 +58,8 @@ class CoverGrid(QListWidget):
     def update_grid(self):
         self.art_ratio=1.5
         width=max(1,self.viewport().width()-16);target=142 if self.compact else 180
-        columns=max(1,min(8 if self.compact else 6,width//target));cell=max(100,width//columns)
-        size=QSize(cell,round((cell-28)*self.art_ratio)+64)
+        columns=max(1,width//(150 if self.compact else 180));cell=max(100,min(170 if self.compact else 205,width//columns))
+        size=QSize(cell,round((cell-20)*self.art_ratio)+54)
         if self.last_grid!=size:self.last_grid=size;self.setGridSize(size)
         self.viewport().update()
 

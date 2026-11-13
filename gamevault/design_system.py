@@ -38,7 +38,7 @@ def empty_state(name,title,description,callback=None,button='Adicionar jogo'):
     frame=QFrame();frame.setObjectName('emptyState');inside=QVBoxLayout(frame);inside.setContentsMargins(30,38,30,38);inside.setSpacing(12);inside.addStretch()
     inside.addWidget(Badge(name,52),0,Qt.AlignHCenter)
     label=text(title,'sectionTitle');label.setAlignment(Qt.AlignCenter);inside.addWidget(label)
-    label=text(description,'muted');label.setAlignment(Qt.AlignCenter);label.setMaximumWidth(460);inside.addWidget(label,0,Qt.AlignHCenter)
+    label=text(description,'muted');label.setAlignment(Qt.AlignCenter);label.setMaximumWidth(460);label.setMinimumHeight(52);label.setSizePolicy(QSizePolicy.Preferred,QSizePolicy.Minimum);inside.addWidget(label,0,Qt.AlignHCenter)
     if callback:inside.addWidget(action(button,callback,True),0,Qt.AlignHCenter)
     inside.addStretch();return frame
 

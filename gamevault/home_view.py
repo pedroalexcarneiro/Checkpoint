@@ -71,7 +71,8 @@ def build_home(window):
         left=QWidget();left.setObjectName('homeContinuation');left.setMinimumWidth(280);left_layout=QVBoxLayout(left);left_layout.setContentsMargins(0,0,0,0);left_layout.setSpacing(14)
         game_strip(window,left_layout,'Continuar jogando' if continuing else 'Sua biblioteca',continuing or games)
         left_layout.addStretch()
-        right=QWidget();right.setObjectName('homeActivity');right.setMinimumWidth(240);right.setMaximumWidth(360);right_layout=QVBoxLayout(right);right_layout.setContentsMargins(0,0,0,0);right_layout.setSpacing(12);activity(window,right_layout)
+        left.setMaximumWidth(720)
+        right=QWidget();right.setObjectName('homeActivity');right.setMinimumWidth(240);right_layout=QVBoxLayout(right);right_layout.setContentsMargins(0,0,0,0);right_layout.setSpacing(12);activity(window,right_layout)
         layout.addWidget(AdaptiveColumns(left,right,(3,2),breakpoint=640))
     interrupted=window.library.sql.execute("SELECT count(*) FROM play_sessions WHERE state='interrupted'").fetchone()[0]
     if interrupted:layout.addWidget(action(f'{interrupted} sessões para revisar',window.recover_sessions))

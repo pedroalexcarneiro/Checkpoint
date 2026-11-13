@@ -1,5 +1,15 @@
 # Continuidade do Checkpoint
 
+## Correções após rejeição visual da 0.1.24
+
+Usuário rejeitou a composição da release e reenviou as referências aprovadas.
+Banner limitado a 220–300 px, preservando proporção da imagem; colunas do feed
+reequilibradas, grade com dimensões limitadas e legendas junto à arte visível.
+Atalho Adicionar jogo restaurado na lateral. Busca do Início abre resultados
+na Biblioteca ao digitar. Estado vazio reserva espaço para a descrição completa.
+Capturas Linux isoladas geradas e inspecionadas; isso não valida Windows/DPI.
+Design completo ainda não aprovado. Preservar banco/schema e proteções dos auxiliares.
+
 ## Publicação confirmada — v0.1.24 — 13/11/2026
 
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.24

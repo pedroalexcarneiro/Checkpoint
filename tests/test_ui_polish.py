@@ -6,12 +6,14 @@ from gamevault.ui_components import Hero
 from gamevault.statistics_view import TimeChart,StatusRing
 
 
-def test_banner_frame_tracks_original_ratio(library,app,tmp_path):
+def test_banner_is_bounded_at_desktop_width(library,app,tmp_path):
     image=QImage(900,240,QImage.Format_RGB32);image.fill(QColor('red'));path=tmp_path/'wide.png';image.save(str(path))
     hero=Hero({'title':'Teste','banner':str(path)},__import__('gamevault.theme',fromlist=['get_theme']).get_theme('green'))
     hero.resize(750,300);hero.show();app.processEvents()
-    assert abs(hero.width()/hero.height()-900/240)<.03
+    assert 220<=hero.height()<=300
     assert hero.grab().toImage().pixelColor(hero.width()-20,hero.height()//2).red()>240
+    hero.resize(1700,hero.height());app.processEvents()
+    assert hero.height()<=300
     hero.close()
 
 

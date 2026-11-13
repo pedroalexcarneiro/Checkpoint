@@ -101,7 +101,7 @@ class Hero(QWidget):
     def resizeEvent(self,event):
         super().resizeEvent(event)
         ratio=self.banner.width()/self.banner.height() if not self.banner.isNull() else 4.5
-        height=max(1,round(event.size().width()/ratio)) if not self.banner.isNull() else 220
+        height=max(220,min(300,round(event.size().width()/4)))
         if height!=self._hero_height:self._hero_height=height;self.setFixedHeight(height)
 
     def paintEvent(self, event):
@@ -109,7 +109,8 @@ class Hero(QWidget):
         rect=self.rect();clip=QPainterPath();clip.addRoundedRect(QRectF(rect),10,10);p.setClipPath(clip)
         p.fillRect(rect,QColor('#15191e'))
         if not self.banner.isNull():
-            p.drawPixmap(rect,self.banner)  # O quadro acompanha a proporção original.
+            pix=self.banner.scaled(rect.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation)
+            p.drawPixmap(rect.right()-pix.width()+1,(rect.height()-pix.height())//2,pix)
         shade=QLinearGradient(0,0,self.width()*.7,0)
         shade.setColorAt(0,QColor(9,12,17,210));shade.setColorAt(.65,QColor(9,12,17,65));shade.setColorAt(1,QColor(9,12,17,0));p.fillRect(rect,shade)
         x=26;top=62 if self.detail_mode else 22

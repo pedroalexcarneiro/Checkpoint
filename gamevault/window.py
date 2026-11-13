@@ -55,6 +55,7 @@ class MainWindow(QMainWindow):
         from .branding import SystemName,app_icon
         self.brand=SystemName(self.theme);nav.addWidget(self.brand);nav.addSpacing(8)
         self.setWindowIcon(app_icon(self.theme));QApplication.instance().setWindowIcon(self.windowIcon())
+        self.sidebar_add=button('+ Adicionar jogo',self.add_game,True);nav.addWidget(self.sidebar_add);nav.addSpacing(8)
         self.nav_names=['home','library','wish','memories','stats','settings']
         self.nav_buttons = []
         for index,title in enumerate(PAGES):
@@ -109,6 +110,10 @@ class MainWindow(QMainWindow):
 
     def search_library(self):self.navigate(1)
 
+    def search_changed(self,value):
+        if self.current_page==0 and value.strip():self.navigate(1)
+        self.refresh_library()
+
     def guard(self,callback):
         try: return callback()
         except Exception as error:
@@ -152,7 +157,7 @@ class MainWindow(QMainWindow):
         for name in ('Todos','Favoritos','Jogando','Concluídos'):self.library_tabs.addTab(name)
         self.library_tabs.currentChanged.connect(self.library_tab_changed);layout.addWidget(self.library_tabs)
         filters = QHBoxLayout();self.library_filters=filters; self.search = QLineEdit(); self.search.setPlaceholderText('Buscar jogos…');self.search.setObjectName('headerSearch')
-        self.search.textChanged.connect(self.refresh_library); filters.addWidget(self.search,2)
+        self.search.textChanged.connect(self.search_changed); filters.addWidget(self.search,2)
         self.platform = QComboBox(); self.genre = QComboBox(); self.status = QComboBox()
         self.extra_filters=QWidget();extra_layout=QHBoxLayout(self.extra_filters);extra_layout.setContentsMargins(0,0,0,0)
         self.platform.addItem('Todas as plataformas',''); self.genre.addItem('Todos os gêneros','')
