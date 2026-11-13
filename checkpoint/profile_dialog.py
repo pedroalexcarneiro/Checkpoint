@@ -22,7 +22,7 @@ class ProfileDialog(QDialog):
         super().__init__(parent);self.library=library;self.selected=None;self.remove_photo=False
         self.setWindowTitle('Perfil');self.resize(420,330)
         from .window_style import titlebar_theme
-        titlebar_theme(self,library.setting('appearance.theme','green')!='white')
+        titlebar_theme(self,True)
         layout=QVBoxLayout(self);layout.setContentsMargins(24,24,24,24);layout.setSpacing(16)
         self.photo=QLabel();self.photo.setFixedSize(88,88);self.photo.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.photo,0,Qt.AlignHCenter)

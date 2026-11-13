@@ -14,7 +14,7 @@ def art(folder,name,color):
 
 
 def test_game_detail_uses_banner_logo_tabs_and_preserves_files(library,folder,app):
-    cover=art(folder,'cover','red');banner=art(folder,'banner','blue');logo=art(folder,'logo','white')
+    cover=art(folder,'cover','red');banner=art(folder,'banner','blue');logo=art(folder,'logo','#eeeeee')
     game=library.save_game({'title':'Detail fixture','cover':cover,'banner':banner,'logo':logo})
     window=MainWindow(library);window.detail(game)
     assert [window.detail_tabs.tabText(i) for i in range(4)]==['Visão geral','Atividade','Memórias','Arquivos']

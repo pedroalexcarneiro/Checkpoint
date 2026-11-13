@@ -34,13 +34,6 @@ THEMES={theme.key:theme for theme in [
 ]}
 DEFAULT_THEME='green'
 
-# Tema claro mantido como opção; a seleção do usuário continua persistente.
-THEMES['white']=Theme('white','Branco',{
-    'background':'#f2f3f4','sidebar':'#e9edef','panel':'#ffffff','input':'#f6f7f8',
-    'button':'#e2e7e9','hover':'#d9e2db','border':'#bec7ca','text':'#20272b',
-    'muted':'#505d65','accent':'#365e3b','on_accent':'#ffffff','selected':'#dce8db',
-    'error':'#a22d26','disabled':'#68747b'})
-
 def get_theme(key): return THEMES.get(key,THEMES[DEFAULT_THEME]) if isinstance(key,str) else THEMES[DEFAULT_THEME]
 
 def stylesheet(key):
@@ -79,7 +72,7 @@ QPushButton#profileButton:hover {{ background: {c['selected']}; }}
 QPushButton#iconButton {{ background: transparent; border: 1px solid transparent; padding: 0; }}
 QPushButton#iconButton:checked {{ background: {c['selected']}; border-color: {c['border']}; }}
 QPushButton#iconButton:hover {{ background: {c['selected']}; border-color: {c['border']}; }}
-QPushButton#heroBack {{ background: rgba(15,18,22,160); color: white; border: none; border-radius: 16px; padding: 0; }}
+QPushButton#heroBack {{ background: rgba(15,18,22,160); color: #ffffff; border: none; border-radius: 16px; padding: 0; }}
 QLineEdit, QTextEdit, QComboBox, QSpinBox, QListWidget, QTableWidget {{ background: {c['input']}; border: 1px solid {c['border']}; border-radius: 7px; padding: 7px 10px; selection-background-color: {c['selected']}; selection-color: {c['text']}; }}
 QLineEdit#headerSearch {{ background: {blend(c['input'],c['panel'],.4)}; border-radius: 8px; padding: 7px 14px; font-size: 13px; }}
 QLineEdit#gameSearch {{ font-size: 16px; padding: 10px 16px; border-radius: 9px; }}

@@ -33,7 +33,7 @@ def artwork(root,index,title,color,kind,width,height,source=None):
         p.setPen(Qt.NoPen);p.setBrush(QColor(220,230,240,55));p.drawEllipse(QPointF(width*.78,height*.24),height*.16,height*.16)
         for layer in range(3):
             p.setBrush(QColor(14+layer*10,24+layer*10,38+layer*10,230));p.drawPolygon(QPolygonF([QPointF(0,height),QPointF(width*.25,height*(.3+layer*.1)),QPointF(width*.48,height*.7),QPointF(width*.72,height*(.2+layer*.12)),QPointF(width,height*.65),QPointF(width,height)]))
-    p.setPen(Qt.white);font=QFont('DejaVu Sans');font.setPixelSize(42 if kind=='logo' else 30);font.setWeight(QFont.Bold);p.setFont(font)
+    p.setPen(QColor('#ffffff'));font=QFont('DejaVu Sans');font.setPixelSize(42 if kind=='logo' else 30);font.setWeight(QFont.Bold);p.setFont(font)
     if kind!='banner':p.drawText(QRectF(16,16,width-32,height-32),Qt.AlignCenter|Qt.TextWordWrap,title)
     p.end();path=root/f'{index}-{kind}.png';assert image.save(str(path));return str(path)
 
@@ -116,7 +116,7 @@ def main():
         lib.save_game({'title':names[index],'cover':path},ids[index])
     w.navigate(1);capture('library-mixed-ratios')
     for identity,path in zip(ids,original):lib.save_game({'title':lib.get(identity)['title'],'cover':path},identity)
-    for theme in ('green','purple','blue','white'):
+    for theme in ('green','purple','blue'):
         w.set_theme(theme);w.resize(1000,700)
         for page,name in [(0,'home'),(1,'library'),(2,'wishlist'),(4,'statistics'),(5,'settings')]:w.navigate(page);capture(theme+'-small-'+name)
     (root/'review-info.json').write_text(json.dumps({'platform':sys.platform,'window':'1920×1080, 1100×740 e 1000×700','artwork':'arquivos locais fornecidos em --art-dir e fixtures geradas' if args.art_dir else 'fixtures geradas localmente'},ensure_ascii=False),encoding='utf-8')

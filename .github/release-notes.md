@@ -14,7 +14,7 @@ Checkpoint 0.1.27 — revisão de interface, Desejos, Steam e perfil local.
 - Busca do Início abre os resultados da Biblioteca ao digitar.
 - Estados vazios compactos, sem instruções redundantes; memórias sem limite que corte o texto.
 - Estatísticas com cards adaptativos e calendário dimensionado à largura disponível.
-- Dez temas disponíveis, incluindo Branco, conforme o prompt reenviado; preferências persistentes.
+- Nove temas disponíveis, com Verde como padrão; preferências persistentes.
 - Área principal com largura máxima para evitar expansão desproporcional em telas grandes. Cadastro, editor, conexões e demais diálogos mantêm seus fluxos existentes.
 
 Baixe **Checkpoint-0.1.27-windows-x64.zip**, extraia a pasta completa e abra **Checkpoint.exe**. Mantenha `_internal` e `CheckpointUpdater`.

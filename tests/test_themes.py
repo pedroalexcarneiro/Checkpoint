@@ -22,7 +22,7 @@ def test_palette_normal_text_contrast(key):
 
 def test_theme_selection_is_immediate_and_survives_reopening(app,library):
     window=MainWindow(library); window.navigate(5)
-    assert window.theme_selector.count()==10
+    assert window.theme_selector.count()==9
     for key in THEMES:
         window.theme_selector.setCurrentIndex(window.theme_selector.findData(key)); app.processEvents()
         assert app.property('checkpointTheme')==key
@@ -39,12 +39,19 @@ def test_unknown_theme_falls_back_to_green():
     assert get_theme(None).key==DEFAULT_THEME
 
 
-def test_light_theme_remains_available_and_preserves_library(app,library):
-    identity=library.save_game({'title':'Legacy theme fixture','notes':'Preserve notes'})
-    library.set_setting('appearance.theme','white')
+def test_unknown_saved_preference_falls_back_without_losing_library(app,library):
+    identity=library.save_game({'title':'Preferência removida','notes':'Preservar notas'})
+    library.set_setting('appearance.theme','tema-removido')
     window=MainWindow(library);window.navigate(5)
-    assert 'white' in THEMES and window.theme_selector.findData('white')>=0
-    assert window.theme.key=='white' and library.setting('appearance.theme')=='white'
-    assert library.get(identity)['notes']=='Preserve notes'
-    window.set_theme('white');assert window.theme.key=='white'
+    assert window.theme.key=='green' and library.setting('appearance.theme')=='green'
+    assert library.get(identity)['notes']=='Preservar notas'
+    window.close()
+
+
+def test_exactly_nine_themes_and_swatches(app,library):
+    from checkpoint.design_system import ThemeSwatch
+    assert list(THEMES)==['blue','green','yellow','red','black','purple','pink','orange','cyan']
+    window=MainWindow(library);window.navigate(5)
+    assert len(window.settings_tabs.findChildren(ThemeSwatch))==9
+    assert window.theme_selector.count()==9 and DEFAULT_THEME=='green'
     window.close()
