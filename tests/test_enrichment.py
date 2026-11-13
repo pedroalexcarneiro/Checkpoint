@@ -53,7 +53,7 @@ def test_fill_missing_preserves_personal_values_and_tracks_images(library, folde
     assert game['cover'] == 'manual.png' and game['banner']
     asset = library.sql.execute('SELECT * FROM artwork_assets').fetchone()
     assert asset['provider'] == 'steam' and len(asset['sha256']) == 64
-    assert '1 imagens' in message
+    assert '1 imagem' in message
 
 
 def test_unknown_game_never_searches_by_name(library):
