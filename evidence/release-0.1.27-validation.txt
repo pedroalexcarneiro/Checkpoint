@@ -1,0 +1,6 @@
+Checkpoint 0.1.27 — preparação
+14 testes focados após decisão final de cadastro: passed, 13.79s, exit 0.
+Suíte completa imediatamente anterior: 225 passed in 131.98s, exit 0.
+Windows executará suíte completa, build, smokes, SQLite e capturas no commit final.
+Perfil/foto/nick, Steam com 300 jogos e wishlist com logo cobertos por regressões.
+Não representa autenticação de contas nem aprovação estética do usuário.

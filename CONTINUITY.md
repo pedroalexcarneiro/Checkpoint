@@ -1,5 +1,12 @@
 # Continuidade do Checkpoint
 
+## 0.1.27 — decisão final de visibilidade do cadastro
+
+Botão Adicionar jogo somente no topo direito de Início e Biblioteca, oculto
+em Desejos, Memórias, Estatísticas, Configurações e ficha. Sem duplicata lateral.
+Esta decisão mais recente substitui as instruções históricas de cadastro global.
+Inclui as correções de layout, logos, importação Steam e perfil da 0.1.26.
+
 ## Complemento 0.1.26 — logos nos cards de Desejos
 
 Decisão final posterior: manter Adicionar jogo somente no topo direito; removida

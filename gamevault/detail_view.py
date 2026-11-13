@@ -12,7 +12,7 @@ from .design_system import ArtworkButton,AdaptiveColumns,CardGrid,IconButton,Bad
 def build_detail(window,game):
     game_id=game['id'];saved_tab=window.detail_tabs.currentIndex() if getattr(window,'current_game',None)==game_id and hasattr(window,'detail_tabs') else 0
     draft=window.detail_diary.toPlainText() if getattr(window,'current_game',None)==game_id and hasattr(window,'detail_diary') else ''
-    window.current_game=game_id;window.current_page=1;window.header_widget.show();window.heading.hide();window.search.hide();window.add_button.show()
+    window.current_game=game_id;window.current_page=1;window.header_widget.hide();window.heading.hide();window.search.hide();window.add_button.hide()
     for control in window.view_buttons:control.hide()
     for index,nav in enumerate(window.nav_buttons):nav.setChecked(index==1)
     if hasattr(window,'detail_page'):

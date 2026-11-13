@@ -147,7 +147,7 @@ class MainWindow(QMainWindow):
     def navigate(self,index):
         self.current_page = index; self.current_game = None;self.header_widget.show()
         for i,b in enumerate(self.nav_buttons): b.setChecked(i==index)
-        self.heading.show();self.heading.setText(PAGES[index]);self.add_button.setText('+ Adicionar jogo');self.add_button.show();self.search.setVisible(index in (0,1))
+        self.heading.show();self.heading.setText(PAGES[index]);self.add_button.setText('+ Adicionar jogo');self.add_button.setVisible(index in (0,1));self.search.setVisible(index in (0,1))
         for control in self.view_buttons:control.setVisible(index==1)
         if index==0: self.home()
         elif index==1: self.refresh_library()

@@ -1,5 +1,11 @@
 # Validação
 
+## 0.1.27 — visibilidade final do cadastro
+
+14 testes focados passaram em 13,79 s após restringir Adicionar jogo a Início
+e Biblioteca. Suíte completa anterior de perfil/Steam/Desejos: 225 testes Linux
+aprovados em 131,98 s. Windows validará novamente o commit final integralmente.
+
 ## 0.1.26 — pedidos adicionais
 
 Regressões para atualização automática da logo na wishlist, não repetição de

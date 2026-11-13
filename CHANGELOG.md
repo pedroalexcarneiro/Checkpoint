@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.27
+
+- Adicionar jogo restrito a Início e Biblioteca, no topo direito, sem cópia lateral.
+- Inclui as correções de layout, Desejos, Steam e perfil da 0.1.26.
+
 ## 0.1.26
 
 - Perfil local com foto e apelido, exibidos na lateral, sem conta/login.

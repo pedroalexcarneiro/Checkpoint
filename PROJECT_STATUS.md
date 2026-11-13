@@ -1,5 +1,10 @@
 # Estado do projeto — Checkpoint
 
+## 0.1.27 — ajuste final do cadastro
+
+Adicionar jogo somente em Início/Biblioteca, no topo direito. Demais correções
+de 0.1.25/0.1.26 incluídas: proporções, logos, texto mínimo, Steam e perfil local.
+
 ## 0.1.26 — complemento de Desejos
 
 Decisão final: Adicionar jogo somente no topo direito, sem duplicata lateral.

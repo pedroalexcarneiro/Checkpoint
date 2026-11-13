@@ -28,6 +28,7 @@ def test_sidebar_and_page_bounds_at_full_hd(library,app):
     window=MainWindow(library);window.resize(1920,1080);window.show()
     for page in range(6):
         window.navigate(page);app.processEvents()
+        assert window.add_button.isVisible()==(page in (0,1))
         sidebar=window.centralWidget().findChild(__import__('PySide6.QtWidgets',fromlist=['QWidget']).QWidget,'sidebar')
         assert sidebar.x()==0
         assert window.header_widget.width()<=1392
@@ -35,12 +36,12 @@ def test_sidebar_and_page_bounds_at_full_hd(library,app):
     window.close()
 
 
-def test_global_add_uses_library_even_from_wishlist(library,app,monkeypatch):
-    window=MainWindow(library);window.navigate(2)
+def test_add_game_uses_library_from_home_and_library(library,app,monkeypatch):
+    window=MainWindow(library);window.navigate(1)
     pages=[];monkeypatch.setattr(window,'add_game',lambda:pages.append(window.current_page))
     window.add_button.click()
     assert pages==[1]
-    window.navigate(2);window.add_button.click()
+    window.navigate(0);window.add_button.click()
     assert pages==[1,1]
     assert window.add_button.text()=='+ Adicionar jogo'
     window.close()

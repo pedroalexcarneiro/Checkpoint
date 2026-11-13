@@ -2,7 +2,7 @@
 
 Biblioteca pessoal de jogos para Windows em Python/PySide6 e SQLite.
 A última release publicada é a [v0.1.25](https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.25).
-A 0.1.26 está em preparação com os pedidos adicionais de Desejos, Steam e perfil.
+A 0.1.27 está em preparação com os pedidos adicionais de Desejos, Steam e perfil.
 
 Início pessoal, Biblioteca com capas verticais inteiras e legendas alinhadas, ficha
 com banner/logo e cadastro compacto. Desejos usa cards quadrados com logos,
@@ -10,7 +10,7 @@ menores preços atuais e acesso à comparação de ofertas. Horas aparecem em um
 calendário diário. Descrições priorizam português quando a fonte disponibiliza;
 datas são exibidas em DD/MM/AAAA. A revisão 0.1.25 restaura os dez temas, incluindo
 Branco, conforme o prompt reenviado, e corrige proporções, espaçamentos e navegação.
-Adicionar jogo fica somente no canto superior direito. O perfil local permite
+Adicionar jogo fica somente no canto superior direito de Início e Biblioteca. O perfil local permite
 foto e apelido, mostrados na lateral. A importação Steam usa lista com rolagem
 e resumo compacto, sem relatório por jogo na interface.
 
