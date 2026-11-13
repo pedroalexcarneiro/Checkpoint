@@ -77,6 +77,8 @@ def main():
     w.resize(1100,740)
     w.navigate(5)
     for index,name in enumerate(['appearance','connections','downloads','data']):w.settings_tabs.setCurrentIndex(index);capture('settings-'+name)
+    from gamevault.profile_dialog import ProfileDialog
+    profile=ProfileDialog(lib,w);profile.nickname.setText('Jogador');profile.preview(lib.get(ids[0])['cover']);profile.show();capture('profile',profile);profile.close()
     w.detail(ids[0])
     for index,name in enumerate(['overview','activity','memories','files']):w.detail_tabs.setCurrentIndex(index);capture('detail-'+name)
     for dialog,name in [(GameDialog(w,library=lib),'add'),(GameDialog(w,game=lib.get(ids[0]),library=lib),'edit'),(DriveDialog(lib,w),'drive'),(ArtworkDialog(lib,lib.get(ids[0]),w),'artwork'),(SteamDialog(lib,w),'steam'),(EmulatorDialog(lib,w),'emulators')]:
@@ -96,6 +98,10 @@ def main():
             dialog.source_tabs.setCurrentIndex(0);quick.timer.stop();quick.advanced.setChecked(True);capture('add-advanced',dialog)
         if name=='edit':
             for index in range(4):dialog.editor_tabs.setCurrentIndex(index);capture('edit-'+str(index),dialog)
+        if name=='steam':
+            from gamevault.integrations.steam import SteamGame
+            dialog.show_games(('76561198000000000',[SteamGame(str(index+1),f'Jogo de teste {index+1}',index*60) for index in range(300)]))
+            capture('steam-large-list',dialog)
         dialog.close()
     if args.prices_file:
         from gamevault.library import now

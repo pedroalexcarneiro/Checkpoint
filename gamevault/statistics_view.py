@@ -48,7 +48,7 @@ def build_statistics(window):
     layout.addWidget(frame)
     bottom_left=None;bottom_right=None
     frame,inside=card();inside.addWidget(text('Mais jogados','sectionTitle'))
-    if not stats['top']:inside.addWidget(text('Registre uma sessão para começar seu histórico.','muted'))
+    if not stats['top']:inside.addWidget(text('Sem sessões','muted'))
     for game in stats['top'][:5]:
         line=QHBoxLayout();b=action(game['title'],lambda checked=False,identity=game['id']:window.detail(identity));b.setObjectName('quiet');line.addWidget(b,1);line.addWidget(text(f"{game['seconds']/3600:.1f} h".replace('.',','),'muted'));inside.addLayout(line)
     inside.addStretch();bottom_left=frame

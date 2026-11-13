@@ -8,7 +8,7 @@ from .design_system import CardGrid,page_scroll,empty_state,IconButton,ArtworkBu
 
 class WishLogo(QPushButton):
     def __init__(self,game):
-        super().__init__();self.setObjectName('wishLogo');self.game=game;self.setMinimumHeight(72);self.setAccessibleName(game['title'])
+        super().__init__();self.setObjectName('wishLogo');self.game=game;self.setMinimumHeight(72);self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Expanding);self.setAccessibleName(game['title'])
         from PySide6.QtGui import QPixmap
         self.pixmap=QPixmap(game.get('logo') or '')
         if not self.pixmap.isNull() and self.pixmap.hasAlphaChannel():
@@ -21,9 +21,9 @@ class WishLogo(QPushButton):
         from .design_system import colors
         p=QPainter(self);p.setRenderHint(QPainter.Antialiasing)
         if not self.pixmap.isNull():
-            pix=self.pixmap.scaled(max(1,self.width()-12),max(1,self.height()-12),Qt.KeepAspectRatio,Qt.SmoothTransformation);p.drawPixmap((self.width()-pix.width())//2,(self.height()-pix.height())//2,pix)
+            pix=self.pixmap.scaled(max(1,self.width()-32),max(1,self.height()-24),Qt.KeepAspectRatio,Qt.SmoothTransformation);p.drawPixmap((self.width()-pix.width())//2,(self.height()-pix.height())//2,pix)
         else:
-            font=QFont('Segoe UI');font.setPixelSize(13);font.setWeight(QFont.Normal);p.setFont(font);p.setPen(QColor(colors()['text']));p.drawText(QRectF(self.rect()),Qt.AlignCenter,'Logo indisponível')
+            font=QFont('Segoe UI');font.setPixelSize(12);font.setWeight(QFont.Normal);p.setFont(font);p.setPen(QColor(colors()['muted']));p.drawText(QRectF(self.rect()),Qt.AlignCenter,'Sem logo disponível')
         p.end()
 
 
@@ -58,8 +58,8 @@ def build_wishlist(window):
     outer=window.clear_page(2);inside=page_scroll(outer)
     rows=[dict(row) for row in window.library.sql.execute('SELECT g.*,w.target_cents FROM wishlist w JOIN games g ON g.id=w.game_id WHERE g.deleted_at IS NULL ORDER BY g.title COLLATE NOCASE')]
     if not rows:
-        inside.addWidget(empty_state('wish','Sua lista de desejos','Guarde os jogos que você quer jogar.',window.add_game,'Adicionar desejo'));inside.addStretch();return
-    top=QHBoxLayout();top.addWidget(text(f'{len(rows)} jogos','muted'));top.addStretch();top.addWidget(text('Menores preços atuais','caption'));inside.addLayout(top)
+        inside.addWidget(empty_state('wish','Nenhum desejo','',window.add_game,'Adicionar desejo'));inside.addStretch();return
+    top=QHBoxLayout();top.addWidget(text(f'{len(rows)} jogos','muted'));top.addStretch();top.addWidget(action('+ Adicionar desejo',window.add_game));inside.addLayout(top)
     grid=WishGrid(260);grid.setObjectName('wishlistGrid')
     from .price_view import price_summary,source_link
     for game in rows:
@@ -69,6 +69,11 @@ def build_wishlist(window):
         body.addWidget(price_summary(window.library,game))
         line=QHBoxLayout();line.setSpacing(8);line.addWidget(source_link(window.library,game));line.addStretch();line.addWidget(IconButton('plus','Adicionar à biblioteca',lambda checked=False,g=game['id']:window.acquire_wish(g)));line.addWidget(IconButton('trash','Retirar dos desejos',lambda checked=False,g=game['id']:window.remove_wish(g)));body.addLayout(line);grid.add_card(panel)
     inside.addWidget(grid);inside.addStretch()
+    if window.isVisible() and window.library.setting('artwork.auto',True):
+        requested=getattr(window,'wish_logos_requested',set())
+        missing=[game['id'] for game in rows if not game['logo'] and game['id'] not in requested and window.library.sql.execute('SELECT 1 FROM external_identifiers WHERE game_id=?',(game['id'],)).fetchone()]
+        window.wish_logos_requested=requested|set(missing)
+        if missing:window.completion_queue.submit(missing)
     if window.isVisible() and window.library.setting('prices.auto',True):window.price_queue.submit([game['id'] for game in rows])
 
 
@@ -97,6 +102,6 @@ def build_memories(window):
             grid=CardGrid(320);grid.setObjectName('memoriesGrid')
             for record in selected:grid.add_card(memory_card(window,record))
             inside.addWidget(grid)
-        else:inside.addWidget(empty_state('memories','Guarde suas experiências','Adicione memórias, capturas e vídeos na ficha de cada jogo.',lambda:window.navigate(1),'Escolher jogo'))
+        else:inside.addWidget(empty_state('memories','Nenhuma memória','',lambda:window.navigate(1),'Biblioteca'))
         inside.addStretch();tabs.addTab(page,name)
     outer.addWidget(tabs)

@@ -42,14 +42,14 @@ class QuickAdd(QObject):
         self.results=QListWidget();self.results.setObjectName('gameSearchResults');self.results.setSpacing(4);self.results.setMinimumHeight(100);self.results.setMaximumHeight(180);self.results.hide();outer.addWidget(self.results)
         self.preview=QFrame();self.preview.setObjectName('addPreview');preview=QHBoxLayout(self.preview);preview.setContentsMargins(14,10,14,10);preview.setSpacing(16)
         self.art=QLabel();self.art.setObjectName('addPreviewArt');self.art.setFixedSize(70,94);self.art.setAlignment(Qt.AlignCenter);self.art.setText('Sem capa');preview.addWidget(self.art)
-        words=QVBoxLayout();words.setSpacing(6);self.title=text('Pesquise pelo nome','sectionTitle');words.addWidget(self.title)
-        self.facts=text('Confira a sugestão e adicione à biblioteca.','muted');words.addWidget(self.facts)
+        words=QVBoxLayout();words.setSpacing(6);self.title=text('Nenhum jogo selecionado','sectionTitle');words.addWidget(self.title)
+        self.facts=text('','muted');words.addWidget(self.facts)
         self.description=text('','bodyText');self.description.hide()
         self.association=text('','caption');self.association.hide();words.addWidget(self.association);preview.addLayout(words,1)
         self.confirmed=text('✓','selectedCheck');self.confirmed.setAlignment(Qt.AlignCenter);self.confirmed.setFixedSize(28,28);self.confirmed.hide();preview.addWidget(self.confirmed);outer.addWidget(self.preview)
         self.other=action('Escolher outro resultado',self.show_choices);self.other.setObjectName('resultLink');self.other.hide();outer.addWidget(self.other,0,Qt.AlignHCenter)
         from .task_status import BusyIndicator
-        self.state=text('Ficha e imagens serão buscadas automaticamente.','muted')
+        self.state=text('','muted')
         self.busy=BusyIndicator(get_theme(self.library.setting('appearance.theme','green')));self.busy.hide()
         status=QHBoxLayout();status.addWidget(self.busy);status.addWidget(self.state,1);outer.addLayout(status)
         self.steam_panel=dialog.steam_panel;self.steam_panel.setParent(dialog);outer.addWidget(self.steam_panel);self.steam_panel.hide()
@@ -94,7 +94,7 @@ class QuickAdd(QObject):
         self.advanced.setVisible(index!=2);self.save.setVisible(index!=2);self.save.setEnabled(index==0);self.other.hide();self.confirmed.hide()
         self.query.setPlaceholderText('Pesquisar ROM no índice do Drive…' if index==1 else 'Pesquisar jogo…')
         if index!=2:self.changed(self.query.text())
-        else:self.state.setText('Importe jogos da sua conta Steam. A busca de catálogo não comprova posse.')
+        else:self.state.clear()
 
     def manage_drive(self):
         self.dialog.manage_drive();self.local_results();self.results.show()
@@ -119,14 +119,14 @@ class QuickAdd(QObject):
         for key in ('description','genre','developer','publisher','release_date','cover','banner','logo','executable'):
             self.dialog.fields[key].clear()
         self.dialog.fields['source'].setText('Manual');self.dialog.fields['platform'].setText(self.platform.currentData() or '')
-        self.title.setText(value.strip() or 'Seu próximo jogo');self.art.clear();self.art.setText('Prévia');self.facts.setText('Buscando pelo nome…' if len(value.strip())>=2 else 'Selecione um resultado para conferir a ficha.')
+        self.title.setText(value.strip() or 'Nenhum jogo selecionado');self.art.clear();self.art.setText('Prévia');self.facts.setText('Buscando…' if len(value.strip())>=2 else '')
         self.association.clear();self.association.hide();self.description.clear();self.results.clear();self.candidates=[];self.confirmed.hide();self.other.hide();self.preview.setVisible(self.sources.currentIndex()==0)
         self.local_results()
         if len(value.strip())>=2 and self.sources.currentIndex()==0:self.timer.start()
         elif self.sources.currentIndex()==1:
             self.save.setEnabled(False);self.results.show()
-            self.state.setText('Escolha a versão da ROM. O nome original será preservado.' if self.local else 'Nenhuma ROM encontrada. Pesquise outro nome ou atualize o índice do Drive.')
-        else:self.timer.stop();self.state.setText('Digite pelo menos duas letras.')
+            self.state.setText(f'{len(self.local)} ROMs' if self.local else 'Nenhuma ROM encontrada')
+        else:self.timer.stop();self.state.clear()
 
     @Slot(int)
     def platform_changed(self,index):
@@ -176,7 +176,7 @@ class QuickAdd(QObject):
                 platforms=' / '.join(result.platforms[:3]) or 'Jogo'
                 item=QListWidgetItem(result.title+'\n'+platforms+(' · '+result.release_date[:4] if result.release_date else ''));item.setSizeHint(QSize(0,60));self.results.addItem(item)
             self.results.blockSignals(False)
-            self.state.setText('Escolha o jogo ou a versão do Drive.' if self.candidates or self.local else 'Nenhum resultado disponível. Você pode adicionar pelo nome e completar depois.')
+            self.state.setText('' if self.candidates or self.local else 'Nenhum resultado')
             if payload.get('unavailable'):self.state.setText(self.state.text()+' Parte dos catálogos está indisponível.')
             # Nunca seleciona uma ROM automaticamente. Uma ficha inequívoca pode ser sugerida.
             match=best_match(self.query.text(),self.dialog.fields['platform'].text(),self.candidates)
@@ -188,11 +188,11 @@ class QuickAdd(QObject):
             self.show_result(result)
             path=payload.get('preview',{}).get('cover')
             if path:self.art.setPixmap(QPixmap(path).scaled(self.art.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation))
-            self.state.setText('Ficha preenchida. Imagens disponíveis serão aplicadas ao adicionar.')
+            self.state.clear()
 
     @Slot(str)
     def failed(self,message):
-        if not self.closed and self.sender().property('generation')==self.generation:self.state.setText('A consulta não foi concluída. Você pode adicionar agora e tentar completar depois.')
+        if not self.closed and self.sender().property('generation')==self.generation:self.state.setText('Consulta indisponível')
 
     @Slot()
     def job_finished(self):
@@ -214,7 +214,7 @@ class QuickAdd(QObject):
         result=self.candidates[offset];self.generation+=1;self.art.clear();self.art.setText('Carregando prévia…')
         self.dialog.apply_catalog(result)
         if not self.dialog.fields['platform'].text() and result.platforms:self.dialog.fields['platform'].setText('PC' if 'PC' in result.platforms else result.platforms[0])
-        self.show_result(result);self.state.setText('Preenchendo ficha e prévia… Você já pode adicionar o jogo.')
+        self.show_result(result);self.state.setText('Carregando ficha…')
         self.run('catalog_details',provider=result.provider,identity=result.external_id,platform=self.dialog.fields['platform'].text())
 
     def show_result(self,result):
@@ -229,7 +229,7 @@ class QuickAdd(QObject):
         self.save.setEnabled(True);self.association.setText('ROM selecionada · '+file['original_name']);self.association.show();self.preview.show();self.results.hide();self.state.setText('ROM selecionada. Buscando a ficha para esta plataforma…');self.lookup()
 
     def use_name(self):
-        self.timer.stop();self.generation+=1;self.state.setText('Pronto para adicionar. Ficha e imagens serão buscadas em segundo plano.');self.dialog.validate()
+        self.timer.stop();self.generation+=1;self.state.clear();self.dialog.validate()
 
     def edit_details(self):
         # Editor existente é opcional; nenhuma escolha de provedor é necessária.

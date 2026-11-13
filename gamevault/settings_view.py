@@ -33,11 +33,6 @@ def build_settings(window):
     for name in ('Aparência','Conexões','Downloads','Dados e backup'):
         page=QWidget();outer=QVBoxLayout(page);outer.setContentsMargins(0,18,0,0);pages.append(page_scroll(outer));tabs.addTab(page,name)
     appearance,connections,downloads,data=pages
-    frame,inside=card();head=QHBoxLayout();head.addWidget(Badge('user'));words=QVBoxLayout();words.addWidget(text('Seu perfil','sectionTitle'));words.addWidget(text('Personalize este espaço no seu computador.','muted'));head.addLayout(words,1);inside.addLayout(head)
-    row=QHBoxLayout();row.addWidget(text('Nome de exibição'));row.addStretch();profile_name=QLineEdit(window.library.setting('profile.name',''));profile_name.setPlaceholderText('Meu perfil');profile_name.setMaxLength(40);profile_name.setMaximumWidth(260)
-    def save_name():
-        value=profile_name.text().strip() or 'Meu perfil';window.library.set_setting('profile.name',value);window.profile_button.setText(value)
-    profile_name.editingFinished.connect(save_name);row.addWidget(profile_name);inside.addLayout(row);appearance.addWidget(frame)
     frame,inside=card();head=QHBoxLayout();head.addWidget(text('Tema de cores','sectionTitle'));head.addStretch();window.theme_selector=QComboBox();window.theme_selector.setObjectName('themeSelector')
     for key,theme in THEMES.items():window.theme_selector.addItem(theme.name,key)
     window.theme_selector.setCurrentIndex(window.theme_selector.findData(window.theme.key));window.theme_selector.currentIndexChanged.connect(window.theme_changed);head.addWidget(window.theme_selector);inside.addLayout(head)
@@ -56,10 +51,10 @@ def build_settings(window):
     prices=QCheckBox('Consultar preços do GG.deals automaticamente');prices.setChecked(window.library.setting('prices.auto',True));prices.toggled.connect(lambda value:window.library.set_setting('prices.auto',value));inside.addWidget(prices)
     disclosure('Avançado',extra,connections);connections.addStretch()
     for key,title in [('downloads','ROMs baixadas'),('captures','Capturas'),('save_backups','Backups de saves')]:downloads.addWidget(folder_row(window,key,title))
-    downloads.addWidget(text('Downloads de ROMs são iniciados somente quando você solicita.','caption'));downloads.addStretch()
+    downloads.addStretch()
     grid=CardGrid(330)
     for title,description,name,actions in [('Biblioteca','Seu banco de jogos e suas preferências.','library',[('Criar backup',window.backup_database),('Abrir pasta de dados',lambda:QDesktopServices.openUrl(QUrl.fromLocalFile(str(window.library.db.path.parent.resolve()))))]),('Saves tradicionais','Cópias de segurança dos saves configurados.','folder',[('Criar backup',window.backup_saves),('Restaurar saves',window.restore_saves)])]:
-        frame,inside=card();head=QHBoxLayout();head.addWidget(Badge(name));head.addWidget(text(title,'cardTitle'),1);inside.addLayout(head);inside.addWidget(text(description,'muted'))
+        frame,inside=card();head=QHBoxLayout();head.addWidget(Badge(name));head.addWidget(text(title,'cardTitle'),1);inside.addLayout(head)
         row=QHBoxLayout()
         for caption,callback in actions:row.addWidget(action(caption,callback))
         inside.addLayout(row);grid.add_card(frame)

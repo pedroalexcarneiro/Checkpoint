@@ -1,0 +1,9 @@
+Checkpoint 0.1.26 — preparação
+Linux, QT_QPA_PLATFORM=offscreen: 225 passed in 131.98s, exit 0.
+Focados após perfil: 36 passed in 23.53s, exit 0.
+Smokes 6 páginas/SQLite e cadastro completo/auxiliar passaram em base isolada.
+Capturas Qt inspecionadas, incluindo logos públicas reais em Desejos,
+importação com lista de 300 jogos, perfil e estados vazios sem instruções.
+Teste controlado de importação de 300 jogos confirma janela sem expansão e resumo curto.
+Foto/nick locais testados, sem conta nem alteração do arquivo original.
+Windows e publicação aguardam workflow; não representa teste autenticado.

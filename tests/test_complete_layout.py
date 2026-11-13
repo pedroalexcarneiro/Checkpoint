@@ -71,10 +71,10 @@ def test_layout_header_and_library_fit_small_window(library,app):
 
 def test_theme_swatches_and_profile_apply_without_losing_data(library,app):
     identity=library.save_game({'title':'Theme fixture'})
-    window=MainWindow(library);window.open_profile();window.show();app.processEvents()
+    window=MainWindow(library);window.navigate(5);window.show();app.processEvents()
     swatch=next(item for item in window.findChildren(ThemeSwatch) if item.theme.key=='purple');swatch.click()
     assert app.property('checkpointTheme')=='purple' and window.brand.theme.key=='purple'
-    field=next(item for item in window.settings_tabs.currentWidget().findChildren(QLineEdit) if item.placeholderText()=='Meu perfil')
-    field.setText('Jogador');field.editingFinished.emit()
+    from gamevault.profile_dialog import ProfileDialog
+    dialog=ProfileDialog(library,window);dialog.nickname.setText('Jogador');dialog.save();window.refresh_profile()
     assert library.setting('profile.name')=='Jogador' and window.profile_button.text()=='Jogador'
     assert library.get(identity)['title']=='Theme fixture';window.close()

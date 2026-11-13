@@ -55,7 +55,7 @@ def build_home(window):
     games=window.library.owned_games(sort='recent')
     if not games:
         from .design_system import empty_state
-        layout.addWidget(empty_state('library','Sua biblioteca começa aqui','Pesquise um jogo pelo nome para adicionar ficha e imagens à sua coleção.',window.add_game,'Adicionar jogo'))
+        layout.addWidget(empty_state('library','Biblioteca vazia','',window.add_library_game,'Adicionar jogo'))
         activity(window,layout)
     else:
         playing=[game for game in games if game['status']=='Jogando']

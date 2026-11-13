@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.26
+
+- Perfil local com foto e apelido, exibidos na lateral, sem conta/login.
+
+- Cadastro global no topo direito, sem duplicata lateral; desejo adicionado separadamente.
+- Removidas instruções e frases promocionais de estados vazios e painéis.
+- Steam com tabela rolável e tamanho limitado; resumo substitui log por jogo.
+
+- Logos usam o espaço reservado dentro dos cards de Desejos sem distorção.
+- Artes faltantes são solicitadas para jogos identificados ao abrir a lista.
+- Lista aberta atualiza ao receber a logo; tentativas limitadas por sessão.
+- Inclui correções de layout e navegação da 0.1.25.
+
 ## 0.1.25
 
 - Corrigidos banners expansivos, tamanho de logos e espaçamento das capas/legendas.

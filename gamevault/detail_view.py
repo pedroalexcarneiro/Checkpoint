@@ -12,7 +12,8 @@ from .design_system import ArtworkButton,AdaptiveColumns,CardGrid,IconButton,Bad
 def build_detail(window,game):
     game_id=game['id'];saved_tab=window.detail_tabs.currentIndex() if getattr(window,'current_game',None)==game_id and hasattr(window,'detail_tabs') else 0
     draft=window.detail_diary.toPlainText() if getattr(window,'current_game',None)==game_id and hasattr(window,'detail_diary') else ''
-    window.current_game=game_id;window.current_page=1;window.header_widget.hide()
+    window.current_game=game_id;window.current_page=1;window.header_widget.show();window.heading.hide();window.search.hide();window.add_button.show()
+    for control in window.view_buttons:control.hide()
     for index,nav in enumerate(window.nav_buttons):nav.setChecked(index==1)
     if hasattr(window,'detail_page'):
         window.stack.removeWidget(window.detail_page);window.detail_page.deleteLater()
@@ -48,7 +49,7 @@ def build_detail(window,game):
     overview,activity,memories,technical=layouts
     columns=None
     about=QWidget();about_layout=QVBoxLayout(about);about_layout.setContentsMargins(0,0,0,0);about_layout.setSpacing(14)
-    about_layout.addWidget(text(game['description'] or 'A descrição será exibida quando a ficha estiver disponível.','bodyText'))
+    if game['description']:about_layout.addWidget(text(game['description'],'bodyText'))
     from .description_provenance import current
     provenance=current(window.library,game)
     if provenance.get('source','').startswith('https://pt.wikipedia.org/'):
@@ -85,7 +86,7 @@ def build_detail(window,game):
         for image in images:
             row.addWidget(ArtworkButton(image['path'],image['caption'] or 'Abrir captura',lambda checked=False,m=image:window.show_media(m),height=100))
         gallery_layout.addLayout(row)
-    else:gallery_layout.addWidget(text('Suas capturas deste jogo aparecem aqui.','muted'))
+    else:gallery_layout.addWidget(text('Nenhuma captura','muted'))
     add=action('Adicionar captura',lambda:window.import_media(game_id));add.setObjectName('quiet');gallery_layout.addWidget(add,0,Qt.AlignLeft);gallery_layout.addStretch()
     overview.addWidget(AdaptiveColumns(about,gallery,(3,2),breakpoint=640))
     from .steam_library import game_accounts
@@ -104,7 +105,7 @@ def build_detail(window,game):
     if accounts:activity.addWidget(action('Gerenciar Steam',window.steam))
     heading=QHBoxLayout();heading.addWidget(text('Marcos pessoais','sectionTitle'));heading.addStretch();heading.addWidget(action('+ Registrar marco',lambda:window.achievement(game_id)));activity.addLayout(heading)
     milestones=window.library.sql.execute('SELECT * FROM achievements WHERE game_id=?',(game_id,)).fetchall()
-    if not milestones:activity.addWidget(text('Seus marcos e conquistas aparecem aqui.','muted'))
+    if not milestones:activity.addWidget(text('Nenhum marco','muted'))
     for record in milestones:
         frame,inside=card();row=QHBoxLayout();row.addWidget(Badge('trophy'));row.addWidget(text(record['title'],'cardTitle'),1);row.addWidget(text(date_display(record['unlocked_at']),'caption'));inside.addLayout(row);activity.addWidget(frame)
     activity.addWidget(text('Sessões','sectionTitle'))
@@ -128,7 +129,7 @@ def build_detail(window,game):
         for record in records:grid.add_card(memory_card(window,record))
         memories.addWidget(grid)
     technical.addWidget(text('Arquivos e versões','sectionTitle'))
-    if not files:technical.addWidget(text('Nenhuma ROM associada. Adicione uma versão pelo Drive.','muted'))
+    if not files:technical.addWidget(text('Nenhuma ROM associada','muted'))
     for file in files:
         frame,inside=card();row=QHBoxLayout();row.addWidget(Badge('folder'));words=QVBoxLayout();words.addWidget(text(file['original_name'],'cardTitle'));words.addWidget(text('Disponível neste computador' if file['available'] else 'Somente no Drive','muted'));row.addLayout(words,1)
         row.addWidget(action('Executar versão',lambda checked=False,f=file:window.launch_rom(game_id,f),True) if file['available'] else action('Baixar ROM',window.drive,True));inside.addLayout(row);technical.addWidget(frame)
@@ -143,6 +144,6 @@ def build_detail(window,game):
         inside.addWidget(action('Fazer backup agora',lambda:window.game_backup(game_id)),0,Qt.AlignLeft);technical.addWidget(frame)
         for backup in GameSaveBackups(window.library).history(game_id):
             frame,inside=card();row=QHBoxLayout();row.addWidget(text(datetime_display(backup['created_at'])),1);row.addWidget(action('Restaurar',lambda checked=False,b=backup:window.restore_game_backup(game_id,b)));inside.addLayout(row);technical.addWidget(frame)
-    else:technical.addWidget(text('Configure uma pasta de saves para criar e restaurar backups.','muted'))
+    else:technical.addWidget(text('Nenhum perfil de saves','muted'))
     for inside in layouts:inside.addStretch()
     tabs.setCurrentIndex(min(saved_tab,3));layout.addWidget(tabs);page.setWidget(body);window.stack.addWidget(page);window.stack.setCurrentWidget(page)

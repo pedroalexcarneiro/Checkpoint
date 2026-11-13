@@ -1,5 +1,33 @@
 # Continuidade do Checkpoint
 
+## Complemento 0.1.26 — logos nos cards de Desejos
+
+Decisão final posterior: manter Adicionar jogo somente no topo direito; removida
+a duplicata da barra lateral. Esta decisão substitui o pedido de dois atalhos abaixo.
+
+Perfil: clicar no nick/Meu perfil abre diálogo próprio apenas com foto e apelido.
+Foto validada/copied para cache local ao salvar; original intacto. Preferências
+profile.name/profile.avatar, sem mudança de schema, conta ou envio remoto.
+Botão lateral mostra nick/foto e preserva ambos ao trocar tema. Nome removido
+da aba Aparência para manter a personalização dentro da opção de perfil.
+
+Pedidos adicionais: Adicionar jogo global no topo direito e na lateral, inclusive
+na ficha. Adicionar desejo separado dentro da wishlist. Frases instrutivas e
+promocionais retiradas de estados vazios/painéis/diálogos; dados de jogos mantidos.
+Importação Steam não acumula mensagens por jogo no QLabel: janela 960×640 com
+limites 760×520–1100×760, tabela rolável e estado de uma linha de altura fixa.
+Resultado com contagens e pendências; cancelamento e dados importados preservados.
+Regressão importa 300 jogos controlados e confirma tamanho estável e resumo curto.
+
+Usuário apontou ausência das logos na caixa. WishLogo tinha política vertical
+fixa herdada de QPushButton, reduzindo a imagem apesar do espaço livre: agora
+expande na área do card, com margens e proporção preservadas. Desejos solicita
+artes faltantes de jogos já identificados uma vez por sessão e respeita artwork.auto.
+game_completed atualiza a wishlist aberta ao concluir o auxiliar. Não exige
+alteração manual de capa nem inventa logo a partir do título. Captura isolada
+conferida com logos públicas reais de Animal Well, Hades II, Silksong e Nine Sols.
+A 0.1.26 inclui as correções de composição/navegação da 0.1.25 e preserva as tags.
+
 ## Correção 0.1.25 — prompt e referências reenviados
 
 Revisão após rejeição visual da 0.1.24. O prompt reenviado exige dez temas:

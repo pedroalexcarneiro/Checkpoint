@@ -55,7 +55,6 @@ class MainWindow(QMainWindow):
         from .branding import SystemName,app_icon
         self.brand=SystemName(self.theme);nav.addWidget(self.brand);nav.addSpacing(8)
         self.setWindowIcon(app_icon(self.theme));QApplication.instance().setWindowIcon(self.windowIcon())
-        self.sidebar_add=button('+ Adicionar jogo',self.add_library_game,True);nav.addWidget(self.sidebar_add);nav.addSpacing(8)
         self.nav_names=['home','library','wish','memories','stats','settings']
         self.nav_buttons = []
         for index,title in enumerate(PAGES):
@@ -71,13 +70,14 @@ class MainWindow(QMainWindow):
         # O divisor agrupa Configurações e perfil no rodapé da lateral.
         self.profile_button=button(self.library.setting('profile.name','Meu perfil'),self.open_profile);self.profile_button.setObjectName('profileButton');self.profile_button.setIcon(nav_icon('user',self.theme.colors['muted']));self.profile_button.setIconSize(QSize(22,22));self.profile_button.setToolTip('Perfil local e aparência');nav.addWidget(self.profile_button)
         self.profile_button.setToolTip('Perfil local · Checkpoint v'+__version__)
+        self.refresh_profile()
         layout.addWidget(sidebar)
         content=QWidget();content.setObjectName('mainContent');content.setMaximumWidth(1440)
         self.host = QVBoxLayout(content); self.host.setContentsMargins(24,20,24,18); self.host.setSpacing(14)
         main_area=QWidget();main_row=QHBoxLayout(main_area);main_row.setContentsMargins(0,0,0,0);main_row.setSpacing(0)
         main_row.addWidget(content,1);layout.addWidget(main_area,1)
         self.header_widget=QWidget();self.header_widget.setFixedHeight(38);self.header = QHBoxLayout(self.header_widget);self.header.setContentsMargins(0,0,0,0); self.heading = label('','title'); self.header.addWidget(self.heading); self.header.addStretch()
-        self.add_button=button('+ Adicionar jogo',self.add_game,True);self.header.addWidget(self.add_button); self.host.addWidget(self.header_widget)
+        self.add_button=button('+ Adicionar jogo',self.add_library_game,True);self.header.addWidget(self.add_button); self.host.addWidget(self.header_widget)
         self.stack = QStackedWidget(); self.host.addWidget(self.stack,1)
         self.pages = []
         for _ in PAGES:
@@ -103,7 +103,18 @@ class MainWindow(QMainWindow):
         for i,control in enumerate(self.view_buttons):control.setChecked(i==index)
 
     def open_profile(self):
-        self.settings_section=0;self.navigate(5)
+        from .profile_dialog import ProfileDialog
+        dialog=ProfileDialog(self.library,self)
+        if dialog.exec()==QDialog.Accepted:self.refresh_profile()
+
+    def refresh_profile(self):
+        from .profile_dialog import avatar_icon
+        from .ui_components import nav_icon
+        nickname=self.library.setting('profile.name','Meu perfil') or 'Meu perfil'
+        self.profile_button.setText(nickname);self.profile_button.setToolTip(nickname)
+        icon=avatar_icon(self.library.setting('profile.avatar',''),64)
+        self.profile_button.setIcon(icon if not icon.isNull() else nav_icon('user',self.theme.colors['muted']))
+        self.profile_button.setIconSize(QSize(28,28))
 
     def showEvent(self,event):
         super().showEvent(event)
@@ -136,7 +147,7 @@ class MainWindow(QMainWindow):
     def navigate(self,index):
         self.current_page = index; self.current_game = None;self.header_widget.show()
         for i,b in enumerate(self.nav_buttons): b.setChecked(i==index)
-        self.heading.setText(PAGES[index]);self.add_button.setText('+ Adicionar desejo' if index==2 else '+ Adicionar jogo');self.add_button.setVisible(index in (1,2));self.search.setVisible(index in (0,1))
+        self.heading.show();self.heading.setText(PAGES[index]);self.add_button.setText('+ Adicionar jogo');self.add_button.show();self.search.setVisible(index in (0,1))
         for control in self.view_buttons:control.setVisible(index==1)
         if index==0: self.home()
         elif index==1: self.refresh_library()
@@ -197,7 +208,7 @@ class MainWindow(QMainWindow):
         layout.setSpacing(16)
         layout.addWidget(self.gallery,1); layout.addWidget(self.table,1)
         from .design_system import empty_state
-        self.library_empty=empty_state('search','Nenhum jogo por aqui','Adicione um jogo ou ajuste a busca e os filtros.',self.add_game,'Adicionar jogo');layout.addWidget(self.library_empty);self.library_empty.hide()
+        self.library_empty=empty_state('search','Nenhum jogo encontrado','',self.add_game,'Adicionar jogo');layout.addWidget(self.library_empty);self.library_empty.hide()
         self.gallery.setObjectName('coverGrid');self.gallery.setFrameShape(QFrame.NoFrame);self.gallery.setTextElideMode(Qt.ElideRight)
 
     @Slot(int)
@@ -218,7 +229,7 @@ class MainWindow(QMainWindow):
         games = self.library.owned_games(self.search.text(),self.platform.currentData(),self.genre.currentData(),self.status.currentData(),self.favorites.isChecked(),self.sort.currentData())
         compact=self.library.setting('appearance.density','comfortable')=='compact'
         self.gallery.setIconSize(QSize(138,184) if compact else QSize(174,232));self.gallery.theme=self.theme;self.gallery.set_density(compact)
-        self.gallery.clear(); self.table.setRowCount(len(games)); self.count.setText(f'{len(games)} jogos' if games else 'Nenhum jogo encontrado. Adicione um jogo ou ajuste os filtros.')
+        self.gallery.clear(); self.table.setRowCount(len(games)); self.count.setText(f'{len(games)} jogos')
         for row,game in enumerate(games):
             pix = QPixmap(game['cover']) if game['cover'] else QPixmap()
             if pix.isNull():
@@ -418,6 +429,7 @@ class MainWindow(QMainWindow):
         self.refresh_library()
         if self.current_game==game_id and self.library.get(game_id):self.detail(game_id)
         elif self.current_page==0:self.home()
+        elif self.current_page==2:self.wishlist()
         self.statusBar().showMessage(message)
 
     @Slot(str)
@@ -441,7 +453,7 @@ class MainWindow(QMainWindow):
         from .ui_components import Hero,nav_icon
         from .window_style import titlebar_theme
         titlebar_theme(self,True)
-        self.profile_button.setIcon(nav_icon('user',self.theme.colors['muted']))
+        self.refresh_profile()
         self.brand.set_theme(self.theme);self.setWindowIcon(app_icon(self.theme));QApplication.instance().setWindowIcon(self.windowIcon())
         for item,name in zip(self.nav_buttons,self.nav_names):item.setIcon(nav_icon(name,self.theme.colors['muted']))
         for hero in self.findChildren(Hero):hero.set_theme(self.theme)

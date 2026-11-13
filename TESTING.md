@@ -1,5 +1,15 @@
 # Validação
 
+## 0.1.26 — pedidos adicionais
+
+Regressões para atualização automática da logo na wishlist, não repetição de
+consulta na sessão, importação Steam de 300 jogos com tamanho estável e resumo
+de uma linha; cadastro global adiciona posse mesmo ao partir de Desejos.
+Perfil verifica foto em cache local, original preservado, apelido persistente,
+cancelamento, remoção da foto e manutenção ao trocar tema/reabrir janela.
+36 testes focados passaram após a implementação do perfil. Suíte Linux completa:
+225 aprovados em 131,98 s, exit 0. Pacote Windows aguarda workflow separado.
+
 ## 0.1.25 — correções de composição e navegação
 
 Linux: suíte completa com Qt offscreen, 221 testes aprovados em 133,17 s.

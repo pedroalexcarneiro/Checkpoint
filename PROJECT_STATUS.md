@@ -1,5 +1,18 @@
 # Estado do projeto — Checkpoint
 
+## 0.1.26 — complemento de Desejos
+
+Decisão final: Adicionar jogo somente no topo direito, sem duplicata lateral.
+Perfil local com foto e apelido em diálogo próprio; nick/foto no botão lateral.
+
+Também atende aos pedidos adicionais: cadastro no topo direito e lateral,
+removidas frases óbvias e corrigida expansão da importação Steam por relatório
+multilinha. Janela limitada, tabela rolável e resumo curto; teste de 300 jogos.
+
+Logo expandida dentro do card, fila para imagens faltantes de identidades
+confirmadas e atualização da lista aberta após enriquecimento. Preferência
+de automação e artes existentes preservadas. Inclui revisão da 0.1.25.
+
 ## 0.1.25 — correções após rejeição da 0.1.24
 
 Banner limitado e logo maior; grade com legendas próximas; cadastro global na

@@ -3,7 +3,7 @@ from threading import Event
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QAbstractItemView, QDialog, QHBoxLayout, QInputDialog, QLabel, QLineEdit,
-    QPushButton, QTableWidget, QTableWidgetItem, QVBoxLayout,
+    QPushButton, QTableWidget, QTableWidgetItem, QVBoxLayout, QSizePolicy,QAbstractScrollArea,
 )
 
 from .credentials import CredentialVault
@@ -22,7 +22,9 @@ class SteamDialog(QDialog):
         self.job = None
         self.changed = False
         self.setWindowTitle('Importar biblioteca Steam')
-        self.resize(1040, 700)
+        self.resize(960, 640)
+        self.setMinimumSize(760,520)
+        self.setMaximumSize(1100,760)
         layout = QVBoxLayout(self)
         help_text = QLabel('Consulte a conta, marque os jogos e confirme a importação. Horas Steam ficam separadas das sessões locais. Jogos com o mesmo nome só são associados por sua escolha.')
         help_text.setWordWrap(True)
@@ -48,32 +50,35 @@ class SteamDialog(QDialog):
         self.table.horizontalHeader().setStretchLastSection(True)
         self.table.setColumnWidth(1, 300)
         self.table.setAlternatingRowColors(True);self.table.setShowGrid(False);self.table.verticalHeader().hide()
+        self.table.setSizeAdjustPolicy(QAbstractScrollArea.AdjustIgnored)
+        self.table.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.table.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Expanding)
         self.table.itemChanged.connect(self.selection_changed)
         layout.addWidget(self.table, 1)
         actions = QHBoxLayout()
         self.mark_button = QPushButton('Marcar todos')
         self.mark_button.clicked.connect(lambda: self.mark_all(Qt.Checked))
-        self.unmark_button = QPushButton('Desmarcar todos')
+        self.unmark_button = QPushButton('Limpar seleção')
         self.unmark_button.clicked.connect(lambda: self.mark_all(Qt.Unchecked))
-        self.link_button = QPushButton('Associar linha a cadastro existente')
+        self.link_button = QPushButton('Associar jogo')
         self.link_button.clicked.connect(self.link_selected)
-        self.new_button = QPushButton('Usar novo cadastro na linha')
+        self.new_button = QPushButton('Novo cadastro')
         self.new_button.clicked.connect(self.unlink_selected)
         for control in (self.mark_button, self.unmark_button, self.link_button, self.new_button):
             actions.addWidget(control)
         layout.addLayout(actions)
         footer = QHBoxLayout()
-        self.import_button = QPushButton('Importar jogos marcados')
+        self.import_button = QPushButton('Importar selecionados')
         self.import_button.setObjectName('primary')
         self.import_button.clicked.connect(self.import_selected)
-        self.achievements_button = QPushButton('Atualizar conquistas da linha')
+        self.achievements_button = QPushButton('Atualizar conquistas')
         self.achievements_button.clicked.connect(self.fetch_achievements)
         footer.addWidget(self.import_button)
         footer.addWidget(self.achievements_button)
         layout.addLayout(footer)
-        self.state = QLabel('Requer chave Steam Web API e acesso aos detalhes dos jogos da conta. Nenhuma senha Steam é solicitada.')
+        self.state = QLabel('')
         self.state.setTextFormat(Qt.PlainText)
-        self.state.setWordWrap(True)
+        self.state.setWordWrap(False);self.state.setFixedHeight(24);self.state.setSizePolicy(QSizePolicy.Ignored,QSizePolicy.Fixed)
         layout.addWidget(self.state)
         self.enrichment_progress.connect(self.state.setText)
         self.enrichment_stop = Event()
@@ -82,7 +87,7 @@ class SteamDialog(QDialog):
         self.stop_button.hide()
         layout.addWidget(self.stop_button)
         from .design_system import dialog_heading
-        dialog_heading(layout,'Steam','Consulte sua conta e escolha os jogos para importar.','Steam')
+        dialog_heading(layout,'Steam','','Steam')
         self.account.textChanged.connect(self.invalidate)
         self.selection_changed()
 
@@ -157,7 +162,7 @@ class SteamDialog(QDialog):
             self.table.setItem(index, 2, QTableWidgetItem('Não disponível' if game.minutes is None else f'{game.minutes / 60:.1f} h'))
             self.table.setItem(index, 3, QTableWidgetItem(self.destination(game)))
         self.table.blockSignals(False)
-        self.state.setText(f'{len(games)} jogos retornados. Marque os desejados; a consulta não importa automaticamente.' if games else 'A Steam retornou uma biblioteca vazia. Nenhum cadastro local foi removido.')
+        self.state.setText(f'{len(games)} jogos' if games else 'Biblioteca Steam vazia')
         self.selection_changed()
 
     def destination(self, game):
@@ -236,7 +241,7 @@ class SteamDialog(QDialog):
         self.changed = True
         for index, game in enumerate(self.games):
             self.table.item(index, 3).setText(self.destination(game))
-        summary=f'{created} jogos criados; {updated} atualizados/associados. Dados pessoais e sessões locais foram preservados.'
+        summary=f'{created} adicionados · {updated} atualizados'
         ids=[self.library.sql.execute("SELECT game_id FROM external_identifiers WHERE provider='steam' AND external_id=?",(game.app_id,)).fetchone()[0] for game in selected]
         path=self.library.db.path
         self.enrichment_stop.clear();self.stop_button.show()
@@ -246,20 +251,22 @@ class SteamDialog(QDialog):
             from .worker import run_isolated
             db=Database(path)
             try:
-                lib=Library(db);messages=[]
+                lib=Library(db);processed=0;pending=0
                 for index,identity in enumerate(ids):
                     if self.enrichment_stop.is_set():
-                        messages.append('Preenchimento interrompido. Jogos importados preservados.');break
+                        break
                     game=lib.get(identity)
                     title=game['title'] if game else 'Jogo indisponível'
                     self.enrichment_progress.emit(f'{index+1}/{len(ids)} · '+title+' · buscando ficha e imagens…')
                     try:message=run_isolated('enrich',path,game_id=identity)
                     except Exception:message='Não foi possível completar as imagens; jogo importado preservado.'
-                    messages.append(title+': '+message)
-                return '\n'.join(messages)
+                    processed+=1
+                    import re
+                    if re.search(r'não foi possível|pendente|configure|[1-9]\d* consultas indisponíveis',str(message),re.IGNORECASE):pending+=1
+                return f'{processed}/{len(ids)} processados'+(f' · {pending} com pendências' if pending else '')+(' · Interrompido' if self.enrichment_stop.is_set() else '')
             finally:db.close()
         self.state.setText(summary+' Buscando fichas e imagens…')
-        self.run_job(complete,lambda message:self.state.setText(summary+'\n'+message))
+        self.run_job(complete,lambda message:self.state.setText(summary+' · '+message))
 
     def fetch_achievements(self):
         index = self.table.currentRow()

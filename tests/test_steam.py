@@ -198,7 +198,8 @@ def test_dialog_async_query_selection_import_achievements_and_account_change(app
         assert dialog.import_button.isEnabled()
         dialog.import_selected()
         wait_job()
-        assert "Ficha e imagens verificadas" in dialog.state.text()
+        assert '1/1 processados' in dialog.state.text()
+        assert '\n' not in dialog.state.text()
         assert [game['title'] for game in library.games()] == ['Meu cadastro']
         assert library.get(original)['notes'] == 'Preservar'
         dialog.table.setCurrentCell(0, 1)

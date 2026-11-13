@@ -38,7 +38,6 @@ def empty_state(name,title,description,callback=None,button='Adicionar jogo'):
     frame=QFrame();frame.setObjectName('emptyState');frame.setMinimumHeight(270);frame.setMaximumHeight(320);inside=QVBoxLayout(frame);inside.setContentsMargins(30,26,30,26);inside.setSpacing(12);inside.addStretch()
     inside.addWidget(Badge(name,52),0,Qt.AlignHCenter)
     label=text(title,'sectionTitle');label.setAlignment(Qt.AlignCenter);inside.addWidget(label)
-    label=text(description,'muted');label.setAlignment(Qt.AlignCenter);label.setMinimumWidth(320);label.setMaximumWidth(460);label.setMinimumHeight(52);label.setSizePolicy(QSizePolicy.Preferred,QSizePolicy.Minimum);inside.addWidget(label,0,Qt.AlignHCenter)
     if callback:inside.addWidget(action(button,callback,True),0,Qt.AlignHCenter)
     inside.addStretch();return frame
 
@@ -109,5 +108,4 @@ def dialog_heading(layout,title,description='',name='settings'):
     if layout.parentWidget():titlebar_theme(layout.parentWidget().window(),True)
     frame=QWidget();frame.setObjectName('dialogHeading');row=QHBoxLayout(frame);row.setContentsMargins(0,0,0,8);row.setSpacing(14);row.addWidget(Badge(name,44),0,Qt.AlignTop)
     words=QVBoxLayout();words.setSpacing(4);words.addWidget(text(title,'sectionTitle'))
-    if description:words.addWidget(text(description,'muted'))
     row.addLayout(words,1);layout.insertWidget(0,frame);return frame
