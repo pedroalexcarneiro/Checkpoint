@@ -44,6 +44,10 @@ def build_detail(window,game):
     notice=getattr(window,'detail_notice',None)
     if notice and notice[0]==game_id:
         banner=text(notice[1]);banner.setObjectName('wishNotice');banner.setAccessibleName(notice[1]);banner.setStyleSheet('padding: 10px; border: 1px solid '+window.theme.colors['accent']+'; border-radius: 7px;');layout.addWidget(banner)
+    if any(file['drive_id'] for file in files) and not all(game[field] for field in ('description','developer','publisher')):
+        warning=text('Não encontramos dados para este jogo. Pesquise manualmente.')
+        warning.setObjectName('metadataNotice');layout.addWidget(warning)
+        layout.addWidget(action('Pesquisar manualmente',lambda:window.search_game_data(game_id)),0,Qt.AlignLeft)
     tabs=CurrentPageTabs();tabs.setObjectName('detailTabs');window.detail_tabs=tabs
     layouts=[]
     for name in ('Visão geral','Atividade','Memórias','Arquivos'):

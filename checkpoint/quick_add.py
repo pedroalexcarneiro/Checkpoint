@@ -16,7 +16,7 @@ class QuickAdd(QObject):
     def __init__(self,dialog,outer,allow_steam):
         super().__init__(dialog);self.dialog=dialog;self.library=dialog.library
         self.generation=0;self.jobs=[];self.finishing=False;self.suspend=False;self.closed=False;self.pending_show_lookup=False;self.pending_search=False;self.pending_details=None
-        self.candidates=[];self.local=[];self.owner=dialog
+        self.candidates=[];self.local=[];self.drive_catalog=False;self.metadata_unavailable=False;self.owner=dialog
         while self.owner.parentWidget() is not None:self.owner=self.owner.parentWidget()
         while outer.count():
             item=outer.takeAt(0)
@@ -56,6 +56,7 @@ class QuickAdd(QObject):
         status=QHBoxLayout();status.addWidget(self.busy);status.addWidget(self.state,1);outer.addLayout(status)
         self.steam_panel=dialog.steam_panel;self.steam_panel.setParent(dialog);outer.addWidget(self.steam_panel);self.steam_panel.hide()
         self.drive_manage=action('Atualizar índice do Drive',self.manage_drive);self.drive_manage.setObjectName('quiet');outer.addWidget(self.drive_manage,0,Qt.AlignLeft);self.drive_manage.hide()
+        self.manual=action('Pesquisar manualmente',self.manual_search);self.manual.hide();outer.addWidget(self.manual,0,Qt.AlignLeft)
         advanced=QWidget();advanced_row=QVBoxLayout(advanced);advanced_row.setContentsMargins(0,0,0,0);advanced_row.setSpacing(10)
         self.platform=QComboBox();self.platform.setMinimumSize(220,40);self.platform.setSizeAdjustPolicy(QComboBox.AdjustToContents);self.platform.addItem('Todas as plataformas','')
         for name in sorted({row['platform'] for row in self.library.sql.execute('SELECT DISTINCT platform FROM game_files') if row['platform']}|{'PC','Nintendo Switch','Nintendo DS','Game Boy Advance','Super Nintendo','PlayStation','PlayStation 2'}):self.platform.addItem(name,name)
@@ -90,7 +91,7 @@ class QuickAdd(QObject):
     @Slot(int)
     def source_changed(self,index):
         self.timer.stop();self.generation+=1;self.pending_search=False;self.pending_details=None
-        self.dialog.drive_file_id=None;self.dialog.catalog_result=None
+        self.dialog.drive_file_id=None;self.dialog.catalog_result=None;self.drive_catalog=False;self.metadata_unavailable=False;self.manual.hide()
         self.query.setVisible(index!=2);self.preview.setVisible(index==0);self.results.setVisible(index==1)
         self.steam_panel.setVisible(index==2);self.drive_manage.setVisible(index==1)
         self.advanced.setVisible(index!=2);self.automation.setVisible(index!=2);self.save.setVisible(index!=2);self.save.setEnabled(False);self.other.hide();self.confirmed.hide()
@@ -117,14 +118,19 @@ class QuickAdd(QObject):
     def changed(self,value):
         if self.suspend:return
         self.dialog.error.clear();self.save.setEnabled(False)
-        self.generation+=1;self.dialog.catalog_result=None;self.dialog.drive_file_id=None
+        self.generation+=1;self.dialog.catalog_result=None
+        preserve_rom=self.drive_catalog and self.dialog.drive_file_id is not None and self.sources.currentIndex()==1
+        if not preserve_rom:self.dialog.drive_file_id=None
+        self.metadata_unavailable=False;self.manual.hide()
         for key in ('description','genre','developer','publisher','release_date','cover','banner','logo','executable'):
             self.dialog.fields[key].clear()
-        self.dialog.fields['source'].setText('Manual');self.dialog.fields['platform'].setText(self.platform.currentData() or '')
+        self.dialog.fields['source'].setText('Não identificada' if preserve_rom else 'Manual')
+        if not preserve_rom:self.dialog.fields['platform'].setText(self.platform.currentData() or '')
         self.title.setText(value.strip() or 'Nenhum jogo selecionado');self.art.clear();self.art.setText('Prévia');self.facts.clear()
-        self.association.clear();self.association.hide();self.description.clear();self.results.clear();self.candidates=[];self.confirmed.hide();self.other.hide();self.preview.hide()
+        if not preserve_rom:self.association.clear();self.association.hide()
+        self.description.clear();self.results.clear();self.candidates=[];self.confirmed.hide();self.other.hide();self.preview.hide()
         self.local_results()
-        if len(value.strip())>=2 and self.sources.currentIndex()==0:self.state.setText('Buscando…');self.timer.start()
+        if len(value.strip())>=2 and (self.sources.currentIndex()==0 or preserve_rom):self.state.setText('Buscando…');self.timer.start()
         elif self.sources.currentIndex()==1:
             self.save.setEnabled(False);self.results.show()
             self.state.setText(count_text(len(self.local),'ROM','ROMs') if self.local else 'Nenhuma ROM encontrada')
@@ -142,7 +148,7 @@ class QuickAdd(QObject):
         rows=self.library.sql.execute('SELECT * FROM game_files WHERE drive_id IS NOT NULL ORDER BY original_name')
         self.local=[dict(row) for row in rows if query and query in normalized(normalize_rom_name(row['original_name'])) and (not platform or platform==row['platform'])][:40]
         self.results.blockSignals(True);self.results.clear()
-        if self.sources.currentIndex()==0:self.local=[]
+        if self.sources.currentIndex()==0 or self.dialog.drive_file_id is not None:self.local=[]
         for row in self.local:
             item=QListWidgetItem(row['original_name']+'\nDisponível no Drive · '+(row['platform'] or 'Plataforma não definida'))
             item.setSizeHint(QSize(0,60));item.setToolTip(row['original_name']);self.results.addItem(item)
@@ -157,6 +163,7 @@ class QuickAdd(QObject):
         if not self.dialog.isVisible():self.pending_show_lookup=True;return
         if any(job.property('operation')=='catalog_search' for job in self.jobs):self.pending_search=True;return
         self.pending_search=False;self.preview.hide();self.results.hide();self.state.setText('Buscando…')
+        if self.dialog.drive_file_id is not None:self.save.setEnabled(False)
         self.run('catalog_search',title=self.query.text().strip(),platform=self.dialog.fields['platform'].text())
 
     def run(self,operation,**arguments):
@@ -182,9 +189,9 @@ class QuickAdd(QObject):
             self.state.setText('' if self.candidates or self.local else 'Nenhum resultado')
             if not self.candidates and not self.local:
                 if self.dialog.drive_file_id is not None:
-                    self.preview.show();self.save.setEnabled(True);self.state.setText('ROM selecionada. Ficha indisponível; você pode adicionar e ajustar depois.')
+                    self.show_missing_metadata()
                 else:self.preview.hide();self.results.hide();self.facts.clear();self.save.setEnabled(False)
-            if payload.get('unavailable'):self.state.setText(self.state.text()+' Parte dos catálogos está indisponível.')
+            if payload.get('unavailable') and not self.metadata_unavailable:self.state.setText(self.state.text()+' Parte dos catálogos está indisponível.')
             # Nunca seleciona uma ROM automaticamente. Uma ficha inequívoca pode ser sugerida.
             match=best_match(self.query.text(),self.dialog.fields['platform'].text(),self.candidates)
             if self.dialog.drive_file_id is not None and match and normalized(match.title)!=normalized(self.query.text()):match=None
@@ -196,10 +203,14 @@ class QuickAdd(QObject):
             path=payload.get('preview',{}).get('cover')
             if path:self.art.setPixmap(QPixmap(path).scaled(self.art.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation))
             self.state.clear()
+            if self.dialog.drive_file_id is not None and not all((result.description,result.developer,result.publisher)):
+                self.show_missing_metadata()
 
     @Slot(str)
     def failed(self,message):
-        if not self.closed and self.sender().property('generation')==self.generation:self.state.setText('Consulta indisponível')
+        if not self.closed and self.sender().property('generation')==self.generation:
+            if self.dialog.drive_file_id is not None:self.show_missing_metadata()
+            else:self.state.setText('Consulta indisponível')
 
     @Slot()
     def job_finished(self):
@@ -222,9 +233,11 @@ class QuickAdd(QObject):
         self.dialog.apply_catalog(result)
         if not self.dialog.fields['platform'].text() and result.platforms:self.dialog.fields['platform'].setText('PC' if 'PC' in result.platforms else result.platforms[0])
         self.show_result(result);self.state.setText('Carregando ficha…')
+        if self.dialog.drive_file_id is not None:self.save.setEnabled(False)
         self.run('catalog_details',provider=result.provider,identity=result.external_id,platform=self.dialog.fields['platform'].text())
 
     def show_result(self,result):
+        self.metadata_unavailable=False;self.manual.hide()
         self.save.setEnabled(not self.finishing);self.preview.show();self.results.hide();self.other.setVisible(bool(self.candidates));self.confirmed.show()
         self.title.setText(result.title)
         details=[self.dialog.fields['platform'].text() or ' / '.join(result.platforms[:3]),result.developer,result.release_date[:4]]
@@ -233,7 +246,18 @@ class QuickAdd(QObject):
     def drive_loaded(self,file):
         self.art.clear();self.art.setText('Prévia')
         self.generation+=1;self.title.setText(self.query.text());self.facts.setText(file['platform'] or 'Plataforma não definida');self.description.clear()
-        self.save.setEnabled(True);self.association.setText('ROM selecionada · '+file['original_name']);self.association.show();self.preview.show();self.results.hide();self.state.setText('ROM selecionada. Buscando a ficha para esta plataforma…');self.lookup()
+        self.drive_catalog=True;self.metadata_unavailable=False;self.manual.hide();self.save.setEnabled(False)
+        self.association.setText('ROM selecionada · '+file['original_name']);self.association.show();self.preview.show();self.results.hide();self.state.setText('ROM selecionada. Buscando a ficha para esta plataforma…');self.lookup()
+
+    def show_missing_metadata(self):
+        self.metadata_unavailable=True;self.preview.show();self.save.setEnabled(not self.finishing)
+        self.state.setText('Não encontramos dados para este jogo. Pesquise manualmente.')
+        self.manual.show()
+
+    def manual_search(self):
+        # Pesquisar novamente não remove nem troca o vínculo da ROM selecionada.
+        self.drive_catalog=True;self.query.setPlaceholderText('Pesquisar dados do jogo…')
+        self.query.setFocus();self.query.selectAll();self.lookup()
 
     def use_name(self):
         self.timer.stop();self.generation+=1;self.state.clear();self.dialog.validate()

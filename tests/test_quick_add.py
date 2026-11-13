@@ -164,7 +164,7 @@ def test_drive_source_displays_versions_and_preserves_original(library,app,monke
     quick.results.setCurrentRow(1);wait(app,lambda:not quick.jobs)
     assert calls[0]['platform']=='Game Boy Advance'
     assert library.sql.execute('SELECT original_name FROM game_files WHERE id=?',(dialog.drive_file_id,)).fetchone()[0]=='Example (USA).gba'
-    assert dialog.data()['source']=='Google Drive'
+    assert dialog.data()['source']=='Não identificada'
     quick.save.click();assert dialog.result()==QDialog.Accepted;window.close()
 
 

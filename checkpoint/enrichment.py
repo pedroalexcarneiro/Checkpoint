@@ -53,6 +53,7 @@ def complete_game(library, game_id, steam_provider=None, rawg_provider=None, cac
                 art_provider=SteamGridDbProvider(CredentialVault().get('steamgriddb'))
             sources.append(('steamgriddb',art_provider))
         except Exception:pass
+    drive_rom=library.sql.execute('SELECT 1 FROM game_files WHERE game_id=? AND drive_id IS NOT NULL',(game_id,)).fetchone() is not None
     fields_saved = images_saved = failures = 0
     for source, provider in sources:
         try:
@@ -80,6 +81,7 @@ def complete_game(library, game_id, steam_provider=None, rawg_provider=None, cac
                       'release_date': result.release_date}
             # Identidade e campo são conferidos no UPDATE para preservar edições concorrentes.
             with library.sql:
+                saved_text=0
                 for field, value in values.items():
                     if value:
                         cursor = library.sql.execute(
@@ -88,8 +90,12 @@ def complete_game(library, game_id, steam_provider=None, rawg_provider=None, cac
                             "WHERE game_id=games.id AND provider=? AND external_id=?)",
                             (value, now(), game_id, expected_description if field=='description' else '', source, result.external_id))
                         fields_saved += cursor.rowcount
+                        if field in ('description','developer','publisher'):saved_text+=cursor.rowcount
+                if saved_text and source in ('rawg','steam'):
+                    library.sql.execute("UPDATE games SET source='Busca' WHERE id=? AND source IN ('','Manual','Google Drive','Não identificada')",(game_id,))
                 record(library,game_id,result)
-            for kind, url in result.images.items():
+            # O arquivo/pasta do Drive não é fonte de arte; ROMs usam SteamGridDB.
+            for kind, url in (result.images.items() if not drive_rom or source=='steamgriddb' else []):
                 if kind not in ('cover', 'banner', 'logo'):
                     continue
                 current = library.get(game_id)

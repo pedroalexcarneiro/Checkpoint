@@ -153,7 +153,7 @@ class GameDialog(QDialog):
             else:widget.clear()
         self.fields['title'].setText(normalize_rom_name(file['original_name']))
         self.fields['platform'].setText(file['platform'] or rom_identity(file['original_name'])[1])
-        self.fields['source'].setText('Google Drive')
+        self.fields['source'].setText('Não identificada')
         if file['game_id']:
             existing=self.library.get(file['game_id'])
             if existing:
@@ -179,7 +179,8 @@ class GameDialog(QDialog):
     def apply_catalog(self,result):
         if hasattr(self,'quick_add'):self.quick_add.suspend=True
         self.catalog_result=result
-        if self.drive_file_id is None:self.fields['source'].setText('Busca')
+        if self.drive_file_id is None or any((result.description,result.developer,result.publisher)):
+            self.fields['source'].setText('Busca')
         values={'title':result.title,'description':result.description,'genre':', '.join(result.genres),'developer':result.developer,'publisher':result.publisher,'release_date':result.release_date}
         for key,value in values.items():
             if value:
@@ -209,6 +210,9 @@ class GameDialog(QDialog):
         return result
 
     def validate(self):
+        quick=getattr(self,'quick_add',None)
+        if quick and self.drive_file_id is not None and self.catalog_result is None and quick.jobs and not quick.metadata_unavailable:
+            self.error.setText('Aguarde a pesquisa da ficha antes de adicionar.');return
         if hasattr(self,'quick_add') and self.catalog_result is None and self.drive_file_id is None:
             self.error.setText('Selecione um jogo ou uma ROM antes de adicionar.');return
         if not self.fields['title'].text().strip():

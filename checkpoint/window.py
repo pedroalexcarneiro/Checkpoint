@@ -280,10 +280,16 @@ class MainWindow(QMainWindow):
             row = self.table.currentRow(); item = self.table.item(row,0) if row>=0 else None
         if item: self.detail(item.data(Qt.UserRole))
 
-    def add_game(self):
+    def search_game_data(self,game_id):
+        file=self.library.sql.execute('SELECT * FROM game_files WHERE game_id=? AND drive_id IS NOT NULL ORDER BY id LIMIT 1',(game_id,)).fetchone()
+        if file:self.add_game(drive_file=dict(file))
+
+    def add_game(self,drive_file=None):
         wish=self.current_page==2
         owned_before={game['id'] for game in self.library.owned_games()}
         dialog = GameDialog(self,library=self.library,purpose='wish' if wish else 'library')
+        if drive_file is not None:
+            dialog.source_tabs.setCurrentIndex(1);dialog.load_drive_file(drive_file)
         result=dialog.exec()
         if dialog.steam_requested:
             QTimer.singleShot(0,self.steam);return
@@ -301,7 +307,9 @@ class MainWindow(QMainWindow):
                 self.detail_notice=(game_id,message) if wish else None
                 self.refresh_library();self.detail(game_id)
                 self.statusBar().showMessage(message)
-                if dialog.complete_on_save.isChecked():
+                if dialog.drive_file_id is not None and dialog.catalog_result is None:
+                    self.statusBar().showMessage('Não encontramos dados para este jogo. Pesquise manualmente.')
+                elif dialog.complete_on_save.isChecked():
                     self.completion_queue.submit([game_id])
             self.guard(save)
 
