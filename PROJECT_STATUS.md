@@ -1,5 +1,11 @@
 # Estado atual — Checkpoint 0.1.32
 
+## Publicação posterior autorizada — 0.1.32
+
+A pré-release [v0.1.32](https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.32) foi publicada após autorização posterior do dono. Tag em `29f34626efeda7a09d2bcc265e46578ef75a9941` (não na main). Execução Windows [43518936038](https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43518936038): 344 testes, zero falhas/erros/skips, 336,454 s; build do app/atualizador e validação do ZIP extraído aprovados. Pacote portátil: `Checkpoint-0.1.32-windows-x64.zip`, 84.103.765 bytes, com SHA-256 e relatório de validação anexados à release. Isso comprova validação automática em Windows, não homologação manual de DPI/fontes/contas reais.
+
+Primeira tentativa: 343 passaram e 1 falhou por conversão LF→CRLF no checkout Windows. O workflow foi ajustado com `core.autocrlf=false` antes do checkout; nenhum teste ou código do aplicativo foi alterado para resolver essa falha. Releases anteriores preservadas. As restrições de não publicar descritas na entrega visual original referem-se àquela etapa, antes da autorização de publicação.
+
 Trabalho atual: `fix/0.1.32-visual`, base `c51c2456f8479f208d73a1281eb0dfada8ee7213`. Revisão visual com tokens comuns aos nove temas, telas e estados vazios, sem alterar cadastro/Drive. Evidências e limitações em [RELATORIO_0132_VISUAL.md](RELATORIO_0132_VISUAL.md). Sem tag, release ou PR; publicar somente a branch visual, sem force. Preservar as branches 0.1.30 e 0.1.29.
 
 Suíte integral final: **344 passed in 429.70s (0:07:09)**, exit 0; sem falhas/erros e sem novos skips ou xfails. Qt offscreen, CHECKPOINT_TEST_ROOT=/tmp, Python 3.12.
