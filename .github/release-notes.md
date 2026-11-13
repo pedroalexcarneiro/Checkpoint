@@ -5,6 +5,7 @@ Checkpoint 0.1.27 — revisão de interface, Desejos, Steam e perfil local.
 - Adicionar jogo fica no canto superior direito somente em Início e Biblioteca. A duplicata da lateral foi removida. Adicionar desejo é separado dentro da lista.
 - Removidas frases instrutivas/promocionais de estados vazios, painéis e diálogos.
 - Importação Steam tem lista com rolagem, janela limitada e resultado compacto. O relatório por jogo que expandia o diálogo foi removido.
+- A regressão de importação usa 300 jogos e verifica rolagem, tamanho da janela e resumo sem log por jogo.
 - Perfil local em janela própria: escolher/remover foto e alterar apelido. O nick e a foto aparecem na lateral, sem login nem campos de conta.
 
 - Início e ficha com banner de altura limitada, logo legível e imagem sem deformação ou corte; feed e atividade em colunas equilibradas.

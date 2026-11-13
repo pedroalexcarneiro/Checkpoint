@@ -60,7 +60,8 @@ def test_large_steam_import_keeps_dialog_bounded_without_per_game_log(library,ap
     before=dialog.size()
     assert dialog.table.verticalScrollBar().maximum()>0
     dialog.mark_all(Qt.Checked);dialog.import_selected()
-    deadline=time.monotonic()+10
+    # Verifica layout/resultado, não um limite de desempenho do runner Windows.
+    deadline=time.monotonic()+60
     while dialog.job and time.monotonic()<deadline:QTest.qWait(10)
     assert dialog.job is None
     app.processEvents()

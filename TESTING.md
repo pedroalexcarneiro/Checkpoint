@@ -2,6 +2,10 @@
 
 ## 0.1.27 — visibilidade final do cadastro
 
+A primeira execução Windows barrou publicação: o caso de 300 jogos excedeu a
+espera de 10 s, com 224 outros testes aprovados. Ajustada somente a tolerância
+de espera para 60 s; mantidas as verificações de rolagem, tamanho e resumo.
+
 14 testes focados passaram em 13,79 s após restringir Adicionar jogo a Início
 e Biblioteca. Suíte completa anterior de perfil/Steam/Desejos: 225 testes Linux
 aprovados em 131,98 s. Windows validará novamente o commit final integralmente.
