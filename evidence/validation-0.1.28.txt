@@ -1,0 +1,12 @@
+Checkpoint 0.1.28 — validação local, 13/11/2026
+Base: 0.1.27, 225 testes passaram antes das mudanças.
+Final Linux/Python 3.12/PySide6/Qt offscreen: 252 passaram em 273,37 s.
+Comando: QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest tests -q -p no:cacheprovider
+Smokes isolados: seis páginas OK; cadastro/auxiliar/renderização OK; integridade SQLite ok em ambos.
+Capturas: 61 estados Qt reais com fixtures declaradas; sete imagens principais em evidence/ui-0.1.28.
+Formato: capas verticais, quatro colunas; nove temas, Verde padrão.
+Contas, dados pessoais, credenciais reais e Windows do usuário não acessados.
+Windows CI final: 252 testes passaram em 174,51 s; build, fonte/executável extraído e capturas aprovados.
+Execução: https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43368694510
+Ver RELATORIO_CORRECOES.md para comandos, etapas, artefatos e limitações.
+Nenhuma tag, release ou asset antigo alterado.

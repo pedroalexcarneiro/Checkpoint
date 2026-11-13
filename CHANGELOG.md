@@ -468,3 +468,8 @@ O produto antes chamado GameVault passou a usar Checkpoint em todos os identific
 | `gamevault/window.py` | `checkpoint/window.py` |
 | `gamevault/window_style.py` | `checkpoint/window_style.py` |
 | `gamevault/worker.py` | `checkpoint/worker.py` |
+| `run_gamevault.py` | `run_checkpoint.py` |
+| Serviço do cofre: `GameVault` | `Checkpoint` |
+| `%LOCALAPPDATA%\GameVault` | `%LOCALAPPDATA%\Checkpoint` |
+| `gamevault.sqlite` | `checkpoint.sqlite` |
+| `gamevault.lock` | `checkpoint.lock` |
