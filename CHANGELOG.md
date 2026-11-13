@@ -2,11 +2,24 @@
 
 Registros anteriores descrevem o estado de cada versão; não são instruções atuais.
 
+## 0.1.29 — revisão de uso e estabilidade
+
+- Tamanho das capas de 70% a 150%, preferência persistida e conversão da densidade anterior; seis colunas no padrão largo, com redução responsiva.
+- Início com destaque e continuidade somente de jogos em andamento, sem abas de Biblioteca e com estado vazio.
+- Rolagem por pixel animada em 180 ms e barras discretas na cor do tema.
+- Desejos com arte 1:1, logo contida, capa/título como alternativas, preço original riscado, desconto e ordenação, preservando rolagem após atualização.
+- Contrato de provedores de preços, parser do preço original e estrutura separada da API oficial, sem transporte real enquanto faltar documentação.
+- Busca aguarda detalhes antes de salvar, grava dados completos e origem Busca; mensagens de conclusão simplificadas.
+- Cadastro com barra própria e um fechamento, plataforma legível, seleção obrigatória e automação como informação; limpeza de títulos de ROM preserva o nome original e a plataforma.
+- Estados vazios e confirmação de desejos verificados, incluindo a proteção de jogos já possuídos.
+- Correção do encerramento de diálogos aninhados com busca ativa, cobrindo o SIGSEGV do Drive com faulthandler e regressão de ciclo de vida.
+- Documentação e capturas em duas resoluções atualizadas. Sem alteração de schema, tag, build de release ou publicação.
+
 ## 0.1.28 — revisão do produto e publicação autorizada
 
 - Renomeação técnica de GameVault para Checkpoint: pacote, launcher, banco, diretório de dados, cofre e scripts.
 - Migração por cópia, SQLite consistente com backup/integridade, schema 4 preservado, cofre sem apagar o serviço antigo, travas de instância e recuperação sem perda da origem.
-- Nove temas; removido Branco. Preferências antigas compatíveis passam para Verde.
+- Nove temas; removida a paleta descontinuada. Preferências antigas compatíveis passam para Verde.
 - Biblioteca de quatro colunas e capas verticais; Desejos com logos contidas em áreas fixas; Início, ficha, cadastro e Conexões alinhados às referências.
 - Cadastro exige seleção, distingue busca/ausência/seleção, confirma desejos visivelmente e preserva jogos já possuídos. Contadores e estados vazios corrigidos.
 - Documentação atual reorganizada; histórico consolidado abaixo. Na etapa de correções não houve publicação; após autorização posterior do dono, a pré-release v0.1.28 foi publicada com o mesmo artefato Windows validado.
@@ -279,7 +292,7 @@ Diagnóstico da autenticação e do transporte, sem registrar credenciais. OAuth
 
 ## 0.1.5 — Paletas
 
-- Dez temas coesos e discretos, incluindo Branco claro e Preto neutro.
+- Dez temas coesos e discretos, incluindo uma paleta posteriormente descontinuada e Preto neutro.
 - Seletor em Configurações, aplicação imediata e preferência persistente.
 - Controles, diálogos e capas ausentes acompanham o tema escolhido.
 - 58 testes passaram, incluindo contraste de texto e persistência.
@@ -385,11 +398,11 @@ Validação: 46 testes passaram em 5,77 s; incluem regressão com gzip real do u
 
 ## Checkpoint 0.1.5 — paletas de cores
 
-Adicionadas dez paletas: Azul, Verde, Amarelo, Vermelho, Preto, Branco, Roxo, Rosa, Laranja e Ciano. Nove usam superfícies escuras com acentos dessaturados; Branco é claro, com fundos quentes e texto escuro. A preferência fica em Configurações > Aparência > Tema, é aplicada imediatamente e persiste no SQLite em appearance.theme. Verde continua como padrão para bibliotecas sem preferência; valores antigos/desconhecidos usam esse padrão.
+Adicionadas dez paletas na época; uma foi posteriormente descontinuada. A revisão atual mantém nove temas escuros com acentos dessaturados. A preferência fica em Configurações > Aparência > Tema, é aplicada imediatamente e persiste no SQLite em appearance.theme. Verde continua como padrão para bibliotecas sem preferência; valores antigos/desconhecidos usam esse padrão.
 
 As paletas alteram fundos, painéis, campos, textos, botões, seleção, foco, progresso, navegação, diálogos e cores de capas ausentes. A aplicação também define QPalette para controles do Qt. As artes e capturas originais não são recoloridas. Estados desabilitados recebem tratamento próprio. A moldura externa da janela e diálogos nativos de arquivos podem seguir as preferências do Windows.
 
-Validação: 58 testes passaram em 12,82 s, incluindo contraste mínimo 4,5:1 dos pares de texto normal verificados nas dez paletas, troca imediata, navegação nas seis áreas em cada tema e reabertura do banco preservando a escolha. Isso não é uma auditoria completa de acessibilidade. Foram renderizadas as dez telas iniciais, e a comparação de paletas e o tema Branco foram inspecionados visualmente. Preferências e controles reais de DPI ainda precisam de validação humana no Windows.
+Validação: 58 testes passaram em 12,82 s, incluindo contraste mínimo 4,5:1 dos pares de texto normal verificados nas dez paletas, troca imediata, navegação nas seis áreas em cada tema e reabertura do banco preservando a escolha. Isso não é uma auditoria completa de acessibilidade. Foram renderizadas as dez telas iniciais, e a comparação de paletas e a paleta posteriormente descontinuada foram inspecionados visualmente. Preferências e controles reais de DPI ainda precisam de validação humana no Windows.
 
 ## Registro histórico da renomeação técnica
 

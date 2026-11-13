@@ -1,22 +1,11 @@
 # Continuidade do Checkpoint
 
-Base desta revisão: código-fonte 0.1.27 da branch `codex/design-fidelity-pt-br`. Trabalho 0.1.28 em `fix/rename-redesign-0.1.28`; não usar a main defasada.
+Trabalho atual: versão 0.1.29, branch `fix/0.1.29`, iniciada no commit `8d39c18` da base solicitada. Não usar a main defasada nem alterar as branches codex existentes.
 
-Leia `PROJECT_STATUS.md`, `RELATORIO_CORRECOES.md` e `ARCHITECTURE.md`. O histórico está no CHANGELOG; não reintroduzir exigências antigas de formato ou temas removidos.
+Leia PROJECT_STATUS.md, RELATORIO_CORRECOES.md e ARCHITECTURE.md. Referências visuais e decisões do dono prevalecem: wordmark checkpo//nt e ícone próprio; Biblioteca vertical com tamanho ajustável e seis colunas no padrão largo; Desejos com arte 1:1; Início de andamento; ficha com galeria; Conexões 2×2. São nove temas, Verde padrão.
 
-Preservar o wordmark checkpo//nt e o ícone de identidade. Referências visuais do dono prevalecem sobre o código: capas verticais, quatro colunas, banner/continuidade, ficha com galeria e Conexões 2×2. Não fundir os componentes de cadastro sem a decisão registrada no relatório.
+Não volte a permitir que um GameDialog conclua enquanto seus jobs de busca estão ativos, inclusive sob DriveDialog. Ao salvar durante a consulta de detalhes selecionados, aguarde a resposta no loop Qt e preserve desenvolvedora, editora e descrição. Não use skip/xfail para quedas nativas.
 
-Validação local:
+Valide com QT_QPA_PLATFORM=offscreen, CHECKPOINT_TEST_ROOT em /tmp e --data-dir novo nos smokes. O schema permanece 4; a migração copia e preserva a origem. Nunca consultar cofre real em testes.
 
-```bash
-QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest tests -q -p no:cacheprovider
-QT_QPA_PLATFORM=offscreen .venv/bin/python scripts/render_ui_review.py /tmp/revisao-checkpoint-nova
-```
-
-Use sempre diretórios isolados e novos para smoke. Não leia credenciais, altere releases antigas ou recrie dados do usuário. A migração mantém a origem e não muda o schema 4.
-
-## Publicação autorizada posteriormente
-
-A v0.1.28 foi publicada como pré-release após pedido explícito do dono. ZIP validado do CI, sem recompilação. A tag aponta para a revisão de código e relatório anterior à configuração da publicação; não deve ser movida. Releases anteriores foram preservadas.
-
-https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.28
+Não criar tags nem publicar releases nesta tarefa. A pré-release v0.1.28 publicada por engano deve ser removida pelo dono; não alterá-la. A API oficial GG.deals aguarda documentação e chave própria no cofre. Não implementar endpoints por suposição. Não fundir os componentes de cadastro sem decisão posterior do dono.

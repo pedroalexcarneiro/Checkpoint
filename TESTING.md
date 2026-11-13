@@ -1,18 +1,14 @@
-# Validação da 0.1.28
+# Validação da 0.1.29
 
-## Executar
+Use Python 3.12 e as dependências de requirements-tested.txt. Não é necessário instalar dependências adicionais nesta revisão.
 
 ```bash
-QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest tests -q -p no:cacheprovider
+QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -X faulthandler -m pytest tests -q -p no:cacheprovider
 QT_QPA_PLATFORM=offscreen .venv/bin/python -m checkpoint.app --smoke-test --data-dir /tmp/checkpoint-smoke-novo
 QT_QPA_PLATFORM=offscreen .venv/bin/python -m checkpoint.app --save-smoke-test --data-dir /tmp/checkpoint-cadastro-novo
-QT_QPA_PLATFORM=offscreen .venv/bin/python scripts/render_ui_review.py /tmp/checkpoint-revisao-nova
+QT_QPA_PLATFORM=offscreen .venv/bin/python scripts/render_ui_review.py /tmp/checkpoint-revisao-nova --reference-sizes
 ```
 
-Instale o projeto editável conforme SETUP.md antes de executar scripts. Use sempre pastas novas/isoladas; o smoke recusa banco existente. CHECKPOINT_TEST_ROOT permite colocar as fixtures fora do checkout. Nunca usar LOCALAPPDATA real para testes.
+Use pastas novas, fora dos dados pessoais. A suíte inicial teve 252 testes passando; o caso Drive isolado reproduziu SIGSEGV. Consulte RELATORIO_CORRECOES.md para resultados completos por etapa e repetições com faulthandler.
 
-## Cobertura e evidências
-
-Estado inicial: 225 testes passaram antes de alterações. Migração inclui origem em WAL, backup/integridade, primeira abertura, destino existente, corrupção, travas, falha do cofre, credencial fictícia em memória e normalização de preferências. Testes de tema verificam exatamente nove paletas e contraste; testes de layout e regressão verificam menu, quatro colunas, dimensões de Desejos, banner, execução, Conexões e estados do cadastro.
-
-Resultado final: 252 testes passaram em Linux (273,37 s) e em Windows CI (174,51 s). No runner Windows também passaram build, smokes e capturas. Resultados por etapa, comandos, artefatos e limitações estão em RELATORIO_CORRECOES.md. Capturas são Qt real com fixtures declaradas, não acesso autenticado nem execução Windows. Testes controlados não garantem DPI, hardware ou contas reais. Os arquivos evidence anteriores são registros históricos, não resultados desta revisão.
+A cobertura inclui migração de dados/cofre e preferências, nove temas/contraste, layout, cards/colunas, 500 jogos com roda do mouse, descontos, busca gravada, nomes de ROM, estados vazios e ciclo de vida com jobs ativos. Integrações de testes usam fixtures; isso não valida contas reais nem o transporte da API oficial GG.deals. Capturas são Qt offscreen em Linux; o diálogo é composto com grabs Qt da janela e do modal. Não é captura do desktop Windows. Evidências de versões anteriores são históricas.

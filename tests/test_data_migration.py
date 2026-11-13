@@ -6,7 +6,7 @@ import pytest
 from checkpoint.database import Database
 from checkpoint.library import Library
 from checkpoint.credentials import CredentialVault,SERVICE
-from checkpoint.data_migration import prepare_data_directory,MigrationError,LEGACY_PRODUCT,LEGACY_DATABASE,DATABASE_NAME
+from checkpoint.data_migration import prepare_data_directory,MigrationError,LEGACY_PRODUCT,LEGACY_DATABASE,DATABASE_NAME,LEGACY_PALETTE
 
 
 class MemoryVault:
@@ -26,7 +26,7 @@ def old_library(root):
     db=Database(directory/LEGACY_DATABASE);lib=Library(db)
     art=directory/'images'/'manual.png';art.parent.mkdir();art.write_bytes(b'image fixture')
     identity=lib.save_game({'title':'Jogo preservado','notes':'Minha nota','cover':str(art),'status':'Jogando'})
-    lib.add_diary(identity,'Minha memória');lib.set_setting('appearance.theme','white');lib.set_setting('other.preference',{'keep':True})
+    lib.add_diary(identity,'Minha memória');lib.set_setting('appearance.theme',LEGACY_PALETTE);lib.set_setting('other.preference',{'keep':True})
     return directory,db,lib,identity
 
 

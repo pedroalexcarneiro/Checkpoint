@@ -40,6 +40,7 @@ def artwork(root,index,title,color,kind,width,height,source=None):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('output',type=Path);parser.add_argument('--prices-file',type=Path,help='Snapshot público opcional para revisão isolada.');parser.add_argument('--art-dir',type=Path,help='Artes locais opcionais; nunca consulta provedores ou contas.')
+    parser.add_argument('--reference-sizes',action='store_true',help='Captura as seis telas de referência em 1280×800 e 1920×1080.')
     args=parser.parse_args();root=args.output.resolve();root.mkdir(parents=True,exist_ok=True)
     if (root/'review.sqlite').exists():raise SystemExit('Use um diretório novo: base existente preservada.')
     app=QApplication([]);app.setStyle('Fusion')
@@ -47,12 +48,12 @@ def main():
     install_fonts(app)
     if not verify_text_font():raise SystemExit('Fonte sem os glifos necessários; capturas bloqueadas.')
     db=Database(root/'review.sqlite');lib=Library(db)
-    names=['Hollow Knight','Celeste','INSIDE','Hades','The Legend of Zelda: Breath of the Wild','Ori and the Will of the Wisps','Returnal','Dead Cells','Hades II','Hollow Knight: Silksong','Animal Well','Nine Sols']
-    colors=['#365d79','#a06388','#86474e','#9d5b43','#668771','#42888b','#4a687e','#71577c','#936657','#5d7391','#53776c','#81715f'];ids=[]
+    names=['Hollow Knight','Celeste','INSIDE','Hades','The Legend of Zelda: Breath of the Wild','Ori and the Will of the Wisps','Returnal','Dead Cells','Hades II','Hollow Knight: Silksong','Animal Well','Nine Sols','Journey']
+    colors=['#365d79','#a06388','#86474e','#9d5b43','#668771','#42888b','#4a687e','#71577c','#936657','#5d7391','#53776c','#81715f','#785c72'];ids=[]
     for index,(title,color) in enumerate(zip(names,colors)):
-        cover=artwork(root,index,title,color,'cover',600,800,args.art_dir)
+        cover=artwork(root,index,title,color,'cover',600,900 if args.reference_sizes else 800,args.art_dir)
         banner=artwork(root,index,title,color,'banner',1600,450,args.art_dir);logo=artwork(root,index,title,color,'logo',620,150,args.art_dir)
-        identity=lib.save_game({'title':title,'platform':'PC','cover':cover,'banner':banner,'logo':logo,'status':'Jogando' if index<4 else 'Concluído' if index<6 else 'Não iniciado','developer':'Estúdio de teste','publisher':'Publicadora de teste','genre':'Aventura','release_date':'2024-01-12','description':'Dados de teste para conferir a interface: explore um mundo cheio de caminhos, encontros e descobertas. As artes desta captura são fixtures locais, sem acesso a contas pessoais.','favorite':int(index==0)});ids.append(identity)
+        identity=lib.save_game({'title':title,'platform':'PC','cover':cover,'banner':banner,'logo':logo,'status':'Jogando' if index<4 else 'Concluído' if index<6 else 'Não iniciado','developer':'Estúdio de teste','publisher':'Publicadora de teste','source':'Busca','genre':'Aventura','release_date':'2024-01-12','description':'Dados de teste para conferir a interface: explore um mundo cheio de caminhos, encontros e descobertas. As artes desta captura são fixtures locais, sem acesso a contas pessoais.','favorite':int(index==0)});ids.append(identity)
         if index<4:
             lib.add_diary(identity,'Uma lembrança de teste para conferir a leitura, os espaçamentos e a navegação da interface.')
             lib.add_media(identity,banner,'Captura de teste · paisagem')
@@ -69,8 +70,37 @@ def main():
     lib.set_setting('artwork.auto',False);lib.set_setting('prices.auto',False);w=MainWindow(lib);w.integration_status=lambda provider:'Não configurada';w.resize(1100,740);w.show()
     def capture(name,widget=w):
         w.statusBar().clearMessage()
+        from PySide6.QtTest import QTest
         for _ in range(4):app.processEvents()
+        QTest.qWait(30)
         assert widget.grab().save(str(root/(name+'.png')))
+    if args.reference_sizes:
+        # Valores e artes de teste declarados, sem consultar contas ou provedores.
+        lib.set_setting(f'prices.ggdeals.{ids[8]}',{'lowest':5990,'current':5990,'original':9990,'discount':40,'currency':'BRL','state':'ready'})
+        for width,height in ((1280,800),(1920,1080)):
+            w.resize(width,height);prefix=f'{width}x{height}-'
+            for page,name in ((0,'home'),(1,'library'),(2,'wishlist'),(5,'settings')):
+                if page==5:w.integration_status=lambda provider:'Credencial salva · fixture não autenticada' if provider in ('Steam','RAWG') else 'Não configurada'
+                w.navigate(page)
+                if page==5:w.settings_tabs.setCurrentIndex(1)
+                capture(prefix+name)
+            w.settings_tabs.setCurrentIndex(0);capture(prefix+'appearance')
+            w.detail(ids[0]);capture(prefix+'detail')
+            w.navigate(0);dialog=GameDialog(w,library=lib);quick=dialog.quick_add
+            from checkpoint.integrations import MetadataResult
+            selected=MetadataResult('steam','367520','Hollow Knight',platforms=('PC',),developer='Team Cherry',publisher='Team Cherry',description='Descrição de teste para revisar o cadastro.')
+            dialog.apply_catalog(selected);quick.candidates=[selected];quick.show_result(selected);quick.state.clear();quick.timer.stop()
+            from PySide6.QtGui import QPixmap
+            quick.art.setPixmap(QPixmap(lib.get(ids[0])['cover']).scaled(quick.art.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation))
+            dialog.show()
+            for _ in range(4):app.processEvents()
+            dialog.move(w.mapToGlobal(w.rect().center())-dialog.rect().center())
+            for _ in range(4):app.processEvents()
+            # Composição de grabs Qt reais: offscreen não fornece captura do desktop.
+            shot=w.grab();painter=QPainter(shot);painter.drawPixmap(dialog.mapToGlobal(dialog.rect().topLeft())-w.mapToGlobal(w.rect().topLeft()),dialog.grab());painter.end()
+            assert shot.save(str(root/(prefix+'add.png')));dialog.reject()
+        (root/'review-info.json').write_text(json.dumps({'platform':sys.platform,'window':'1280×800 e 1920×1080','artwork':'fixtures locais','dialog':'composição dos grabs Qt do diálogo e da janela; não é captura do desktop'},ensure_ascii=False),encoding='utf-8')
+        w.close();db.close();print(root);return
     for page,name in enumerate(['home','library','wishlist','memories','statistics','settings']):w.navigate(page);capture(name)
     w.resize(1920,1080)
     for page,name in enumerate(['home','library','wishlist','memories','statistics','settings']):w.navigate(page);capture('desktop-'+name)

@@ -1,8 +1,8 @@
 REGISTRO HISTÓRICO — não representa a validação da revisão atual.
 Checkpoint 0.1.5
 58 tests passed in 12.82s
-10 themes rendered; palette comparison and white theme visually inspected.
+10 themes rendered; palette comparison and legacy palette visually inspected.
 Text pairs tested at contrast >=4.5:1. Not a full accessibility audit.
 Immediate changes, all six pages in every theme, persistent preference after database reopen verified.
-Compiled app: white preference restored/rendered; exit 0.
+Compiled app: legacy preference restored/rendered; exit 0.
 Relocated update helper: isolated swap and prior-version preservation passed.

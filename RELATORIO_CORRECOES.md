@@ -1,271 +1,204 @@
-# Relatório de correções — Checkpoint 0.1.28
+# Relatório de correções — Checkpoint 0.1.29
 
-## Base, escopo e preservação
+Revisão em 13/11/2026 11:49 -03. Base confirmada: `fix/rename-redesign-0.1.28`, commit `8d39c18`, versão 0.1.28 nos dois arquivos. Branch de entrega: `fix/0.1.29`. A árvore estava limpa antes das alterações. A versão final é 0.1.29 no módulo e no pyproject.
 
-Base confirmada antes das mudanças: `codex/design-fidelity-pt-br`, versão 0.1.27, commit `1f3df2730db2058ae9da074161716a9c0fa4edcc`. Branch de trabalho: `fix/rename-redesign-0.1.28`. A main não foi usada nem alterada. Versão atual consistente em pyproject e módulo: 0.1.28.
+## Escopo e preservação
 
-Na etapa original de correções não foram criadas tags ou releases. A publicação posterior, autorizada em novo pedido, está registrada ao fim deste relatório. Não foram alterados assets de releases anteriores, usados force push ou acessadas bibliotecas pessoais. Nenhuma credencial real foi lida, criada ou gravada pela tarefa. Os testes de cofre usam valores fictícios somente em memória. Os comandos Git usam a conexão já configurada, sem inspecionar seu material de autenticação.
+Schema 4 mantido. A migração de diretório, snapshot SQLite por backup, integridade, travas, cofre e origem foram preservados. Nenhum dado pessoal foi aberto para testes. Nenhuma dependência nova foi instalada: ambiente existente com Python 3.12.14 e PySide6 6.8.3.
 
-## Renomeação, arquivo por arquivo
+Não houve build de release, tag, edição/remoção de release, PR ou force push. Main e branches codex não foram alteradas. O texto `.github/release-notes.md` é um documento local atualizado, não uma publicação. A pré-release v0.1.28 publicada por engano permanece sob responsabilidade do dono.
 
-Pacote `checkpoint/`, entrada `checkpoint.app:main`, launcher `run_checkpoint.py`, serviço do cofre Checkpoint, banco `checkpoint.sqlite`, pasta `%LOCALAPPDATA%\Checkpoint`, lock `checkpoint.lock` e scripts de build/validação atualizados. As correspondências literais entre caminhos anteriores e atuais ficam no apêndice histórico do CHANGELOG, para que o nome anterior não permaneça em documentação operacional.
+## SIGSEGV: causa funcional e correção
 
-| Arquivo atual | Alteração da renomeação |
-| --- | --- |
-| `.github/workflows/windows-release.yml` | Referências técnicas ou textuais atualizadas. |
-| `.github/workflows/windows-ui-validation.yml` | Referências técnicas ou textuais atualizadas. |
-| `AGENTS.md` | Referências técnicas ou textuais atualizadas. |
-| `CLOUD_SETUP.md` | Referências técnicas ou textuais atualizadas. |
-| `CONTINUITY.md` | Referências técnicas ou textuais atualizadas. |
-| `PROJECT_STATUS.md` | Referências técnicas ou textuais atualizadas. |
-| `README.md` | Referências técnicas ou textuais atualizadas. |
-| `SETUP.md` | Referências técnicas ou textuais atualizadas. |
-| `TESTING.md` | Referências técnicas ou textuais atualizadas. |
-| `THIRD_PARTY_NOTICES.md` | Referências técnicas ou textuais atualizadas. |
-| `checkpoint/.gitkeep` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/__init__.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/activity_heatmap.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/app.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/artwork_dialog.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/artwork_progress.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/artwork_render.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/assets/services/google-drive.png` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/assets/services/steam.ico` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/auto_artwork.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/automatic_catalog.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/branding.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/catalog_picker.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/collection_views.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/completion_queue.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/cover_grid.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/credentials.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/database.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/description_provenance.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/design_system.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/detail_view.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/dialogs.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/drive_dialog.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/emulator_dialog.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/enrichment.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/folder_platform_dialog.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/fonts.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/game_editor.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/game_import.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/game_saves.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/home_view.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/integrations/.gitkeep` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/integrations/__init__.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/integrations/descriptions.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/integrations/drive.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/integrations/ggdeals.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/integrations/http.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/integrations/images.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/integrations/metadata.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/integrations/network.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/integrations/steam.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/integrations/steam_store.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/jobs.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/launcher.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/library.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/locale.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/metadata_dialog.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/price_queue.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/price_view.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/prices.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/profile_dialog.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/quick_add.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/rom_catalog.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/save_profiles.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/save_smoke.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/saves.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/settings_view.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/statistics_view.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/steam_dialog.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/steam_library.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/task_status.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/theme.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/trash_import.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/ui_components.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/unified_catalog.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/update_installer.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/updates.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/updates_dialog.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/window.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/window_style.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `checkpoint/worker.py` | Caminho renomeado; imports/referências atualizados quando presentes. |
-| `evidence/cloud-qt-shutdown.txt` | Referências técnicas ou textuais atualizadas. |
-| `evidence/save-modal-crash.txt` | Referências técnicas ou textuais atualizadas. |
-| `evidence/validation.txt` | Referências técnicas ou textuais atualizadas. |
-| `pyproject.toml` | Referências técnicas ou textuais atualizadas. |
-| `run_checkpoint.py` | Launcher renomeado e import atualizado. |
-| `run_updater.py` | Referências técnicas ou textuais atualizadas. |
-| `scripts/LEIA-ME.txt` | Referências técnicas ou textuais atualizadas. |
-| `scripts/build.ps1` | Referências técnicas ou textuais atualizadas. |
-| `scripts/create_icon.py` | Referências técnicas ou textuais atualizadas. |
-| `scripts/package_ui_review.py` | Referências técnicas ou textuais atualizadas. |
-| `scripts/package_windows_release.py` | Referências técnicas ou textuais atualizadas. |
-| `scripts/render_ui_review.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/conftest.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_auto_artwork.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_catalog.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_complete_layout.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_completion_queue.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_drive.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_drive_auth.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_drive_search.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_enrichment.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_folder_platforms.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_game_import.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_game_saves.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_isolated_operations.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_layout_regressions_025.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_library.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_localized_metadata.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_migrations.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_network.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_profile.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_quick_add.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_save_lifecycle.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_save_profiles.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_saves.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_services.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_steam.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_themes.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_trash_import.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_ui.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_ui_polish.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_ui_redesign.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_updates.py` | Referências técnicas ou textuais atualizadas. |
-| `tests/test_wishlist_prices.py` | Referências técnicas ou textuais atualizadas. |
+A suíte completa inicial passou, mas o caso Drive isolado retornou -11 na base. Portanto, o resultado da suíte em conjunto não foi tomado como prova de ausência da queda.
 
-Busca final: `git grep -ni 'game''vault' -- . ':(exclude)CHANGELOG.md'` deve retornar zero ocorrências. As 78 linhas com ocorrências históricas restantes no CHANGELOG têm estes motivos: linha 7, descrição da renomeação nesta versão; linha 396, introdução histórica; linhas 400–471, um caminho anterior por arquivo no apêndice. Cada uma dessas 72 linhas documenta um arquivo renomeado; linhas 472–475 registram os quatro identificadores de compatibilidade (serviço, pasta, banco e trava). Todos esses usos são históricos, sem uso operacional direto. Não são imports, serviços ou instruções atuais. Em `data_migration.py`, `LEGACY_PRODUCT` monta o identificador anterior exclusivamente para compatibilidade; removê-lo impediria localizar os dados e o cofre antigos.
+A proteção de `GameDialog.finish_or_wait()` só esperava as consultas quando `quick.owner is self`. No fluxo Drive, o owner era a janela principal; `apply_catalog()` seguido de `validate()` podia concluir o diálogo com uma busca ainda em execução. O faulthandler mostrou a queda na thread principal, antes do encerramento programado da janela, enquanto havia Jobs em `worker.run_isolated` e `DriveDialog.queue_artwork`.
 
-## Migração e segurança de dados
+Trechos do traceback reproduzido na base:
 
-`prepare_data_directory` cria staging, copia arquivos comuns e produz snapshots consistentes dos bancos SQLite com `sqlite3.Connection.backup`, verificando `PRAGMA integrity_check` antes da adoção. Não copia arquivos WAL/SHM manualmente. Renomeia o banco principal no destino e mantém o schema 4. Preserva a pasta original, preferências, notas, sessões, mídia e backups. Caminhos internos passam a apontar para a cópia; caminhos externos não são trocados.
+```text
+Current thread:
+  File "<string>", line 45 in check
+  File "<string>", line 67 in <module>
 
-Uma trava transitória serializa o início; as travas antiga e nova permanecem retidas durante a sessão, impedindo abrir a edição anterior ao mesmo tempo. Destino existente não é sobrescrito. Uma pasta nova vazia ao lado de banco antigo gera erro claro em vez de abrir uma biblioteca vazia. Falhas removem somente staging incompleto, mostram o caminho de origem na interface e registram apenas categoria/classe de erro no log.
+Thread de trabalho:
+  File "checkpoint/worker.py", line 31 in run_isolated
+  File "<string>", line 22 in isolated
+  File "checkpoint/drive_dialog.py", line 154 in <lambda>
+  File "checkpoint/drive_dialog.py", line 76 in work
+  File "checkpoint/jobs.py", line 10 in run
+```
 
-O cofre copia somente credenciais ausentes no serviço novo, sem apagar ou substituir valores antigos. O marcador de conclusão contém apenas um número, não valores de credencial. No Linux, a migração nativa do cofre não é tentada. Em testes, inclusive os preparados para Windows, o backend é em memória.
+A correção está em `checkpoint/dialogs.py:102` e `checkpoint/quick_add.py:205`: o diálogo aguarda seus Jobs independentemente do pai, mantendo receptor/widgets vivos até `finished`. Cancelar descarta respostas; salvar aguarda os detalhes selecionados e só então conclui. Buscas pendentes não substituem uma escolha durante esse encerramento. A thread principal continua processando eventos; não há `wait()` bloqueante no fluxo da interface.
 
-Decisão conservadora: exportações reconhecíveis de segredos (`credentials*.json`, `token*.json`, `client_secret*.json`, `.env` e variantes) não são copiadas para outros arquivos; permanecem intocadas na origem. Arquivos comuns com nomes parecidos, como a ROM fictícia usada no teste, continuam copiados. Isso resolve a tensão entre copiar a pasta inteira e não copiar credenciais em arquivos. SQLite secundário de backup é copiado pela API sem reescrever seu conteúdo histórico. Arquivos de saves continuam aceitando manifestos anteriores.
+O novo teste de diálogo aninhado mantém um job bloqueado e verifica que o diálogo permanece aberto até sua conclusão. O teste original `tests/test_save_lifecycle.py` não foi alterado, removido, pulado ou marcado como xfail. Após a correção inicial: 5/5 execuções isoladas passaram. Após a correção completa de cadastro: mais 5/5 passaram com `-X faulthandler`, sem SIGSEGV, em 17,81 s, 17,65 s, 16,94 s, 17,06 s e 18,42 s. O fluxo também integra todas as suítes completas posteriores.
 
-Testes em `tests/test_data_migration.py`: primeira abertura com pasta antiga completa e WAL; abertura sem dados antigos; destino existente; falha de integridade sem publicar cópia; credenciais fictícias sem log/arquivo e sem sobrescrever o serviço novo; preferência antiga normalizada para Verde com outras preferências intactas; concorrência de instâncias; `--data-dir` sem tocar no padrão; banco corrompido e destino vazio; erro de cofre sanitizado; edição antiga aberta; arquivo comum preservado. `tests/test_saves.py` cobre o manifesto anterior.
+O diagnóstico confirma o caminho funcional de encerramento prematuro e a regressão corrigida; não identifica uma instrução C++ específica. Não foi feita validação equivalente no Windows real.
 
-Não foi validada migração de uma biblioteca pessoal ou cofre real no computador Windows do usuário. Testes são isolados; não se deve confundir cobertura automatizada com essa validação.
+## Ficha da busca
 
-## Nove temas
+Ao selecionar, a consulta de detalhes ainda podia estar ativa. O salvamento encerrava o diálogo e a resposta posterior era descartada; a origem continuava no valor inicial Manual. Agora o aceite aguarda detalhes, `apply_catalog` registra Busca e `save_import` completa dados selecionados dentro da transação. O teste salva durante uma consulta pendente e confere os três dados e a origem no banco. ROMs mantêm Google Drive como origem e seu nome original no índice.
 
-Removido o tema Branco, incluindo paleta, seletor, swatches, revisão de capturas e textos atuais. Temas: Azul, Verde, Amarelo, Vermelho, Preto, Roxo, Rosa, Laranja e Ciano. Verde permanece padrão. A bolinha branca das referências foi removida por decisão do dono.
+## Decisões sem confirmação
 
-Arquivos envolvidos: `checkpoint/theme.py`, `checkpoint/profile_dialog.py`, `scripts/render_ui_review.py`, `scripts/package_ui_review.py`, `tests/test_themes.py`, `tests/test_ui_redesign.py`, README, DESIGN, SETUP, TESTING, PROJECT_STATUS, CONTINUITY e notas da revisão. Documentos históricos foram consolidados no CHANGELOG. A chave antiga de preferência permanece apenas na normalização obrigatória de `data_migration.py` e na fixture de migração, sem representar um tema disponível. Cores de tinta em SVG/imagens não são paletas do aplicativo.
+- Priorizei a queda nativa antes do desenho, pois o pedido proíbe encobrir a falha.
+- Densidade compacta vira 80%; confortável vira 100%. A preferência antiga permanece gravada e um tamanho já existente tem precedência.
+- Um único cálculo atende às duas grades; o padrão largo tem seis colunas e janelas menores reduzem. Em 70%, ações de Desejos usam duas linhas para preservar texto e ícones, sem zoom global.
+- Arte dos Desejos é 1:1: logo contida, capa recortada ao centro ou título. A Biblioteca preserva a capa vertical inteira. Não foi criado seletor de formato.
+- Automação continua ativa por padrão. A caixa local foi retirada da interface; seu controle interno é mantido para compatibilidade, respeitando a preferência global anterior de automação.
+- Limpeza de ROM remove apenas tags reconhecidas de região/versão, extensões e plataforma explícita; parênteses que podem fazer parte do título permanecem. A regra de plataforma da pasta tem precedência sobre a indicação do arquivo.
+- Provedor público GG.deals permanece em uso. A classe de API só reconhece presença de configuração injetada no cofre e retorna indisponibilidade enquanto faltar documentação. Não há endpoint presumido, transporte real nem credencial em arquivo/teste.
+- Os três componentes de cadastro foram mantidos. Não foi executada uma fusão não solicitada.
+- A partir das etapas finais, validei cópias imutáveis em /tmp, com PYTHONPATH explícito e bancos isolados. Os arquivos de aplicativo/testes no checkout foram comparados byte a byte com a cópia final. Os tempos abaixo incluem concorrência entre suítes e não medem desempenho do aplicativo.
 
-## Layout e bugs
+## Testes reais
 
-- Biblioteca: quatro colunas, capas verticais, título/status alinhados à imagem, borda de seleção, filtros próximos às abas e espaço superior reduzido. Placeholder desenha o título completo, inclusive ARK, sem inventar arte ou usar duas letras.
-- Desejos: mesma grade vertical; cards de dimensões iguais e área de logo fixa, proporcional e contida. Cinco jogos exibem “5 jogos”; um exibe “1 jogo”. Reserva de espaço de rolagem evita mudança de largura entre uma e várias linhas. Ofertas, adição e lixeira ficam alinhadas.
-- Início: banner com “Continuar jogando”, quatro capas de continuidade e atividade à direita. Havendo ambos os tipos, prioriza uma conquista e uma entrada de diário; não fabrica eventos.
-- Ficha: banner/voltar, barra de execução, bolinha de status, tempo, menu, quatro abas, descrição à esquerda, galeria à direita e metadados com ícones. Logo/capa não se duplicam na ficha.
-- Cadastro: três fontes, pesquisa com lupa/limpar, prévia com capa pequena, título/plataforma/estúdio e check, link de troca, automação, avançado recolhido e fechar visível. Estados de busca e ausência não se sobrepõem. Botão exige seleção de jogo ou ROM. Busca de dados/imagens ocorre em segundo plano; uma ROM selecionada pode ser salva mesmo sem ficha disponível.
-- Desejos usa “Adicionar desejo” e “Salvar desejo”; a ficha mostra “Adicionado à lista de desejos”. O risco de posse foi confirmado no código anterior: salvar reaproveitava a identidade e escrevia a marca de não possuído. Agora a posse anterior é preservada e o aviso indica que o jogo já está na Biblioteca. Testes verificam ausência de marca indevida e preservação de notas.
-- Biblioteca vazia oferece adicionar; busca/filtro sem resultado oferece limpar filtros; abas vazias têm mensagem própria e retorno a todos os jogos.
-- Conexões: 2×2, quatro serviços, ajuda no canto direito, Avançado recolhido, Gerenciar/Conectar e bolinhas verde/cinza. “Configurado” informa presença de configuração, não autenticação verificada.
-- Menu: identidade existente preservada, cinco destinos, separador, Configurações e perfil no rodapé com chevron. Textos e contadores revisados em PT-BR, inclusive importação Steam, conquistas e dia singular no calendário; datas de apresentação e acessibilidade DD/MM/AAAA; datas ISO persistidas continuam ISO.
+Comando da suíte, executado antes das mudanças e após cada etapa:
 
-### Desvios e decisões explícitas
+```bash
+QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp PYTHONDONTWRITEBYTECODE=1 \
+  .venv/bin/python -X faulthandler -m pytest tests -q -p no:cacheprovider
+```
 
-1. Desejos não tinha mockup específico completo: usa a grade da Biblioteca com logo contida, preço, link e ações. Em janelas menores o preço fica abaixo de “Menor preço atual”, preservando leitura. Desvio permitido pelo pedido.
-2. “Jogar” somente com executável configurado; sem ele, “Configurar execução” é secundário. ROMs continuam acessíveis em Arquivos. Desvio solicitado.
-3. Início substitui “Ver jogo” por “Continuar jogando”. Sem execução configurada, o botão abre a ficha para configuração, sem tentar iniciar algo inexistente. Desvio solicitado, com comportamento conservador.
-4. Identidade checkpo//nt e ícone próprio preservados, em vez do controle e do texto em maiúsculas das referências. Exceção do dono.
-5. Nove temas e ausência da bolinha branca, por decisão do dono.
-6. Solicitar desejo de um jogo já possuído preserva a Biblioteca e informa isso; não o reclassifica silenciosamente.
+Nas cópias, o executável foi `/workspace/Checkpoint/.venv/bin/python`, com `PYTHONPATH=/tmp/checkpoint-029-stageN` e cwd da mesma cópia. A base inicial usou `/tmp/checkpoint-029-baseline.oPaXCM` como raiz de dados. Logs desta execução ficam em `/tmp/checkpoint-029-*.log`; o resumo durável está em `evidence/validation-0.1.29.txt`.
+
+| Etapa | Resumo real |
+|---|---|
+| Base, antes de qualquer alteração | 252 passed in 216.36s (0:03:36) |
+| Ciclo de vida do Drive | 253 passed in 223.42s (0:03:43) |
+| Tamanho — iteração intermediária | 2 failed, 253 passed in 234.42s (0:03:54) |
+| Tamanho — fechamento | 255 passed in 241.47s (0:04:01) |
+| Início | 257 passed in 250.39s (0:04:10) |
+| Rolagem | 258 passed in 950.10s (0:15:50) |
+| Desejos e preços | 261 passed in 1092.91s (0:18:12) |
+| Ficha da busca | 262 passed in 1131.58s (0:18:51) |
+| Diálogo e ROM | 269 passed in 1236.45s (0:20:36) |
+| Estados vazios | 269 passed in 1112.42s (0:18:32) |
+| Documentação e acabamento inicial | 271 passed in 896.00s (0:14:56) |
+| Acabamento dos cards em 70% — final | 271 passed in 570.80s (0:09:30) |
+
+As duas falhas intermediárias de tamanho correspondiam ao encaixe exato da última coluna no Qt e a uma expectativa antiga de quatro colunas em janela estreita. Foram corrigidas antes do fechamento. Testes de contratos antigos foram atualizados para a ficha já preenchida na importação e o estado de salvamento pendente. Na revisão visual, um teste novo de identidade de item foi corrigido para verificar somente o ajuste do slider: navegar até a Biblioteca normalmente recria seus itens.
+
+O teste de rolagem usa 500 jogos, roda do mouse, animação de 180 ms e verifica progresso por pixel sem travar o loop. O parser é testado com e sem preço original e não fabrica desconto. A API é testada com objetos em memória, sem valor de chave. Migração, nove temas/contraste, estados vazios e proteção de jogos já possuídos continuam na suíte.
+
+Smokes repetidos no checkout final, com pastas novas e Qt offscreen:
+
+```bash
+QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -X faulthandler -m checkpoint.app --smoke-test --data-dir /tmp/checkpoint-029-root-smoke
+QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -X faulthandler -m checkpoint.app --save-smoke-test --data-dir /tmp/checkpoint-029-root-save-smoke
+```
+
+Saídas reais:
+
+```text
+Checkpoint smoke: 6 pages OK; SQLite integrity=ok
+Cadastro smoke: salvar, auxiliar, renderização e SQLite OK
+```
 
 ## Capturas e comparação
 
-Geradas por `scripts/render_ui_review.py`, usando Qt real, dados locais e artes sintéticas identificadas. Não são fotografias do Windows do usuário nem prova de acesso a provedores. São 61 capturas de páginas/estados no pacote de revisão; arquivos auxiliares de arte, SQLite e logs ficam fora dele.
-
-| Tela | Captura versionada | Conferência |
-| --- | --- | --- |
-| Início | [home.png](evidence/ui-0.1.28/home.png) | Banner, continuidade e atividade em duas colunas. |
-| Biblioteca | [library.png](evidence/ui-0.1.28/library.png) | Quatro capas verticais, nome/status e controles. |
-| Ficha | [detail-overview.png](evidence/ui-0.1.28/detail-overview.png) | Barra, abas, metadados e galeria. |
-| Desejos | [wishlist-prices.png](evidence/ui-0.1.28/wishlist-prices.png) | Cinco jogos, logos contidas e ações alinhadas. |
-| Adicionar jogo | [add-selected.png](evidence/ui-0.1.28/add-selected.png) | Seleção/check, automação e avançado. |
-| Configurações | [settings-connections.png](evidence/ui-0.1.28/settings-connections.png) | Quatro cards 2×2 e estados não configurados. |
-| Conexões configuradas | [settings-connections-configured.png](evidence/ui-0.1.28/settings-connections-configured.png) | Bolinhas verdes e Gerenciar, presença simulada declarada, sem credenciais. |
-
-Revisão completa local: `/workspace/work/checkpoint-0128-entrega`. Pacote sem bancos/logs: `/workspace/work/checkpoint-0128-entrega-artifacts/Checkpoint-0.1.28-ui-review.zip`. Janelas verificadas: 1000×700, 1100×740 e 1920×1080.
-
-Diferenças restantes: artes e conteúdo das capturas são fixtures, portanto personagens/logos dos jogos das referências não aparecem; fontes, métricas, antialiasing, barra nativa e DPI podem diferir no Windows. O diálogo tem altura mínima maior para evitar sobreposição e preservar a prévia. Steam/Drive mantêm assets oficiais existentes; SteamGridDB/RAWG ainda usam monogramas herdados SG/R, e não os logos oficiais específicos da imagem. Tentativas de obter seus favicons encontraram restrição de rede nesta sessão; mantive identificadores existentes em vez de desenhar marcas falsas. Esses pontos impedem declarar igualdade pixel a pixel. A estrutura foi comparada visualmente, mas a aprovação estética pertence ao dono.
-
-## Testes e comandos reais
-
-Comando da suíte em cada etapa: `QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest tests -q -p no:cacheprovider`. Fixtures usam pastas próprias, removidas após os testes. Smokes usam diretórios novos fora do checkout.
-
-| Etapa | Resultado |
-| --- | --- |
-| Base 0.1.27, antes de alterar | 225 passaram, 168,33 s |
-| Renomeação | 225 passaram, 173,51 s |
-| Migração | 236 passaram, 170,10 s |
-| Nove temas | 236 passaram, 161,46 s |
-| Grades e compatibilidade de backups | 241 passaram, 160,64 s |
-| Estrutura das telas de referência | 245 passaram, 193,58 s |
-| Cadastro, posse e contadores | 249 passaram, 199,31 s |
-| Geometria e placeholder, testes focados | 9 passaram, 1,89 s |
-| Primeiro fechamento antes da revisão final de contadores | 251 passaram, 228,03 s |
-| Após fechamento explícito das conexões de teste | 251 passaram, 281,86 s |
-| Contadores Steam/calendário, testes focados | 27 passaram, 4,27 s |
-| Fechamento final 0.1.28 — Linux | 252 passaram, 273,37 s |
-| Windows CI final | 252 passaram, 174,51 s; build, smokes e capturas aprovados |
-
-Na primeira rodada Windows houve 251 testes aprovados e três erros de limpeza: conexões SQLite abertas pelas verificações não foram fechadas pelo gerenciador de transação. As três leituras de teste passaram a usar `contextlib.closing`; o código de migração já o usava. As 12 verificações de migração passaram localmente após a correção.
-
-Houve falhas intermediárias em expectativas textuais antigas (“Menor preço”, “artes”, “1 imagens”, contagens fracionadas da importação Steam) e na comparação de largura com/sem espaço de rolagem. Foram corrigidas, incluindo reserva estável da rolagem; não se omitiu a execução com falha nem se trataram testes parciais como suíte completa. Execuções intermediárias registraram 1 falha/240 aprovações na grade, 4 falhas/245 aprovações nos textos de artes, 1 falha/250 aprovações no singular de imagem e 1 falha/251 aprovações no texto antigo da importação em lote. A execução final acima passou integralmente.
-
-O fluxo de cadastro em processo separado foi atualizado para selecionar uma fixture, sem acessar catálogo real.
-
-Outros comandos/resultados:
+Geradas por `scripts/render_ui_review.py --reference-sizes`, em `/tmp/checkpoint-029-evidence-complete`, com cópias somente dos PNGs e da descrição da revisão em `evidence/ui-0.1.29/`. Nenhum banco, imagem pessoal, log privado ou arquivo de credencial foi incluído. São 14 capturas: seis telas em duas resoluções, mais Aparência nas duas.
 
 ```bash
-QT_QPA_PLATFORM=offscreen .venv/bin/python -m checkpoint.app --smoke-test --data-dir /workspace/work/checkpoint-0128-ultimo-pages
-# Checkpoint smoke: 6 pages OK; SQLite integrity=ok
-QT_QPA_PLATFORM=offscreen .venv/bin/python -m checkpoint.app --save-smoke-test --data-dir /workspace/work/checkpoint-0128-ultimo-cadastro
-# Cadastro smoke: salvar, auxiliar, renderização e SQLite OK
-QT_QPA_PLATFORM=offscreen .venv/bin/python scripts/render_ui_review.py /workspace/work/checkpoint-0128-entrega
-QT_QPA_PLATFORM=offscreen .venv/bin/python scripts/package_ui_review.py /workspace/work/checkpoint-0128-entrega /workspace/work/checkpoint-0128-entrega-artifacts
-# Revisão visual: 61 PNGs e índice HTML; bases e logs excluídos.
-.venv/bin/python -m pip check
-# No broken requirements found.
+QT_QPA_PLATFORM=offscreen python scripts/render_ui_review.py /tmp/revisao-nova --reference-sizes
 ```
 
-Dependência local de build ausente foi instalada e o projeto reinstalado editável; scripts passaram depois disso. A versão do módulo e de pyproject foi conferida como 0.1.28. API pública GitHub respondeu HTTP 200; leitura de v0.1.27 retornou tag correta, release não rascunho e oito assets. Nada foi escrito em releases.
+Os dados, preços e artes são fixtures declaradas; não demonstram integrações autenticadas. No modo offscreen, a imagem de Adicionar jogo compõe grabs Qt reais da janela e do diálogo na posição correspondente; não é captura do desktop Windows.
 
-Windows CI concluído com sucesso em Windows Server 2022 x64/Python 3.12.10: **252 testes passaram em 174,51 s**, build concluído, validação de fonte/executável extraído e capturas concluídas. Execução: [Windows UI validation](https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43368694510), código validado `124daab`. Artefatos novos: [pacote e revisão Windows](https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43368694510/artifacts/14011324126) e [relatório de testes](https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43368694510/artifacts/14011329615). Retenção configurada: 14 dias. As sete capturas versionadas neste relatório são as inspecionadas localmente em Linux; as capturas Windows do runner estão no artefato, sem afirmar inspeção no computador pessoal. Workflow de validação separado, com permissão somente de leitura e upload de artefatos novos; o workflow de release não inclui esta branch. Nenhuma publicação foi solicitada.
+| Arquivo | Dimensão | Bytes |
+|---|---|---:|
+| [1280x800-add.png](evidence/ui-0.1.29/1280x800-add.png) | 1280×800 | 117088 |
+| [1280x800-appearance.png](evidence/ui-0.1.29/1280x800-appearance.png) | 1280×800 | 56633 |
+| [1280x800-detail.png](evidence/ui-0.1.29/1280x800-detail.png) | 1280×800 | 114374 |
+| [1280x800-home.png](evidence/ui-0.1.29/1280x800-home.png) | 1280×800 | 165978 |
+| [1280x800-library.png](evidence/ui-0.1.29/1280x800-library.png) | 1280×800 | 221150 |
+| [1280x800-settings.png](evidence/ui-0.1.29/1280x800-settings.png) | 1280×800 | 74332 |
+| [1280x800-wishlist.png](evidence/ui-0.1.29/1280x800-wishlist.png) | 1280×800 | 83399 |
+| [1920x1080-add.png](evidence/ui-0.1.29/1920x1080-add.png) | 1920×1080 | 170742 |
+| [1920x1080-appearance.png](evidence/ui-0.1.29/1920x1080-appearance.png) | 1920×1080 | 67614 |
+| [1920x1080-detail.png](evidence/ui-0.1.29/1920x1080-detail.png) | 1920×1080 | 132637 |
+| [1920x1080-home.png](evidence/ui-0.1.29/1920x1080-home.png) | 1920×1080 | 182846 |
+| [1920x1080-library.png](evidence/ui-0.1.29/1920x1080-library.png) | 1920×1080 | 230954 |
+| [1920x1080-settings.png](evidence/ui-0.1.29/1920x1080-settings.png) | 1920×1080 | 86933 |
+| [1920x1080-wishlist.png](evidence/ui-0.1.29/1920x1080-wishlist.png) | 1920×1080 | 94628 |
 
-## Revisão de código e documentação
+Comparação visual feita com as referências fornecidas:
 
-A busca encontrou `window.metadata` no botão “Pesquisar metadados manualmente” de Conexões > Avançado, e `metadata_dialog.py` é importado por esse método. Portanto ambos foram mantidos; a hipótese de código morto não se confirmou.
+- Início: banner, texto curto, Continuar jogando, quatro jogos em andamento e atividade à direita; sem abas da Biblioteca. Botão permanece dentro do banner em ambas as resoluções.
+- Biblioteca: capas verticais, título/status, busca, adição, visualização, abas e filtros. Seis colunas no padrão largo substituem as quatro da referência por decisão explícita desta versão.
+- Desejos: cinco jogos de teste em cards uniformes, arte 1:1, preço/indisponibilidade, desconto e ações. A nova proporção prevalece sobre a foto antiga.
+- Ficha: banner, voltar, barra de execução/status/tempo/menu, abas e galeria. A captura usa Configurar execução secundário porque a fixture não tem executável, conforme a exceção solicitada.
+- Adicionar: uma barra própria, um fechamento, três fontes, seleção/check, Escolher outro resultado, informação de automação, avançado e ações. A plataforma expandida é coberta por teste de largura/altura.
+- Conexões: quatro cards 2×2, estados verdes/cinzas e botões; as presenças configuradas das capturas são simuladas, sem autenticação. Aparência mostra nove temas e o slider.
 
-`dialogs.py` ainda concentra campos, validação e fontes antigas; `quick_add.py` reorganiza esses campos no cadastro rápido; `game_editor.py` os apresenta em abas para edição. Há sobreposição de composição, preenchimento e sinalização. Proposta futura: extrair um modelo de formulário e um controlador de seleção/enriquecimento compartilhados, mantendo cadastro e edição como apresentações separadas. A fusão não foi executada.
+Diferenças restantes: artes/logos de jogos e textos são fixtures, não os arquivos das imagens aprovadas; a tipografia/renderização é a disponível no Linux. SteamGridDB e RAWG mantêm identificadores gráficos SG/R em vez das marcas completas. A ficha conserva metadados adicionais de gênero, lançamento, publicadora e origem; a referência os resume. A ajuda de Conexões fica em linha própria acima dos cards. Margens e espaço livre variam com a largura e a quantidade de dados; não se afirma igualdade pixel a pixel com as fotografias. Capas reais de proporções diferentes são preservadas inteiras, sem fundo desfocado. A revisão final de estética e DPI no Windows continua humana.
 
-README, LEIA-ME, SETUP, INTEGRATIONS, PROJECT_STATUS, CONTINUITY, DESIGN, ARCHITECTURE, CLOUD_SETUP, TESTING, ROADMAP e notas atuais foram revisados. PROJECT_STATUS agora contém estado atual, pendências e limitações, sem hashes ou IDs de workflow. CHANGELOG reúne versões da 0.1.0 à atual, descrições antes misturadas à instalação e apêndice de caminhos renomeados. Evidence antigo recebeu identificação histórica; contagens e datas históricas não foram apresentadas como resultados novos. Exigências antigas de formato e paleta foram removidas da documentação operacional.
+## Arquivos alterados
 
-## Não validado e decisão humana pendente
+- `.github/release-notes.md` — Texto local atualizado; nenhuma descrição de release existente foi editada no GitHub.
+- `AGENTS.md` — Distingue a arte dos Desejos das capas da Biblioteca.
+- `CHANGELOG.md` — Entrada da revisão e histórico identificado como histórico.
+- `CLOUD_SETUP.md` — Branch de trabalho atual e dados isolados.
+- `CONTINUITY.md` — Base, continuidade, regras de encerramento e restrição de publicação.
+- `DESIGN.md` — Decisões atuais de tamanho, colunas e arte dos desejos.
+- `INTEGRATIONS.md` — Provedor público versus estrutura de API; cobertura e limites.
+- `PRODUCT_VISION.md` — Remove formato antigo rígido e alinha Biblioteca vertical/Desejos 1:1.
+- `PROJECT_STATUS.md` — Estado atual, pendências e limitações, sem hashes/IDs/branches.
+- `README.md` — Versão, funcionalidades e ausência de nova release.
+- `ROADMAP.md` — Pendências do dono e validação Windows.
+- `SETUP.md` — Instalação, execução, build e dados; preferência sem mudança de schema.
+- `TESTING.md` — Comandos e cobertura atuais, isolamento e limites das capturas.
+- `checkpoint/__init__.py` — Versão 0.1.29.
+- `checkpoint/auto_artwork.py` — Conclusão das imagens em linguagem simples, sem totais de tipos indisponíveis.
+- `checkpoint/card_layout.py` — Métrica única de colunas/tamanho/espaçamento e conversão da preferência de densidade.
+- `checkpoint/collection_views.py` — Arte 1:1, alternativas de capa/título, descontos, ordenação, restauração da rolagem e ações adaptáveis nos cards pequenos.
+- `checkpoint/cover_grid.py` — Capas verticais, tamanho responsivo e rolagem por pixel.
+- `checkpoint/data_migration.py` — Identificador de paleta legada centralizado; mesma conversão, sem alterar schema, backup ou origem.
+- `checkpoint/design_system.py` — Áreas de rolagem suave e referência à área criada para restaurar posição.
+- `checkpoint/dialogs.py` — Conclusão aguarda jobs em qualquer hierarquia; origem Busca e plataforma da ROM.
+- `checkpoint/enrichment.py` — Mensagem de ficha preenchida e orientação de falha, sem relatório técnico de totais.
+- `checkpoint/game_import.py` — Metadados selecionados completam o novo cadastro na mesma transação, com origem correta.
+- `checkpoint/home_view.py` — Seleção por andamento/recência, ausência de arte aleatória e composição que cabe em 1280 px.
+- `checkpoint/integrations/drive.py` — Limpeza conservadora de extensão, tags e plataforma; preserva original_name.
+- `checkpoint/integrations/ggdeals.py` — Preço original da oferta, desconto calculado e rejeição de preço zero.
+- `checkpoint/integrations/price_provider.py` — Contrato de preços e implementação separada da API, sem transporte real.
+- `checkpoint/price_view.py` — Preço atual, original riscado, desconto e indisponibilidade legível.
+- `checkpoint/prices.py` — Validação de BRL/valor positivo, último valor válido e ordenação dos desejos.
+- `checkpoint/quick_add.py` — Estados de consulta/conclusão, detalhes aguardados, fechamento único e simplificação das opções visíveis.
+- `checkpoint/settings_view.py` — Slider 70–150%, padrão 100%, no lugar da densidade.
+- `checkpoint/smooth_scroll.py` — Animação de 180 ms sobre a barra vertical e tratamento por pixel.
+- `checkpoint/statistics_view.py` — Uso da área de rolagem animada.
+- `checkpoint/theme.py` — Barras temáticas, slider e selo de desconto; nove paletas preservadas.
+- `checkpoint/ui_components.py` — Recalcula a área do banner para manter o botão dentro dela ao redimensionar.
+- `checkpoint/window.py` — Atualiza tamanho sem reconstruir os itens, preserva a página no refresh e distingue estados vazios.
+- `checkpoint/window_style.py` — Barra própria do diálogo, fechamento e arraste.
+- `evidence/checkpoint-015-validation.txt` — Troca do nome da paleta descontinuada por descrição genérica; números e marcação histórica preservados.
+- `pyproject.toml` — Versão 0.1.29; dependências e schema mantidos.
+- `scripts/LEIA-ME.txt` — Orientação simples para a revisão atual, dados, cadastro e tamanho das capas.
+- `scripts/render_ui_review.py` — Matriz das seis telas em duas resoluções, Aparência adicional e composição declarada do diálogo.
+- `tests/test_add_dialog_0129.py` — Fechamento único, plataforma legível, seleção e opções visíveis.
+- `tests/test_card_layout.py` — Colunas, migração da densidade, persistência, mesma fórmula e ações legíveis em 70%.
+- `tests/test_complete_layout.py` — Atualiza expectativa antiga de colunas para o comportamento responsivo.
+- `tests/test_data_migration.py` — Mantém teste de conversão da preferência usando a constante de compatibilidade.
+- `tests/test_enrichment.py` — Mensagens novas e metadados já preenchidos na importação.
+- `tests/test_home_0129.py` — Andamento/recência, ausência de abas, estado vazio, largura e botão dentro do banner.
+- `tests/test_prices_0129.py` — Preço original/desconto, ausência de original, zero, API sem transporte, ordenação e rolagem.
+- `tests/test_quick_add.py` — Regressão de diálogo aninhado com job pendente e estado de conclusão.
+- `tests/test_registration_0128.py` — CTAs de abas/filtros e biblioteca vazia, sem regressão de desejos já possuídos.
+- `tests/test_revision_0128.py` — Arte 1:1 dos desejos e colunas responsivas, preservando limites dos cards.
+- `tests/test_rom_titles_0129.py` — Cinco nomes típicos e preservação do original/plataforma no índice.
+- `tests/test_search_save_0129.py` — Salvar durante detalhes pendentes e conferir desenvolvedora, editora, descrição e origem no SQLite.
+- `tests/test_smooth_scroll.py` — Roda com 500 jogos, pixel/animação e áreas das demais telas.
+- `tests/test_ui_redesign.py` — Controle de tamanho substitui a expectativa antiga de densidade.
+- `RELATORIO_CORRECOES.md` — relatório desta revisão, substituindo o relatório atual anterior; o histórico permanece no Git e no CHANGELOG.
+- `evidence/ui-0.1.29/*.png` — 14 capturas listadas acima, uma por caminho.
+- `evidence/ui-0.1.29/review-info.json` — ambiente, resoluções e natureza das fixtures/composição.
+- `evidence/validation-0.1.29.txt` — resumos reais de validação.
 
-Não foi aberto o programa no Windows do usuário, não foram usados seus dados ou credenciais, nem verificadas contas reais Steam, Drive, SteamGridDB, RAWG ou GG.deals. DPI, múltiplos monitores, renderização final no computador pessoal e satisfação estética exigem conferência humana. A presença de configuração simulada nas capturas não comprova login. Windows CI validou o runner e o executável nele, sem validar o computador pessoal.
+## Auditoria e limitações
 
-Decisão de produto pendente: **o dono deseja futuramente unificar os três componentes de cadastro?** Nesta tarefa foram mantidos, com a sobreposição documentada. As demais decisões conservadoras e diferenças visuais estão explicitadas acima, sem substituir as referências por um layout novo.
+Busca case-insensitive pelo identificador anterior: zero ocorrências fora do CHANGELOG; as menções históricas no CHANGELOG foram preservadas. Não há paleta descontinuada no seletor, swatches ou catálogo de temas. Seu valor legado só é reconhecido na fronteira de migração e no teste correspondente. O schema continua 4. A identidade checkpo//nt e os arquivos do ícone da base não foram substituídos.
 
+Não foram lidas ou expostas credenciais reais. Nenhuma chave foi criada ou registrada em arquivos, logs ou testes novos. Não foram validados Windows real, DPI, cofre nativo real, contas de Steam/Drive/RAWG/SteamGridDB, bloqueios reais de GG.deals, nem API oficial autenticada. Não foi gerado executável Windows nesta revisão.
 
-## Publicação posterior autorizada
-
-Após novo pedido explícito do dono, a v0.1.28 foi publicada como pré-release, mantendo a classificação das versões anteriores. Usou o artefato aprovado da execução Windows 43368694510, sem recompilação, após conferir SHA-256 e CRC do ZIP. A publicação foi preparada em rascunho e tornada pública depois do upload dos oito assets.
-
-- Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.28
-- Publicação aprovada: https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43409812604
-- Tag nova v0.1.28: 21ca701f052855fec97032f56211f3ba6f536ffc. Nenhuma tag anterior foi movida.
-- ZIP Windows: 84.057.164 bytes; SHA-256 `65548a88addb57586cf77294372265b31449b85c3a79fe2d6acd036e60859c5d`.
-- O código do aplicativo continua idêntico ao build validado em 124daab; commits posteriores registram documentação e publicação.
-
-A autorização posterior substitui a proibição de criar esta nova release; a preservação de todas as releases anteriores continua mantida.
+Pendências do dono: documentação oficial e chave própria para a futura API GG.deals; remoção da pré-release v0.1.28 publicada por engano; revisão visual e validação em Windows real. A futura unificação dos componentes de cadastro permanece uma decisão separada.

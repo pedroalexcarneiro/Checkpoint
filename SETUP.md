@@ -28,3 +28,5 @@ Padrão: `%LOCALAPPDATA%\Checkpoint`, banco `checkpoint.sqlite`, schema 4. `--da
 A primeira abertura copia o diretório anterior quando o novo ainda não existe, produz um snapshot SQLite pela API de backup e verifica sua integridade. Preserva a origem, preferências, imagens, arquivos e credenciais antigas; credenciais são copiadas apenas entre serviços do cofre. Exportações de segredos não são copiadas para arquivos. Preferências antigas de aparência são normalizadas para Verde quando necessário.
 
 Falhas interrompem a abertura e mostram o caminho original para recuperação. Não apague a pasta antiga nem abra duas versões simultaneamente. Uma pasta nova já existente não é sobrescrita. Backups de saves continuam compatíveis com manifestos anteriores.
+
+O tamanho dos cards é uma preferência da tabela de configurações; a densidade anterior é convertida sem apagar a preferência original. Não é necessário migrar o schema. Testes devem usar CHECKPOINT_TEST_ROOT em /tmp e --data-dir isolado.

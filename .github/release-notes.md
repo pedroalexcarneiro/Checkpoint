@@ -1,18 +1,11 @@
-# Checkpoint 0.1.28
+# Checkpoint 0.1.29 — revisão de código-fonte
 
-- Renomeação técnica para Checkpoint, com migração não destrutiva dos dados e do cofre. A pasta anterior é preservada; o banco continua no schema 4.
-- Biblioteca com quatro colunas de capas verticais, Desejos com logos contidas, Início com continuidade e ficha com galeria.
-- Cadastro com seleção, dados e imagens em segundo plano; confirmação de desejos e proteção dos jogos já possuídos.
-- Nove temas, com Verde como padrão. O tema Branco foi removido.
+- Tamanho ajustável das capas, colunas responsivas e Início com jogos em andamento.
+- Rolagem suave, Desejos com arte 1:1 e descontos reais quando presentes na fonte.
+- Busca com ficha completa e origem correta; cadastro com fechamento único, nomes de ROM limpos e estados vazios distintos.
+- Diálogos aninhados aguardam as consultas ativas antes de concluir; regressões com faulthandler.
+- Nove temas, Verde padrão. Migração de dados preservada e schema 4 mantido.
 
-## Baixar e usar
+Esta revisão não publica release, tag ou pacote Windows. Este arquivo é documentação local; não foi enviado como descrição de uma release existente.
 
-Baixe **Checkpoint-0.1.28-windows-x64.zip**, extraia a pasta inteira e abra **Checkpoint.exe**. O arquivo `.sha256` permite conferir o pacote.
-
-## Validação e limites
-
-252 testes aprovados em Linux e Windows CI; build, smokes do código-fonte e do executável extraído, SQLite e capturas aprovados. O pacote publicado é o mesmo artefato do CI, sem recompilação.
-
-Código-fonte da revisão: `21ca701`; binário construído em `124daab`. Entre esses commits há somente relatório, documentação e capturas, sem mudanças no código do aplicativo.
-
-A interface ainda apresenta diferenças em relação às referências, documentadas no `RELATORIO_CORRECOES.md`, incluindo monogramas de SteamGridDB/RAWG. DPI, contas reais e o Windows pessoal do usuário não foram homologados. A futura unificação dos componentes de cadastro continua pendente de decisão.
+Resultados reais de testes, capturas, smokes e limitações estão em RELATORIO_CORRECOES.md. A API oficial GG.deals depende de documentação e chave do dono. Windows real, DPI e contas autenticadas não foram homologados nesta revisão. A remoção da pré-release anterior publicada por engano cabe ao dono.

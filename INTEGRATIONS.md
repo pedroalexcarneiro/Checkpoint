@@ -14,7 +14,9 @@ Credenciais próprias configuradas em Conexões. SteamGridDB fornece artes da co
 
 ## GG.deals
 
-Consulta pública de preços em reais, com cache e preservação do último valor válido quando a consulta falha. Links de lojas e afiliados são preservados exatamente como fornecidos pela fonte. A prévia lista somente as ofertas extraídas com segurança; a página externa pode conter ofertas adicionais. Indisponível significa que não há preço utilizável, não preço zero. Bloqueios e desafios de acesso podem impedir a consulta.
+O provedor **Página pública** continua sendo o padrão: consulta HTML BR, mantém links de lojas/afiliados e cache de uma hora, preservando o último preço válido quando há falha. O parser usa o preço original da mesma oferta para calcular desconto; sem original, não inventa percentual. Preço ausente ou zero não é apresentado como oferta utilizável. Bloqueios e mudanças do HTML podem impedir consultas. A página externa pode conter ofertas adicionais.
+
+O contrato PriceProvider retorna preço atual, original, desconto, moeda e lojas. **API oficial GG.deals** é uma implementação separada, desativada sem configuração no cofre. Mesmo com configuração, não realiza chamadas: depende da documentação oficial, a ser fornecida/verificada antes da implementação do transporte. A interface atual continua usando a página pública; não há campo para registrar segredo em arquivo. A decisão sobre a chave depende do dono. Os testes verificam a estrutura com objetos em memória e preços fictícios, não autenticam uma conta nem validam a API real.
 
 ## Atualizações
 

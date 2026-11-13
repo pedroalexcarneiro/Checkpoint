@@ -22,8 +22,8 @@ favoritos, categorias, CRUD e detalhes. Status: não iniciado, backlog, jogando,
 concluído e abandonado. Ficha: nome, descrição, desenvolvedora, publicadora, lançamento,
 plataforma, gênero, capa/banner/logo, status, nota, favorito, notas, origem e IDs externos.
 Visual editorial limpo, paletas discretas, tipografia/espaçamento consistentes, transições
-suaves quando úteis. Sem slogans. Capas 3:4 com arte inteira; banners horizontais e logos
-transparentes quando disponíveis, imagens sem moldura física/branco de embalagem.
+suaves quando úteis. Sem slogans. Capas verticais com arte inteira; Desejos com arte 1:1; banners horizontais e logos
+transparentes quando disponíveis, imagens sem moldura física ou bordas de embalagem.
 
 ## Metadados e artes
 

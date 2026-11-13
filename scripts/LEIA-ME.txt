@@ -1,20 +1,21 @@
-CHECKPOINT 0.1.28
+Checkpoint 0.1.29
 
-Para usar o pacote Windows, extraia a pasta inteira e abra Checkpoint.exe.
-Não abra o programa dentro do ZIP. Mantenha os arquivos da pasta juntos.
+Esta revisão entrega código-fonte; não publica um novo pacote Windows.
+Para desenvolvimento, instalação e build, consulte SETUP.md na raiz.
 
-Sua biblioteca fica em %LOCALAPPDATA%\Checkpoint, fora da instalação.
-Ao atualizar de uma edição antiga, o programa copia os dados compatíveis e
-verifica o banco. A pasta anterior é preservada. Se houver erro, a mensagem
-mostra onde estão os dados antigos. Não apague essa pasta.
+Quando houver um pacote Windows, extraia a pasta inteira antes de abrir
+Checkpoint.exe. Sua biblioteca fica em %LOCALAPPDATA%\Checkpoint, fora da
+instalação. A migração copia os dados antigos, verifica o banco e preserva
+a origem. Não apague a pasta anterior.
 
-Para adicionar um jogo, pesquise o nome, escolha o resultado e salve.
-Ficha e imagens disponíveis são buscadas automaticamente. ROM do Drive e
-Steam ficam nas abas do cadastro. Conexões e aparência ficam em Configurações.
+Para adicionar, pesquise o nome e escolha um resultado; ficha e imagens
+são obtidas automaticamente, conforme a disponibilidade dos provedores.
+ROMs do Drive e Steam ficam nas abas do cadastro. O nome original da ROM
+é preservado no índice, mesmo com o título limpo na Biblioteca.
 
-São nove temas, com Verde como padrão. Capas são verticais.
-Credenciais são configuradas somente no aplicativo e ficam no cofre do Windows;
-não envie chaves pelo chat ou coloque-as em arquivos do projeto.
+Em Configurações > Aparência, ajuste Tamanho das capas entre 70% e 150%.
+Biblioteca usa capas verticais. Desejos usa logos em área quadrada e mostra
+os descontos disponíveis. São nove temas, com Verde como padrão.
 
-Para desenvolver ou gerar um pacote, consulte SETUP.md na raiz.
-Esta revisão do código não cria uma nova release automaticamente.
+Conexões ficam em Configurações. Credenciais ficam somente no cofre do
+Windows; não envie chaves pelo chat nem salve segredos no projeto.

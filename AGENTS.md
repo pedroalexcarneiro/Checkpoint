@@ -11,7 +11,7 @@ Leia primeiro `CONTINUITY.md`, depois o resumo atual de `PROJECT_STATUS.md`,
 - Preserve a separação entre interface PySide6, serviços, SQLite e provedores.
   Migrações devem preservar dados e ter testes; nunca recrie o banco do usuário.
 - Português brasileiro na interface e comunicação. Sem slogans/subtítulos promocionais.
-  Temas discretos e coesos; capas verticais com imagem inteira, sem deformar ou cortar texto; título e status
+  Temas discretos e coesos; capas da Biblioteca verticais com imagem inteira, sem deformar ou cortar texto; Desejos com arte 1:1, logo contida e alternativas de capa/título; título e status
   alinhados à borda real da imagem.
 - Não associe ROM por semelhança fraca. Preserve `original_name`, IDs Drive e versões.
   A escolha explícita no catálogo pode padronizar o título exibido.

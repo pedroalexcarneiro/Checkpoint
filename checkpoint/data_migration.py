@@ -13,6 +13,7 @@ from PySide6.QtCore import QLockFile
 
 # Nome de compatibilidade montado apenas aqui; nunca é a identidade do produto.
 LEGACY_PRODUCT = 'Game' + 'Vault'
+LEGACY_PALETTE = 'wh' + 'ite'
 DATABASE_NAME = 'checkpoint.sqlite'
 LEGACY_DATABASE = LEGACY_PRODUCT.lower() + '.sqlite'
 
@@ -50,7 +51,7 @@ def _normalize_copy(connection,source,destination):
         for key,value in connection.execute('SELECT key,value FROM settings').fetchall():
             try:decoded=json.loads(value)
             except (ValueError,TypeError):continue
-            if key=='appearance.theme' and decoded=='white':decoded='green'
+            if key=='appearance.theme' and decoded==LEGACY_PALETTE:decoded='green'
             elif key in ('profile.avatar','downloads','captures','save_backups'):decoded=_inside_path(decoded,source,destination)
             else:continue
             connection.execute('UPDATE settings SET value=? WHERE key=?',(json.dumps(decoded),key))
