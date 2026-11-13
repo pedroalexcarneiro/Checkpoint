@@ -215,6 +215,7 @@ class MainWindow(QMainWindow):
         from .design_system import empty_state
         self.library_empty=empty_state('library','Biblioteca vazia','',self.add_library_game,'Adicionar jogo');layout.addWidget(self.library_empty);self.library_empty.hide()
         self.gallery.setObjectName('coverGrid');self.gallery.setFrameShape(QFrame.NoFrame);self.gallery.setTextElideMode(Qt.ElideRight)
+        layout.addStretch(0)
 
     @Slot(int)
     def library_tab_changed(self,index):

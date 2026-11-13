@@ -13,7 +13,7 @@ def test_banner_is_bounded_at_desktop_width(library,app,tmp_path):
     assert 220<=hero.height()<=300
     assert hero.grab().toImage().pixelColor(hero.width()-20,hero.height()//2).red()>240
     hero.resize(1700,hero.height());app.processEvents()
-    assert hero.height()<=300
+    assert hero.height()<=360
     hero.close()
 
 

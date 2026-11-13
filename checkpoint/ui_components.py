@@ -176,7 +176,7 @@ class GameTile(CoverArtwork):
         p.drawText(QRectF(0,self.art_height+5,self.width(),20),Qt.AlignVCenter,p.fontMetrics().elidedText(self.game['title'],Qt.ElideRight,self.width()))
         font.setPixelSize(12);font.setWeight(QFont.Normal);p.setFont(font);p.setPen(QColor(colors['muted']))
         p.drawText(QRectF(0,self.art_height+25,self.width(),18),Qt.AlignVCenter,' · '.join(filter(None,[self.game.get('status'),f"{self.game['seconds']/3600:.0f} h" if self.game.get('seconds') else ''])))
-        if self.hasFocus():p.setPen(QPen(QColor(colors['accent']),1));p.setBrush(Qt.NoBrush);p.drawRoundedRect(self.rect().adjusted(1,1,-1,-1),7,7)
+        if self.hasFocus():p.setPen(QPen(QColor(colors['accent']),1));p.setBrush(Qt.NoBrush);p.drawRoundedRect(self.rect().adjusted(1,1,-1,-1),RADIUS['card'],RADIUS['card'])
         p.end()
 
     def open_game(self):self.callback(self.game_id)
@@ -191,9 +191,19 @@ class CurrentPageTabs(QTabWidget):
     def sizeHint(self):
         page=self.currentWidget()
         if page is None:return super().sizeHint()
-        return QSize(page.sizeHint().width(),page.sizeHint().height()+self.tabBar().sizeHint().height()+8)
+        return QSize(page.sizeHint().width(),self.heightForWidth(max(1,self.width())))
 
-    def minimumSizeHint(self):return QSize(0,self.sizeHint().height())
+    def minimumSizeHint(self):return QSize(0,self.heightForWidth(max(1,self.width())))
+
+    def resizeEvent(self,event):
+        super().resizeEvent(event)
+        if event.oldSize().width()!=event.size().width():self.updateGeometry()
+
+    def heightForWidth(self,width):
+        page=self.currentWidget()
+        if page is None:return super().heightForWidth(width)
+        height=page.heightForWidth(width) if page.hasHeightForWidth() else page.sizeHint().height()
+        return max(0,height)+self.tabBar().sizeHint().height()+8
 
     def page_changed(self,index):self.updateGeometry()
 

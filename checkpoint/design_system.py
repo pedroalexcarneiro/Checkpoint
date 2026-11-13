@@ -100,7 +100,7 @@ class AdaptiveColumns(QWidget):
     def __init__(self,left,right,ratio=(3,2),breakpoint=800,parent=None):
         super().__init__(parent);self.breakpoint=breakpoint;self.ratio=ratio
         self.row=QBoxLayout(QBoxLayout.LeftToRight,self);self.row.setContentsMargins(0,0,0,0);self.row.setSpacing(22);self.row.setSizeConstraint(QLayout.SetNoConstraint)
-        self.row.addWidget(left,ratio[0]);self.row.addWidget(right,ratio[1]);self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Preferred)
+        self.row.addWidget(left,ratio[0],Qt.AlignTop);self.row.addWidget(right,ratio[1],Qt.AlignTop);self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Preferred)
     def minimumSizeHint(self):return QSize(0,self.sizeHint().height())
     def resizeEvent(self,event):
         direction=QBoxLayout.TopToBottom if self.width()<self.breakpoint else QBoxLayout.LeftToRight
@@ -111,12 +111,17 @@ class AdaptiveColumns(QWidget):
 class CardGrid(QWidget):
     def __init__(self,target=300,parent=None,max_columns=None):
         super().__init__(parent);self.target=target;self.max_columns=max_columns;self.cards=[];self.columns=0
-        self.grid=QGridLayout(self);self.grid.setContentsMargins(0,0,0,0);self.grid.setSpacing(SPACE['lg']);self.grid.setAlignment(Qt.AlignTop)
+        self.grid=QGridLayout(self);self.grid.setContentsMargins(0,0,0,0);self.grid.setSpacing(SPACE['lg']);self.grid.setAlignment(Qt.AlignTop);self.grid.setSizeConstraint(QLayout.SetNoConstraint)
+        self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
+    def minimumSizeHint(self):return QSize(0,super().minimumSizeHint().height())
     def add_card(self,widget):self.cards.append(widget);self.reflow()
     def reflow(self):
         columns=max(1,self.width()//self.target)
         if self.max_columns:columns=min(columns,self.max_columns)
         width=max(1,(self.width()-max(0,columns-1)*self.grid.spacing())//columns)
+        for column in range(max(columns,self.columns)):
+            self.grid.setColumnStretch(column,1 if column<columns else 0)
+            self.grid.setColumnMinimumWidth(column,width if column<columns else 0)
         for widget in self.cards:
             if hasattr(widget,'set_tile_width'):widget.set_tile_width(width)
             else:widget.setFixedWidth(width)
@@ -132,13 +137,13 @@ class ArtworkButton(QPushButton):
         super().__init__(parent);self.pixmap=QPixmap(path);self.setObjectName('artworkButton');self.setFixedHeight(height);self.setMinimumWidth(100)
         self.setAccessibleName(caption);self.setToolTip(caption);self.clicked.connect(callback)
     def paintEvent(self,event):
-        p=QPainter(self);p.setRenderHint(QPainter.Antialiasing);path=QPainterPath();path.addRoundedRect(QRectF(self.rect().adjusted(1,1,-1,-1)),8,8);p.setClipPath(path)
+        p=QPainter(self);p.setRenderHint(QPainter.Antialiasing);path=QPainterPath();path.addRoundedRect(QRectF(self.rect().adjusted(1,1,-1,-1)),RADIUS['card'],RADIUS['card']);p.setClipPath(path)
         p.fillRect(self.rect(),QColor(colors()['input']))
         if not self.pixmap.isNull():
             pix=self.pixmap.scaled(self.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation);p.drawPixmap((self.width()-pix.width())//2,(self.height()-pix.height())//2,pix)
         else:p.drawPixmap(self.width()//2-12,self.height()//2-12,icon('memories',24))
         p.setClipping(False)
-        if self.underMouse() or self.hasFocus():p.setPen(QPen(QColor(colors()['accent']),2));p.setBrush(Qt.NoBrush);p.drawRoundedRect(QRectF(self.rect().adjusted(1,1,-1,-1)),8,8)
+        if self.underMouse() or self.hasFocus():p.setPen(QPen(QColor(colors()['accent']),2));p.setBrush(Qt.NoBrush);p.drawRoundedRect(QRectF(self.rect().adjusted(1,1,-1,-1)),RADIUS['card'],RADIUS['card'])
         p.end()
 
 

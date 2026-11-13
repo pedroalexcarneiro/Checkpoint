@@ -16,7 +16,11 @@ def paint_art(painter,bounds,pixmap,title,colors,selected=False,padding=0):
         painter.fillRect(bounds,QColor(colors['elevated']))
         font=QFont('Segoe UI');font.setPixelSize(TYPE['body']);font.setWeight(QFont.DemiBold)
         painter.setFont(font);painter.setPen(QColor(colors['secondary']))
-        painter.drawText(bounds.adjusted(12,12,-12,-12),Qt.AlignCenter|Qt.TextWordWrap,title)
+        if bounds.width()<80:
+            from .ui_components import nav_icon
+            icon=nav_icon('library',colors['muted']).pixmap(24,24)
+            painter.drawPixmap(round(bounds.center().x()-12),round(bounds.center().y()-12),icon)
+        else:painter.drawText(bounds.adjusted(12,12,-12,-12),Qt.AlignCenter|Qt.TextWordWrap,title)
     painter.setClipping(False);painter.setBrush(Qt.NoBrush)
     painter.setPen(QPen(QColor(colors['accent'] if selected else colors['border_subtle']),2 if selected else 1))
     painter.drawRoundedRect(bounds.adjusted(1,1,-1,-1),RADIUS['card'],RADIUS['card']);painter.restore()

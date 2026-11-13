@@ -57,3 +57,35 @@ class CatalogResultDelegate(QStyledItemDelegate):
         painter.setPen(QColor(colors['accent']));painter.drawText(QRectF(left,rect.top()+40,max(0,width-badge_width-12),22),Qt.AlignVCenter,painter.fontMetrics().elidedText(platform,Qt.ElideRight,int(max(0,width-badge_width-12))))
         painter.setPen(QColor(colors['muted']));painter.drawText(QRectF(left,rect.top()+66,width,18),Qt.AlignVCenter,painter.fontMetrics().elidedText(original,Qt.ElideRight,int(width)))
         painter.restore()
+
+
+from PySide6.QtCore import QEvent
+from PySide6.QtWidgets import QFrame,QVBoxLayout
+
+
+class ResultEmptyOverlay(QFrame):
+    """Estado desenhado sobre a lista vazia; não intercepta eventos de seleção."""
+    def __init__(self,quick):
+        super().__init__(quick.results.viewport());self.quick_ref=weakref.ref(quick)
+        self.setObjectName('resultEmptyState');self.setAttribute(Qt.WA_TransparentForMouseEvents)
+        from .ui_components import text
+        from .design_system import Badge
+        layout=QVBoxLayout(self);layout.setContentsMargins(*([SPACE['md']]*4));layout.setSpacing(SPACE['xs'])
+        layout.addWidget(Badge('folder',32),0,Qt.AlignHCenter)
+        title=text('Nenhuma ROM no índice','cardTitle');title.setAlignment(Qt.AlignCenter);layout.addWidget(title)
+        description=text('Atualize o índice do Drive ou pesquise um jogo na primeira aba.','emptyDescription')
+        description.setAlignment(Qt.AlignCenter);layout.addWidget(description)
+        quick.results.viewport().installEventFilter(self)
+        quick.sources.currentChanged.connect(self.sync)
+        quick.results.model().rowsInserted.connect(self.sync)
+        quick.results.model().rowsRemoved.connect(self.sync)
+        quick.results.model().modelReset.connect(self.sync)
+        self.sync()
+    def sync(self,*args):
+        quick=self.quick_ref()
+        if quick is None:return
+        self.setGeometry(quick.results.viewport().rect())
+        self.setVisible(quick.sources.currentIndex()==1 and quick.results.count()==0)
+    def eventFilter(self,watched,event):
+        if event.type()==QEvent.Resize:self.sync()
+        return False

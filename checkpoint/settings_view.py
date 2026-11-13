@@ -70,7 +70,7 @@ def build_settings(window):
     disclosure('Avançado',extra,connections);connections.addStretch()
     for key,title in [('downloads','ROMs baixadas'),('captures','Capturas'),('save_backups','Backups de saves')]:downloads.addWidget(folder_row(window,key,title))
     downloads.addStretch()
-    grid=CardGrid(330)
+    grid=CardGrid(330,max_columns=2)
     for title,description,name,actions in [('Biblioteca','Seu banco de jogos e suas preferências.','library',[('Criar backup',window.backup_database),('Abrir pasta de dados',lambda:QDesktopServices.openUrl(QUrl.fromLocalFile(str(window.library.db.path.parent.resolve()))))]),('Saves tradicionais','Cópias de segurança dos saves configurados.','folder',[('Criar backup',window.backup_saves),('Restaurar saves',window.restore_saves)])]:
         frame,inside=card();head=QHBoxLayout();head.addWidget(Badge(name));head.addWidget(text(title,'cardTitle'),1);inside.addLayout(head);inside.addWidget(text(description,'secondary'))
         row=QHBoxLayout()

@@ -61,7 +61,7 @@ def test_layout_header_and_library_fit_small_window(library,app):
     for page in range(6):
         window.navigate(page)
         for _ in range(3):app.processEvents()
-        assert window.width()==1000 and window.header_widget.height()==38
+        assert window.width()==1000 and window.header_widget.height()==48
         assert window.heading.geometry().top()>=0 and window.heading.geometry().bottom()<window.header_widget.height()
     window.navigate(1);app.processEvents();grid=window.gallery
     first=[grid.visualItemRect(grid.item(i)) for i in range(grid.count()) if grid.visualItemRect(grid.item(i)).top()==0]

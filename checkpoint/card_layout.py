@@ -10,7 +10,7 @@ class CardMetrics:
 
 def card_metrics(available,percent=100):
     scale=max(70,min(150,int(percent)))/100
-    gap=round(SPACE['lg']*scale)
+    gap=SPACE['md'] if scale<1 else SPACE['lg'] if scale<=1.25 else SPACE['xl']
     target=round(200*scale)
     columns=max(1,(max(1,int(available))+gap)//(target+gap))
     width=max(1,max(1,int(available)-16)//columns-gap)
