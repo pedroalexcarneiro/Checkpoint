@@ -1,0 +1,17 @@
+{
+  "environment": "Linux, Qt offscreen; fontes controladas; sem contas reais",
+  "captures": [
+    {
+      "file": "drive-resultados.png",
+      "bytes": 52318,
+      "sha256": "b8f5b3b1d2b78ffa44deee3c50bcc366671db58323975ecfcdc7579c8b709f6f",
+      "commit": "1fabaefdf50780b6f88d45109ae84a6d8e17f5bb"
+    },
+    {
+      "file": "drive-sem-resultado.png",
+      "bytes": 51953,
+      "sha256": "752693b6517d74b26f19d7a86758386932d1e579e9bcfb2e1cafc9b8c5330084",
+      "commit": "1fabaefdf50780b6f88d45109ae84a6d8e17f5bb"
+    }
+  ]
+}

@@ -2,6 +2,13 @@
 
 Registros anteriores descrevem o estado de cada versão; não são instruções atuais.
 
+## 0.1.33 — busca No-Intro no Drive (sem release)
+
+- Título de ROM com artigo No-Intro e subtítulo normalizados antes de pesquisar.
+- Candidatos continuam visíveis na aba Drive; ausência de dados mantém aviso e ações.
+- Ficha sem dados usa cabeçalho limpo, sem título grande no banner.
+- Testes por cliques antes/depois, normalização e evidências em RELATORIO_0133_DRIVE.md.
+
 ## 0.1.32 — revisão visual (sem release)
 
 - Tokens de contraste, superfícies, tipografia e espaçamento comuns aos nove temas.
