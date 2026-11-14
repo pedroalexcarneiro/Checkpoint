@@ -62,3 +62,15 @@ def test_price_keeps_last_valid_or_explains_absence(ui):
     w.library.set_setting(key,{})
     frame=price_summary(w.library,w.library.get(i))
     assert not any(label.text()=='Indisponível' for label in frame.findChildren(QLabel))
+
+def test_artwork_close_refreshes_library_without_restart(ui,folder,monkeypatch):
+    from checkpoint.artwork_dialog import ArtworkDialog
+    w,i=ui
+    image=QImage(120,180,QImage.Format_RGB32);image.fill(QColor('#da4848'));p=folder/'chosen.png';assert image.save(str(p))
+    def choose(d):
+        w.library.save_game({'title':d.game['title'],'cover':str(p)},i)
+        return d.DialogCode.Accepted
+    monkeypatch.setattr(ArtworkDialog,'exec',choose)
+    w.refresh_library();w.artworks(i)
+    row=next(w.gallery.item(n) for n in range(w.gallery.count()) if w.gallery.item(n).data(Qt.UserRole)==i)
+    assert row.data(Qt.UserRole+1)['cover']==str(p)

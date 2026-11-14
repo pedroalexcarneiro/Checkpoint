@@ -526,7 +526,7 @@ class MainWindow(QMainWindow):
 
     def artworks(self,game_id):
         from .artwork_dialog import ArtworkDialog
-        ArtworkDialog(self.library,self.library.get(game_id),self).exec(); self.detail(game_id)
+        ArtworkDialog(self.library,self.library.get(game_id),self).exec(); self.refresh_library(); self.detail(game_id)
 
     def start_game(self,game):
         if game['id'] in self.save_jobs:
