@@ -29,7 +29,8 @@ def disclosure(title,content,parent_layout):
 def folder_row(window,key,title):
     frame,inside=card();row=QHBoxLayout();row.setSpacing(14);row.addWidget(Badge('folder'))
     words=QVBoxLayout();words.addWidget(text(title,'cardTitle'));path=window.library.setting(key,'')
-    label=text(Path(path).name if path else 'Pasta não definida','muted');label.setToolTip(path);words.addWidget(label);row.addLayout(words,1)
+    value=str(Path(path).expanduser().resolve()) if path else 'Não definida'
+    label=text(value,'muted');label.setObjectName('folderPath');label.setMinimumWidth(0);label.setToolTip(value);label.setTextInteractionFlags(Qt.TextSelectableByMouse);words.addWidget(label);row.addLayout(words,1)
     row.addWidget(action('Selecionar pasta',lambda checked=False:window.choose_directory(key)));inside.addLayout(row);return frame
 
 
@@ -43,7 +44,10 @@ def build_settings(window):
     window.theme_selector.setCurrentIndex(window.theme_selector.findData(window.theme.key));window.theme_selector.currentIndexChanged.connect(window.theme_changed);head.addWidget(window.theme_selector);inside.addLayout(head)
     inside.addWidget(text('O tema acompanha todas as páginas. Ajuste abaixo o tamanho das capas.','secondary'))
     swatches=QHBoxLayout();swatches.setSpacing(10)
-    for key,theme in THEMES.items():swatches.addWidget(ThemeSwatch(theme,lambda checked=False,k=key:window.theme_selector.setCurrentIndex(window.theme_selector.findData(k))))
+    for key,theme in THEMES.items():
+        entry=QWidget();column=QVBoxLayout(entry);column.setContentsMargins(0,0,0,0);column.setSpacing(SPACE['xxs'])
+        column.addWidget(ThemeSwatch(theme,lambda checked=False,k=key:window.theme_selector.setCurrentIndex(window.theme_selector.findData(k))),0,Qt.AlignHCenter)
+        name=text(theme.name,'caption');name.setAlignment(Qt.AlignCenter);column.addWidget(name);swatches.addWidget(entry)
     swatches.addStretch();inside.addLayout(swatches)
     from .card_layout import cover_size
     row=QHBoxLayout();row.addWidget(text('Tamanho das capas','muted'))
@@ -52,7 +56,7 @@ def build_settings(window):
     slider.valueChanged.connect(lambda value:(percentage.setText(str(value)+'%'),window.set_cover_size(value)))
     row.addWidget(slider,1);row.addWidget(percentage);inside.addLayout(row)
     appearance.addWidget(frame);appearance.addStretch()
-    grid=CardGrid(320,max_columns=2);grid.setObjectName('connectionsGrid')
+    grid=CardGrid(320,max_columns=2);grid.setObjectName('connectionsGrid');grid.setMaximumWidth(1200)
     for provider,callback in [('Steam',window.steam),('Google Drive',window.drive),('SteamGridDB',lambda:window.configure_key('steamgriddb')),('RAWG',lambda:window.configure_key('rawg'))]:
         frame,inside=card();frame.setMinimumHeight(120);head=QHBoxLayout();badge=text('');badge.setPixmap(service_icon(provider));badge.setFixedSize(48,48);head.addWidget(badge)
         words=QVBoxLayout();words.addWidget(text(provider,'cardTitle'));configured=window.integration_status(provider).startswith('Credencial salva');state=QHBoxLayout();dot=text('●');dot.setObjectName('connectionStateDot');dot.setFixedWidth(12);dot.setProperty('configured',configured)
@@ -79,7 +83,9 @@ def build_settings(window):
         row=QHBoxLayout()
         for caption,callback in actions:row.addWidget(action(caption,callback))
         inside.addLayout(row);grid.add_card(frame)
-    data.addWidget(grid);update=action('Verificar atualizações',window.updates);update.setObjectName('quiet');data.addWidget(update,0,Qt.AlignLeft)
+    data.addWidget(grid)
+    frame,inside=card();inside.addWidget(text('Atualizações do Checkpoint','cardTitle'));inside.addWidget(text('Consulte as versões disponíveis sem alterar sua biblioteca.','secondary'))
+    update=action('Verificar atualizações',window.updates,True);update.setObjectName('checkUpdates');inside.addWidget(update,0,Qt.AlignLeft);data.addWidget(frame)
     extra=QWidget();inside=QVBoxLayout(extra);inside.addWidget(action('Perfis de emuladores',window.emulators));inside.addWidget(action('Revisar sessões interrompidas',window.recover_sessions));disclosure('Avançado',extra,data)
     removed=window.library.sql.execute('SELECT id,title FROM games WHERE deleted_at IS NOT NULL ORDER BY title').fetchall();trash=QWidget();inside=QVBoxLayout(trash)
     if not removed:

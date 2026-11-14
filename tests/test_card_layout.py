@@ -26,7 +26,7 @@ def test_density_preference_preserved_in_settings_without_schema_change(library,
     window.close()
 
 
-def test_both_grids_share_columns_and_size_control_keeps_font_and_items(library,app):
+def test_grids_keep_their_proportions_and_size_control_keeps_font_and_items(library,app):
     from checkpoint.collection_views import WishGrid
     for index in range(12):
         identity=library.save_game({'title':f'Fixture {index}'})
@@ -47,6 +47,11 @@ def test_both_grids_share_columns_and_size_control_keeps_font_and_items(library,
             assert link.width()>=link.fontMetrics().horizontalAdvance(link.text())
             window.navigate(1)
             for _ in range(4):app.processEvents()
-            assert window.gallery.columns==wish_columns
+            # E3 da 0.1.34: Desejos tem cards maiores, com arte 1:1;
+            # quantidade de colunas não precisa coincidir com capas verticais.
+            from checkpoint.collection_views import WishLogo
+            assert wishes.columns==wish_columns and wishes.cards[0].width()>=280
+            logo=wishes.cards[0].findChild(WishLogo)
+            assert logo.width()==logo.height()
             window.navigate(2)
     window.close()

@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt, QSize, QRectF, QPointF
+from PySide6.QtCore import Qt, QSize, QRectF, QPointF,QRect
 from PySide6.QtGui import QPixmap, QPainter, QColor, QLinearGradient, QFont, QIcon, QPen, QPolygonF, QRegion, QPainterPath
 from .visual_tokens import SPACE,TYPE,RADIUS
 from .cover_art import CoverArtwork,paint_art,cover_pixmap
@@ -20,6 +20,17 @@ class TwoLineLabel(QLabel):
         super().resizeEvent(event);metrics=self.fontMetrics();words=self.full_text.split();line=''
         while words and metrics.horizontalAdvance((line+' '+words[0]).strip())<=self.width():line=(line+' '+words.pop(0)).strip()
         self.setText(line+('\n'+metrics.elidedText(' '.join(words),Qt.ElideRight,self.width()) if words else ''))
+
+
+class FullTextLabel(QLabel):
+    """Altura mínima acompanha a largura real; não corta instruções de estado vazio."""
+    def __init__(self,value,parent=None):
+        super().__init__(value,parent);self.setWordWrap(True);self.setTextFormat(Qt.PlainText)
+        self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Minimum)
+    def resizeEvent(self,event):
+        super().resizeEvent(event)
+        needed=self.fontMetrics().boundingRect(QRect(0,0,max(1,self.width()),10000),Qt.TextWordWrap,self.text()).height()+2
+        if self.minimumHeight()!=needed:self.setMinimumHeight(needed)
 
 
 def action(title, callback, primary=False):

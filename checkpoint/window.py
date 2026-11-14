@@ -202,7 +202,7 @@ class MainWindow(QMainWindow):
         self.gallery=CoverGrid(self.theme,self.pages[1]);self.gallery.setIconSize(QSize(174,232))
         self.gallery.itemActivated.connect(lambda item:self.detail(item.data(Qt.UserRole)))
         self.gallery.itemClicked.connect(lambda item:self.detail(item.data(Qt.UserRole)))
-        self.table = QTableWidget(0,5);self.table.setAlternatingRowColors(True);self.table.verticalHeader().hide();self.table.setShowGrid(False); self.table.setIconSize(QSize(42,56)); self.table.setHorizontalHeaderLabels(['Jogo','Plataforma','Status','Gênero','Nota'])
+        self.table = QTableWidget(0,6);self.table.setAlternatingRowColors(True);self.table.verticalHeader().hide();self.table.setShowGrid(False); self.table.setIconSize(QSize(140,48)); self.table.setHorizontalHeaderLabels(['Logo','Jogo','Plataforma','Status','Gênero','Nota'])
         self.table.horizontalHeader().setStretchLastSection(True); self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.table.cellDoubleClicked.connect(lambda row,col:self.detail(self.table.item(row,0).data(Qt.UserRole)))
@@ -237,20 +237,17 @@ class MainWindow(QMainWindow):
         self.gallery.theme=self.theme;self.gallery.set_cover_size(cover_size(self.library))
         self.gallery.clear(); self.table.setRowCount(len(games)); self.count.setText(count_text(len(games),'jogo'))
         for row,game in enumerate(games):
-            pix = QPixmap(game['cover']) if game['cover'] else QPixmap()
-            if pix.isNull():
-                pix = QPixmap(174,232); pix.fill(Qt.GlobalColor.darkCyan)
-                from PySide6.QtGui import QPainter,QColor,QFont
-                painter = QPainter(pix); painter.fillRect(pix.rect(),QColor(self.theme.colors['selected'])); painter.setPen(QColor(self.theme.colors['accent']))
-                painter.setFont(QFont('Segoe UI',15)); painter.drawText(pix.rect().adjusted(12,12,-12,-12),Qt.AlignCenter|Qt.TextWordWrap,game['title']); painter.end()
+            from .cover_art import cover_pixmap
+            pix=cover_pixmap(game)
             item = QListWidgetItem(QIcon(pix),('★ ' if game['favorite'] else '')+game['title']+'\n'+game['status'])
             item.setData(Qt.UserRole,game['id']);item.setData(Qt.UserRole+1,game);self.gallery.addItem(item)
-            for col,key in enumerate(['title','platform','status','genre','rating']):
+            from .list_art import list_icon
+            logo=QTableWidgetItem();logo.setIcon(list_icon(game,self.theme.colors['text']));logo.setData(Qt.UserRole,game['id']);self.table.setItem(row,0,logo)
+            for col,key in enumerate(['title','platform','status','genre','rating'],1):
                 cell = QTableWidgetItem(str(game[key]) if game[key] is not None else '—'); cell.setData(Qt.UserRole,game['id']);
-                if col==0: cell.setIcon(QIcon(pix))
                 self.table.setItem(row,col,cell)
             self.table.setRowHeight(row,64)
-        self.table.resizeColumnsToContents(); self.gallery.setVisible(bool(games) and self.view.currentIndex()==0); self.table.setVisible(bool(games) and self.view.currentIndex()==1);self.library_empty.setVisible(not games)
+        self.table.resizeColumnsToContents();self.table.setColumnWidth(0,160); self.gallery.setVisible(bool(games) and self.view.currentIndex()==0); self.table.setVisible(bool(games) and self.view.currentIndex()==1);self.library_empty.setVisible(not games)
         if not games:self.update_library_empty()
 
     def clear_library_filters(self):

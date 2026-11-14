@@ -71,17 +71,17 @@ class ActionCard(CardSurface):
 
 
 def empty_state(name,title,description,callback=None,button='Adicionar jogo'):
-    from .ui_components import text,action
+    from .ui_components import text,action,FullTextLabel
     descriptions={'library':'Reúna seus jogos, escolha o próximo e acompanhe sua jornada.',
                   'wish':'Guarde os jogos que você quer jogar e acompanhe as ofertas.',
                   'memories':'Capturas e anotações dos seus jogos ficam reunidas aqui.',
                   'stats':'Jogue para começar a acompanhar seu tempo e suas conquistas.'}
     frame=CardSurface();frame.setObjectName('emptyState');frame.setProperty('emptyState',True)
-    frame.setMinimumHeight(240);frame.setMaximumHeight(300)
+    frame.setMinimumHeight(240)
     inside=QVBoxLayout(frame);inside.setContentsMargins(*([SPACE['lg']]*4));inside.setSpacing(SPACE['sm'])
     inside.addWidget(Badge(name,48),0,Qt.AlignHCenter)
-    label=text(title,'sectionTitle');label.setAlignment(Qt.AlignCenter);inside.addWidget(label)
-    label=text(description or descriptions.get(name,'Explore sua biblioteca para começar.'),'emptyDescription')
+    label=FullTextLabel(title);label.setObjectName('sectionTitle');label.setAlignment(Qt.AlignCenter);inside.addWidget(label)
+    label=FullTextLabel(description or descriptions.get(name,'Explore sua biblioteca para começar.'));label.setObjectName('emptyDescription')
     label.setAlignment(Qt.AlignCenter);label.setMaximumWidth(480);inside.addWidget(label,0,Qt.AlignHCenter)
     if callback:inside.addWidget(action(button,callback,True),0,Qt.AlignHCenter)
     return frame
