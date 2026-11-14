@@ -12,6 +12,10 @@ OAuth com acesso de leitura. O índice preserva IDs, nomes originais, plataforma
 
 Credenciais próprias configuradas em Conexões. SteamGridDB fornece artes da comunidade e identidades; RAWG fornece metadados. A busca selecionada completa dados e imagens disponíveis em segundo plano, preservando escolhas existentes. Uma fonte não garante todos os campos. Artes animadas ou marcadas como impróprias são rejeitadas pelo fluxo automático.
 
+## Wikipédia em português
+
+A fonte de descrição pode ser a Wikipédia em português quando a identificação existente confirma título e plataforma. A busca e a escolha da fonte permanecem inalteradas. Na ficha, só se apresenta o primeiro parágrafo em até três frases, sem datas/anos, números entre parênteses ou trechos de história, versões e listas. O texto armazenado e a proveniência são preservados. Atribuição única do bloco: “Fonte: Wikipédia · CC BY-SA 4.0”, com link para o artigo; nenhum rótulo RAWG/Steam acompanha essa descrição. Metadados e preços continuam com suas respectivas fontes.
+
 ## GG.deals
 
 A [documentação oficial](https://gg.deals/api/prices/) define o endpoint `https://api.gg.deals/v1/prices/by-steam-app-id/`, com `ids`, `key` e `region=br`. A aplicação usa a identidade `steam` em `external_identifiers`; sem ela, não chama a API e mostra “Sem ID da Steam para consulta”.

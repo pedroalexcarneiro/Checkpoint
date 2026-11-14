@@ -69,9 +69,11 @@ def build_detail(window,game):
         about.setProperty('emptyState',True)
         about_layout.addWidget(text('A ficha ainda está incompleta. Adicione informações para organizar este jogo.','emptyDescription'))
         about_layout.addWidget(action('Editar ficha',lambda:window.edit_game(game_id)),0,Qt.AlignLeft)
-    if game['description']:about_layout.addWidget(text(game['description'],'bodyText'))
     from .description_provenance import current
+    from .wiki_text import intro
     provenance=current(window.library,game)
+    wikipedia=provenance.get('source','').startswith('https://pt.wikipedia.org/')
+    if game['description']:about_layout.addWidget(text(intro(game['description']) if wikipedia else game['description'],'bodyText'))
     if provenance.get('source','').startswith('https://pt.wikipedia.org/'):
         from PySide6.QtGui import QDesktopServices
         from PySide6.QtCore import QUrl
@@ -88,7 +90,7 @@ def build_detail(window,game):
         words=QVBoxLayout();words.setSpacing(3);words.addWidget(text(caption,'caption'));words.addWidget(text(value));row.addLayout(words,1);facts.addWidget(item,index//2,index%2)
     about_layout.addLayout(facts)
     extra=QWidget();extra_layout=QVBoxLayout(extra);extra_layout.setContentsMargins(0,4,0,0)
-    other=[('Publicadora',game['publisher']),('Origem',game['source']),('Categoria',game['category']),('Sua nota',str(game['rating'])+'/10' if game['rating'] is not None else '')]
+    other=[('Publicadora',game['publisher']),('Origem','' if wikipedia else game['source']),('Categoria',game['category']),('Sua nota',str(game['rating'])+'/10' if game['rating'] is not None else '')]
     for caption,value in other:
         if value:extra_layout.addWidget(text(f'{caption} · {value}','muted'))
     from .settings_view import disclosure

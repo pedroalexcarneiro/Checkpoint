@@ -96,3 +96,15 @@ def test_vertical_cover_fills_its_art_area(ui,folder,app,size):
         result=tile.grab().toImage()
         assert result.pixelColor(14,30)==color and result.pixelColor(165,tile.art_height-18)==color
     finally:tile.close();tile.deleteLater()
+
+def test_wikipedia_detail_has_only_short_intro(ui,app):
+    from checkpoint.description_provenance import record
+    w,i=ui;game=w.library.get(i)
+    description=game['title']+' é uma aventura (1999). Explore mundos em 21 de março de 2001. Resolva desafios. Uma quarta frase.\n\nHistória: a versão de 2005 ganhou listas e expansões.'
+    w.library.save_game({'title':game['title'],'description':description,'source':'RAWG'},i)
+    record(w.library,i,MetadataResult('rawg',str(i),game['title'],description=description,description_source='https://pt.wikipedia.org/?curid=1',description_language='pt'))
+    w.library.sql.commit();w.detail(i);app.processEvents()
+    body=next(label.text() for label in w.detail_page.findChildren(QLabel,'bodyText'))
+    assert '1999' not in body and '2001' not in body and 'quarta' not in body and 'História' not in body
+    assert len(body.split('.'))<=4
+    assert not any(label.text()=='Origem · RAWG' for label in w.detail_page.findChildren(QLabel))
