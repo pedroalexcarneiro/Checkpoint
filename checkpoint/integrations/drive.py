@@ -291,11 +291,8 @@ class DriveScanner:
         return count
 
     def associate(self,file_id,game_id):
-        if not self.library.get(game_id): raise ValueError('Jogo não encontrado.')
-        with self.library.sql:
-            cursor = self.library.sql.execute("UPDATE game_files SET game_id=?,review_state='confirmed' WHERE id=?",(game_id,file_id))
-            if cursor.rowcount!=1: raise ValueError('Arquivo não encontrado.')
-            self.library.sql.execute('INSERT OR IGNORE INTO rom_versions(file_id) VALUES(?)',(file_id,))
+        from ..rom_link import bind
+        bind(self.library,file_id,game_id)
 
     def download(self,file_id,directory):
         row = self.library.sql.execute('SELECT * FROM game_files WHERE id=?',(file_id,)).fetchone()

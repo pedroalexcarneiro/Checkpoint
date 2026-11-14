@@ -17,8 +17,12 @@ def main():
     parser.add_argument('--smoke-test',action='store_true',help='Abre todas as páginas e encerra em ambiente isolado')
     parser.add_argument('--network-test', action='store_true', help='Testa HTTPS público sem autenticação e salva network-test.txt no diretório de dados')
     parser.add_argument('--worker-request',type=Path,help=argparse.SUPPRESS)
+    parser.add_argument('--rom-link-request',type=Path,help=argparse.SUPPRESS)
     parser.add_argument('--save-smoke-test',action='store_true',help=argparse.SUPPRESS)
     args = parser.parse_args()
+    if args.rom_link_request:
+        from .rom_link_worker import execute
+        return execute(args.rom_link_request)
     if args.worker_request:
         from .worker import execute_request
         return execute_request(args.worker_request)

@@ -563,6 +563,12 @@ class MainWindow(QMainWindow):
         if dialog.exec()==QDialog.Accepted and dialog.imported_id:
             self.refresh_library(); self.detail(dialog.imported_id)
 
+    def link_rom(self,game_id):
+        from .rom_link_dialog import RomLinkDialog
+        dialog=RomLinkDialog(self.library,game_id,self);dialog.exec()
+        self.refresh_library();self.detail(game_id)
+        if dialog.outcome:self.statusBar().showMessage(dialog.outcome.get('message','ROM vinculada.'))
+
     def drive(self):
         from .drive_dialog import DriveDialog
         DriveDialog(self.library,self).exec(); self.refresh_library()

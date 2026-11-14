@@ -74,5 +74,11 @@ def ask_removed(parent,title):
 
 def save_with_prompt(parent,library,data,file_id=None,result=None):
     removed=removed_match(library,data,file_id,result)
-    return save_decision(library,data,file_id,result,removed_id=removed['id'] if removed else None,
-                         decision=ask_removed(parent,removed['title']) if removed else 'cancel')
+    decision=ask_removed(parent,removed['title']) if removed else 'cancel'
+    from .game_import import atomic
+    with atomic(library.sql):
+        game_id=save_decision(library,data,file_id,result,removed_id=removed['id'] if removed else None,decision=decision)
+        if game_id is not None and file_id is not None:
+            from .rom_link import bind
+            bind(library,file_id,game_id)
+        return game_id

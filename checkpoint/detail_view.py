@@ -154,11 +154,11 @@ def build_detail(window,game):
         for record in records:grid.add_card(memory_card(window,record))
         memories.addWidget(grid)
     technical.addWidget(text('Arquivos e versões','sectionTitle'))
-    if not files:technical.addWidget(ActionCard('folder','Nenhuma ROM associada','Os arquivos e as versões vinculadas a este jogo aparecem aqui.',window.drive,'Abrir Drive'))
+    if not files:technical.addWidget(ActionCard('folder','Nenhuma ROM associada','Os arquivos e as versões vinculadas a este jogo aparecem aqui.',lambda:window.link_rom(game_id),'Vincular ROM do Drive'))
     for file in files:
         frame,inside=card();row=QHBoxLayout();row.addWidget(Badge('folder'));words=QVBoxLayout();words.addWidget(text(file['original_name'],'cardTitle'));words.addWidget(StatusChip('Disponível neste computador' if file['available'] else 'Somente no Drive'));row.addLayout(words,1)
-        row.addWidget(action('Executar versão',lambda checked=False,f=file:window.launch_rom(game_id,f),True) if file['available'] else action('Baixar ROM',window.drive,True));inside.addLayout(row);technical.addWidget(frame)
-    edit=action('Configurar execução',lambda:window.edit_game(game_id));edit.setObjectName('quiet');technical.addWidget(edit,0,Qt.AlignLeft)
+        row.addWidget(action('Executar versão',lambda checked=False,f=file:window.launch_rom(game_id,f),True) if file['available'] else action('Baixar ROM',lambda:window.link_rom(game_id),True));inside.addLayout(row);technical.addWidget(frame)
+    if files:technical.addWidget(action('Substituir ROM vinculada',lambda:window.link_rom(game_id)),0,Qt.AlignLeft)
     heading=QHBoxLayout();heading.addWidget(text('Saves tradicionais','sectionTitle'));heading.addStretch();heading.addWidget(action('Configurar saves',lambda:window.configure_saves(game_id)));technical.addLayout(heading)
     from .save_profiles import SaveProfiles
     from .game_saves import GameSaveBackups
