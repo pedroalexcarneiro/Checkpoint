@@ -478,6 +478,9 @@ class MainWindow(QMainWindow):
 
     @Slot(int,str)
     def game_completed(self,game_id,message):
+        from .metadata_state import completion_feedback
+        game=self.library.get(game_id)
+        if game:message=completion_feedback(self.library,game,message)
         self.refresh_library()
         if self.current_game==game_id and self.library.get(game_id):self.detail(game_id)
         elif self.current_page==0:self.home()

@@ -20,7 +20,7 @@ def build_detail(window,game):
         window.stack.removeWidget(window.detail_page);window.detail_page.deleteLater()
     page=QScrollArea();page.setWidgetResizable(True);window.detail_page=page
     body=QWidget();layout=QVBoxLayout(body);layout.setContentsMargins(0,0,SPACE['xs'],0);layout.setSpacing(SPACE['md']);layout.setAlignment(Qt.AlignTop)
-    from .metadata_state import has_game_data
+    from .metadata_state import has_game_data,display_source
     incomplete=not has_game_data(window.library,game)
     hero=Hero(game,window.theme);hero.detail_mode=True;hero.compact=incomplete
     back=QHBoxLayout();back_button=action('←',lambda:window.navigate(1));back_button.setFixedSize(32,32);back_button.setObjectName('heroBack');back_button.setAccessibleName('Voltar à biblioteca');back_button.setToolTip('Voltar à biblioteca');back.addWidget(back_button);back.addStretch();hero.content.insertLayout(0,back)
@@ -57,6 +57,10 @@ def build_detail(window,game):
         warning=text('Não encontramos dados para este jogo. Pesquise manualmente.')
         warning.setObjectName('metadataNotice');layout.addWidget(warning)
         layout.addWidget(action('Pesquisar manualmente',lambda:window.search_game_data(game_id)),0,Qt.AlignLeft)
+    link_state=window.library.setting(f'rom.link.{game_id}',{})
+    if link_state.get('errors'):
+        layout.addWidget(text(link_state['message'],'muted'))
+        layout.addWidget(action('Tentar novamente o vínculo da ROM',lambda:window.link_rom(game_id)),0,Qt.AlignLeft)
     tabs=CurrentPageTabs();tabs.setObjectName('detailTabs');window.detail_tabs=tabs
     layouts=[]
     for name in ('Visão geral','Atividade','Memórias','Arquivos'):
@@ -90,7 +94,7 @@ def build_detail(window,game):
         words=QVBoxLayout();words.setSpacing(3);words.addWidget(text(caption,'caption'));words.addWidget(text(value));row.addLayout(words,1);facts.addWidget(item,index//2,index%2)
     about_layout.addLayout(facts)
     extra=QWidget();extra_layout=QVBoxLayout(extra);extra_layout.setContentsMargins(0,4,0,0)
-    other=[('Publicadora',game['publisher']),('Origem','' if wikipedia else game['source']),('Categoria',game['category']),('Sua nota',str(game['rating'])+'/10' if game['rating'] is not None else '')]
+    other=[('Publicadora',game['publisher']),('Origem','' if wikipedia else display_source(window.library,game)),('Categoria',game['category']),('Sua nota',str(game['rating'])+'/10' if game['rating'] is not None else '')]
     for caption,value in other:
         if value:extra_layout.addWidget(text(f'{caption} · {value}','muted'))
     from .settings_view import disclosure
