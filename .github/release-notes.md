@@ -1,11 +1,9 @@
-# Checkpoint 0.1.29 — revisão de código-fonte
+# Checkpoint 0.1.33 — fluxo Drive
 
-- Tamanho ajustável das capas, colunas responsivas e Início com jogos em andamento.
-- Rolagem suave, Desejos com arte 1:1, preços atuais/históricos, atribuição e ordenação por nome ou preço.
-- Busca com ficha completa e origem correta; cadastro com fechamento único, nomes de ROM limpos e estados vazios distintos.
-- Diálogos aninhados aguardam as consultas ativas antes de concluir; regressões com faulthandler.
-- Nove temas, Verde padrão. Migração de dados preservada e schema 4 mantido.
+- Busca de ROMs do Drive normaliza nomes No-Intro: artigos The/A/An vão para o início e separadores de subtítulo viram dois-pontos.
+- A aba Drive mostra candidatos com check verde, como a aba Pesquisar jogo.
+- Ficha sem dados usa cabeçalho limpo, sem título grande no banner.
 
-Esta revisão não publica release, tag ou pacote Windows. Este arquivo é documentação local; não foi enviado como descrição de uma release existente.
+**PRÉ-RELEASE.** A suíte completa é testada automaticamente no Windows pelo workflow, antes da publicação. A revisão também foi testada em Linux. Teste manual com a conta Google Drive do dono, APIs de metadados e GG.deals ainda depende de validação do dono.
 
-Resultados reais de testes, capturas, smokes e limitações estão em RELATORIO_CORRECOES.md. A API oficial GG.deals está implementada conforme documentação, com chave apenas no cofre e fallback público configurável. Autenticação real depende da configuração do dono; histórico não é desconto. Windows real, DPI e contas autenticadas não foram homologados nesta revisão. A remoção da pré-release anterior publicada por engano cabe ao dono.
+Não substitui a 0.1.28 nem a 0.1.29 como versão estável. Sem chaves, tokens ou dados pessoais.
