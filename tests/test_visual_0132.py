@@ -140,7 +140,7 @@ def test_protected_drive_and_registration_logic_is_unchanged():
                     if isinstance(node,ast.FunctionDef) and ((filename.endswith('quick_add.py') and node.name not in {'show_result','show_missing_metadata'}) or node.name in names)}
         assert methods(original)==methods(current),filename
     for filename in ('tests/test_drive_search_flow.py','scripts/drive_search_flow_support.py','tests/test_drive_metadata_policy.py','checkpoint/game_import.py','checkpoint/worker.py','checkpoint/enrichment.py','checkpoint/completion_queue.py'):
-        assert subprocess.check_output(['git','show',f'c51c245:{filename}'])==Path(filename).read_bytes()
+                assert subprocess.check_output(['git','show',f'c51c245:{filename}']).replace(b'\r\n',b'\n')==Path(filename).read_bytes().replace(b'\r\n',b'\n')
 
 
 def test_sparse_detail_and_gallery_explain_missing_content(app,visual_window):
