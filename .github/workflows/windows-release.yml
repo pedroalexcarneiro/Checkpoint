@@ -6,6 +6,7 @@ on:
       - main
       - codex/steam-library-import
       - codex/design-fidelity-pt-br
+      - fix/0.1.33-drive
     paths:
       - .github/workflows/windows-release.yml
       - .github/release-notes.md
