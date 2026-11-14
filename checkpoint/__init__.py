@@ -1,2 +1,2 @@
 """Checkpoint — biblioteca pessoal local."""
-__version__ = "0.1.33"
+__version__ = "0.1.34"
