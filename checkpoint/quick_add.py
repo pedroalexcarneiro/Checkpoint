@@ -253,6 +253,13 @@ class QuickAdd(QObject):
         self.association.setText('ROM selecionada · '+file['original_name']);self.association.show();self.preview.show();self.results.hide();self.state.setText('ROM selecionada. Buscando a ficha para esta plataforma…');self.lookup()
 
     def show_missing_metadata(self):
+        if self.dialog.catalog_result is not None:
+            self.save.setEnabled(not self.finishing)
+            self.metadata_unavailable=False
+            complete=any(getattr(self.dialog.catalog_result,key,'') for key in ('description','developer','publisher'))
+            self.state.setText('' if complete else 'Resultado selecionado com ficha incompleta. Pesquise manualmente.')
+            self.manual.setVisible(not complete)
+            return
         self.metadata_unavailable=True;self.preview.show();self.results.hide();self.save.setEnabled(not self.finishing)
         self.state.setText('Não encontramos dados para este jogo. Pesquise manualmente.')
         self.manual.show()
