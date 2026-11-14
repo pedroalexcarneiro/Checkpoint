@@ -13,3 +13,5 @@ Python 3.12, PySide6, SQLite schema 4. Pacote `checkpoint`, entrada `checkpoint.
 - `integrations/`: provedores e cache de imagens. `saves.py`: backups com restauração compatível com manifestos anteriores.
 
 Tokens nunca pertencem ao SQLite, fixtures em disco ou relatórios. Tests usam pastas próprias e provedores controlados; capturas não equivalem a validação autenticada.
+
+0.1.34 local: rom_link.py concentra candidatos, vínculo único das entradas da interface e conclusão; rom_link_dialog.py mantém os Jobs vivos até finished e oferece nova tentativa; rom_link_worker.py executa o novo protocolo auxiliar, inclusive via --rom-link-request no executável congelado. O worker/enrichment/cadastro protegidos não foram alterados. icons.py renderiza SVGs Lucide locais, empacotados como dados, com licença em THIRD_PARTY_NOTICES.md. Nenhuma mudança de schema.

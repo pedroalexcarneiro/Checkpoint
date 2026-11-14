@@ -1,6 +1,6 @@
 # Checkpoint
 
-Biblioteca pessoal de jogos para Windows, em português do Brasil. Código-fonte atual: **0.1.33**, branch `fix/0.1.33-drive`, sem release desta revisão. Python 3.12, PySide6 e SQLite (schema 4). A [pré-release Windows 0.1.32](https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.32) permanece disponível.
+Biblioteca pessoal de jogos para Windows, em português do Brasil. Código-fonte local: **0.1.34**, branch `fix/0.1.34-bugs`, sem release desta revisão. Há uma pendência em A4; veja [RELATORIO_0134_COMPLETA.md](RELATORIO_0134_COMPLETA.md). Python 3.12, PySide6 e SQLite (schema 4). A [pré-release Windows 0.1.32](https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.32) permanece disponível.
 
 A Biblioteca tem capas verticais e tamanho ajustável entre 70% e 150%, com seis colunas no padrão em janela larga. Desejos tem arte 1:1, logos contidas, preços atuais e menores históricos quando disponíveis. A ordenação padrão é Nome A–Z, com alternativa por menor preço atual. Início reúne jogos em andamento e atividade pessoal; a ficha reúne banner, execução, informações e galeria.
 
@@ -27,3 +27,5 @@ Cadastro pelo Drive: o nome limpo da ROM é pesquisado no catálogo; textos vêm
 Revisão visual: [relatório 0.1.32](RELATORIO_0132_VISUAL.md), com 72 capturas Verde/Rosa em duas resoluções, limites de validação e preservação do cadastro Drive.
 
 Correção de títulos No-Intro e candidatos no cadastro Drive: [RELATORIO_0133_DRIVE.md](RELATORIO_0133_DRIVE.md), com prova antes/depois e limitações.
+
+Na aba Arquivos da ficha, Vincular ROM do Drive abre uma busca de até três versões compatíveis. Um clique substitui o vínculo, baixa/verifica a ROM e consulta ficha e artes; falhas exibem causa e nova tentativa. O cadastro anterior pela aba ROM do Drive continua com confirmação: A4 não foi entregue. Nenhuma ROM remota ou cópia local anterior é apagada.

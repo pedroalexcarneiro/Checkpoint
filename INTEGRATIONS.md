@@ -8,6 +8,8 @@ Importação por SteamID64 público e chave Web API pessoal configurada no cofre
 
 OAuth com acesso de leitura. O índice preserva IDs, nomes originais, plataformas e versões. Downloads são locais e sob demanda; não há exclusão remota. Associações exigem seleção explícita. Credenciais ficam no cofre, nunca no SQLite.
 
+Na ficha, a seleção de uma ROM é também o pedido explícito de download. A busca respeita título e plataforma, limita a três candidatos e prioriza USA, depois Europe e a revisão mais recente dentro da região. Os vínculos anteriores são desfeitos, sem apagar o índice ou os arquivos locais. O download usa a pasta configurada ou, na primeira solicitação sem pasta, ROMs no diretório de dados. O caminho aparece completo nas Configurações. A pesquisa de dados só aplica uma identidade exata inequívoca; ambiguidades e falhas exigem revisão ou nova tentativa. O fluxo antigo Adicionar jogo > ROM do Drive ainda exige confirmação (A4 bloqueado).
+
 ## SteamGridDB e RAWG
 
 Credenciais próprias configuradas em Conexões. SteamGridDB fornece artes da comunidade e identidades; RAWG fornece metadados. A busca selecionada completa dados e imagens disponíveis em segundo plano, preservando escolhas existentes. Uma fonte não garante todos os campos. Artes animadas ou marcadas como impróprias são rejeitadas pelo fluxo automático.

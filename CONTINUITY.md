@@ -1,5 +1,14 @@
 # Continuidade do Checkpoint
 
+## Entrega local 0.1.34 — continuação da branch atual
+
+Partida: 10458eea4b037236e2ae79731f53c06625eaf5b2, mantendo os sete commits noturnos anteriores. Branch única fix/0.1.34-bugs; versão declarada 0.1.34, schema 4. Sem push, tag, release ou PR. **A4 permanece bloqueado:** o cadastro pela aba ROM do Drive continua exigindo escolha de ficha e confirmação. Não declarar a tarefa inteira concluída nem lançar esta branch como se A4 estivesse entregue.
+
+Arquivos da ficha têm busca própria: um clique numa ROM vincula, baixa/verifica e consulta texto/imagens. As entradas da interface substituem o vínculo anterior sem apagar índice, arquivo local ou histórico. O serviço legado save_import permanece congelado; chamadas externas diretas e dados antigos podem conter múltiplas versões. Não foi executada limpeza em massa dos dados existentes.
+
+Texto e origem da ficha, preço preservado, tempos app/Steam separados, clique do menu na borda, alternativa de banner, Lucide ISC e os ajustes de layout foram validados com fontes controladas. Detalhes, mudança de expectativa E3, saídas e limitações em RELATORIO_0134_COMPLETA.md. As 72 capturas são fixtures, não contas reais.
+
+
 ## Correções noturnas — fix/0.1.34-bugs (somente local)
 
 Base: fix/0.1.33-drive em cffbeb3d744fade381ea7573a6602e41d616c5de. Código segue declarando 0.1.33; não houve lançamento ou alteração de versão. Concluídos os itens 1, 2, 3, 5, 7, 8 e 9: estado do Drive após seleção, ficha preenchida, cache de preço, refresh da arte, posição do menu, recorte proporcional de capas e resumo de Wikipédia. Item 4 sem erro reproduzido no mapeamento dos menus; item 6 revertido após falha do teste de coordenadas de imagem; item 10 revertido integralmente após a validação de indicador pequeno continuar falhando. Esses itens não fazem parte da branch final.
