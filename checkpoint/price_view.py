@@ -51,7 +51,8 @@ def price_summary(library,game):
     current=value.get('lowest');usable=type(current) is int and current>0 and value.get('currency','BRL')=='BRL'
     stale=value.get('state') in ('unavailable','missing_steam_id') and usable
     label=text('Último preço salvo' if stale else 'Menor preço atual','caption');label.setWordWrap(False);row.addWidget(label)
-    amount=PriceAmount(money(current) if usable else 'Indisponível');row.addWidget(amount)
+    amount=PriceAmount(money(current) if usable else 'Sem preço salvo');row.addWidget(amount)
+    if not usable:row.addWidget(text(value.get('message') or ('Preços ainda não consultados.' if has_steam_id(library,game) else 'Sem ID da Steam para consultar ofertas.'),'caption'))
     kind={'retail':'Loja oficial','keyshop':'Keyshop'}.get(value.get('current_kind'))
     if kind and usable:
         offers=[offer for offer in value.get('offers',[]) if offer.get('cents')==current]

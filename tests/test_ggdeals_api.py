@@ -104,4 +104,5 @@ def test_api_failure_keeps_previous_price_and_null_is_not_zero(library):
     assert snapshot(library,identity)['lowest']==5900
     empty=GgDealsApiProvider(vault,lambda url:response(currentRetail=None,currentKeyshops=None))
     refresh_prices(library,identity,empty)
-    assert snapshot(library,identity)['lowest'] is None
+    assert snapshot(library,identity)['lowest']==5900
+    assert snapshot(library,identity)['state']=='unavailable'

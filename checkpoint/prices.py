@@ -42,7 +42,7 @@ def refresh_prices(library,game_id,provider=None):
     try:
         result=(provider or default_provider(library)).prices(identity[0],url=url)
         current=result.get('current',result.get('lowest'))
-        if result.get('currency')!='BRL' or (current is not None and (type(current) is not int or current<=0)):
+        if result.get('currency')!='BRL' or type(current) is not int or current<=0:
             raise IntegrationError('Nenhuma oferta em reais disponível. Último preço salvo preservado.')
         result['lowest']=result['current']=current
         result.update({'config_version':library.setting('prices.config_version',0),'checked_at':now(),'attempted_at':now(),'state':'ready' if current is not None else 'unavailable'})

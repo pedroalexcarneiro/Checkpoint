@@ -45,3 +45,20 @@ def test_any_metadata_prevents_empty_notice(ui,app,field,value):
     w.detail(i);app.processEvents()
     assert not w.detail_page.findChildren(QLabel,'metadataNotice')
     assert not any('A ficha ainda está incompleta' in label.text() for label in w.detail_page.findChildren(QLabel))
+
+def test_price_keeps_last_valid_or_explains_absence(ui):
+    from checkpoint.prices import refresh_prices,snapshot
+    from checkpoint.price_view import price_summary
+    w,i=ui;key=f'prices.ggdeals.{i}'
+    w.library.sql.execute('INSERT INTO external_identifiers VALUES(?,?,?)',(i,'steam',str(i)));w.library.sql.commit()
+    class Provider:
+        value=1900+i*100
+        def prices(self,*args,**kwargs):return {'current':self.value,'currency':'BRL'}
+    p=Provider();refresh_prices(w.library,i,p);previous=snapshot(w.library,i)['lowest']
+    p.value=None;refresh_prices(w.library,i,p)
+    assert snapshot(w.library,i)['lowest']==previous
+    frame=price_summary(w.library,w.library.get(i))
+    assert any('R$' in label.text() for label in frame.findChildren(QLabel))
+    w.library.set_setting(key,{})
+    frame=price_summary(w.library,w.library.get(i))
+    assert not any(label.text()=='Indisponível' for label in frame.findChildren(QLabel))
