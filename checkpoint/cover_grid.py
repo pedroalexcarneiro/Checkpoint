@@ -23,7 +23,7 @@ class CoverDelegate(QStyledItemDelegate):
         game=index.data(Qt.UserRole+1) or {}
         icon=index.data(Qt.DecorationRole);image_rect=art
         pix=icon.pixmap(art.size().toSize()) if game.get('cover') and icon and not icon.isNull() else None
-        CoverArtwork.paint_art(painter,art,pix,game.get('title','Jogo sem imagem'),colors,selected or hovered)
+        CoverArtwork.paint_art(painter,art,pix,game.get('title','Jogo sem imagem'),colors,selected or hovered,fill=True)
         font=QFont('Segoe UI');font.setPixelSize(14);font.setWeight(QFont.DemiBold);painter.setFont(font);painter.setPen(QColor(colors['text']))
         title=game.get('title') or index.data(Qt.DisplayRole).split('\n')[0]
         painter.drawText(QRectF(image_rect.x(),image_rect.bottom()+6,image_rect.width(),23),Qt.AlignLeft|Qt.AlignVCenter,painter.fontMetrics().elidedText(title,Qt.ElideRight,int(image_rect.width())))

@@ -85,3 +85,14 @@ def test_detail_menu_stays_inside_window(ui,app,sample):
         bounds=w.rect();position=w.mapFromGlobal(menu.pos())
         assert bounds.contains(position) and bounds.contains(position+QPoint(menu.width()-1,menu.height()-1))
     finally:menu.hide()
+
+@pytest.mark.parametrize('size',[(120,120),(360,120),(120,240)])
+def test_vertical_cover_fills_its_art_area(ui,folder,app,size):
+    from checkpoint.ui_components import GameTile
+    w,i=ui;image=QImage(*size,QImage.Format_RGB32);color=QColor('#b74f86');image.fill(color)
+    p=folder/'cover.png';assert image.save(str(p));w.library.save_game({'title':w.library.get(i)['title'],'cover':str(p)},i)
+    tile=GameTile(w.library.get(i),lambda:None,width=180);tile.show();app.processEvents()
+    try:
+        result=tile.grab().toImage()
+        assert result.pixelColor(14,30)==color and result.pixelColor(165,tile.art_height-18)==color
+    finally:tile.close();tile.deleteLater()

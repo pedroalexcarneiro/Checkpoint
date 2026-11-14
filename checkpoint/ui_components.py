@@ -171,7 +171,7 @@ class GameTile(CoverArtwork):
         colors=get_theme(QApplication.instance().property('checkpointTheme')).colors
         p=QPainter(self);p.setRenderHint(QPainter.Antialiasing)
         art=QRectF(0,0,self.width(),self.art_height)
-        paint_art(p,art,self.pixmap,self.game['title'],colors,self.hasFocus() or self.underMouse())
+        paint_art(p,art,self.pixmap,self.game['title'],colors,self.hasFocus() or self.underMouse(),fill=True)
         font=QFont('Segoe UI');font.setPixelSize(14);font.setWeight(QFont.DemiBold);p.setFont(font);p.setPen(QColor(colors['text']))
         p.drawText(QRectF(0,self.art_height+5,self.width(),20),Qt.AlignVCenter,p.fontMetrics().elidedText(self.game['title'],Qt.ElideRight,self.width()))
         font.setPixelSize(12);font.setWeight(QFont.Normal);p.setFont(font);p.setPen(QColor(colors['muted']))

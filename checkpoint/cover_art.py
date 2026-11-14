@@ -5,12 +5,12 @@ from PySide6.QtWidgets import QPushButton
 from .visual_tokens import RADIUS,TYPE
 
 
-def paint_art(painter,bounds,pixmap,title,colors,selected=False,padding=0):
+def paint_art(painter,bounds,pixmap,title,colors,selected=False,padding=0,fill=False):
     painter.save();clip=QPainterPath();clip.addRoundedRect(bounds,RADIUS['card'],RADIUS['card'])
     painter.setClipPath(clip);painter.fillRect(bounds,QColor(colors['surface']))
     if pixmap and not pixmap.isNull():
         area=bounds.adjusted(padding,padding,-padding,-padding)
-        scaled=pixmap.scaled(area.size().toSize(),Qt.KeepAspectRatio,Qt.SmoothTransformation)
+        scaled=pixmap.scaled(area.size().toSize(),Qt.KeepAspectRatioByExpanding if fill else Qt.KeepAspectRatio,Qt.SmoothTransformation)
         painter.drawPixmap(round(area.center().x()-scaled.width()/2),round(area.center().y()-scaled.height()/2),scaled)
     else:
         painter.fillRect(bounds,QColor(colors['elevated']))
