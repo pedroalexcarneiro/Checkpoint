@@ -74,3 +74,14 @@ def test_artwork_close_refreshes_library_without_restart(ui,folder,monkeypatch):
     w.refresh_library();w.artworks(i)
     row=next(w.gallery.item(n) for n in range(w.gallery.count()) if w.gallery.item(n).data(Qt.UserRole)==i)
     assert row.data(Qt.UserRole+1)['cover']==str(p)
+
+def test_detail_menu_stays_inside_window(ui,app,sample):
+    from PySide6.QtCore import QPoint
+    from PySide6.QtWidgets import QToolButton
+    w,i=ui;w.detail(i);app.processEvents();w.move(500-w.width(),40)
+    button=next(b for b in w.detail_page.findChildren(QToolButton) if b.menu())
+    menu=button.menu();menu.popup(w.mapToGlobal(QPoint(w.width()-2,110)));app.processEvents()
+    try:
+        bounds=w.rect();position=w.mapFromGlobal(menu.pos())
+        assert bounds.contains(position) and bounds.contains(position+QPoint(menu.width()-1,menu.height()-1))
+    finally:menu.hide()

@@ -45,7 +45,8 @@ def build_detail(window,game):
     bar.addStretch()
     bar.addWidget(IconButton('heart','Retirar dos favoritos' if game['favorite'] else 'Marcar como favorito',lambda:window.toggle_favorite(game_id)))
     more=QToolButton();more.setFixedSize(40,36);more.setText('⋯');more.setAccessibleName('Gerenciar jogo');more.setPopupMode(QToolButton.InstantPopup)
-    menu=QMenu(more)
+    from .window_menu import WindowMenu
+    menu=WindowMenu(more)
     for title,callback in [('Editar ficha',lambda:window.edit_game(game_id)),('Trocar imagens',lambda:window.artworks(game_id)),('Obter ficha e imagens faltantes',lambda:window.completion_queue.submit([game_id],force=True)),('Adicionar aos desejos',lambda:window.add_wish(game_id)),('Remover da biblioteca',lambda:window.remove_game(game_id))]:
         item=menu.addAction(title);item.triggered.connect(callback)
     more.setMenu(menu);bar.addWidget(more);layout.addWidget(actions_frame)
