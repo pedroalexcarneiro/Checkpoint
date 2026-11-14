@@ -1,5 +1,5 @@
 """Cards da biblioteca desenhados com hierarquia própria e grade responsiva."""
-from .cover_art import CoverArtwork
+from .cover_art import CoverArtwork,cover_pixmap
 from .visual_tokens import TYPE,SPACE
 from PySide6.QtCore import Qt,QSize,QRectF
 from PySide6.QtGui import QPainter,QColor,QFont,QPen,QLinearGradient,QPainterPath
@@ -22,7 +22,7 @@ class CoverDelegate(QStyledItemDelegate):
         art=QRectF(rect.x()+2,rect.y()+2,rect.width()-4,(rect.width()-4)*self.parent().art_ratio)
         game=index.data(Qt.UserRole+1) or {}
         icon=index.data(Qt.DecorationRole);image_rect=art
-        pix=icon.pixmap(art.size().toSize()) if game.get('cover') and icon and not icon.isNull() else None
+        pix=cover_pixmap(game)
         CoverArtwork.paint_art(painter,art,pix,game.get('title','Jogo sem imagem'),colors,selected or hovered,fill=True)
         font=QFont('Segoe UI');font.setPixelSize(14);font.setWeight(QFont.DemiBold);painter.setFont(font);painter.setPen(QColor(colors['text']))
         title=game.get('title') or index.data(Qt.DisplayRole).split('\n')[0]

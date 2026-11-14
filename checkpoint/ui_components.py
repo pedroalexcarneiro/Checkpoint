@@ -1,7 +1,7 @@
 from PySide6.QtCore import Qt, QSize, QRectF, QPointF
 from PySide6.QtGui import QPixmap, QPainter, QColor, QLinearGradient, QFont, QIcon, QPen, QPolygonF, QRegion, QPainterPath
 from .visual_tokens import SPACE,TYPE,RADIUS
-from .cover_art import CoverArtwork,paint_art
+from .cover_art import CoverArtwork,paint_art,cover_pixmap
 from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QFrame, QTabWidget, QSizePolicy
 
 
@@ -157,7 +157,7 @@ class GameTile(CoverArtwork):
     """Mesmo desenho e posições em todos os DPI; sem layout dentro do botão."""
     def __init__(self, game, callback, width=148, parent=None):
         super().__init__(parent);self.setObjectName('gameTile');self.setFixedWidth(width)
-        self.game=game;self.callback=callback;self.game_id=game['id'];self.pixmap=QPixmap(game.get('cover') or '')
+        self.game=game;self.callback=callback;self.game_id=game['id'];self.pixmap=cover_pixmap(game)
         self.set_tile_width(width)
         self.setAccessibleName(game['title']);self.setAccessibleDescription(game.get('status') or '');self.setToolTip(game['title'])
         self.clicked.connect(self.open_game)

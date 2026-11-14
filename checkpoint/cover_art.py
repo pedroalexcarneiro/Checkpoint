@@ -5,6 +5,14 @@ from PySide6.QtWidgets import QPushButton
 from .visual_tokens import RADIUS,TYPE
 
 
+def cover_pixmap(game):
+    """Capa tem prioridade; banner é alternativa, nunca a logo da grade."""
+    for kind in ('cover','banner'):
+        pix=QPixmap(game.get(kind) or '')
+        if not pix.isNull():return pix
+    return QPixmap()
+
+
 def paint_art(painter,bounds,pixmap,title,colors,selected=False,padding=0,fill=False):
     painter.save();clip=QPainterPath();clip.addRoundedRect(bounds,RADIUS['card'],RADIUS['card'])
     painter.setClipPath(clip);painter.fillRect(bounds,QColor(colors['surface']))
