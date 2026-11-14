@@ -40,7 +40,14 @@ def build_detail(window,game):
     seconds=window.library.sql.execute("SELECT COALESCE(SUM(duration_seconds),0) FROM play_sessions WHERE game_id=? AND state='finished'",(game_id,)).fetchone()[0]
     if owned:
         status_row=QHBoxLayout();dot=text('●');dot.setObjectName('gameStatusDot');dot.setStyleSheet('color: '+(window.theme.colors['accent'] if game['status'] in ('Jogando','Concluído') else window.theme.colors['muted']));status_row.addWidget(dot);status_row.addWidget(text(game['status'],'muted'));bar.addLayout(status_row)
-        bar.addWidget(text('Tempo jogado: '+f'{seconds/3600:g}'.replace('.',',')+' h','muted'))
+        times=QVBoxLayout();times.setSpacing(2)
+        local=text('Tempo jogado: '+f'{seconds/3600:g}'.replace('.',',')+' h','muted');local.setObjectName('localPlaytime');times.addWidget(local)
+        from .steam_library import game_accounts
+        for account in game_accounts(window.library,game_id):
+            value='Não disponível' if account['minutes'] is None else f"{account['minutes']/60:g}".replace('.',',')+' h'
+            remote=text('Steam: '+value,'caption');remote.setObjectName('steamPlaytime');times.addWidget(remote)
+        bar.addLayout(times)
+        actions_frame.setFixedHeight(max(HEIGHT['actions'],16+times.count()*18))
     else:bar.addWidget(text('Na lista de desejos' if window.library.sql.execute('SELECT 1 FROM wishlist WHERE game_id=?',(game_id,)).fetchone() else 'Desejo arquivado','muted'))
     bar.addStretch()
     bar.addWidget(IconButton('heart','Retirar dos favoritos' if game['favorite'] else 'Marcar como favorito',lambda:window.toggle_favorite(game_id)))
