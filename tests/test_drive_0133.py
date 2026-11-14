@@ -1,5 +1,7 @@
 """Fluxo por cliques: o catálogo controlado responde apenas ao nome No-Intro limpo."""
 import time
+import os
+import tempfile
 from unittest.mock import patch
 import pytest
 from PySide6.QtCore import Qt,QTimer,QCoreApplication,QEvent
@@ -64,7 +66,7 @@ def drive_flow(app,library,folder,*,missing=False,capture=False):
                 elif state['stage']=='save' and not q.jobs and q.save.isEnabled():
                     if capture:
                         from pathlib import Path
-                        out=Path('/tmp/checkpoint-0133-evidence');out.mkdir(exist_ok=True)
+                        out=(Path(os.environ.get('CHECKPOINT_TEST_ROOT', tempfile.gettempdir())) / 'checkpoint-0133-evidence');out.mkdir(exist_ok=True)
                         assert d.grab().save(str(out/('drive-sem-resultado.png' if missing else 'drive-resultados.png')))
                     timer.stop();QTest.mouseClick(q.save,Qt.LeftButton)
             except BaseException as exc:
