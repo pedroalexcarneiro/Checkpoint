@@ -35,3 +35,13 @@ def test_selected_drive_result_is_not_not_found(ui,app,sample,monkeypatch):
         q.manual_search();d.apply_catalog(result);q.show_result(result);q.save.setEnabled(False);q.show_missing_metadata()
         assert 'Não encontramos' not in q.state.text() and d.drive_file_id==identity
     finally:d.reject();d.deleteLater();QCoreApplication.sendPostedEvents(None,QEvent.DeferredDelete)
+
+@pytest.mark.parametrize('field,value',[('description','Um mundo para explorar.'),('cover','imagem-local.png'),('price',2490)])
+def test_any_metadata_prevents_empty_notice(ui,app,field,value):
+    w,i=ui
+    w.library.sql.execute("INSERT INTO game_files(game_id,drive_id,original_name) VALUES(?,?,?)",(i,'fixture-rom','arquivo.nds'));w.library.sql.commit()
+    if field=='price':w.library.set_setting(f'prices.ggdeals.{i}',{'lowest':value,'currency':'BRL'})
+    else:w.library.save_game({'title':w.library.get(i)['title'],field:value},i)
+    w.detail(i);app.processEvents()
+    assert not w.detail_page.findChildren(QLabel,'metadataNotice')
+    assert not any('A ficha ainda está incompleta' in label.text() for label in w.detail_page.findChildren(QLabel))

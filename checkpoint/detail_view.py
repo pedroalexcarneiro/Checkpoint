@@ -20,7 +20,9 @@ def build_detail(window,game):
         window.stack.removeWidget(window.detail_page);window.detail_page.deleteLater()
     page=QScrollArea();page.setWidgetResizable(True);window.detail_page=page
     body=QWidget();layout=QVBoxLayout(body);layout.setContentsMargins(0,0,SPACE['xs'],0);layout.setSpacing(SPACE['md']);layout.setAlignment(Qt.AlignTop)
-    hero=Hero(game,window.theme);hero.detail_mode=True;hero.compact=not any(game[field] for field in ('description','developer','publisher'))
+    from .metadata_state import has_game_data
+    incomplete=not has_game_data(window.library,game)
+    hero=Hero(game,window.theme);hero.detail_mode=True;hero.compact=incomplete
     back=QHBoxLayout();back_button=action('←',lambda:window.navigate(1));back_button.setFixedSize(32,32);back_button.setObjectName('heroBack');back_button.setAccessibleName('Voltar à biblioteca');back_button.setToolTip('Voltar à biblioteca');back.addWidget(back_button);back.addStretch();hero.content.insertLayout(0,back)
     layout.addWidget(hero)
     if hero.compact or (hero.banner.isNull() and hero.logo.isNull()):
@@ -50,7 +52,7 @@ def build_detail(window,game):
     notice=getattr(window,'detail_notice',None)
     if notice and notice[0]==game_id:
         banner=text(notice[1]);banner.setObjectName('wishNotice');banner.setAccessibleName(notice[1]);banner.setStyleSheet('padding: 10px; border: 1px solid '+window.theme.colors['accent']+'; border-radius: 7px;');layout.addWidget(banner)
-    if any(file['drive_id'] for file in files) and not all(game[field] for field in ('description','developer','publisher')):
+    if any(file['drive_id'] for file in files) and incomplete:
         warning=text('Não encontramos dados para este jogo. Pesquise manualmente.')
         warning.setObjectName('metadataNotice');layout.addWidget(warning)
         layout.addWidget(action('Pesquisar manualmente',lambda:window.search_game_data(game_id)),0,Qt.AlignLeft)
@@ -62,7 +64,7 @@ def build_detail(window,game):
     columns=None
     about=CardSurface();about_layout=QVBoxLayout(about);about_layout.setContentsMargins(*([SPACE['lg']]*4));about_layout.setSpacing(SPACE['md'])
     about_layout.addWidget(text('Sobre o jogo','sectionTitle'))
-    if not any(game[field] for field in ('description','developer','publisher')):
+    if incomplete:
         about.setProperty('emptyState',True)
         about_layout.addWidget(text('A ficha ainda está incompleta. Adicione informações para organizar este jogo.','emptyDescription'))
         about_layout.addWidget(action('Editar ficha',lambda:window.edit_game(game_id)),0,Qt.AlignLeft)
