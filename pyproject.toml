@@ -17,4 +17,4 @@ where = ["."]
 include = ["checkpoint*"]
 
 [tool.setuptools.package-data]
-checkpoint = ["assets/services/*"]
+checkpoint = ["assets/services/*", "assets/lucide/*.svg"]

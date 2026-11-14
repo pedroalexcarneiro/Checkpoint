@@ -5,7 +5,7 @@ from pathlib import Path
 from PySide6.QtCore import Qt,QSize
 from PySide6.QtGui import QPixmap,QIcon
 from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QScrollArea,QTabWidget,QToolButton,QMenu,QTextEdit,QCheckBox,QSizePolicy
-from .ui_components import Hero,text,action,card,CurrentPageTabs
+from .ui_components import Hero,text,action,card,CurrentPageTabs,nav_icon
 from .design_system import ArtworkButton,AdaptiveColumns,CardGrid,IconButton,Badge,empty_state,CardSurface,ActionCard,StatusChip
 from .visual_tokens import SPACE,HEIGHT
 
@@ -51,7 +51,7 @@ def build_detail(window,game):
     else:bar.addWidget(text('Na lista de desejos' if window.library.sql.execute('SELECT 1 FROM wishlist WHERE game_id=?',(game_id,)).fetchone() else 'Desejo arquivado','muted'))
     bar.addStretch()
     bar.addWidget(IconButton('heart','Retirar dos favoritos' if game['favorite'] else 'Marcar como favorito',lambda:window.toggle_favorite(game_id)))
-    more=QToolButton();more.setFixedSize(40,36);more.setText('⋯');more.setAccessibleName('Gerenciar jogo');more.setPopupMode(QToolButton.InstantPopup)
+    more=QToolButton();more.setFixedSize(40,36);more.setIcon(nav_icon('more',window.theme.colors['text'],20));more.setIconSize(QSize(20,20));more.setAccessibleName('Gerenciar jogo');more.setPopupMode(QToolButton.InstantPopup)
     from .window_menu import WindowMenu
     menu=WindowMenu(more)
     for title,callback in [('Editar ficha',lambda:window.edit_game(game_id)),('Trocar imagens',lambda:window.artworks(game_id)),('Obter ficha e imagens faltantes',lambda:window.completion_queue.submit([game_id],force=True)),('Adicionar aos desejos',lambda:window.add_wish(game_id)),('Remover da biblioteca',lambda:window.remove_game(game_id))]:

@@ -23,7 +23,16 @@ class TwoLineLabel(QLabel):
 
 
 def action(title, callback, primary=False):
-    button = QPushButton(title); button.clicked.connect(callback)
+    symbols={'←':('back','Voltar'),'…':('more','Mais opções'),'⋯':('more','Mais opções'),'×':('close','Fechar')}
+    symbol=symbols.get(title)
+    caption='' if symbol else title[2:] if title.startswith('+ ') else title
+    button = QPushButton(caption); button.clicked.connect(callback)
+    if symbol or title.startswith('+ '):
+        from .theme import get_theme
+        from PySide6.QtWidgets import QApplication
+        color=get_theme(QApplication.instance().property('checkpointTheme')).colors['text']
+        button.setIcon(nav_icon(symbol[0] if symbol else 'plus',color,20));button.setIconSize(QSize(20,20))
+        if symbol:button.setAccessibleName(symbol[1])
     button.setProperty('variant','primary' if primary else 'secondary')
     button.setSizePolicy(QSizePolicy.Maximum,QSizePolicy.Fixed);button.setMinimumHeight(40)
     if primary: button.setObjectName('primary')
@@ -38,59 +47,9 @@ def card():
     return frame, layout
 
 
-def nav_icon(name, color):
-    pixmap = QPixmap(24, 24); pixmap.fill(Qt.transparent)
-    p = QPainter(pixmap); p.setRenderHint(QPainter.Antialiasing)
-    p.setPen(QPen(QColor(color), 1.7, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-    if name == 'home':
-        p.drawPolyline(QPolygonF([QPointF(x,y) for x,y in ((3,11),(12,3),(21,11))]))
-        p.drawRoundedRect(QRectF(6,10,12,11),2,2)
-    elif name == 'library':
-        for x in (4,13):
-            for y in (4,13): p.drawRoundedRect(QRectF(x,y,7,7),1.2,1.2)
-    elif name == 'stats':
-        for x,y in ((5,13),(11,7),(17,3)):p.drawRoundedRect(QRectF(x,y,3,19-y),1,1)
-    elif name == 'memories':
-        p.drawRoundedRect(QRectF(3,4,18,16),2,2); p.drawLine(5,17,10,11);p.drawLine(10,11,14,15);p.drawLine(14,15,18,10)
-    elif name == 'settings':
-        import math
-        points=[]
-        for i in range(48):
-            radius=10 if i%8 in (0,1,6,7) else 8
-            angle=i*math.pi/24
-            points.append(QPointF(12+radius*math.cos(angle),12+radius*math.sin(angle)))
-        p.drawPolygon(QPolygonF(points));p.drawEllipse(QRectF(8.5,8.5,7,7))
-    elif name in ('wish','heart'):
-        path=QPainterPath(QPointF(12,21));path.cubicTo(8,17,2,13,2,8);path.cubicTo(2,2,9,1,12,6);path.cubicTo(15,1,22,2,22,8);path.cubicTo(22,13,16,17,12,21);p.drawPath(path)
-    elif name=='help':
-        p.drawEllipse(QRectF(3,3,18,18));font=QFont('Segoe UI');font.setPixelSize(16);p.setFont(font);p.drawText(QRectF(2,1,20,21),Qt.AlignCenter,'?')
-    elif name=='platform':
-        p.drawRoundedRect(QRectF(3,4,18,13),1.5,1.5);p.drawLine(12,17,12,21);p.drawLine(8,21,16,21)
-    elif name=='clock':
-        p.drawEllipse(QRectF(3,3,18,18));p.drawLine(12,6,12,12);p.drawLine(12,12,16,14)
-    elif name=='user':
-        p.drawEllipse(QRectF(8,3,8,8));path=QPainterPath(QPointF(4,21));path.cubicTo(4,10,20,10,20,21);p.drawPath(path)
-    elif name=='search':
-        p.drawEllipse(QRectF(3,3,13,13));p.drawLine(15,15,21,21)
-    elif name=='folder':
-        path=QPainterPath(QPointF(3,7));path.lineTo(3,4);path.lineTo(10,4);path.lineTo(12,7);path.lineTo(21,7);path.lineTo(21,20);path.lineTo(3,20);path.closeSubpath();p.drawPath(path)
-    elif name=='download':
-        p.drawLine(12,3,12,16);p.drawLine(7,11,12,16);p.drawLine(12,16,17,11);p.drawPolyline(QPolygonF([QPointF(4,17),QPointF(4,21),QPointF(20,21),QPointF(20,17)]))
-    elif name=='trophy':
-        p.drawPolyline(QPolygonF([QPointF(7,3),QPointF(17,3),QPointF(16,12),QPointF(12,16),QPointF(8,12),QPointF(7,3)]));p.drawPolyline(QPolygonF([QPointF(7,5),QPointF(3,5),QPointF(4,11),QPointF(8,12)]));p.drawPolyline(QPolygonF([QPointF(17,5),QPointF(21,5),QPointF(20,11),QPointF(16,12)]));p.drawLine(12,16,12,21);p.drawLine(8,21,16,21)
-    elif name=='trash':
-        p.drawLine(4,6,20,6);p.drawPolyline(QPolygonF([QPointF(6,6),QPointF(7,21),QPointF(17,21),QPointF(18,6)]));p.drawRoundedRect(QRectF(9,2,6,4),1,1);p.drawLine(10,10,10,17);p.drawLine(14,10,14,17)
-    elif name=='play':
-        p.drawPolygon(QPolygonF([QPointF(8,4),QPointF(20,12),QPointF(8,20)]))
-    elif name=='list':
-        for y in (6,12,18):p.drawLine(8,y,21,y);p.drawPoint(3,y)
-    elif name=='filter':
-        for y,x in ((6,8),(12,16),(18,10)):
-            p.drawLine(3,y,21,y);p.drawEllipse(QRectF(x-2,y-2,4,4))
-    elif name=='plus':p.drawLine(12,4,12,20);p.drawLine(4,12,20,12)
-    else:
-        p.drawRoundedRect(QRectF(4,3,16,18),2,2);p.drawLine(8,9,16,9);p.drawLine(8,14,16,14)
-    p.end();return QIcon(pixmap)
+def nav_icon(name,color,size=24):
+    from .icons import lucide_icon
+    return lucide_icon(name,color,size)
 
 
 class Hero(QWidget):

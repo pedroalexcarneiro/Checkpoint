@@ -237,6 +237,9 @@ class QuickAdd(QObject):
         self.run('catalog_details',provider=result.provider,identity=result.external_id,platform=self.dialog.fields['platform'].text())
 
     def show_result(self,result):
+        from .ui_components import nav_icon
+        from .design_system import colors
+        self.confirmed.setPixmap(nav_icon('check',colors()['accent'],24).pixmap(24,24))
         self.metadata_unavailable=False;self.manual.hide()
         self.save.setEnabled(not self.finishing);self.preview.show();self.results.hide();self.other.setVisible(bool(self.candidates));self.confirmed.show()
         if self.dialog.drive_file_id is not None and self.candidates:

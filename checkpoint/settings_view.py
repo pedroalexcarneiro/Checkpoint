@@ -13,9 +13,12 @@ from .theme import THEMES
 class DisclosureButton(QToolButton):
     def __init__(self,title,parent=None):
         super().__init__(parent);self.setText(title);self.setCheckable(True);self.setObjectName('disclosure');self.setMinimumHeight(44);self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed)
-        self.setToolButtonStyle(Qt.ToolButtonTextBesideIcon);self.setArrowType(Qt.RightArrow)
+        self.setToolButtonStyle(Qt.ToolButtonTextBesideIcon);self.indicate(False)
         self.toggled.connect(self.indicate)
-    def indicate(self,expanded):self.setArrowType(Qt.DownArrow if expanded else Qt.RightArrow)
+    def indicate(self,expanded):
+        from .design_system import colors
+        from .icons import lucide_icon
+        self.setIcon(lucide_icon('chevron' if expanded else 'chevron-right',colors()['muted'],18))
 
 
 def disclosure(title,content,parent_layout):

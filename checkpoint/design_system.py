@@ -13,7 +13,7 @@ def colors():return get_theme(QApplication.instance().property('checkpointTheme'
 
 def icon(name,size=20,accent=False):
     from .ui_components import nav_icon
-    return nav_icon(name,colors()['accent' if accent else 'muted']).pixmap(size,size)
+    return nav_icon(name,colors()['accent' if accent else 'muted'],size).pixmap(size,size)
 
 
 class Badge(QLabel):
@@ -154,7 +154,8 @@ class ThemeSwatch(QPushButton):
         p=QPainter(self);p.setRenderHint(QPainter.Antialiasing);chosen=QApplication.instance().property('checkpointTheme')==self.theme.key
         p.setPen(QPen(QColor(colors()['accent'] if chosen else colors()['border']),2 if chosen else 1));p.setBrush(QColor(self.theme.colors['accent']));p.drawRoundedRect(QRectF(3,3,36,36),9,9)
         if chosen:
-            p.setPen(QPen(QColor(self.theme.colors['on_accent']),2.2,Qt.SolidLine,Qt.RoundCap,Qt.RoundJoin));p.drawLine(14,21,19,26);p.drawLine(19,26,28,16)
+            from .icons import lucide_icon
+            p.drawPixmap(12,12,lucide_icon('check',self.theme.colors['on_accent'],18).pixmap(18,18))
         p.end()
 
 

@@ -24,7 +24,9 @@ class DialogTitleBar(QWidget):
         super().__init__(dialog);self.dialog=dialog;self.drag_offset=None;self.setObjectName('dialogTitleBar')
         row=QHBoxLayout(self);row.setContentsMargins(0,0,0,0)
         label=QLabel(dialog.add_title);label.setObjectName('pageTitle');label.setAttribute(Qt.WA_TransparentForMouseEvents);row.addWidget(label,1)
-        close=QPushButton('×');close.setObjectName('quiet');close.setFixedSize(30,30);close.setAccessibleName('Fechar');close.clicked.connect(dialog.reject);row.addWidget(close)
+        from .design_system import colors
+        from .ui_components import nav_icon
+        close=QPushButton();close.setIcon(nav_icon('close',colors()['text'],18));close.setObjectName('quiet');close.setFixedSize(30,30);close.setAccessibleName('Fechar');close.clicked.connect(dialog.reject);row.addWidget(close)
     def mousePressEvent(self,event):
         if event.button()==Qt.LeftButton:
             handle=self.dialog.windowHandle()
