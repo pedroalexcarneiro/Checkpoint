@@ -1,9 +1,7 @@
-# Checkpoint 0.1.33 — fluxo Drive
-
-- Busca de ROMs do Drive normaliza nomes No-Intro: artigos The/A/An vão para o início e separadores de subtítulo viram dois-pontos.
-- A aba Drive mostra candidatos com check verde, como a aba Pesquisar jogo.
-- Ficha sem dados usa cabeçalho limpo, sem título grande no banner.
-
-**PRÉ-RELEASE.** A suíte completa é testada automaticamente no Windows pelo workflow, antes da publicação. A revisão também foi testada em Linux. Teste manual com a conta Google Drive do dono, APIs de metadados e GG.deals ainda depende de validação do dono.
-
-Não substitui a 0.1.28 nem a 0.1.29 como versão estável. Sem chaves, tokens ou dados pessoais.
+# Checkpoint 0.1.34
+- Vínculo de ROM pela ficha: busca até três versões compatíveis; um clique vincula, baixa, verifica e busca ficha e imagens.
+- Origem e textos da ficha corrigidos; "não encontrado" não aparece junto com dados.
+- Tempo jogado do app e da Steam em linhas separadas. Preço preservado nos Desejos.
+- Banner como alternativa à capa; capas preenchem o card.
+- Ícones Lucide (ISC) e ajustes de layout.
+**PRÉ-RELEASE.** A aba Adicionar jogo > ROM do Drive ainda pede confirmação (pendência conhecida). Validado em Linux; validação no Windows do dono pendente.
