@@ -1,5 +1,17 @@
 # Continuidade do Checkpoint
 
+## Trabalho local 0.1.35 — validação Linux, com bloqueio parcial do item 2
+
+Branch fix/0.1.35-ajustes a partir do remoto af1d3ab. Itens 1–22 e complementos visuais/textuais em commits próprios; o item 2 só está resolvido para encerramento do processo. Fechar apenas a ROM mantendo o emulador aberto continua sem sinal validado por perfil. A4 e arquivos protegidos intactos. Não houve push, tag, release, PR ou workflow de publicação.
+
+Código validado em 94fecc1: **542 passed in 353.65s (0:05:53)**, exit 0, Linux Python 3.12.14, QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp. Saída integral final em RELATORIO_0135.md; histórico completo de comandos/reproduções em RELATORIO_0135_TESTES.md. Patches completos e SHA-256 na entrega local. Capturas Qt são fixtures, não validação Windows.
+
+Jogar usa o fluxo da ROM; processo encerrado finaliza registro e atualiza ficha. Cards Desejos até 360 px; total app + snapshot Steam sem duplicação; ações e orientação de Memórias; status editável; ficha exclusiva de desejos; banners contidos; resumo Wikipédia e ausência de texto; preço oficial por padrão com opção keyshops. Atalho configurável para captura por PID e descoberta Steam por VDF/manifests. Tabulação por clique completo; calendário local sem regravar instantes.
+
+Logos de serviços preservadas fora de Lucide. Steam usa steam.ico contido. Aparência com nove prévias e slider à esquerda/exemplos à direita; exclusões de mockup e regra de texto aplicadas em commits adicionais aprovados.
+
+Captura real no Windows não validada; primeiro uso real será no PC do dono. Não declarar detecção de fechamento interno de ROM ou origem exata do registro pessoal de data como validadas. Versão declarada do pacote ainda 0.1.34; schema 4. O projeto completo não está concluído.
+
 ## Entrega local 0.1.34 — continuação da branch atual
 
 Partida: 10458eea4b037236e2ae79731f53c06625eaf5b2, mantendo os sete commits noturnos anteriores. Branch única fix/0.1.34-bugs; versão declarada 0.1.34, schema 4. Sem push, tag, release ou PR. **A4 permanece bloqueado:** o cadastro pela aba ROM do Drive continua exigindo escolha de ficha e confirmação. Não declarar a tarefa inteira concluída nem lançar esta branch como se A4 estivesse entregue.
