@@ -204,6 +204,7 @@ class CurrentPageTabs(QTabWidget):
 
 
 def service_icon(provider):
+    """Marcas de serviços preservadas; Lucide é reservado aos ícones de ações/navegação."""
     pixmap=QPixmap(48,48);pixmap.fill(Qt.transparent)
     p=QPainter(pixmap);p.setRenderHint(QPainter.Antialiasing);p.setPen(Qt.NoPen)
     backgrounds={'Steam':'#152b49','Google Drive':'#202933','SteamGridDB':'#204659','RAWG':'#191b20'}
