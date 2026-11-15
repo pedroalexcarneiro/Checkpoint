@@ -29,6 +29,9 @@ class ProfileDialog(QDialog):
         self.photo=QLabel();self.photo.setFixedSize(88,88);self.photo.setAlignment(Qt.AlignCenter)
         from .avatar_crop import AvatarCrop
         self.crop=AvatarCrop(self);self.zoom=QSlider(Qt.Horizontal);self.zoom.setObjectName('avatarZoom');self.zoom.setRange(100,400);self.zoom.setValue(100)
+        from .design_system import colors
+        palette=colors()
+        self.zoom.setStyleSheet('QSlider#avatarZoom::groove:horizontal { height: 4px; background: '+palette['border']+'; border-radius: 2px; } QSlider#avatarZoom::sub-page:horizontal { background: '+palette['accent']+'; border-radius: 2px; } QSlider#avatarZoom::handle:horizontal { width: 14px; height: 14px; margin: -5px 0; border: none; border-radius: 7px; background: '+palette['accent']+'; }')
         self.zoom.setAccessibleName('Zoom da foto');self.zoom.valueChanged.connect(self.crop.set_zoom)
         preview=QHBoxLayout();preview.addWidget(self.crop);words=QVBoxLayout();words.addWidget(QLabel('Prévia'));words.addWidget(self.photo);words.addStretch();preview.addLayout(words);layout.addLayout(preview)
         controls=QHBoxLayout();controls.addWidget(QLabel('Zoom'));controls.addWidget(self.zoom,1);self.zoom_value=QLabel('100%');controls.addWidget(self.zoom_value);layout.addLayout(controls)

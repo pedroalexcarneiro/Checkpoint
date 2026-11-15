@@ -61,3 +61,5 @@ Nova prévia solicitada para Ofertas: um banner horizontal por oferta, inteiro e
 Complemento de rótulo: filtro de plataforma mostra somente Todas no estado sem filtro, substituindo Plataforma: Todas/Todas as plataformas; dados/opções e filtragem preservados.
 
 Revisão posterior de Estatísticas: grade de meses em linhas e dias 1–31 foi rejeitada pelo dono. Não manter esse desenho nos períodos longos. Usar mapa de calor compacto (semanas em colunas), barras em Hoje/Esta semana e calendário mensal próprio; parear gráficos menores com Mais jogados para evitar painel largo vazio.
+
+Complemento do Perfil: indicador do slider de Zoom circular, substituindo o quadrado; manter faixa, valores, teclado e funcionamento do recorte. Captura perfil-v2 enviada ao dono.
