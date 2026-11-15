@@ -32,7 +32,7 @@ class CoverChoice(QAbstractButton):
         self.setAccessibleName(str(value)+'%');self.setToolTip(str(value)+'%');self.setMinimumWidth(44)
         self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed);self.setFixedHeight(228)
     def artwork_rect(self):
-        height=min(176,max(24,(self.width()-16)*1.5))*(self.value/150)
+        height=self.owner.preview_height*(self.value/150)
         width=height*2/3
         return QRectF((self.width()-width)/2,188-height,width,height)
     def paintEvent(self,event):
@@ -54,14 +54,14 @@ class CoverChoice(QAbstractButton):
 
 class CoverSizeChoices(QWidget):
     def __init__(self,percent,callback):
-        from PySide6.QtWidgets import QHBoxLayout,QButtonGroup
+        from PySide6.QtWidgets import QButtonGroup
         from .card_layout import COVER_CHOICES,nearest_cover_choice
         super().__init__();self.setObjectName('coverSizePreview');self.setAccessibleName('Tamanho das capas')
-        row=QHBoxLayout(self);row.setContentsMargins(0,0,0,0);row.setSpacing(8)
+        self.preview_height=176;self.setFixedHeight(228);self.setMinimumWidth(320);self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed)
         self.group=QButtonGroup(self);self.group.setExclusive(True);self.buttons=[]
         self.percent=nearest_cover_choice(percent)
         for index,value in enumerate(COVER_CHOICES):
-            button=CoverChoice(value,index,self);self.buttons.append(button);self.group.addButton(button,value);row.addWidget(button,1)
+            button=CoverChoice(value,index,self);self.buttons.append(button);self.group.addButton(button,value)
             button.setChecked(value==self.percent)
         self.group.idClicked.connect(self.choose);self.callback=callback
     def choose(self,value):
@@ -72,3 +72,14 @@ class CoverSizeChoices(QWidget):
     def cover_rects(self):
         from PySide6.QtCore import QPointF
         return [b.artwork_rect().translated(QPointF(b.pos())) for b in self.buttons]
+
+    def resizeEvent(self,event):
+        # Espaços medidos nas bordas da arte, não nas colunas dos botões.
+        factor=sum(button.value/150*2/3 for button in self.buttons)
+        self.preview_height=min(176,max(24,(self.width()-96)/factor))
+        widths=[self.preview_height*button.value/150*2/3 for button in self.buttons]
+        gap=(self.width()-sum(widths))/6;x=gap
+        for button,width in zip(self.buttons,widths):
+            button.setGeometry(round(x-8),0,round(width+16),228);button.update()
+            x+=width+gap
+        super().resizeEvent(event)

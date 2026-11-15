@@ -37,3 +37,13 @@ def test_old_percent_preserved_and_keyboard_selects(ui,app):
  assert preview.percent==100 and preview.group.button(100).hasFocus()
  assert w.library.setting('appearance.cover_size')==100
  assert nearest_cover_choice(80)==70 and nearest_cover_choice(-10)==70 and nearest_cover_choice(999)==150
+
+@pytest.mark.parametrize('size',[(1280,800),(1920,1080)])
+def test_cover_outline_spacing_is_equal_at_both_edges(ui,app,size):
+ w,i=ui;w.resize(*size);w.navigate(5)
+ for _ in range(5):app.processEvents()
+ preview=w.pages[5].findChild(CoverSizeChoices);rects=preview.cover_rects()
+ left=rects[0].left();right=preview.width()-rects[-1].right()
+ gaps=[b.left()-a.right() for a,b in zip(rects,rects[1:])]
+ assert abs(left-right)<=1
+ assert max(gaps+[left,right])-min(gaps+[left,right])<=2

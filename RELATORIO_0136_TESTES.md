@@ -1229,3 +1229,91 @@ stderr integral:
 ```
 
 Código de saída: 1
+
+## depois-10-espacamento
+
+UTC: 2026-11-15T16:14:46.018689+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_cover_preview_0135.py", "tests/test_card_layout.py", "tests/test_settings_space_0135.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+.....................                                                    [100%]
+21 passed in 2.64s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## antes-05
+
+UTC: 2026-11-15T16:15:13.324255+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_home_description_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+______ test_home_does_not_paint_description_but_detail_keeps_it[sample0] _______
+
+ui = (<checkpoint.window.MainWindow(0x1dfec7c0) at 0x7fd5b6836240>, 1)
+app = <PySide6.QtWidgets.QApplication(0x1df282c0) at 0x7fd5b6998380>
+
+    def test_home_does_not_paint_description_but_detail_keeps_it(ui,app):
+        w,i=ui;game=w.library.get(i);description='Descrição externa que deve permanecer somente em Sobre o jogo. '*4
+        w.library.save_game({'title':game['title'],'description':description,'status':'Jogando'},i)
+        w.navigate(0);app.processEvents();hero=w.pages[0].findChild(Hero)
+        assert hero and hero.findChildren(QPushButton)
+        before=hero.grab().toImage();hero.game={**hero.game,'description':''};hero.update();app.processEvents()
+>       assert before==hero.grab().toImage()
+E       assert <PySide6.QtGui.QImage(QSize(746, 300),format=QImage::Format_ARGB32_Premultiplied,depth=32,devicePixelRatio=1,bytesPerLine=2984,sizeInBytes=895200) at 0x7fd5b638bcc0> == <PySide6.QtGui.QImage(QSize(746, 300),format=QImage::Format_ARGB32_Premultiplied,depth=32,devicePixelRatio=1,bytesPerLine=2984,sizeInBytes=895200) at 0x7fd5b6683040>
+E        +  where <PySide6.QtGui.QImage(QSize(746, 300),format=QImage::Format_ARGB32_Premultiplied,depth=32,devicePixelRatio=1,bytesPerLine=2984,sizeInBytes=895200) at 0x7fd5b6683040> = <built-in method toImage of PySide6.QtGui.QPixmap object at 0x7fd5b66e32c0>()
+E        +    where <built-in method toImage of PySide6.QtGui.QPixmap object at 0x7fd5b66e32c0> = <PySide6.QtGui.QPixmap(QSize(746, 300),depth=32,devicePixelRatio=1,cacheKey=0x1d00000004) at 0x7fd5b66e32c0>.toImage
+E        +      where <PySide6.QtGui.QPixmap(QSize(746, 300),depth=32,devicePixelRatio=1,cacheKey=0x1d00000004) at 0x7fd5b66e32c0> = <built-in method grab of Hero object at 0x7fd5b639ea00>()
+E        +        where <built-in method grab of Hero object at 0x7fd5b639ea00> = <checkpoint.ui_components.Hero(0x1e695110, name="gameHero") at 0x7fd5b639ea00>.grab
+
+tests/test_home_description_0136.py:12: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+______ test_home_does_not_paint_description_but_detail_keeps_it[sample1] _______
+
+ui = (<checkpoint.window.MainWindow(0x1e4cc030) at 0x7fd5b63ac380>, 1)
+app = <PySide6.QtWidgets.QApplication(0x1df282c0) at 0x7fd5b6998380>
+
+    def test_home_does_not_paint_description_but_detail_keeps_it(ui,app):
+        w,i=ui;game=w.library.get(i);description='Descrição externa que deve permanecer somente em Sobre o jogo. '*4
+        w.library.save_game({'title':game['title'],'description':description,'status':'Jogando'},i)
+        w.navigate(0);app.processEvents();hero=w.pages[0].findChild(Hero)
+        assert hero and hero.findChildren(QPushButton)
+        before=hero.grab().toImage();hero.game={**hero.game,'description':''};hero.update();app.processEvents()
+>       assert before==hero.grab().toImage()
+E       assert <PySide6.QtGui.QImage(QSize(1146, 327),format=QImage::Format_ARGB32_Premultiplied,depth=32,devicePixelRatio=1,bytesPerLine=4584,sizeInBytes=1498968) at 0x7fd5b6683c40> == <PySide6.QtGui.QImage(QSize(1146, 327),format=QImage::Format_ARGB32_Premultiplied,depth=32,devicePixelRatio=1,bytesPerLine=4584,sizeInBytes=1498968) at 0x7fd5b639ccc0>
+E        +  where <PySide6.QtGui.QImage(QSize(1146, 327),format=QImage::Format_ARGB32_Premultiplied,depth=32,devicePixelRatio=1,bytesPerLine=4584,sizeInBytes=1498968) at 0x7fd5b639ccc0> = <built-in method toImage of PySide6.QtGui.QPixmap object at 0x7fd5b63af040>()
+E        +    where <built-in method toImage of PySide6.QtGui.QPixmap object at 0x7fd5b63af040> = <PySide6.QtGui.QPixmap(QSize(1146, 327),depth=32,devicePixelRatio=1,cacheKey=0x2700000004) at 0x7fd5b63af040>.toImage
+E        +      where <PySide6.QtGui.QPixmap(QSize(1146, 327),depth=32,devicePixelRatio=1,cacheKey=0x2700000004) at 0x7fd5b63af040> = <built-in method grab of Hero object at 0x7fd5b64107c0>()
+E        +        where <built-in method grab of Hero object at 0x7fd5b64107c0> = <checkpoint.ui_components.Hero(0x1e3aba10, name="gameHero") at 0x7fd5b64107c0>.grab
+
+tests/test_home_description_0136.py:12: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_home_description_0136.py::test_home_does_not_paint_description_but_detail_keeps_it[sample0]
+FAILED tests/test_home_description_0136.py::test_home_does_not_paint_description_but_detail_keeps_it[sample1]
+2 failed in 0.37s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
