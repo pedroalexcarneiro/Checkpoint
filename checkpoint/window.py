@@ -389,6 +389,15 @@ class MainWindow(QMainWindow):
         if media['kind']=='image': ImageDialog(media['path'],self).exec()
         else: QDesktopServices.openUrl(QUrl.fromLocalFile(media['path']))
 
+    def first_memory(self):
+        games=self.library.owned_games()
+        if not games:
+            self.add_library_game(); return
+        names=[game['title'] for game in games]
+        choice,ok=QInputDialog.getItem(self,'Criar primeira memória','Escolha um jogo:',names,0,False)
+        if ok:
+            self.detail(games[names.index(choice)]['id']);self.detail_tabs.setCurrentIndex(2)
+
     def memories(self):
         from .collection_views import build_memories
         build_memories(self)

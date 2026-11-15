@@ -148,6 +148,6 @@ def build_memories(window):
             grid=CardGrid(320);grid.setObjectName('memoriesGrid')
             for record in selected:grid.add_card(memory_card(window,record))
             inside.addWidget(grid)
-        else:inside.addWidget(empty_state('memories','Nenhuma memória','',lambda:window.navigate(1),'Biblioteca'))
+        else:inside.addWidget(empty_state('memories','Nenhuma memória','Abra um jogo, entre na aba Memórias e adicione uma captura ou anotação.',window.first_memory,'Biblioteca'))
         inside.addStretch();tabs.addTab(page,name)
     outer.addWidget(tabs)
