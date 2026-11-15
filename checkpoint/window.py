@@ -272,7 +272,7 @@ class MainWindow(QMainWindow):
             title={1:'Nenhum favorito ainda',2:'Nenhum jogo em andamento',3:'Nenhum jogo concluído ainda'}[tab];caption='Ver todos os jogos';callback=self.clear_library_filters
         else:title='Nenhum resultado';caption='Limpar filtros';callback=self.clear_library_filters
         self.library_empty.findChild(QLabel,'sectionTitle').setText(title)
-        description='Adicione um jogo.' if not owned else 'Altere a busca ou limpe os filtros.'
+        description='Adicione um jogo à biblioteca.' if not owned else 'Altere a busca ou limpe os filtros.'
         self.library_empty.findChild(QLabel,'emptyDescription').setText(description)
         action_button=self.library_empty.findChild(QPushButton);action_button.setText(caption)
         try:action_button.clicked.disconnect()

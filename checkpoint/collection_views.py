@@ -84,7 +84,7 @@ def build_wishlist(window):
     QTimer.singleShot(0,scroll,restore_position)
     rows=[dict(row) for row in window.library.sql.execute('SELECT g.*,w.target_cents FROM wishlist w JOIN games g ON g.id=w.game_id WHERE g.deleted_at IS NULL ORDER BY g.title COLLATE NOCASE')]
     if not rows:
-        inside.addWidget(empty_state('wish','Nenhum desejo','Adicione um desejo.',window.add_game,'Adicionar desejo'));inside.addStretch();return
+        inside.addWidget(empty_state('wish','Nenhum desejo','Adicione um jogo aos desejos.',window.add_game,'Adicionar desejo'));inside.addStretch();return
     from .locale import count_text
     top=QHBoxLayout();top.addWidget(text(count_text(len(rows),'jogo'),'muted'));top.addStretch();top.addWidget(action('+ Adicionar desejo',window.add_game,True));inside.addLayout(top)
     from .card_layout import cover_size

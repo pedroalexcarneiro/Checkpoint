@@ -74,7 +74,7 @@ def build_home(window):
     games=window.library.owned_games(sort='recent')
     if not games:
         from .design_system import empty_state
-        layout.addWidget(empty_state('library','Biblioteca vazia','Adicione um jogo.',window.add_library_game,'Adicionar jogo'))
+        layout.addWidget(empty_state('library','Biblioteca vazia','Adicione um jogo à biblioteca.',window.add_library_game,'Adicionar jogo'))
         activity(window,layout)
     else:
         continuing=in_progress(window.library)
