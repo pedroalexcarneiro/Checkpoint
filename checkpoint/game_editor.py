@@ -55,3 +55,23 @@ def build_editor(dialog,outer):
     footer=QHBoxLayout()
     if hasattr(dialog,'catalog_button'):dialog.catalog_button.setText('Identificar jogo');dialog.catalog_button.setObjectName('quiet');dialog.catalog_button.show();footer.addWidget(dialog.catalog_button)
     footer.addStretch();dialog.buttons.show();footer.addWidget(dialog.buttons);outer.addLayout(footer)
+
+
+def add_steam_detection(dialog,game_id):
+    identity=dialog.library.sql.execute("SELECT external_id FROM external_identifiers WHERE game_id=? AND provider='steam'",(game_id,)).fetchone()
+    if not identity:return
+    from PySide6.QtWidgets import QInputDialog,QMessageBox
+    def detect():
+        from .steam_installations import find_executables
+        try:candidates=find_executables(identity[0])
+        except (OSError,ValueError):
+            QMessageBox.information(dialog,'Steam','Não foi possível ler as bibliotecas locais da Steam.');return
+        if not candidates:
+            QMessageBox.information(dialog,'Steam','Nenhum executável encontrado nas bibliotecas Steam. Use Escolher executável.');return
+        if len(candidates)==1:chosen=str(candidates[0])
+        else:
+            chosen,ok=QInputDialog.getItem(dialog,'Steam','Escolha o executável do jogo:',[str(p) for p in candidates],0,False)
+            if not ok:return
+        dialog.fields['executable'].setText(chosen)
+    inside=dialog.editor_tabs.widget(1).widget().layout()
+    inside.insertWidget(1,action('Detectar nas bibliotecas Steam',detect),0,Qt.AlignLeft)

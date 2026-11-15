@@ -328,6 +328,8 @@ class MainWindow(QMainWindow):
 
     def edit_game(self,game_id):
         dialog = GameDialog(self,self.library.get(game_id),library=self.library)
+        from .game_editor import add_steam_detection
+        add_steam_detection(dialog,game_id)
         if dialog.exec()==QDialog.Accepted:
             def save():
                 result=dialog.catalog_result
