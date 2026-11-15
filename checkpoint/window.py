@@ -153,6 +153,7 @@ class MainWindow(QMainWindow):
 
     def navigate(self,index):
         self.detail_notice=None
+        self.host.parentWidget().setMaximumWidth(16777215 if index==5 else 1440)
         self.current_page = index; self.current_game = None;self.header_widget.show()
         for i,b in enumerate(self.nav_buttons): b.setChecked(i==index)
         self.heading.show();self.heading.setText(PAGES[index]);self.add_button.setText('+ Adicionar jogo');self.add_button.setVisible(index in (0,1));self.search.setVisible(index in (0,1))

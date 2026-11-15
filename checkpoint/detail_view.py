@@ -11,6 +11,7 @@ from .visual_tokens import SPACE,HEIGHT
 
 
 def build_detail(window,game):
+    window.host.parentWidget().setMaximumWidth(1440)
     game_id=game['id'];saved_tab=window.detail_tabs.currentIndex() if getattr(window,'current_game',None)==game_id and hasattr(window,'detail_tabs') else 0
     draft=window.detail_diary.toPlainText() if getattr(window,'current_game',None)==game_id and hasattr(window,'detail_diary') else ''
     window.current_game=game_id;window.current_page=1;window.header_widget.hide();window.heading.hide();window.search.hide();window.add_button.hide()
