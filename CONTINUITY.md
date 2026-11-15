@@ -1,5 +1,9 @@
 # Continuidade do Checkpoint
 
+## Retomada do lançamento 0.1.36 — revisão visual
+
+A execução Windows 43742802876 aprovou 612 testes (453,60 s), build e smokes do pacote extraído, mas excedeu 30 minutos na revisão visual. O renderizador ocultava a primeira MainWindow antes de criar outra, mantendo o mesmo atalho global registrado. O aviso modal de conflito bloqueou o runner. Correção restrita ao ciclo de vida em scripts/render_ui_review.py: fechar a janela e o banco antes dos estados vazios; workflows e aplicativo preservados. Regressão executa o renderizador inteiro com adaptador exclusivo controlado: falhou antes e passou depois, incluindo 13 jogos e quatro telas vazias. Resultados integrais e nova publicação em RELATORIO_LANCAMENTO_0136.md; não declarar lançamento antes da confirmação de tag e arquivos.
+
 ## Lançamento 0.1.36 autorizado — preparação
 
 O dono autorizou explicitamente lançar a 0.1.36 no GitHub nesta conversa, após a entrega local. A autorização permite enviar fix/0.1.36-ajustes e acionar Windows release para publicar a pré-release, preservando workflows e releases anteriores. Código local validado em da12842e6de663ee4791a6a4010bc622cfed8222, 612 testes Linux; a publicação depende agora dos testes/build/smokes Windows do próprio commit enviado.

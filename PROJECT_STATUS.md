@@ -1,5 +1,9 @@
 # Estado atual — Checkpoint 0.1.36 local
 
+## Retomada do lançamento 0.1.36
+
+Primeira execução Windows 43742802876: 612 testes passaram, build e pacote extraído validados; revisão visual bloqueada por conflito de atalho entre as duas janelas do renderizador, até atingir o limite de 30 minutos. Nenhuma publicação nessa execução. Correção fecha a primeira janela antes da segunda, sem mudar aplicativo, assets ou workflows. Regressão completa do renderizador reproduziu o erro antes e passou depois (7 testes direcionados aprovados). Nova suíte integral e publicação serão registradas em RELATORIO_LANCAMENTO_0136.md. Homologação de jogo real no PC do dono continua pendente.
+
 ## Lançamento 0.1.36 autorizado — preparação
 
 O dono autorizou explicitamente lançar a 0.1.36 no GitHub nesta conversa, após a entrega local. A autorização permite enviar fix/0.1.36-ajustes e acionar Windows release para publicar a pré-release, preservando workflows e releases anteriores. Código local validado em da12842e6de663ee4791a6a4010bc622cfed8222, 612 testes Linux; a publicação depende agora dos testes/build/smokes Windows do próprio commit enviado.
