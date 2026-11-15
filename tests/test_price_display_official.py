@@ -19,7 +19,7 @@ def test_official_history_is_never_struck_out_or_used_as_discount(library,app):
 def test_price_order_places_missing_prices_last_and_respects_name(library):
     ids=[library.save_game({'title':title}) for title in ('Zulu','Beta','Alfa','Sem preço')]
     for identity,current in zip(ids,(5000,2000,2000,None)):
-        library.set_setting(f'prices.ggdeals.{identity}',{'lowest':current})
+        library.set_setting(f'prices.ggdeals.{identity}',{'lowest':current,'current_kind':'retail'})
     assert [game['title'] for game in wishlist_order(library,library.games())]==['Alfa','Beta','Sem preço','Zulu']
     assert [game['title'] for game in wishlist_order(library,library.games(),'price')]==['Alfa','Beta','Zulu','Sem preço']
 

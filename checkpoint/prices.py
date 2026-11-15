@@ -10,6 +10,23 @@ def money(value):return 'Indisponível' if type(value) is not int or value<=0 el
 def snapshot(library,game_id):return library.setting(f'prices.ggdeals.{game_id}',{})
 
 
+def selected_quote(library,game_id):
+    value=dict(snapshot(library,game_id))
+    if value.get('currency','BRL')!='BRL':return {}
+    allowed=('retail','keyshop') if library.setting('prices.include_keyshops',False) else ('retail',)
+    choices=[]
+    def add(amount,kind):
+        if kind in allowed and type(amount) is int and amount>0:choices.append((amount,kind))
+    for kind in allowed:add(value.get(kind),kind)
+    add(value.get('current',value.get('lowest')),value.get('current_kind'))
+    for offer in value.get('offers',[]):add(offer.get('cents'),offer.get('kind'))
+    amount,kind=min(choices,default=(None,None))
+    value.update(lowest=amount,current=amount,current_kind=kind,original=None,discount=None)
+    if amount is None and snapshot(library,game_id).get('lowest'):
+        value['message']='Nenhuma oferta de loja oficial identificada.' if allowed==('retail',) else 'A origem do preço salvo não foi identificada. Consulte novamente.'
+    return value
+
+
 def needs_update(library,game_id):
     value=snapshot(library,game_id)
     if value.get('config_version',0)!=library.setting('prices.config_version',0):return True
@@ -56,7 +73,7 @@ def refresh_prices(library,game_id,provider=None):
 
 def wishlist_order(library,games,order='name'):
     def key(game):
-        value=snapshot(library,game['id']);current=value.get('lowest')
+        value=selected_quote(library,game['id']);current=value.get('lowest')
         usable=type(current) is int and current>0 and value.get('currency','BRL')=='BRL'
         return (not usable,current if usable else 0,game['title'].casefold()) if order=='price' else (game['title'].casefold(),)
     return sorted(games,key=key)

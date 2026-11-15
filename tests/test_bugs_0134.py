@@ -53,7 +53,7 @@ def test_price_keeps_last_valid_or_explains_absence(ui):
     w.library.sql.execute('INSERT INTO external_identifiers VALUES(?,?,?)',(i,'steam',str(i)));w.library.sql.commit()
     class Provider:
         value=1900+i*100
-        def prices(self,*args,**kwargs):return {'current':self.value,'currency':'BRL'}
+        def prices(self,*args,**kwargs):return {'current':self.value,'current_kind':'retail','currency':'BRL'}
     p=Provider();refresh_prices(w.library,i,p);previous=snapshot(w.library,i)['lowest']
     p.value=None;refresh_prices(w.library,i,p)
     assert snapshot(w.library,i)['lowest']==previous

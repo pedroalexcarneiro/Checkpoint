@@ -5,7 +5,7 @@ from PySide6.QtGui import QDesktopServices
 from PySide6.QtWidgets import QWidget,QHBoxLayout,QVBoxLayout,QLabel,QSizePolicy
 from PySide6.QtGui import QFont,QFontMetrics
 from .ui_components import text,action,card
-from .prices import snapshot,money
+from .prices import snapshot,money,selected_quote
 from .visual_tokens import SPACE,TYPE
 from .locale import datetime_display,date_display
 
@@ -30,8 +30,7 @@ def has_steam_id(library,game):
 
 
 def display_snapshot(library,game):
-    value=snapshot(library,game['id'])
-    return value if value.get('currency','BRL')=='BRL' else {}
+    return selected_quote(library,game['id'])
 
 
 class PriceAmount(QLabel):
@@ -58,10 +57,6 @@ def price_summary(library,game):
         offers=[offer for offer in value.get('offers',[]) if offer.get('cents')==current]
         shop=offers[0].get('shop','') if offers else ''
         label=text(kind+(' · '+shop if shop else ''),'secondary');label.setToolTip(label.text());row.addWidget(label)
-    original=value.get('original');discount=value.get('discount')
-    if value.get('provider')!='api' and usable and type(original) is int and original>current and discount:
-        detail=QHBoxLayout();before=text(money(original),'caption');font=before.font();font.setStrikeOut(True);before.setFont(font);detail.addWidget(before)
-        badge=text('-'+str(discount)+'%','discountBadge');detail.addWidget(badge);detail.addStretch();row.addLayout(detail)
     historical=value.get('historical')
     if type(historical) is int and historical>0:row.addWidget(text('Menor histórico: '+money(historical),'caption'))
     if not has_steam_id(library,game):row.addWidget(text('Sem ID da Steam para consulta','caption'))

@@ -4,7 +4,7 @@ from .cover_art import CoverArtwork
 from .visual_tokens import SPACE
 from .design_system import CardSurface
 from PySide6.QtCore import Qt,QSize,QTimer
-from PySide6.QtWidgets import QLabel,QWidget,QVBoxLayout,QHBoxLayout,QBoxLayout,QTabWidget,QFrame,QSizePolicy,QPushButton,QComboBox
+from PySide6.QtWidgets import QLabel,QWidget,QVBoxLayout,QHBoxLayout,QBoxLayout,QTabWidget,QFrame,QSizePolicy,QPushButton,QComboBox,QCheckBox
 from .ui_components import text,action,card,GameTile,relative_date
 from .design_system import CardGrid,page_scroll,empty_state,IconButton,ArtworkButton,Badge
 
@@ -97,6 +97,10 @@ def build_wishlist(window):
     def change_order(index):
         window.library.set_setting('wishlist.order',order.itemData(index));window.wishlist()
     order.currentIndexChanged.connect(change_order);top.insertWidget(1,order)
+    keyshops=QCheckBox('Incluir keyshops');keyshops.setObjectName('includeKeyshops');keyshops.setChecked(window.library.setting('prices.include_keyshops',False))
+    def include_keyshops(value):
+        window.library.set_setting('prices.include_keyshops',value);window.wishlist()
+    keyshops.toggled.connect(include_keyshops);top.insertWidget(1,keyshops)
     rows=wishlist_order(window.library,rows,order.currentData())
     grid=WishGrid(260);grid.cover_percent=cover_size(window.library);grid.setObjectName('wishlistGrid');grid.setProperty('cardComponent','coverCard')
     from .price_view import price_summary,source_link

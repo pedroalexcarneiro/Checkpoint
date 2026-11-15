@@ -36,7 +36,7 @@ def test_wishlist_name_price_sort_and_scroll_survive_refresh(library,app):
         identity=library.save_game({'title':f'Jogo {index:02}'})
         with library.sql:library.sql.execute('INSERT INTO wishlist(game_id,target_cents) VALUES(?,0)',(identity,))
         ids.append(identity)
-    library.set_setting(f'prices.ggdeals.{ids[-1]}',{'lowest':6000,'current':6000,'original':10000,'discount':40,'currency':'BRL'})
+    library.set_setting(f'prices.ggdeals.{ids[-1]}',{'lowest':6000,'current_kind':'retail','current':6000,'original':10000,'discount':40,'currency':'BRL'})
     ordered=wishlist_order(library,library.games())
     assert ordered[0]['id']==ids[0]
     assert wishlist_order(library,library.games(),'price')[0]['id']==ids[-1]
@@ -49,10 +49,10 @@ def test_wishlist_name_price_sort_and_scroll_survive_refresh(library,app):
     assert grid.cards[0].game['id']==ids[-1]
     assert all(card.findChild(WishLogo).width()==card.findChild(WishLogo).height() for card in grid.cards)
     price=price_summary(library,library.get(ids[-1]));labels=price.findChildren(QLabel)
-    assert any(label.text()=='-40%' for label in labels)
-    assert any(label.text()=='R$ 100,00' and label.font().strikeOut() for label in labels)
+    assert not any('%' in label.text() for label in labels)
+    assert not any(label.font().strikeOut() or label.text()=='R$ 100,00' for label in labels)
     window.wishlist_scroll.verticalScrollBar().setValue(250)
-    library.set_setting(f'prices.ggdeals.{ids[-2]}',{'lowest':2000,'discount':80,'original':10000})
+    library.set_setting(f'prices.ggdeals.{ids[-2]}',{'lowest':2000,'current_kind':'retail','discount':80,'original':10000})
     window.prices_updated(ids[-2])
     for _ in range(5):app.processEvents()
     assert window.wishlist_scroll.verticalScrollBar().value()==250

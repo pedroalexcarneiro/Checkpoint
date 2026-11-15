@@ -20,7 +20,7 @@ def test_wish_card_keeps_price_and_explains_no_price(ui,app):
         w.library.sql.execute("INSERT INTO external_identifiers VALUES(?,'steam',?)",(i,str(i)))
     class Provider:
         value=2190
-        def prices(self,*args,**kwargs):return {'current':self.value,'currency':'BRL'}
+        def prices(self,*args,**kwargs):return {'current':self.value,'current_kind':'retail','currency':'BRL'}
     provider=Provider();refresh_prices(w.library,i,provider);provider.value=None;refresh_prices(w.library,i,provider)
     w.wishlist();app.processEvents();card=w.pages[2].findChild(WishCard)
     assert any(label.text()=='R$ 21,90' for label in card.findChildren(QLabel))
