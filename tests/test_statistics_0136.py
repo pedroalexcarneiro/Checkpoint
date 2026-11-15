@@ -51,6 +51,9 @@ def test_equivalent_metrics_and_period_selector(ui,app):
         for key in ['daily','weekly','monthly','3m','6m','12m','all']:
             combo.setCurrentIndex(combo.findData(key))
             for _ in range(3):app.processEvents()
+            from checkpoint.statistics_view import HeatmapViewport
+            viewport=w.pages[4].findChild(HeatmapViewport)
+            assert viewport.widget().height()<=viewport.height()<=viewport.widget().height()+viewport.horizontalScrollBar().sizeHint().height()
             grid=w.pages[4].findChild(CardGrid,'statisticsMetrics')
             assert len({c.height() for c in grid.cards})==1
             assert len({c.y() for c in grid.cards})==1

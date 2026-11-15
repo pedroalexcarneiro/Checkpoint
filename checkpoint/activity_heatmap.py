@@ -1,6 +1,6 @@
 """Calendário de horas reais, em células diárias como um gráfico de contribuições."""
 from datetime import date,datetime,timedelta,timezone
-from PySide6.QtCore import Qt,QRectF,QSize
+from PySide6.QtCore import Qt,QRectF,QSize,Signal
 from PySide6.QtGui import QPainter,QColor,QFont,QPen
 from PySide6.QtWidgets import QWidget,QToolTip
 from .design_system import colors
@@ -12,6 +12,7 @@ MONTHS=('Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez')
 
 
 class ActivityHeatmap(QWidget):
+    height_changed=Signal(int)
     def __init__(self,values,theme,parent=None,display_timezone=timezone.utc):
         super().__init__(parent);self.display_timezone=display_timezone;self.theme=theme;self.year=None;self.period_interval=None;self.cells=[];self.setMinimumHeight(166);self.setMouseTracking(True);self.set_values(values)
     def sizeHint(self):return QSize(740,166)
@@ -20,6 +21,7 @@ class ActivityHeatmap(QWidget):
         first,last=self.interval();start=first-timedelta(days=first.weekday());columns=(last-start).days//7+1
         height=28+7*(self.cell_size(columns)+3)+42
         if self.height()!=height:self.setFixedHeight(height)
+        self.height_changed.emit(height)
         super().resizeEvent(event)
     def set_values(self,values):
         self.values=values;self.setAccessibleName('Horas de jogo por dia')

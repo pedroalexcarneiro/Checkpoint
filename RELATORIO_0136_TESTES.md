@@ -720,3 +720,123 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## antes-09
+
+UTC: 2026-11-15T16:03:19.510725+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_statistics_visible_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_________ test_genres_and_completions_are_directly_available[sample0] __________
+
+ui = (<checkpoint.window.MainWindow(0x249f6880) at 0x7f3035cffa80>, 1)
+app = <PySide6.QtWidgets.QApplication(0x24866ad0) at 0x7f3035e9ba00>
+
+    def test_genres_and_completions_are_directly_available(ui,app):
+        w,i=ui;w.library.save_game({'title':w.library.get(i)['title'],'genre':'Aventura','status':'Concluído'},i)
+        w.navigate(4);app.processEvents()
+>       assert not any(b.text()=='Mais estatísticas' for b in w.pages[4].findChildren(QToolButton))
+E       assert not True
+E        +  where True = any(<generator object test_genres_and_completions_are_directly_available.<locals>.<genexpr> at 0x7f303583d560>)
+
+tests/test_statistics_visible_0136.py:8: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+_________ test_genres_and_completions_are_directly_available[sample1] __________
+
+ui = (<checkpoint.window.MainWindow(0x24b13540) at 0x7f3035cff840>, 1)
+app = <PySide6.QtWidgets.QApplication(0x24866ad0) at 0x7f3035e9ba00>
+
+    def test_genres_and_completions_are_directly_available(ui,app):
+        w,i=ui;w.library.save_game({'title':w.library.get(i)['title'],'genre':'Aventura','status':'Concluído'},i)
+        w.navigate(4);app.processEvents()
+>       assert not any(b.text()=='Mais estatísticas' for b in w.pages[4].findChildren(QToolButton))
+E       assert not True
+E        +  where True = any(<generator object test_genres_and_completions_are_directly_available.<locals>.<genexpr> at 0x7f30357ef1d0>)
+
+tests/test_statistics_visible_0136.py:8: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_statistics_visible_0136.py::test_genres_and_completions_are_directly_available[sample0]
+FAILED tests/test_statistics_visible_0136.py::test_genres_and_completions_are_directly_available[sample1]
+2 failed in 0.37s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## depois-09
+
+UTC: 2026-11-15T16:03:30.215215+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_statistics_visible_0136.py", "tests/test_statistics_0136.py", "tests/test_ui_polish.py::test_statistics_chart_uses_library_totals", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+..........                                                               [100%]
+10 passed in 1.38s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## antes-10-11
+
+UTC: 2026-11-15T16:03:31.654636+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_cover_preview_0135.py", "tests/test_card_layout.py", "tests/test_service_logo_0135.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+.............                                                            [100%]
+13 passed in 1.38s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## depois-09-calor-ajustado
+
+UTC: 2026-11-15T16:04:29.889393+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_statistics_visible_0136.py", "tests/test_statistics_0136.py", "tests/test_ui_polish.py::test_statistics_chart_uses_library_totals", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+..........                                                               [100%]
+10 passed in 1.46s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0

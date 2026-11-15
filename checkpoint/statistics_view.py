@@ -3,13 +3,25 @@ from .locale import count_text
 """Painel de estatísticas com números e gráficos derivados da biblioteca real."""
 from PySide6.QtCore import Qt,QRectF,QPointF
 from PySide6.QtGui import QPainter,QPen,QColor,QFont,QPainterPath,QLinearGradient
-from PySide6.QtWidgets import QWidget,QScrollArea,QVBoxLayout,QHBoxLayout,QGridLayout,QComboBox,QProgressBar
+from PySide6.QtWidgets import QWidget,QScrollArea,QVBoxLayout,QHBoxLayout,QGridLayout,QComboBox,QProgressBar,QPushButton
 from .ui_components import text,card,action
 from .theme import blend
 from .design_system import AdaptiveColumns,colors as current_colors,Badge,CardGrid
 
 
 from .activity_heatmap import ActivityHeatmap as TimeChart
+
+
+class HeatmapViewport(SmoothScrollArea):
+    def __init__(self,chart):
+        super().__init__();self.setObjectName('heatmapViewport');self.setFrameShape(self.Shape.NoFrame)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff);self.setWidgetResizable(True);self.setWidget(chart)
+        chart.height_changed.connect(self.fit_height);self.horizontalScrollBar().rangeChanged.connect(self.fit_height)
+        self.setFixedHeight(chart.sizeHint().height())
+    def fit_height(self,*args):
+        extra=self.horizontalScrollBar().sizeHint().height() if self.horizontalScrollBar().maximum()>0 else 0
+        height=self.widget().height()+extra+2*self.frameWidth()
+        if self.height()!=height:self.setFixedHeight(height)
 
 
 class StatusRing(QWidget):
@@ -29,7 +41,7 @@ class StatusRing(QWidget):
         p.end()
 
 
-class GameNameButton(__import__('PySide6.QtWidgets',fromlist=['QPushButton']).QPushButton):
+class GameNameButton(QPushButton):
     def __init__(self,title,callback):
         super().__init__();self.full_title=title;self.setObjectName('quiet');self.setToolTip(title);self.setAccessibleName(title);self.setMinimumWidth(0)
         from PySide6.QtWidgets import QSizePolicy
@@ -62,7 +74,7 @@ def render_statistics(window,layout,selected):
     from datetime import timedelta
     first,last=temporal['dates'];columns=(last-(first-timedelta(days=first.weekday()))).days//7+1
     chart.setMinimumWidth(36+columns*6)
-    scroller=SmoothScrollArea();scroller.setWidgetResizable(True);scroller.setFrameShape(scroller.Shape.NoFrame);scroller.setWidget(chart);scroller.setFixedHeight(252);inside.addWidget(scroller)
+    scroller=HeatmapViewport(chart);inside.addWidget(scroller)
     layout.addWidget(frame)
     frame,inside=card();inside.addWidget(text('Mais jogados no período','sectionTitle'))
     if not temporal['top']:inside.addWidget(text('Sem sessões neste período.','muted'))
@@ -88,8 +100,7 @@ def render_statistics(window,layout,selected):
         for name,value in values.items():
             if title=='Conclusões no período' and len(name)==7:name=name[5:7]+'/'+name[:4]
             inside.addWidget(text(f'{name} · {value}','muted'))
-    from .settings_view import disclosure
-    disclosure('Mais estatísticas',extra,layout)
+    layout.addWidget(extra)
     layout.addStretch()
 
 

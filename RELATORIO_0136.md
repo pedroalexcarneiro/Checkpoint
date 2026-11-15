@@ -55,3 +55,9 @@ Limites: [início,agora), dia/mês atuais, semana segunda-feira; janelas móveis
 Arquivos/funções: checkpoint/statistics_periods.py (period_bounds, period_stats, instant), statistics_view.py (metric, GameNameButton, render_statistics, build_statistics), activity_heatmap.py (set_interval/interval). Cobertura inclui dois jogos, meia-noite, ano, semanas/mês/mês com dia limitado, janela vazia, snapshot Steam alto que não entra no recorte, DST e preservação exata dos registros. 1280×800/1920×1080 com sete filtros, limites dos labels e alinhamento. Expectativa fixa de 365 células em test_wishlist_prices atualizada para os dias do intervalo móvel de calendário; preservados tempos e agrupamento local, conforme item 08.
 
 Capturas da implementação: estatisticas-tela-4-{1280x800,1920x1080}.png; dados isolados (Portal 2/Metroid Fusion), não banco pessoal. Captura 1280×800 enviada no chat para revisão. Fontes reais/renderização Windows e tooltip no PC do dono não testados; sem mudança global de fonte.
+
+## 09 — Mais estatísticas — feito
+
+Antes: dois testes falharam pois gêneros/conclusões estavam escondidos pelo disclosure. Removido o botão e integrado seu conteúdo na página, sem apagar dados. Arquivos: checkpoint/statistics_view.py::render_statistics; tests/test_statistics_visible_0136.py. Dois jogos de fixture, gênero/status preservados; dez testes pertinentes passaram.
+
+Complemento solicitado durante revisão no chat: a primeira captura de Estatísticas tinha sobra excessiva abaixo da legenda. Substituída altura fixa de 252px por HeatmapViewport, que acompanha a altura calculada do gráfico e eventual barra horizontal; ActivityHeatmap emite height_changed. Teste verifica tamanho ajustado nos sete períodos e duas resoluções, sem retirar rolagem da página. Capturas calor-compacto-tela-4-1280x800.png e calor-compacto-tela-4-1920x1080.png enviadas no chat; reduzem a sobra sem reduzir fontes. Não houve reescrita do commit anterior.
