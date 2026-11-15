@@ -15,7 +15,7 @@ from .activity_heatmap import ActivityHeatmap as TimeChart
 class HeatmapViewport(SmoothScrollArea):
     def __init__(self,chart):
         super().__init__();self.setObjectName('heatmapViewport');self.setFrameShape(self.Shape.NoFrame)
-        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff);self.setWidgetResizable(True);self.setWidget(chart)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff);self.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded);self.setWidgetResizable(True);self.setWidget(chart)
         chart.height_changed.connect(self.fit_height);self.horizontalScrollBar().rangeChanged.connect(self.fit_height)
         self.setFixedHeight(chart.sizeHint().height())
     def fit_height(self,*args):
@@ -91,7 +91,7 @@ def render_statistics(window,layout,selected):
             logo.setPixmap(nav_icon('library',window.theme.colors['muted'],32).pixmap(32,32))
         line.addWidget(logo)
         b=GameNameButton(game['title'],lambda checked=False,identity=game['id']:window.detail(identity));b.setObjectName('statisticsGameName');line.addWidget(b,1)
-        value=text(format_time(game['seconds']),'muted');value.setObjectName('statisticsGameTime');value.setWordWrap(False);value.setAlignment(Qt.AlignRight|Qt.AlignVCenter);line.addWidget(value);inside.addWidget(game_row)
+        value=text(format_time(game['seconds']),'muted');value.setObjectName('statisticsGameTime');value.setStyleSheet('font-size: 16px; font-weight: 600; color: '+window.theme.colors['text']+';');value.setWordWrap(False);value.setAlignment(Qt.AlignRight|Qt.AlignVCenter);line.addWidget(value);inside.addWidget(game_row)
     inside.addStretch();layout.addWidget(frame)
     layout.addWidget(text('Coleção atual','sectionTitle'))
     row=CardGrid(220,max_columns=3);row.setObjectName('collectionMetrics')

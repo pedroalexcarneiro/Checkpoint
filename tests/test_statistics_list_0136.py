@@ -22,4 +22,5 @@ def test_top_list_logo_name_and_time_are_separate(ui,app,folder):
             assert logo.geometry().right()<name.geometry().left() and name.geometry().right()<value.geometry().left()
             assert row.rect().contains(value.geometry()) and name.toolTip()
             assert value.text() in ('1h00min','1h10min')
+            assert value.font().bold() and value.font().pixelSize()==16
         assert rows[0].findChild(QLabel,'statisticsGameTime').text()=='1h10min'
