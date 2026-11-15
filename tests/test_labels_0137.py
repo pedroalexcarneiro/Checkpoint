@@ -22,5 +22,5 @@ def test_period_and_sort_labels_keep_underlying_keys(ui):
     from checkpoint.statistics_periods import PERIODS
     w, _ = ui
     assert PERIODS[:3] == (('Hoje', 'daily'), ('Esta semana', 'weekly'), ('Este mês', 'monthly'))
-    assert w.sort.itemText(w.sort.findData('title')) == 'Nome: A–Z'
+    assert w.sort.itemText(w.sort.findData('title')) == 'Alfabeticamente'
     assert w.sort.itemText(w.sort.findData('recent')) == 'Adicionados recentemente'

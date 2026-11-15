@@ -55,3 +55,5 @@ Complemento posterior nos cards recentes: remover plataforma; manter status, úl
 Última decisão de Ofertas: remover toda miniatura/logo e contexto visual; linha somente nome, original riscado, percentual na cor do tema e atual. Essa decisão substitui o pedido anterior de logo. Identidade/plataforma/edição e política continuam validadas nos dados; original/percentual só aparecem juntos quando confiáveis na mesma oferta. API sem original individual mantém nome/atual, sem dados inventados.
 
 Nova prévia solicitada para Ofertas: um banner horizontal por oferta, inteiro e proporcional, e faixa de nome/original/desconto/atual abaixo. Sem logo/miniatura adicional; sem banner disponível, manter linha de dados. Captura inicio-v10 enviada no chat para comparação, sem alegar aprovação estética.
+
+Última instrução de rótulo: Alfabeticamente substitui Nome: A–Z na Biblioteca e Desejos, preservando chaves e comparação de títulos.

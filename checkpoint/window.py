@@ -91,7 +91,7 @@ class MainWindow(QMainWindow):
         self.header.insertWidget(2,self.search);self.header.setSpacing(12)
         self.search.returnPressed.connect(self.search_library)
         self.library_filters.removeWidget(self.platform);self.library_options.insertWidget(1,self.platform)
-        self.platform.setObjectName('libraryPlatform');self.sort.setObjectName('librarySort');self.platform.setFixedWidth(165);self.sort.setFixedWidth(145)
+        self.platform.setObjectName('libraryPlatform');self.sort.setObjectName('librarySort');self.platform.setFixedWidth(165);self.sort.setFixedWidth(200)
         from .design_system import IconButton
         self.view_buttons=[]
         for index,name in enumerate(('library','list')):
@@ -200,7 +200,7 @@ class MainWindow(QMainWindow):
         self.favorites = QCheckBox('Favoritos',self.pages[1]); self.favorites.toggled.connect(self.refresh_library);self.favorites.hide()
         from .ui_components import nav_icon
         filter_button=QPushButton();filter_button.setIcon(nav_icon('filter',self.theme.colors['muted']));filter_button.setFixedSize(32,32);filter_button.setToolTip('Mais filtros');filter_button.setAccessibleName('Mais filtros');filter_button.setCheckable(True);filter_button.toggled.connect(self.extra_filters.setVisible);options.addWidget(filter_button)
-        self.sort = QComboBox(); self.sort.addItem('Nome: A–Z','title'); self.sort.addItem('Adicionados recentemente','recent'); self.sort.addItem('Maior nota','rating')
+        self.sort = QComboBox(); self.sort.addItem('Alfabeticamente','title'); self.sort.addItem('Adicionados recentemente','recent'); self.sort.addItem('Maior nota','rating')
         self.sort.currentIndexChanged.connect(self.refresh_library); options.addWidget(self.sort)
         self.view = QComboBox(); self.view.addItems(['Galeria','Lista']); self.view.currentIndexChanged.connect(self.refresh_library); self.view.hide()
         layout.addLayout(options);layout.addWidget(self.extra_filters);self.extra_filters.hide()
