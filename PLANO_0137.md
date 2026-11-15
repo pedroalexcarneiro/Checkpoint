@@ -57,3 +57,7 @@ Complemento posterior nos cards recentes: remover plataforma; manter status, úl
 Nova prévia solicitada para Ofertas: um banner horizontal por oferta, inteiro e proporcional, e faixa de nome/original/desconto/atual abaixo. Sem logo/miniatura adicional; sem banner disponível, manter linha de dados. Captura inicio-v10 enviada no chat para comparação, sem alegar aprovação estética.
 
 Última instrução de rótulo: Alfabeticamente substitui Nome: A–Z na Biblioteca e Desejos, preservando chaves e comparação de títulos.
+
+Complemento de rótulo: filtro de plataforma mostra somente Todas no estado sem filtro, substituindo Plataforma: Todas/Todas as plataformas; dados/opções e filtragem preservados.
+
+Revisão posterior de Estatísticas: grade de meses em linhas e dias 1–31 foi rejeitada pelo dono. Não manter esse desenho nos períodos longos. Usar mapa de calor compacto (semanas em colunas), barras em Hoje/Esta semana e calendário mensal próprio; parear gráficos menores com Mais jogados para evitar painel largo vazio.

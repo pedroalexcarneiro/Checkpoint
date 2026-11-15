@@ -1460,3 +1460,353 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## estatisticas-periodos-antes
+
+UTC: 2026-11-15T21:57:42.311386+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_period_chart_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+________ test_week_chart_uses_width_and_months_keep_real_days[sample0] _________
+
+ui = (<checkpoint.window.MainWindow(0x132e7690) at 0x7f2b26a10fc0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x1320b480) at 0x7f2b26b37940>
+
+    def test_week_chart_uses_width_and_months_keep_real_days(ui,app):
+        w,i=ui
+        for size in ((1280,800),(1920,1080)):
+            w.resize(*size);w.navigate(4);combo=w.pages[4].findChild(QComboBox,'statisticsPeriod')
+            combo.setCurrentIndex(combo.findData('weekly'))
+            for _ in range(6):app.processEvents()
+            from checkpoint.statistics_view import TimeChart
+            chart=w.pages[4].findChild(TimeChart);chart.grab()
+>           assert chart.period=='weekly' and chart.cells
+                   ^^^^^^^^^^^^
+E           AttributeError: 'ActivityHeatmap' object has no attribute 'period'
+
+tests/test_period_chart_0137.py:14: AttributeError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+________ test_week_chart_uses_width_and_months_keep_real_days[sample1] _________
+
+ui = (<checkpoint.window.MainWindow(0x1388a340) at 0x7f2b265b6e40>, 1)
+app = <PySide6.QtWidgets.QApplication(0x1320b480) at 0x7f2b26b37940>
+
+    def test_week_chart_uses_width_and_months_keep_real_days(ui,app):
+        w,i=ui
+        for size in ((1280,800),(1920,1080)):
+            w.resize(*size);w.navigate(4);combo=w.pages[4].findChild(QComboBox,'statisticsPeriod')
+            combo.setCurrentIndex(combo.findData('weekly'))
+            for _ in range(6):app.processEvents()
+            from checkpoint.statistics_view import TimeChart
+            chart=w.pages[4].findChild(TimeChart);chart.grab()
+>           assert chart.period=='weekly' and chart.cells
+                   ^^^^^^^^^^^^
+E           AttributeError: 'ActivityHeatmap' object has no attribute 'period'
+
+tests/test_period_chart_0137.py:14: AttributeError
+______________ test_hourly_day_uses_real_local_session_boundaries ______________
+
+library = <checkpoint.library.Library object at 0x7f2b2ca6cf50>
+
+    def test_hourly_day_uses_real_local_session_boundaries(library):
+>       from checkpoint.statistics_periods import day_hours
+E       ImportError: cannot import name 'day_hours' from 'checkpoint.statistics_periods' (/workspace/work/Checkpoint/checkpoint/statistics_periods.py)
+
+tests/test_period_chart_0137.py:25: ImportError
+____________ test_day_hours_respect_dst_and_do_not_change_instants _____________
+
+library = <checkpoint.library.Library object at 0x7f2b2c8acad0>
+
+    def test_day_hours_respect_dst_and_do_not_change_instants(library):
+        from zoneinfo import ZoneInfo
+>       from checkpoint.statistics_periods import day_hours
+E       ImportError: cannot import name 'day_hours' from 'checkpoint.statistics_periods' (/workspace/work/Checkpoint/checkpoint/statistics_periods.py)
+
+tests/test_period_chart_0137.py:36: ImportError
+=========================== short test summary info ============================
+FAILED tests/test_period_chart_0137.py::test_week_chart_uses_width_and_months_keep_real_days[sample0]
+FAILED tests/test_period_chart_0137.py::test_week_chart_uses_width_and_months_keep_real_days[sample1]
+FAILED tests/test_period_chart_0137.py::test_hourly_day_uses_real_local_session_boundaries
+FAILED tests/test_period_chart_0137.py::test_day_hours_respect_dst_and_do_not_change_instants
+4 failed in 0.49s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## estatisticas-periodos-depois
+
+UTC: 2026-11-15T21:59:38.753376+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_period_chart_0137.py", "tests/test_statistics_0136.py", "tests/test_statistics_list_0136.py", "tests/test_wishlist_prices.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+...................                                                      [100%]
+19 passed in 2.81s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## estatisticas-capturas
+
+UTC: 2026-11-15T22:00:07.699525+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/estatisticas-v1"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/estatisticas-v1
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
+
+## perfil-recorte-antes
+
+UTC: 2026-11-15T22:02:11.834328+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_avatar_crop_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+FFF.                                                                     [100%]
+=================================== FAILURES ===================================
+_________ test_crop_zoom_cancel_and_persistence_keep_original[shape0] __________
+
+library = <checkpoint.library.Library object at 0x7f6139d9e6f0>
+app = <PySide6.QtWidgets.QApplication(0x3f039090) at 0x7f6139f396c0>
+folder = PosixPath('/tmp/a3864d7403774ab498e5f412e911f5fc')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6139d9e660>
+shape = (400, 200)
+
+    @pytest.mark.parametrize('shape',[(400,200),(200,400),(24,16)])
+    def test_crop_zoom_cancel_and_persistence_keep_original(library,app,folder,monkeypatch,shape):
+        image=QImage(*shape,QImage.Format_RGB32);image.fill(QColor('red'));p=QPainter(image);p.fillRect(shape[0]//2,0,shape[0]//2,shape[1],QColor('blue'));p.end()
+        path=folder/'Foto com espaço e acentuação.png';assert image.save(str(path));before=path.read_bytes()
+        monkeypatch.setattr('checkpoint.profile_dialog.QFileDialog.getOpenFileName',lambda *a,**k:(str(path),''))
+        dialog=ProfileDialog(library);dialog.choose_photo()
+>       assert hasattr(dialog,'crop')
+E       AssertionError: assert False
+E        +  where False = hasattr(<checkpoint.profile_dialog.ProfileDialog(0x3f256490) at 0x7f6139dee640>, 'crop')
+
+tests/test_avatar_crop_0137.py:13: AssertionError
+----------------------------- Captured stderr call -----------------------------
+Fontconfig error: No writable cache directories
+_________ test_crop_zoom_cancel_and_persistence_keep_original[shape1] __________
+
+library = <checkpoint.library.Library object at 0x7f6139039430>
+app = <PySide6.QtWidgets.QApplication(0x3f039090) at 0x7f6139f396c0>
+folder = PosixPath('/tmp/f5bb7f077fbb4181b3c4e44bc855be2a')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6139038e00>
+shape = (200, 400)
+
+    @pytest.mark.parametrize('shape',[(400,200),(200,400),(24,16)])
+    def test_crop_zoom_cancel_and_persistence_keep_original(library,app,folder,monkeypatch,shape):
+        image=QImage(*shape,QImage.Format_RGB32);image.fill(QColor('red'));p=QPainter(image);p.fillRect(shape[0]//2,0,shape[0]//2,shape[1],QColor('blue'));p.end()
+        path=folder/'Foto com espaço e acentuação.png';assert image.save(str(path));before=path.read_bytes()
+        monkeypatch.setattr('checkpoint.profile_dialog.QFileDialog.getOpenFileName',lambda *a,**k:(str(path),''))
+        dialog=ProfileDialog(library);dialog.choose_photo()
+>       assert hasattr(dialog,'crop')
+E       AssertionError: assert False
+E        +  where False = hasattr(<checkpoint.profile_dialog.ProfileDialog(0x3f427ee0) at 0x7f613904fe40>, 'crop')
+
+tests/test_avatar_crop_0137.py:13: AssertionError
+_________ test_crop_zoom_cancel_and_persistence_keep_original[shape2] __________
+
+library = <checkpoint.library.Library object at 0x7f6139038da0>
+app = <PySide6.QtWidgets.QApplication(0x3f039090) at 0x7f6139f396c0>
+folder = PosixPath('/tmp/c279fa4d907f46c2aa5dbb78d0d482e9')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f61390394f0>
+shape = (24, 16)
+
+    @pytest.mark.parametrize('shape',[(400,200),(200,400),(24,16)])
+    def test_crop_zoom_cancel_and_persistence_keep_original(library,app,folder,monkeypatch,shape):
+        image=QImage(*shape,QImage.Format_RGB32);image.fill(QColor('red'));p=QPainter(image);p.fillRect(shape[0]//2,0,shape[0]//2,shape[1],QColor('blue'));p.end()
+        path=folder/'Foto com espaço e acentuação.png';assert image.save(str(path));before=path.read_bytes()
+        monkeypatch.setattr('checkpoint.profile_dialog.QFileDialog.getOpenFileName',lambda *a,**k:(str(path),''))
+        dialog=ProfileDialog(library);dialog.choose_photo()
+>       assert hasattr(dialog,'crop')
+E       AssertionError: assert False
+E        +  where False = hasattr(<checkpoint.profile_dialog.ProfileDialog(0x3f42a410) at 0x7f613906b6c0>, 'crop')
+
+tests/test_avatar_crop_0137.py:13: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_avatar_crop_0137.py::test_crop_zoom_cancel_and_persistence_keep_original[shape0]
+FAILED tests/test_avatar_crop_0137.py::test_crop_zoom_cancel_and_persistence_keep_original[shape1]
+FAILED tests/test_avatar_crop_0137.py::test_crop_zoom_cancel_and_persistence_keep_original[shape2]
+3 failed, 1 passed in 0.24s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## estatisticas-regressoes
+
+UTC: 2026-11-15T22:02:27.072651+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_period_chart_0137.py", "tests/test_statistics_0136.py", "tests/test_statistics_list_0136.py", "tests/test_statistics_visible_0136.py", "tests/test_wishlist_prices.py", "tests/test_ui_polish.py", "tests/test_labels_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+...............................                                          [100%]
+31 passed in 3.67s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## estatisticas-heatmap-compacto
+
+UTC: 2026-11-15T22:04:53.475078+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/estatisticas-v2"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/estatisticas-v2
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
+
+## estatisticas-compactas-regressao
+
+UTC: 2026-11-15T22:05:51.991421+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_period_chart_0137.py", "tests/test_statistics_0136.py", "tests/test_statistics_list_0136.py", "tests/test_statistics_visible_0136.py", "tests/test_wishlist_prices.py", "tests/test_ui_polish.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+.........................                                                [100%]
+25 passed in 3.51s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## perfil-recorte-depois
+
+UTC: 2026-11-15T22:06:50.885324+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_avatar_crop_0137.py", "tests/test_profile.py", "tests/test_complete_layout.py::test_theme_swatches_and_profile_apply_without_losing_data", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+.......                                                                  [100%]
+7 passed in 1.14s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## perfil-orientacao-arrasto
+
+UTC: 2026-11-15T22:07:40.882694+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_avatar_crop_0137.py", "tests/test_profile.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+.......                                                                  [100%]
+7 passed in 0.59s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## perfil-captura
+
+UTC: 2026-11-15T22:07:45.029152+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/perfil-v1"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/perfil-v1
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0

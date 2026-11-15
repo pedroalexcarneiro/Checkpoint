@@ -34,6 +34,26 @@ def instant(value):
     return result.replace(tzinfo=timezone.utc) if result.tzinfo is None else result.astimezone(timezone.utc)
 
 
+def day_hours(library,now=None,zone='local'):
+    start,end=period_bounds('daily',now,zone)
+    tomorrow=attach(datetime.combine(local(start,zone).date()+timedelta(days=1),time.min),zone).astimezone(timezone.utc)
+    rows=[];cursor=start
+    while cursor<tomorrow:
+        stop=min(cursor+timedelta(hours=1),tomorrow)
+        rows.append({'start':cursor,'end':stop,'label':local(cursor,zone).strftime('%Hh'),
+                     'tooltip':local(cursor,zone).strftime('%d/%m/%Y %H:%M %z'),'seconds':0})
+        cursor=stop
+    owned={g['id'] for g in library.owned_games()}
+    for session in library.sql.execute("SELECT * FROM play_sessions WHERE state='finished' AND duration_seconds>0"):
+        if session['game_id'] not in owned:continue
+        try:a=instant(session['started_at'])
+        except (ValueError,TypeError):continue
+        b=min(a+timedelta(seconds=session['duration_seconds']),end)
+        for row in rows:
+            row['seconds']+=max(0,(min(b,row['end'])-max(a,row['start'])).total_seconds())
+    return rows
+
+
 def period_stats(library,period='12m',now=None,zone='local'):
     start,end=period_bounds(period,now,zone);owned={g['id']:g for g in library.owned_games()}
     daily=defaultdict(float);top=defaultdict(float);durations=[];completions=defaultdict(int)

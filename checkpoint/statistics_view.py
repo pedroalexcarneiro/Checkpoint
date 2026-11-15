@@ -9,7 +9,7 @@ from .theme import blend
 from .design_system import AdaptiveColumns,colors as current_colors,Badge,CardGrid
 
 
-from .activity_heatmap import ActivityHeatmap as TimeChart
+from .period_chart import PeriodChart as TimeChart
 
 
 class HeatmapViewport(SmoothScrollArea):
@@ -71,11 +71,16 @@ def render_statistics(window,layout,selected):
     layout.addWidget(row)
     frame,inside=card();inside.addWidget(text('Seu ritmo de jogo','sectionTitle'))
     chart=TimeChart(temporal['daily'],window.theme,display_timezone='local');chart.set_interval(*temporal['dates'])
+    from .statistics_periods import day_hours
+    chart.set_period(selected,day_hours(window.library) if selected=='daily' else None)
     from datetime import timedelta
     first,last=temporal['dates'];columns=(last-(first-timedelta(days=first.weekday()))).days//7+1
-    chart.setMinimumWidth(36+columns*6)
+    chart.setMinimumWidth(max(340,36+columns*6) if selected not in ('daily','weekly','monthly') else 340)
     scroller=HeatmapViewport(chart);inside.addWidget(scroller)
-    layout.addWidget(frame)
+    chart_frame=frame
+    paired=selected in ('monthly','3m','6m') or selected=='all' and (last-first).days<180
+    if not paired:layout.addWidget(chart_frame)
+    elif selected=='monthly':chart_frame.setMaximumWidth(440)
     frame,inside=card();inside.addWidget(text('Mais jogados no período','sectionTitle'))
     if not temporal['top']:inside.addWidget(text('Sem sessões neste período.','muted'))
     for game in temporal['top'][:5]:
@@ -90,9 +95,11 @@ def render_statistics(window,layout,selected):
             from .ui_components import nav_icon
             logo.setPixmap(nav_icon('library',window.theme.colors['muted'],32).pixmap(32,32))
         line.addWidget(logo)
-        b=GameNameButton(game['title'],lambda checked=False,identity=game['id']:window.detail(identity));b.setObjectName('statisticsGameName');line.addWidget(b,1)
+        b=GameNameButton(game['title'],lambda checked=False,identity=game['id']:window.detail(identity));b.setObjectName('statisticsGameName');b.setStyleSheet('background: transparent; border: none; text-align: left; font-weight: 600;');line.addWidget(b,1)
         value=text(format_time(game['seconds']),'muted');value.setObjectName('statisticsGameTime');value.setStyleSheet('font-size: 16px; font-weight: 600; color: '+window.theme.colors['text']+';');value.setWordWrap(False);value.setAlignment(Qt.AlignRight|Qt.AlignVCenter);line.addWidget(value);inside.addWidget(game_row)
-    inside.addStretch();layout.addWidget(frame)
+    inside.addStretch()
+    if paired:layout.addWidget(AdaptiveColumns(chart_frame,frame,(1,1),breakpoint=780))
+    else:layout.addWidget(frame)
     layout.addWidget(text('Coleção atual','sectionTitle'))
     row=CardGrid(220,max_columns=3);row.setObjectName('collectionMetrics')
     for title,value in [('Jogos da coleção',str(stats['total'])),('Concluídos da coleção',str(stats['statuses']['Concluído'])),('Tempo total · app + Steam',format_time(sum(times.values())))]:row.add_card(metric(title,value))
@@ -105,7 +112,7 @@ def render_statistics(window,layout,selected):
         bar=QProgressBar();bar.setRange(0,max(stats['total'],1));bar.setValue(count);bar.setTextVisible(False);bar.setFixedHeight(4);inside.addWidget(bar)
     layout.addWidget(frame)
     extra=QWidget();inside=QVBoxLayout(extra)
-    for title,values in [('Gêneros da coleção',stats['genres']),('Conclusões no período',temporal['completions'])]:
+    for title,values in [('Conclusões no período',temporal['completions'])]:
         inside.addWidget(text(title,'cardTitle'))
         if not values:inside.addWidget(text('Sem registros neste período.' if title=='Conclusões no período' else 'Sem gêneros registrados.','muted'))
         for name,value in values.items():

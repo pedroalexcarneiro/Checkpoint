@@ -75,3 +75,11 @@ playtime.collection_times agrega sessões e MAX Steam separadamente, depois comb
 ## Complemento — rótulo Alfabeticamente
 
 A instrução posterior do dono substitui Nome: A–Z por Alfabeticamente na Biblioteca e Desejos; chaves title/name e ordenação permanecem. Combo da Biblioteca ampliado para exibir também Adicionados recentemente sem corte. Teste de rótulos atualizado somente no texto autorizado. Não altera filtros, dados ou precedência de ordenação.
+
+## Item 9 — gráficos por período e remoção de Gêneros (feito em Linux, revisão visual)
+
+Antes: a semana usa a mesma grade anual e ocupa coluna estreita. Novos testes tiveram quatro falhas. Implementado period_chart.PeriodChart: Hoje mostra distribuição horária de sessões locais reais; Esta semana tem sete posições de dias; mês usa calendário com dias e tooltip; períodos maiores usam mapa de calor compacto. Primeira proposta com meses em linhas e 31 colunas foi rejeitada expressamente no chat; substituída antes do commit, capturas estatisticas-v1/v2 documentam a revisão. Não considerar a proposta rejeitada uma aprovação.
+
+Gráficos menores ficam ao lado de Mais jogados quando há largura, com empilhamento na janela menor; históricos extensos mantêm rolagem necessária para não cortar células. Preservadas métricas, valor destacado e lista com logo/nome/tempo; nome sem caixa de botão. Removida seção Gêneros da coleção e sua lista; gêneros no banco/ficha preservados. Teste antigo de disponibilidade dos gêneros foi atualizado para exigir ausência na tela e permanência nos dados, conforme item 9.2; conclusões continuam presentes.
+
+statistics_periods.day_hours reparte sessões finalizadas entre intervalos horários reais do dia local, sem inventar datas Steam, inclui 23/25 horas em transições DST e mantém instantes. Sem mudar semântica de period_stats. 25 regressões finais aprovadas em 3,51 s; antes da revisão, 31 regressões da primeira proposta também passaram, mas isso não validou estética. Capturas reais Qt semana/12m enviadas no chat; script gera dia/mês/12m/todo período em três resoluções. Windows real não homologado.
