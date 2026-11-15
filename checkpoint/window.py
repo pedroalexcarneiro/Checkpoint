@@ -239,8 +239,8 @@ class MainWindow(QMainWindow):
             for value in values: combo.addItem(value,value)
             index = combo.findData(selected); combo.setCurrentIndex(max(0,index)); combo.blockSignals(False)
         games = self.library.owned_games(self.search.text(),self.platform.currentData(),self.genre.currentData(),self.status.currentData(),self.favorites.isChecked(),self.sort.currentData())
-        from .card_layout import cover_size
-        self.gallery.theme=self.theme;self.gallery.set_cover_size(cover_size(self.library))
+        from .card_layout import cover_size,nearest_cover_choice
+        self.gallery.theme=self.theme;self.gallery.set_cover_size(nearest_cover_choice(cover_size(self.library)))
         self.gallery.clear(); self.table.setRowCount(len(games)); self.count.setText(count_text(len(games),'jogo'))
         for row,game in enumerate(games):
             from .cover_art import cover_pixmap

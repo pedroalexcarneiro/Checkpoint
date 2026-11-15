@@ -1,23 +1,39 @@
 import pytest
-from PySide6.QtCore import QPoint
+from PySide6.QtCore import QPoint,Qt
 from PySide6.QtWidgets import QWidget,QSlider
+from PySide6.QtTest import QTest
+from checkpoint.settings_previews import CoverSizeChoices
+from checkpoint.card_layout import nearest_cover_choice
 from test_bugs_0134 import ui,sample
+
 @pytest.mark.parametrize('size',[(1280,800),(1920,1080)])
 @pytest.mark.parametrize('value',[70,150])
-def test_preview_stays_right_with_common_base_and_active_value(ui,app,size,value):
+def test_five_clickable_covers_have_common_base_and_active_value(ui,app,size,value):
  w,i=ui;w.resize(*size);w.navigate(5)
- slider=w.pages[5].findChild(QSlider,'coverSizeSlider');slider.setValue(value)
+ preview=w.pages[5].findChild(CoverSizeChoices);preview.group.button(value).click()
  for _ in range(5):app.processEvents()
- card=w.pages[5].findChild(QWidget,'coverSizeCard');preview=w.pages[5].findChild(QWidget,'coverSizePreview')
- active=0 if value==70 else 2;heights=(68,98,126)
- image=preview.grab().toImage();height=heights[active]
- color=image.pixelColor(round(12+active*80+round(height*2/3)/2),140-height)
+ card=w.pages[5].findChild(QWidget,'coverSizeCard')
+ assert w.pages[5].findChild(QSlider,'coverSizeSlider') is None
+ rectangles=preview.cover_rects();active=0 if value==70 else 4
+ assert len(rectangles)==5 and len({round(rect.bottom()) for rect in rectangles})==1
+ assert all(a.height()<b.height() for a,b in zip(rectangles,rectangles[1:]))
+ assert preview.active_index()==active and sum(b.isChecked() for b in preview.buttons)==1
+ image=preview.grab().toImage();rect=rectangles[active]
+ color=image.pixelColor(round(rect.center().x()),round(rect.top()))
  assert color.green()>color.red() and color.green()>color.blue()
- rectangles=preview.cover_rects()
- assert len({rect.bottom() for rect in rectangles})==1
- assert rectangles[0].height()<rectangles[1].height()<rectangles[2].height()
- assert preview.active_index()==(0 if value==70 else 2)
- p=preview.mapTo(card,QPoint(0,0));s=slider.mapTo(card,QPoint(0,0))
- assert p.x()>s.x()+slider.width()
+ p=preview.mapTo(card,QPoint(0,0))
  assert p.y()+preview.height()<=card.height() and p.x()+preview.width()<=card.width()
  assert all(preview.rect().contains(rect.toRect()) for rect in rectangles)
+ assert w.library.setting('appearance.cover_size')==value and w.gallery.cover_percent==value
+ w.navigate(1);w.navigate(5);app.processEvents()
+ preview=w.pages[5].findChild(CoverSizeChoices);assert preview.percent==value
+
+
+def test_old_percent_preserved_and_keyboard_selects(ui,app):
+ w,i=ui;w.library.set_setting('appearance.cover_size',87);w.navigate(5);app.processEvents()
+ preview=w.pages[5].findChild(CoverSizeChoices)
+ assert preview.percent==90 and w.library.setting('appearance.cover_size')==87
+ current=preview.group.button(90);current.setFocus();QTest.keyClick(current,Qt.Key_Right);app.processEvents()
+ assert preview.percent==100 and preview.group.button(100).hasFocus()
+ assert w.library.setting('appearance.cover_size')==100
+ assert nearest_cover_choice(80)==70 and nearest_cover_choice(-10)==70 and nearest_cover_choice(999)==150

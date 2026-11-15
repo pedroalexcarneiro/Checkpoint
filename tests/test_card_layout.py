@@ -1,6 +1,6 @@
 from checkpoint.card_layout import card_metrics,cover_size
 from checkpoint.window import MainWindow
-from PySide6.QtWidgets import QSlider
+from checkpoint.settings_previews import CoverSizeChoices
 
 def test_six_columns_at_default_and_responsive_scaling():
     assert card_metrics(1386).columns==6
@@ -19,9 +19,10 @@ def test_density_preference_preserved_in_settings_without_schema_change(library,
     assert cover_size(library)==135
     assert library.sql.execute('PRAGMA user_version').fetchone()[0]==4
     window=MainWindow(library);window.navigate(5)
-    slider=window.pages[5].findChild(QSlider,'coverSizeSlider')
-    assert (slider.minimum(),slider.maximum(),slider.value())==(70,150,135)
-    slider.setValue(100)
+    choices=window.pages[5].findChild(CoverSizeChoices)
+    assert [b.value for b in choices.buttons]==[70,90,100,125,150]
+    assert choices.percent==125 and library.setting('appearance.cover_size')==135
+    choices.group.button(100).click()
     assert cover_size(library)==100
     window.close()
 

@@ -23,3 +23,11 @@ def cover_size(library):
         library.set_setting('appearance.cover_size',value)
     try:return max(70,min(150,int(value)))
     except (ValueError,TypeError):return 100
+
+
+COVER_CHOICES=(70,90,100,125,150)
+
+def nearest_cover_choice(value):
+    try:value=int(value)
+    except (TypeError,ValueError):value=100
+    return min(COVER_CHOICES,key=lambda choice:(abs(choice-value),choice))

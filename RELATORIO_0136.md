@@ -65,3 +65,11 @@ Complemento solicitado durante revisão no chat: a primeira captura de Estatíst
 ## Complemento do item 07 — Mais jogados como lista da Biblioteca
 
 Solicitado no chat após revisão das capturas: logo à esquerda, nome no meio e tempo à direita. Novo commit, sem reescrever anteriores. Duas fixtures antes falharam porque não havia linhas com logo. Implementado em statistics_view.py::render_statistics, usando list_art.list_icon para logo contida igual à Biblioteca; capa contida/ícone neutro quando falta logo. Nome elidido com título completo no tooltip/acessibilidade; tempo em coluna separada, linha clicável pelo nome. Testes/test_statistics_list_0136.py verifica dois jogos, ordem por tempo, colunas sem sobreposição e duas janelas. Filtros temporais preservados.
+
+## 10 — cinco tamanhos de capa — feito no ambiente Linux
+
+Antes: 3.mp4 00:20 e screenshots anteriores mostram slider longo e três exemplos pequenos. As 13 regressões antigas de layout/serviços passavam; mudança de produto solicitada explicitamente, não falha desses testes. Slider removido, cinco escolhas clicáveis 70/90/100/125/150 (faixa 70–150 já suportada), crescimento visual, base comum, verde, foco e teclado com setas/Espaço/Enter. A opção altera a grade e persiste ao reabrir.
+
+Preferências antigas mantidas no SQLite até nova escolha: 87 é representado/aplicado como 90. Empate vai para menor; extremos fora da faixa mapeiam ao extremo; inválido usa 100. Configurações não recriadas nem migração de schema. cover_size continua lendo valor legado original; nearest_cover_choice governa apresentação/aplicação inicial. Compact antigo de 80 é exibido como 70 por empate, sem apagar a preferência.
+
+Arquivos: checkpoint/settings_previews.py (CoverChoice/CoverSizeChoices), settings_view.py (build_settings), card_layout.py (COVER_CHOICES/nearest_cover_choice), window.py (refresh_library). Removida classe antiga de três exemplos. Expectativas de slider em tests/test_cover_preview_0135.py/test_card_layout.py substituídas pela autorização do item 10, mantendo cobertura de largura, base, cor, proporção, ausência de sobreposição, persistência e efeito na grade. 23 testes pertinentes passaram; duas fixtures de jogos, resoluções 1280×800 e 1920×1080, extremos e preferência 87, teclado/foco.

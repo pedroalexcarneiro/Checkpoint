@@ -1,7 +1,7 @@
 """Prévias funcionais de aparência, usando as paletas reais do aplicativo."""
 from PySide6.QtCore import Qt,QRectF
 from PySide6.QtGui import QPainter,QColor,QPen
-from PySide6.QtWidgets import QWidget,QApplication,QSizePolicy
+from PySide6.QtWidgets import QWidget,QApplication,QSizePolicy,QAbstractButton
 from .design_system import ThemeSwatch,colors
 
 
@@ -25,18 +25,50 @@ class ThemePreview(ThemeSwatch):
         p.end()
 
 
-class CoverSizePreview(QWidget):
-    def __init__(self,percent):
-        super().__init__();self.percent=percent;self.setObjectName('coverSizePreview');self.setFixedSize(260,150)
-        self.setAccessibleName('Prévia do tamanho das capas')
-    def set_percent(self,value):self.percent=value;self.update()
-    def active_index(self):return min(range(3),key=lambda index:abs((70,100,150)[index]-self.percent))
-    def cover_rects(self):
-        return [QRectF(12+index*80,140-height,round(height*2/3),height) for index,height in enumerate((68,98,126))]
+class CoverChoice(QAbstractButton):
+    def __init__(self,value,index,owner):
+        super().__init__(owner);self.value=value;self.index=index;self.owner=owner
+        self.setObjectName('coverChoice');self.setCheckable(True);self.setFocusPolicy(Qt.StrongFocus)
+        self.setAccessibleName(str(value)+'%');self.setToolTip(str(value)+'%');self.setMinimumWidth(44)
+        self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed);self.setFixedHeight(228)
+    def artwork_rect(self):
+        height=min(176,max(24,(self.width()-16)*1.5))*(self.value/150)
+        width=height*2/3
+        return QRectF((self.width()-width)/2,188-height,width,height)
     def paintEvent(self,event):
         from .theme import get_theme
         p=QPainter(self);p.setRenderHint(QPainter.Antialiasing);c=colors();green=get_theme('green').colors['accent']
-        for index,rect in enumerate(self.cover_rects()):
-            active=index==self.active_index()
-            p.setBrush(QColor(c['panel']));p.setPen(QPen(QColor(green if active else c['border']),2 if active else 1));p.drawRoundedRect(rect,5,5)
+        p.setBrush(QColor(c['panel']));p.setPen(QPen(QColor(green if self.isChecked() else c['border']),2 if self.isChecked() else 1))
+        p.drawRoundedRect(self.artwork_rect(),6,6)
+        p.setPen(QColor(green if self.isChecked() else c['text']));p.drawText(QRectF(0,198,self.width(),24),Qt.AlignCenter,str(self.value)+'%')
+        if self.hasFocus():
+            p.setBrush(Qt.NoBrush);p.setPen(QPen(QColor(c['text']),1,Qt.DashLine));p.drawRoundedRect(QRectF(self.rect().adjusted(3,3,-3,-3)),6,6)
         p.end()
+    def keyPressEvent(self,event):
+        if event.key() in (Qt.Key_Left,Qt.Key_Right,Qt.Key_Up,Qt.Key_Down):
+            offset=-1 if event.key() in (Qt.Key_Left,Qt.Key_Up) else 1
+            target=self.owner.buttons[(self.index+offset)%5];target.setFocus();target.click();event.accept();return
+        if event.key() in (Qt.Key_Return,Qt.Key_Enter):self.click();event.accept();return
+        super().keyPressEvent(event)
+
+
+class CoverSizeChoices(QWidget):
+    def __init__(self,percent,callback):
+        from PySide6.QtWidgets import QHBoxLayout,QButtonGroup
+        from .card_layout import COVER_CHOICES,nearest_cover_choice
+        super().__init__();self.setObjectName('coverSizePreview');self.setAccessibleName('Tamanho das capas')
+        row=QHBoxLayout(self);row.setContentsMargins(0,0,0,0);row.setSpacing(8)
+        self.group=QButtonGroup(self);self.group.setExclusive(True);self.buttons=[]
+        self.percent=nearest_cover_choice(percent)
+        for index,value in enumerate(COVER_CHOICES):
+            button=CoverChoice(value,index,self);self.buttons.append(button);self.group.addButton(button,value);row.addWidget(button,1)
+            button.setChecked(value==self.percent)
+        self.group.idClicked.connect(self.choose);self.callback=callback
+    def choose(self,value):
+        self.percent=value;self.group.button(value).setChecked(True);self.callback(value)
+    def active_index(self):
+        from .card_layout import COVER_CHOICES
+        return COVER_CHOICES.index(self.percent)
+    def cover_rects(self):
+        from PySide6.QtCore import QPointF
+        return [b.artwork_rect().translated(QPointF(b.pos())) for b in self.buttons]

@@ -4,7 +4,7 @@ from .locale import count_text
 from pathlib import Path
 from PySide6.QtCore import Qt,QUrl
 from PySide6.QtGui import QDesktopServices
-from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QTabWidget,QComboBox,QToolButton,QMessageBox,QLineEdit,QCheckBox,QSizePolicy,QSlider
+from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QTabWidget,QComboBox,QToolButton,QMessageBox,QLineEdit,QCheckBox,QSizePolicy
 from .ui_components import text,action,card,service_icon
 from .design_system import page_scroll,ThemeSwatch,Badge,CardGrid
 from .theme import THEMES
@@ -42,7 +42,7 @@ def build_settings(window):
     frame,inside=card();head=QHBoxLayout();head.addWidget(text('Tema de cores','sectionTitle'));head.addStretch();window.theme_selector=QComboBox(frame);window.theme_selector.setObjectName('themeSelector')
     for key,theme in THEMES.items():window.theme_selector.addItem(theme.name,key)
     window.theme_selector.setCurrentIndex(window.theme_selector.findData(window.theme.key));window.theme_selector.currentIndexChanged.connect(window.theme_changed);window.theme_selector.hide();inside.addLayout(head)
-    from .settings_previews import ThemePreview,CoverSizePreview
+    from .settings_previews import ThemePreview,CoverSizeChoices
     swatches=CardGrid(300,max_columns=3);swatches.setObjectName('themePreviews')
     for key,theme in THEMES.items():
         entry=QWidget();column=QVBoxLayout(entry);column.setContentsMargins(0,0,0,0);column.setSpacing(SPACE['xxs'])
@@ -52,16 +52,8 @@ def build_settings(window):
     from .card_layout import cover_size
     appearance.addWidget(frame)
     frame,inside=card();frame.setObjectName('coverSizeCard');frame.setMinimumHeight(200)
-    row=QHBoxLayout();label=text('Tamanho das capas','sectionTitle');label.setObjectName('coverSizeLabel');label.setStyleSheet('font-size: 20px; font-weight: 600;');row.addWidget(label)
-    slider=QSlider(Qt.Horizontal);slider.setObjectName('coverSizeSlider');slider.setRange(70,150);slider.setValue(cover_size(window.library));slider.setMinimumWidth(180)
-    preview=CoverSizePreview(slider.value());slider.valueChanged.connect(preview.set_percent)
-    percentage=text(str(slider.value())+'%','muted');percentage.setFixedWidth(48)
-    slider.valueChanged.connect(lambda value:(percentage.setText(str(value)+'%'),window.set_cover_size(value)))
-    row.addWidget(slider,1);row.addWidget(percentage)
-    controls=QWidget();control_layout=QVBoxLayout(controls);control_layout.setContentsMargins(0,0,0,0)
-    control_layout.addWidget(text('Biblioteca','caption'));control_layout.addLayout(row)
-    hints=QHBoxLayout();hints.addWidget(text('Menores','caption'));hints.addStretch();hints.addWidget(text('Maiores','caption'));control_layout.addLayout(hints)
-    combined=QHBoxLayout();combined.addWidget(controls,1);combined.addWidget(preview);inside.addLayout(combined)
+    label=text('Tamanho das capas','sectionTitle');label.setObjectName('coverSizeLabel');label.setStyleSheet('font-size: 20px; font-weight: 600;');inside.addWidget(label)
+    preview=CoverSizeChoices(cover_size(window.library),window.set_cover_size);inside.addWidget(preview)
     def highlight_cover(*args):frame_cover.setStyleSheet('QFrame#coverSizeCard { border: 1px solid '+window.theme.colors['accent']+'; }')
     frame_cover=frame;highlight_cover();window.theme_selector.currentIndexChanged.connect(highlight_cover)
     appearance.addWidget(frame)
