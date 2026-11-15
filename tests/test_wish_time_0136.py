@@ -21,3 +21,12 @@ def test_wish_exclusive_and_owned_keep_sessions_but_only_library_shows_time(ui,a
     w.remove_wish(i);assert lib.is_owned(i)
     assert total_seconds(lib,i)==8100
     assert [tuple(r) for r in lib.sql.execute('SELECT * FROM play_sessions')]==original
+
+
+def test_nullable_legacy_ownership_flag_agrees_with_collection(library):
+    i=library.save_game({'title':'Portal 2'})
+    library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)',(i,));library.sql.commit()
+    for flag,owned in [(None,False),(True,False),(False,True)]:
+        library.set_setting(f'collection.unowned.{i}',flag)
+        assert library.is_owned(i)==owned
+        assert (i in {g['id'] for g in library.owned_games()})==owned

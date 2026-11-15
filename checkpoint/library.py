@@ -68,7 +68,10 @@ class Library:
     def owned_games(self,*args,**kwargs):
         wishes={row[0] for row in self.sql.execute('SELECT game_id FROM wishlist')}
         flags={int(row[0].rsplit('.',1)[-1]):json.loads(row[1]) for row in self.sql.execute("SELECT key,value FROM settings WHERE key LIKE 'collection.unowned.%'") if row[0].rsplit('.',1)[-1].isdigit()}
-        return [game for game in self.games(*args,**kwargs) if not flags.get(game['id'],game['id'] in wishes)]
+        def owned(game):
+            flag=flags.get(game['id'])
+            return not bool(flag) if flag is not None else game['id'] not in wishes
+        return [game for game in self.games(*args,**kwargs) if owned(game)]
 
     def acquire(self,game_id):
         if not self.get(game_id):raise ValueError('Jogo indisponível.')
