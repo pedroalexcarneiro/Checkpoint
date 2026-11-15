@@ -24,6 +24,16 @@ Usar o mesmo selected_quote/discount_percent de Desejos e respeitar prices.inclu
 
 ## Limites e preservação
 
+## Complemento incorporado — ROM local pela ficha
+
+Pedido posterior do dono, mantendo a branch e commits existentes, sem publicação. Já existem game_files.local_path/available/extension/platform, rom_versions.profile_id, EmulatorCommand e Launcher.start_command com monitoramento do processo. Reutilizar esses dados/serviços; não recriar banco ou implementar caminho paralelo de sessões. A4 permanece intacto.
+
+Adicionar origem local claramente separada de Drive na ficha Biblioteca, seletor nativo, existência/leitura, plataforma e perfil realmente compatíveis. Prévia de arquivo/plataforma/perfil e confirmação antes de substituir vínculo; cancelar preserva tudo. Vínculo local não chama Drive/download/cofre, nem copia/move/apaga a ROM. Original anterior permanece em disco e no índice. Arquivo ausente permite localizar novamente, mantendo sessões e metadados. Persistir perfil por ID, sem confundir com executável. Incompatibilidade de extensão/plataforma/edição exige correção da seleção ou abertura/cadastro explícito da edição apropriada; nunca reidentificar por semelhança.
+
+Investigar também candidates/bind/complete_link pela ficha: a busca atual admite substring de título e, quando a ficha não tem plataforma, pode listar outra plataforma; isso é risco, não prova de vínculo errado no vídeo. Harden somente esse fluxo não protegido, com confirmação explícita e sem alterar o cadastro A4. Comparar Ocarina of Time versus Ocarina of Time 3D, com arquivos/plataformas visíveis. Não atribuir preço/sessão/metadados de edição divergente.
+
+Validação: dois programas ROM de teste próprios/legalmente disponíveis, subprocesso de execução controlada, caminhos acentuados/com espaços, incompatibilidade, cancelamento, substituição e originais, ausência/leitura, reabertura, fim de processo e regressão Drive. Identificar fixture e não alegar homologação de emulador real. Capturas reais Qt da origem e do vínculo local. Limitação de fechar apenas a ROM e proibição de troca automática mantidas. Registrar arquivos/métodos protegidos caso apareça bloqueio, continuar independentes.
+
 As duas imagens estão disponíveis; p1.mp4–p4.mp4 citados não foram anexados nesta rodada. Achados descritos são relatos do dono, não reprodução do implementador. Testes isolados usam dois jogos quando aplicável. Imagens geradas são grabs reais do Qt com fixtures identificadas, não aprovação visual nem contas autenticadas.
 
 Preservar banco, sessões, arquivos, identidades, originais, cofre, nove temas e assets. Schema inicial 4: preferir dados existentes; justificar antes de acrescentar persistência. Protegidos: tests/test_save_lifecycle.py, worker.py, enrichment.py, game_import.py, completion_queue.py, dialogs.py e contrato test_protected_drive_and_registration_logic_is_unchanged. Não alterar quick_add.py nem A4. Troca automática de ROM foi descartada; fechar apenas a ROM com emulador vivo continua limitação.

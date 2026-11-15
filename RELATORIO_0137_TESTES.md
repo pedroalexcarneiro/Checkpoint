@@ -185,3 +185,116 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## inicio-dados-antes
+
+UTC: 2026-11-15T21:24:45.226571+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_home_data_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+______ test_recent_games_use_real_start_not_status_or_updated_at[titles0] ______
+
+library = <checkpoint.library.Library object at 0x7fb815e4e540>
+titles = ('Portal 2', 'Hades')
+
+    @pytest.mark.parametrize('titles', [('Portal 2', 'Hades'), ('Celeste', 'Metroid Fusion')])
+    def test_recent_games_use_real_start_not_status_or_updated_at(library, titles):
+>       from checkpoint.home_data import recent_games, execution_history
+E       ModuleNotFoundError: No module named 'checkpoint.home_data'
+
+tests/test_home_data_0137.py:13: ModuleNotFoundError
+______ test_recent_games_use_real_start_not_status_or_updated_at[titles1] ______
+
+library = <checkpoint.library.Library object at 0x7fb815e4dbb0>
+titles = ('Celeste', 'Metroid Fusion')
+
+    @pytest.mark.parametrize('titles', [('Portal 2', 'Hades'), ('Celeste', 'Metroid Fusion')])
+    def test_recent_games_use_real_start_not_status_or_updated_at(library, titles):
+>       from checkpoint.home_data import recent_games, execution_history
+E       ModuleNotFoundError: No module named 'checkpoint.home_data'
+
+tests/test_home_data_0137.py:13: ModuleNotFoundError
+_____ test_week_summary_clips_boundaries_and_excludes_steam_and_unreviewed _____
+
+library = <checkpoint.library.Library object at 0x7fb815e4ff50>
+
+    def test_week_summary_clips_boundaries_and_excludes_steam_and_unreviewed(library):
+>       from checkpoint.home_data import week_summary
+E       ModuleNotFoundError: No module named 'checkpoint.home_data'
+
+tests/test_home_data_0137.py:30: ModuleNotFoundError
+_ test_home_offers_follow_same_discount_policy_and_do_not_promote_stale_cache __
+
+library = <checkpoint.library.Library object at 0x7fb815cbb5f0>
+
+    def test_home_offers_follow_same_discount_policy_and_do_not_promote_stale_cache(library):
+>       from checkpoint.home_data import wish_offers
+E       ModuleNotFoundError: No module named 'checkpoint.home_data'
+
+tests/test_home_data_0137.py:47: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_home_data_0137.py::test_recent_games_use_real_start_not_status_or_updated_at[titles0]
+FAILED tests/test_home_data_0137.py::test_recent_games_use_real_start_not_status_or_updated_at[titles1]
+FAILED tests/test_home_data_0137.py::test_week_summary_clips_boundaries_and_excludes_steam_and_unreviewed
+FAILED tests/test_home_data_0137.py::test_home_offers_follow_same_discount_policy_and_do_not_promote_stale_cache
+4 failed in 0.07s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## inicio-dados-depois
+
+UTC: 2026-11-15T21:25:53.876739+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_home_data_0137.py", "tests/test_statistics_0136.py", "tests/test_price_integrity_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+......................                                                   [100%]
+22 passed in 1.37s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## capturas-antes
+
+UTC: 2026-11-15T21:26:32.940654+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/antes"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/antes
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
