@@ -8,12 +8,12 @@ def test_visual_a_no_official_offer_has_reason(app,library,title):
  library.set_setting(f'prices.ggdeals.{i}',{'lowest':None,'retail':None,'currency':'BRL','state':'ready','checked_at':'2026-11-14T12:00:00+00:00'})
  frame=price_summary(library,library.get(i))
  labels=[label.text() for label in frame.findChildren(QLabel)]
- assert 'Sem preço salvo' in labels and 'Indisponível' not in labels
+ assert '-' in labels and 'Indisponível' not in labels
  assert 'Consulta sem oferta em lojas oficiais.' in labels
 
 @pytest.mark.parametrize('title',['Zelda: A Link to the Past','Metroid Fusion'])
 def test_visual_a_no_id_is_explicit(app,library,title):
  i=library.save_game({'title':title});frame=price_summary(library,library.get(i))
  labels=[label.text() for label in frame.findChildren(QLabel)]
- assert 'Sem preço salvo' in labels and 'Sem ID da Steam para consultar ofertas.' in labels
+ assert '-' in labels and 'Sem ID da Steam para consultar ofertas.' in labels
  assert 'Indisponível' not in labels

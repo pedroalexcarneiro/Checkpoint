@@ -45,7 +45,7 @@ def test_comparison_has_reason_instead_of_bare_unavailable(library,app):
     for title,platform in [('Portal 2','PC'),('Zelda','Nintendo DS')]:
         i=library.save_game({'title':title,'platform':platform});frame=comparison(SimpleNamespace(library=library),library.get(i))
         labels=[l.text() for l in frame.findChildren(QLabel)]
-        assert 'Sem preço salvo' in labels and 'Indisponível' not in labels
+        assert '-' in labels and 'Indisponível' not in labels
         assert any('plataforma' in t.lower() or 'ID da Steam' in t for t in labels)
 
 

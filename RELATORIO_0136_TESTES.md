@@ -2518,3 +2518,312 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## wheel-local-final
+
+UTC: 2026-11-15T16:38:30.489102+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pip", "wheel", ".", "--no-deps", "--no-build-isolation", "--wheel-dir", "/workspace/work/entrega-0136/wheels"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Processing /workspace/work/Checkpoint
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: checkpoint-desktop
+  Building wheel for checkpoint-desktop (pyproject.toml): started
+  Building wheel for checkpoint-desktop (pyproject.toml): finished with status 'done'
+  Created wheel for checkpoint-desktop: filename=checkpoint_desktop-0.1.36-py3-none-any.whl size=233066 sha256=213ae54d46872dc84228be08f7b75821313eac8f30b123b393f7eeda560cfa12
+  Stored in directory: /tmp/pip-ephem-wheel-cache-6pkawvfs/wheels/83/77/53/5eb720791fc6f82eaa0f682bd5e5adf7478efb3a3363bfee14
+Successfully built checkpoint-desktop
+
+```
+
+stderr integral:
+```text
+WARNING: The directory '/home/agent/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+
+[notice] A new release of pip is available: 25.0.1 -> 26.3
+[notice] To update, run: /workspace/work/venv/bin/python -m pip install --upgrade pip
+
+```
+
+Código de saída: 0
+
+## suite-integral-final-0136
+
+UTC: 2026-11-15T16:38:54.932407+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+........................................................................ [ 12%]
+........................................................................ [ 24%]
+........................................................................ [ 36%]
+........................................................................ [ 48%]
+........................................................................ [ 60%]
+........................................................................ [ 72%]
+........................................................................ [ 84%]
+........................................................................ [ 96%]
+......................                                                   [100%]
+598 passed in 414.93s (0:06:54)
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## instalar-wheel-isolado
+
+UTC: 2026-11-15T16:39:56.922687+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pip", "install", "--no-deps", "--no-index", "--target", "/workspace/work/wheel-0136-installed", "/workspace/work/entrega-0136/wheels/checkpoint_desktop-0.1.36-py3-none-any.whl"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Processing /workspace/work/entrega-0136/wheels/checkpoint_desktop-0.1.36-py3-none-any.whl
+Installing collected packages: checkpoint-desktop
+Successfully installed checkpoint-desktop-0.1.36
+
+```
+
+stderr integral:
+```text
+WARNING: The directory '/home/agent/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+
+```
+
+Código de saída: 0
+
+## smoke-wheel-instalado
+
+UTC: 2026-11-15T16:39:57.617927+00:00
+
+Comando: `["bash", "-c", "cd /workspace/work/wheel-0136-installed && /workspace/work/venv/bin/python -m checkpoint.app --smoke-test --data-dir /tmp/checkpoint-0136-wheel-smoke-01"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Checkpoint smoke: 6 pages OK; SQLite integrity=ok
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 0
+
+## smoke-wheel-cadastro
+
+UTC: 2026-11-15T16:39:58.285073+00:00
+
+Comando: `["bash", "-c", "cd /workspace/work/wheel-0136-installed && /workspace/work/venv/bin/python -m checkpoint.app --save-smoke-test --data-dir /tmp/checkpoint-0136-wheel-save-smoke-01"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Cadastro smoke: salvar, auxiliar, renderização e SQLite OK
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 0
+
+## remoto-sem-publicacao
+
+UTC: 2026-11-15T16:41:13.618492+00:00
+
+Comando: `["git", "ls-remote", "origin", "refs/heads/fix/0.1.35-ajustes", "refs/heads/fix/0.1.36-ajustes", "refs/tags/v0.1.35"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+818ec80a492a29936782ddb3a43eecaf3ef996e3	refs/heads/fix/0.1.35-ajustes
+df5ff41e74b36cea4e2abd160e1172f4166bf32a	refs/tags/v0.1.35
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## metadados-visuais
+
+UTC: 2026-11-15T16:41:13.822218+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-c", "from PySide6.QtWidgets import QApplication,QLabel;from PySide6.QtGui import QFontInfo;from checkpoint.theme import apply_theme;app=QApplication([]);apply_theme(app,'green');label=QLabel('Revisão visual');label.ensurePolished();screen=app.primaryScreen();print('Fonte solicitada:',label.font().family());print('Fonte resolvida:',QFontInfo(label.font()).family());print('Tamanho corpo px:',label.font().pixelSize());print('DPR:',screen.devicePixelRatio());print('DPI lógico:',screen.logicalDotsPerInch());print('Tela virtual:',screen.geometry().width(),screen.geometry().height());print('Janelas sintéticas capturadas: 1280x800 e 1920x1080 lógicos; escalas adicionais de geometria: 1.5 e 2.0')"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Fonte solicitada: Segoe UI
+Fonte resolvida: OpenAI Sans
+Tamanho corpo px: 14
+DPR: 1.0
+DPI lógico: 96.0
+Tela virtual: 800 800
+Janelas sintéticas capturadas: 1280x800 e 1920x1080 lógicos; escalas adicionais de geometria: 1.5 e 2.0
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 0
+
+## antes-hifen-sem-preco
+
+UTC: 2026-11-15T16:42:25.991673+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_visual_complements_0135.py", "tests/test_price_integrity_0136.py::test_comparison_has_reason_instead_of_bare_unavailable", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+____ test_visual_a_no_official_offer_has_reason[Zelda: A Link to the Past] _____
+
+app = <PySide6.QtWidgets.QApplication(0x2f6ea2a0) at 0x7f4d4122f4c0>
+library = <checkpoint.library.Library object at 0x7f4d4122b8f0>
+title = 'Zelda: A Link to the Past'
+
+    @pytest.mark.parametrize('title',['Zelda: A Link to the Past','Metroid Fusion'])
+    def test_visual_a_no_official_offer_has_reason(app,library,title):
+     i=library.save_game({'title':title})
+     with library.sql:library.sql.execute("INSERT INTO external_identifiers VALUES(?,'steam',?)",(i,str(i)))
+     library.set_setting(f'prices.ggdeals.{i}',{'lowest':None,'retail':None,'currency':'BRL','state':'ready','checked_at':'2026-11-14T12:00:00+00:00'})
+     frame=price_summary(library,library.get(i))
+     labels=[label.text() for label in frame.findChildren(QLabel)]
+>    assert '-' in labels and 'Indisponível' not in labels
+E    AssertionError: assert ('-' in ['Menor preço atual', 'Sem preço salvo', 'Consulta sem oferta em lojas oficiais.'])
+
+tests/test_visual_complements_0135.py:11: AssertionError
+__________ test_visual_a_no_official_offer_has_reason[Metroid Fusion] __________
+
+app = <PySide6.QtWidgets.QApplication(0x2f6ea2a0) at 0x7f4d4122f4c0>
+library = <checkpoint.library.Library object at 0x7f4d4122b8c0>
+title = 'Metroid Fusion'
+
+    @pytest.mark.parametrize('title',['Zelda: A Link to the Past','Metroid Fusion'])
+    def test_visual_a_no_official_offer_has_reason(app,library,title):
+     i=library.save_game({'title':title})
+     with library.sql:library.sql.execute("INSERT INTO external_identifiers VALUES(?,'steam',?)",(i,str(i)))
+     library.set_setting(f'prices.ggdeals.{i}',{'lowest':None,'retail':None,'currency':'BRL','state':'ready','checked_at':'2026-11-14T12:00:00+00:00'})
+     frame=price_summary(library,library.get(i))
+     labels=[label.text() for label in frame.findChildren(QLabel)]
+>    assert '-' in labels and 'Indisponível' not in labels
+E    AssertionError: assert ('-' in ['Menor preço atual', 'Sem preço salvo', 'Consulta sem oferta em lojas oficiais.'])
+
+tests/test_visual_complements_0135.py:11: AssertionError
+__________ test_visual_a_no_id_is_explicit[Zelda: A Link to the Past] __________
+
+app = <PySide6.QtWidgets.QApplication(0x2f6ea2a0) at 0x7f4d4122f4c0>
+library = <checkpoint.library.Library object at 0x7f4d41191820>
+title = 'Zelda: A Link to the Past'
+
+    @pytest.mark.parametrize('title',['Zelda: A Link to the Past','Metroid Fusion'])
+    def test_visual_a_no_id_is_explicit(app,library,title):
+     i=library.save_game({'title':title});frame=price_summary(library,library.get(i))
+     labels=[label.text() for label in frame.findChildren(QLabel)]
+>    assert '-' in labels and 'Sem ID da Steam para consultar ofertas.' in labels
+E    AssertionError: assert ('-' in ['Menor preço atual', 'Sem preço salvo', 'Sem ID da Steam para consultar ofertas.'])
+
+tests/test_visual_complements_0135.py:18: AssertionError
+_______________ test_visual_a_no_id_is_explicit[Metroid Fusion] ________________
+
+app = <PySide6.QtWidgets.QApplication(0x2f6ea2a0) at 0x7f4d4122f4c0>
+library = <checkpoint.library.Library object at 0x7f4d4125c950>
+title = 'Metroid Fusion'
+
+    @pytest.mark.parametrize('title',['Zelda: A Link to the Past','Metroid Fusion'])
+    def test_visual_a_no_id_is_explicit(app,library,title):
+     i=library.save_game({'title':title});frame=price_summary(library,library.get(i))
+     labels=[label.text() for label in frame.findChildren(QLabel)]
+>    assert '-' in labels and 'Sem ID da Steam para consultar ofertas.' in labels
+E    AssertionError: assert ('-' in ['Menor preço atual', 'Sem preço salvo', 'Sem ID da Steam para consultar ofertas.'])
+
+tests/test_visual_complements_0135.py:18: AssertionError
+____________ test_comparison_has_reason_instead_of_bare_unavailable ____________
+
+library = <checkpoint.library.Library object at 0x7f4d4125cb90>
+app = <PySide6.QtWidgets.QApplication(0x2f6ea2a0) at 0x7f4d4122f4c0>
+
+    def test_comparison_has_reason_instead_of_bare_unavailable(library,app):
+        for title,platform in [('Portal 2','PC'),('Zelda','Nintendo DS')]:
+            i=library.save_game({'title':title,'platform':platform});frame=comparison(SimpleNamespace(library=library),library.get(i))
+            labels=[l.text() for l in frame.findChildren(QLabel)]
+>           assert '-' in labels and 'Indisponível' not in labels
+E           assert ('-' in ['Preços atuais', '<a href="https://gg.deals/">Preços: GG.deals</a>', 'Menor preço atual', 'Sem preço salvo', 'Sem ID da Steam para consultar ofertas.'])
+
+tests/test_price_integrity_0136.py:48: AssertionError
+----------------------------- Captured stderr call -----------------------------
+Fontconfig error: No writable cache directories
+=========================== short test summary info ============================
+FAILED tests/test_visual_complements_0135.py::test_visual_a_no_official_offer_has_reason[Zelda: A Link to the Past]
+FAILED tests/test_visual_complements_0135.py::test_visual_a_no_official_offer_has_reason[Metroid Fusion]
+FAILED tests/test_visual_complements_0135.py::test_visual_a_no_id_is_explicit[Zelda: A Link to the Past]
+FAILED tests/test_visual_complements_0135.py::test_visual_a_no_id_is_explicit[Metroid Fusion]
+FAILED tests/test_price_integrity_0136.py::test_comparison_has_reason_instead_of_bare_unavailable
+5 failed in 0.22s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## depois-hifen-sem-preco
+
+UTC: 2026-11-15T16:42:37.383835+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_visual_complements_0135.py", "tests/test_price_integrity_0136.py", "tests/test_prices_0129.py", "tests/test_time_prices_0134.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+......................                                                   [100%]
+22 passed in 1.26s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0

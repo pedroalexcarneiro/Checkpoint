@@ -129,3 +129,13 @@ Complemento de integridade dos itens 02–03: revisão encontrou que um cache co
 Revisão final de integridade do item 03: ofertas empatadas reproduziram mistura de loja de keyshop com rótulo oficial e original de uma segunda loja. A seleção agora fixa uma única oferta, e loja/original/desconto acompanham essa mesma entrada; não busca original de outra oferta empatada. 28 regressões pertinentes passaram, incluindo recusa do percentual quando a oferta selecionada não tem original.
 
 Revisão final do item 01: preferência legada collection.unowned=null foi reproduzida com divergência entre is_owned e owned_games. Corrigido o fallback para a semântica legada da wishlist quando a flag é nula; false/true explícitos continuam definindo posse. Teste conserva os valores salvos e verifica concordância; sem migração ou limpeza de dados.
+
+## Última decisão de apresentação — ausência de preço com hífen
+
+Pedido posterior do dono substitui o texto principal Sem preço salvo pelo hífen literal `-`, em cards e no painel da ficha. Motivo curto específico permanece embaixo (pendente, sem ID, sem oferta oficial, falha, plataforma/edição não confirmada ou cache sem origem). Não transforma ausência em zero e não altera preços guardados. Arquivo: price_view.py::price_summary. Expectativas em test_visual_complements_0135/test_price_integrity_0136 atualizadas somente nesse texto por autorização direta no chat; causas, ausência de Indisponível e preservação de valores mantidas. Cinco testes falharam antes e 22 pertinentes passaram depois. Captura hifen-revisao-desejos-1280x800.png enviada no chat. Esta decisão prevalece sobre a redação anterior dos itens 02–03 neste histórico.
+
+Pacote técnico wheel 0.1.36 construído localmente e instalado isoladamente; smokes de seis páginas/integridade SQLite e cadastro/auxiliar/renderização passaram no Linux. Não é pacote Windows homologado nem instalador para o dono. Não houve publicação.
+
+Metadados de renderização: fonte solicitada Segoe UI, resolvida OpenAI Sans neste Linux, corpo 14px; DPR 1, DPI lógico 96; tela virtual 800×800. Janelas Qt capturadas em 1280×800 e 1920×1080 lógicos, mesmo quando maiores que essa tela virtual. Escalas de geometria/raster 150%/200% testadas separadamente; não declarar que o desktop Windows ou seu DPI foram reproduzidos.
+
+Verificação remota somente leitura: fix/0.1.35-ajustes continua 818ec80a492a29936782ddb3a43eecaf3ef996e3 e v0.1.35 continua df5ff41e74b36cea4e2abd160e1172f4166bf32a. Nenhuma ref remota fix/0.1.36-ajustes retornada. Sem push/PR/tag/release/workflow. Contratos/assets/workflows comparados byte a byte com a base; UTF-8/LF e diff --check passaram nos arquivos alterados.

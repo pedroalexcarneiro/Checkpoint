@@ -23,3 +23,13 @@ Evidências geradas em /workspace/work/evidencias-0136, fora do versionamento de
 ## Contratos e dados
 
 Não alterar arquivos/testes protegidos nem sequência A4; quick_add fora do escopo. ROM fechada com emulador vivo permanece pendência separada. Não abrir base pessoal nem credenciais; SQLite, mídias e ROMs de teste isolados. Novos/alterados UTF-8 e LF. Textos somente títulos, rótulos, erro/estado vazio acionável ou motivo objetivo; descrição externa somente no lugar apropriado. Não remover cobertura ou enfraquecer asserções; expectativas somente nas mudanças explicitamente autorizadas.
+
+## Complementos solicitados durante a execução
+
+- Mais jogados no período: logo à esquerda, nome no meio, tempo à direita com 16px/seminegrito/contraste; estilo da lista aprovado no chat.
+- Remover sobra fixa abaixo da legenda do mapa de calor; altura acompanha conteúdo e eventual barra horizontal.
+- Cinco capas com vãos iguais entre contornos e margens externas iguais, mantendo base comum.
+- Percentual na cor do tema ativo.
+- Ausência de preço: instrução posterior substituiu Sem preço salvo pelo hífen literal `-`; manter motivo curto embaixo, sem zero nem silêncio.
+- Banner: proporção original fixa; altura do bloco acompanha a largura, imagem inteira em escala uniforme e geometria fracionária, sem faixa lateral. Testar quatro bordas e alternar maximizado/restaurado no ambiente disponível.
+- Aprovação específica recebida para atualizar coordenadas do teste da logo Steam de x+8/y+8 para x+10/y+7 e raster explícito em 100%, mantendo igualdade de pixels e arquivo original.

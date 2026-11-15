@@ -1,5 +1,7 @@
 # Integrações
 
+Decisão posterior do dono na revisão 0.1.36: ausência de preço usa `-` no valor principal, mantendo o motivo curto logo abaixo. Substitui somente o texto Sem preço salvo.
+
 ## Revisão de capacidade da fonte — 0.1.36 local
 
 Documentação primária GG.deals consultada em 15/11/2026: https://gg.deals/api/prices/ e changelog oficial de 14/10/2026. Há endpoints por app/sub/bundle Steam e by-slug. O app continua usando app-id para consultas confirmadas de PC; não declara o Steam como identidade universal. Resposta documentada não inclui plataforma/edição, loja individual ou preço original; cobertura do site não comprova cobertura da API. Sem credencial real neste ambiente, console em BRL não foi comprovado. Expansão por slug com vínculo explícito plataforma/edição/proveniência permanece parcial, sem migração especulativa.

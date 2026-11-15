@@ -1,5 +1,7 @@
 # Referência visual do Checkpoint 0.1.29
 
+Decisão posterior do dono na revisão 0.1.36: ausência de preço usa `-` no valor principal, mantendo o motivo curto logo abaixo. Substitui somente o texto Sem preço salvo.
+
 ## Decisões atuais da 0.1.36
 
 A referência visual orienta proporção e hierarquia, com textos atuais, wordmark/cabeçalho e nove temas. Sem números/círculos, rodapé extra, Verde duplicado ou iniciais ST. Texto só como título/rótulo/estado/erro acionável/motivo objetivo; descrições externas no Sobre.
