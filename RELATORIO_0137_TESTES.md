@@ -298,3 +298,299 @@ This plugin does not support propagateSizeHints()
 ```
 
 Código de saída: 0
+
+## inicio-primeira-captura
+
+UTC: 2026-11-15T21:30:14.502311+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/inicio-v1"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/inicio-v1
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
+
+## inicio-capas-captura
+
+UTC: 2026-11-15T21:32:17.137345+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/inicio-capas-v2"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/inicio-capas-v2
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
+
+## inicio-capas-alinhadas
+
+UTC: 2026-11-15T21:33:15.304214+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/inicio-capas-v3"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/inicio-capas-v3
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
+
+## inicio-ofertas-lista
+
+UTC: 2026-11-15T21:34:17.585108+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/inicio-ofertas-v4"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/inicio-ofertas-v4
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
+
+## inicio-layout-depois
+
+UTC: 2026-11-15T21:34:44.708206+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_home_layout_0137.py", "tests/test_home_data_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+............                                                             [100%]
+12 passed in 1.25s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## inicio-regressoes
+
+UTC: 2026-11-15T21:35:27.817677+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_home_0129.py", "tests/test_home_description_0136.py", "tests/test_reference_layout_0128.py", "tests/test_home_layout_0137.py", "tests/test_favorite_0136.py", "tests/test_wish_navigation_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+...F.....................                                                [100%]
+=================================== FAILURES ===================================
+______ test_home_does_not_paint_description_but_detail_keeps_it[sample0] _______
+
+ui = (<checkpoint.window.MainWindow(0x28652830) at 0x7f4f91a22c00>, 1)
+app = <PySide6.QtWidgets.QApplication(0x28da7cb0) at 0x7f4f934ad940>
+
+    def test_home_does_not_paint_description_but_detail_keeps_it(ui,app):
+        w,i=ui;game=w.library.get(i);description='Descrição externa que deve permanecer somente em Sobre o jogo. '*4
+        w.library.save_game({'title':game['title'],'description':description,'status':'Jogando'},i)
+        from datetime import datetime,timezone
+        with w.library.sql:w.library.sql.execute("INSERT INTO play_sessions(game_id,started_at,state,pid) VALUES(?,?,'interrupted',123)",(i,datetime.now(timezone.utc).isoformat()))
+        w.navigate(0);app.processEvents();hero=w.pages[0].findChild(RecentArtwork)
+        assert hero and w.pages[0].findChild(RecentGameCard).findChildren(QPushButton)
+        before=hero.grab().toImage();hero.game={**hero.game,'description':''};hero.update();app.processEvents()
+>       assert before==hero.grab().toImage()
+E       assert <PySide6.QtGui.QImage(QSize(374, 180),format=QImage::Format_ARGB32_Premultiplied,depth=32,devicePixelRatio=1,bytesPerLine=1496,sizeInBytes=269280) at 0x7f4f93294f40> == <PySide6.QtGui.QImage(QSize(680, 180),format=QImage::Format_ARGB32_Premultiplied,depth=32,devicePixelRatio=1,bytesPerLine=2720,sizeInBytes=489600) at 0x7f4f919bf9c0>
+E        +  where <PySide6.QtGui.QImage(QSize(680, 180),format=QImage::Format_ARGB32_Premultiplied,depth=32,devicePixelRatio=1,bytesPerLine=2720,sizeInBytes=489600) at 0x7f4f919bf9c0> = <built-in method toImage of PySide6.QtGui.QPixmap object at 0x7f4f919a58c0>()
+E        +    where <built-in method toImage of PySide6.QtGui.QPixmap object at 0x7f4f919a58c0> = <PySide6.QtGui.QPixmap(QSize(680, 180),depth=32,devicePixelRatio=1,cacheKey=0x3b00000003) at 0x7f4f919a58c0>.toImage
+E        +      where <PySide6.QtGui.QPixmap(QSize(680, 180),depth=32,devicePixelRatio=1,cacheKey=0x3b00000003) at 0x7f4f919a58c0> = <built-in method grab of RecentArtwork object at 0x7f4f919ed440>()
+E        +        where <built-in method grab of RecentArtwork object at 0x7f4f919ed440> = <checkpoint.home_components.RecentArtwork(0x2a5c07c0, name="recentGameArtwork") at 0x7f4f919ed440>.grab
+
+tests/test_home_description_0136.py:14: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_home_description_0136.py::test_home_does_not_paint_description_but_detail_keeps_it[sample0]
+1 failed, 24 passed in 3.51s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## inicio-carrossel-tres
+
+UTC: 2026-11-15T21:36:41.533798+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/inicio-carrossel-v5"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/inicio-carrossel-v5
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
+
+## inicio-ofertas-no-topo
+
+UTC: 2026-11-15T21:37:41.950483+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/inicio-ofertas-v6"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/inicio-ofertas-v6
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
+
+## inicio-capas-regressoes
+
+UTC: 2026-11-15T21:38:38.520480+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_home_layout_0137.py", "tests/test_home_data_0137.py", "tests/test_home_0129.py", "tests/test_home_description_0136.py", "tests/test_reference_layout_0128.py", "tests/test_favorite_0136.py", "tests/test_wish_navigation_0136.py", "tests/test_ui_review_lifecycle_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+................................                                         [100%]
+32 passed in 13.31s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## inicio-ofertas-logos
+
+UTC: 2026-11-15T21:39:07.906832+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/inicio-ofertas-v7"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/inicio-ofertas-v7
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
+
+## inicio-informacoes-uma-linha
+
+UTC: 2026-11-15T21:40:22.093211+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/inicio-v8"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/inicio-v8
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
+
+## inicio-final-regressoes
+
+UTC: 2026-11-15T21:40:47.024465+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_home_layout_0137.py", "tests/test_home_data_0137.py", "tests/test_home_0129.py", "tests/test_home_description_0136.py", "tests/test_reference_layout_0128.py", "tests/test_favorite_0136.py", "tests/test_wish_navigation_0136.py", "tests/test_ui_review_lifecycle_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+.................................                                        [100%]
+33 passed in 13.09s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0

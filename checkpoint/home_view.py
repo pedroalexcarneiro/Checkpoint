@@ -1,105 +1,68 @@
-from .visual_tokens import SPACE
-from .design_system import SectionHeader,ActionCard,CardGrid
-from .locale import count_text
-"""Composição do início: hero, continuidade e atividade lado a lado."""
-from PySide6.QtCore import Qt,QSize
-from PySide6.QtWidgets import QScrollArea,QWidget,QVBoxLayout,QHBoxLayout,QSizePolicy,QLabel,QLayout
-from .ui_components import Hero,GameTile,text,action,card,nav_icon,relative_date,TwoLineLabel
-
-
-def activity(window,layout):
-    layout.addWidget(SectionHeader('Sua atividade',''))
-    events=[]
-    queries=[("SELECT g.id,g.title,d.created_at AS time,d.text AS message FROM diary_entries d JOIN games g ON g.id=d.game_id WHERE g.deleted_at IS NULL AND NOT EXISTS (SELECT 1 FROM wishlist w WHERE w.game_id=g.id) AND NOT EXISTS (SELECT 1 FROM settings t WHERE t.key='collection.unowned.'||g.id AND t.value='true') ORDER BY d.created_at DESC LIMIT 3",'Memória'),
-             ("SELECT g.id,g.title,a.unlocked_at AS time,a.title AS message FROM achievements a JOIN games g ON g.id=a.game_id WHERE g.deleted_at IS NULL AND NOT EXISTS (SELECT 1 FROM wishlist w WHERE w.game_id=g.id) AND NOT EXISTS (SELECT 1 FROM settings t WHERE t.key='collection.unowned.'||g.id AND t.value='true') ORDER BY a.unlocked_at DESC LIMIT 3",'Marco'),
-             ("SELECT g.id,g.title,s.started_at AS time,s.duration_seconds AS message FROM play_sessions s JOIN games g ON g.id=s.game_id WHERE g.deleted_at IS NULL AND NOT EXISTS (SELECT 1 FROM wishlist w WHERE w.game_id=g.id) AND NOT EXISTS (SELECT 1 FROM settings t WHERE t.key='collection.unowned.'||g.id AND t.value='true') AND s.state='finished' ORDER BY s.started_at DESC LIMIT 3",'Sessão')]
-    for query,kind in queries:
-        events.extend((dict(row),kind) for row in window.library.sql.execute(query) if window.library.is_owned(row['id']))
-    events.sort(key=lambda item:item[0]['time'] or '',reverse=True)
-    if not events:
-        layout.addWidget(ActionCard('clock','Nenhuma atividade','',lambda:window.navigate(1),'Abrir biblioteca'))
-    selected=[]
-    for preferred in ('Marco','Memória'):
-        match=next((item for item in events if item[1]==preferred),None)
-        if match:selected.append(match)
-    for item in events:
-        if len(selected)>=2:break
-        if item not in selected:selected.append(item)
-    for event,kind in selected:
-        frame,inside=card();frame.setObjectName('activityCard');inside.setContentsMargins(*([SPACE['md']]*4))
-        contents=QHBoxLayout();contents.setSpacing(14)
-        badge=QLabel();badge.setFixedSize(36,36);badge.setObjectName('activityBadge')
-        badge.setPixmap(nav_icon('memories' if kind=='Memória' else 'trophy' if kind=='Marco' else 'clock',window.theme.colors['accent']).pixmap(22,22));badge.setAlignment(Qt.AlignCenter);contents.addWidget(badge,0,Qt.AlignTop)
-        words=QVBoxLayout();words.setSpacing(4)
-        top=QHBoxLayout();top.addWidget(text({'Memória':'Diário de jogo','Marco':'Conquista desbloqueada','Sessão':'Sessão concluída'}[kind],'activityKind'));top.addStretch();top.addWidget(text(relative_date(event['time']),'caption'));words.addLayout(top)
-        link=action(event['title'],lambda checked=False,identity=event['id']:window.detail(identity));link.setObjectName('activityLink');link.setToolTip(event['title']);link.setMinimumWidth(0);link.setSizePolicy(QSizePolicy.Ignored,QSizePolicy.Fixed);words.addWidget(link)
-        message=f"{int(event['message'])//60} min registrados" if kind=='Sessão' else str(event['message'])
-        words.addWidget(TwoLineLabel(message));contents.addLayout(words,1);inside.addLayout(contents)
-        layout.addWidget(frame)
-    layout.addStretch()
-
-
-class GameStrip(QScrollArea):
-    """Quatro capas se ajustam à coluna sem esconder a atividade pessoal."""
-    def __init__(self,window,games,maximum):
-        super().__init__();self.setWidgetResizable(True);self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff);self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        tiles=QWidget();self.row=QHBoxLayout(tiles);self.row.setContentsMargins(0,0,0,0);self.row.setSpacing(12);self.row.setAlignment(Qt.AlignTop);self.row.setSizeConstraint(QLayout.SetNoConstraint);self.setMinimumWidth(0)
-        self.tiles=[GameTile(game,window.detail,width=100) for game in games[:maximum]]
-        for tile in self.tiles:self.row.addWidget(tile)
-        self.row.addStretch();self.setWidget(tiles);self.setFixedHeight(190)
-    def minimumSizeHint(self):return QSize(0,0)
-    def resizeEvent(self,event):
-        super().resizeEvent(event)
-        width=max(1,min(150,(self.viewport().width()-max(0,len(self.tiles)-1)*12)//max(1,len(self.tiles))))
-        for tile in self.tiles:tile.set_tile_width(width)
-        self.setFixedHeight(max((tile.height() for tile in self.tiles),default=0)+4)
-
-
-def game_strip(window,layout,title,games,maximum=4):
-    layout.addWidget(SectionHeader(title,'',lambda:window.navigate(1)))
-    layout.addWidget(GameStrip(window,games,maximum))
+"""Início integrado com execuções, semana, ofertas e memórias locais."""
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QLabel,QSizePolicy
+from .design_system import SectionHeader,AdaptiveColumns,CardSurface,empty_state,ArtworkButton,Badge
+from .ui_components import text,action,ElidedAction
+from .home_components import GameStrip,MemoryCarousel,show_execution_history,OfferLogo
+from .home_data import recent_games,week_summary,wish_offers,recent_memories
+from .playtime import format_time,total_seconds
+from .smooth_scroll import SmoothScrollArea
 
 
 def in_progress(library):
-    sessions={row['game_id']:dict(row) for row in library.sql.execute("SELECT game_id,MAX(started_at) AS last_played,SUM(CASE WHEN state='finished' THEN duration_seconds ELSE 0 END) AS seconds FROM play_sessions GROUP BY game_id")}
-    games=[{**game,**sessions.get(game['id'],{})} for game in library.owned_games() if game['status'] in ('Jogando','Pausado')]
-    from .playtime import total_seconds
-    for game in games:game['seconds']=total_seconds(library,game['id'])
-    return sorted(games,key=lambda game:game.get('last_played') or game.get('updated_at') or game['created_at'],reverse=True)
+    """Consulta de status mantida para consumidores; não é histórico de execução."""
+    sessions={row['game_id']:dict(row) for row in library.sql.execute("SELECT game_id,MAX(started_at) AS last_played FROM play_sessions GROUP BY game_id")}
+    games=[{**game,**sessions.get(game['id'],{}),'seconds':total_seconds(library,game['id'])} for game in library.owned_games() if game['status'] in ('Jogando','Pausado')]
+    return sorted(games,key=lambda game:game.get('last_played') or game['created_at'],reverse=True)
+
+
+def section(title,callback=None,button='Ver tudo'):
+    frame=CardSurface();frame.setMinimumWidth(0)
+    inside=QVBoxLayout(frame);inside.setContentsMargins(16,16,16,16);inside.setSpacing(14)
+    inside.addWidget(SectionHeader(title,'',callback,button));return frame,inside
 
 
 def build_home(window):
-    outer=window.clear_page(0);scroll=QScrollArea();scroll.setWidgetResizable(True);scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-    body=QWidget();layout=QVBoxLayout(body);layout.setContentsMargins(0,0,8,0);layout.setSpacing(SPACE['lg'])
-    games=window.library.owned_games(sort='recent')
-    if not games:
-        from .design_system import empty_state
-        layout.addWidget(empty_state('library','Biblioteca vazia','Adicione um jogo à biblioteca.',window.add_library_game,'Adicionar jogo'))
-        activity(window,layout)
-    else:
-        continuing=in_progress(window.library)
-        featured=continuing[0] if continuing else None
-        if featured:
-            hero=Hero(featured,window.theme);hero.setMinimumHeight(0)
-            buttons=QHBoxLayout()
-            play=action('Continuar jogando',lambda:window.start_game(featured) if featured['executable'] else window.detail(featured['id']),True)
-            play.setObjectName('primary');play.setAccessibleName('Continuar jogando')
-            buttons.addWidget(play);buttons.addStretch();hero.content.addLayout(buttons);layout.addWidget(hero)
-        else:
-            from .design_system import empty_state
-            layout.addWidget(empty_state('library','Nenhum jogo em andamento','Abra a ficha de um jogo e selecione Jogando.',lambda:window.navigate(1),'Abrir biblioteca'))
-        from .design_system import AdaptiveColumns
-        left=QWidget();left.setObjectName('homeContinuation');left.setMinimumWidth(280);left_layout=QVBoxLayout(left);left_layout.setContentsMargins(0,0,0,0);left_layout.setSpacing(14)
-        if continuing:game_strip(window,left_layout,'Continuar jogando',continuing)
-        else:
-            left_layout.addWidget(SectionHeader('Na sua biblioteca',''))
-            previews=CardGrid(150,max_columns=4)
-            for game in games[:4]:previews.add_card(GameTile(game,window.detail,width=132))
-            left_layout.addWidget(previews)
-        left_layout.addStretch()
-        left.setMaximumWidth(780)
-        right=QWidget();right.setObjectName('homeActivity');right.setMinimumWidth(240);right_layout=QVBoxLayout(right);right_layout.setContentsMargins(0,0,0,0);right_layout.setSpacing(12);activity(window,right_layout)
-        layout.addWidget(AdaptiveColumns(left,right,(3,2),breakpoint=640))
+    outer=window.clear_page(0);scroll=SmoothScrollArea();scroll.setObjectName('homeScroll');scroll.setWidgetResizable(True)
+    body=QWidget();layout=QVBoxLayout(body);layout.setContentsMargins(0,0,8,0);layout.setSpacing(20)
+    games=window.library.owned_games();recent=recent_games(window.library,limit=None)
+    left,inside=section('Últimos jogos abertos',lambda:show_execution_history(window),'Ver histórico');left.setObjectName('homeRecentSection')
+    if recent:inside.addWidget(GameStrip(window,recent))
+    elif games:inside.addWidget(empty_state('library','Nenhuma execução registrada','Escolha um jogo para começar.',lambda:window.navigate(1),'Abrir biblioteca'))
+    else:inside.addWidget(empty_state('library','Biblioteca vazia','Adicione um jogo à biblioteca.',window.add_library_game,'Adicionar jogo'))
+    right=QWidget();right.setMinimumWidth(0);right_layout=QVBoxLayout(right);right_layout.setContentsMargins(0,0,0,0);right_layout.setSpacing(16)
+    def open_week():
+        window.library.set_setting('statistics.period','weekly');window.navigate(4)
+    frame,inside=section('Resumo da semana',open_week,'Ver estatísticas');frame.setObjectName('homeWeekSummary')
+    summary=week_summary(window.library)
+    for icon,title,value in [('clock','Tempo jogado',format_time(summary['seconds'])),('calendar','Sessões',str(summary['sessions'])),('library','Jogos iniciados',str(summary['started_games']))]:
+        row=QHBoxLayout();row.setSpacing(10);row.addWidget(Badge(icon,28));row.addWidget(text(title),1)
+        label=text(value,'cardTitle');label.setObjectName('homeWeekValue');label.setStyleSheet('color: '+window.theme.colors['accent']+'; font-weight: 600;');row.addWidget(label);inside.addLayout(row)
+    right_layout.addWidget(frame)
+    frame,inside=section('Ofertas',lambda:window.navigate(2),'Ver desejos');frame.setObjectName('homeWishOffers');frame.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Expanding)
+    offers=wish_offers(window.library)
+    offer_list=QWidget();offer_list.setObjectName('homeOfferList')
+    offer_rows=QVBoxLayout(offer_list);offer_rows.setContentsMargins(0,0,0,0);offer_rows.setSpacing(0)
+    for game in offers:
+        offer_row=QWidget();offer_row.setObjectName('homeOfferRow');offer_row.setFixedHeight(72)
+        row=QHBoxLayout(offer_row);row.setContentsMargins(0,8,0,8);row.setSpacing(12);identity=game['id']
+        logo=OfferLogo(game,lambda checked=False,i=identity:window.detail(i));row.addWidget(logo)
+        words=QVBoxLayout();words.setSpacing(3);title=ElidedAction(game['title'],lambda checked=False,i=identity:window.detail(i));title.setObjectName('activityLink');words.addWidget(title)
+        quote=game['quote'];kind='Loja oficial' if quote['current_kind']=='retail' else 'Keyshop'
+        words.addWidget(text(game['platform']+' · '+kind,'caption'));row.addLayout(words,1)
+        from .price_view import source_link
+        from .prices import money
+        price=source_link(window.library,game,money(quote['lowest']));price.setProperty('homeOfferPrice',True);price.setMinimumWidth(88);price.setStyleSheet('color: '+window.theme.colors['accent']+'; font-weight: 600; text-align: right;');row.addWidget(price);offer_rows.addWidget(offer_row)
+    if not offers:offer_rows.addWidget(text('Nenhuma oferta válida nos desejos.','muted'))
+    inside.addWidget(offer_list);inside.addStretch(1)
+    right_layout.addWidget(frame,1)
+    columns=AdaptiveColumns(left,right,(3,2),breakpoint=780)
+    columns.row.setAlignment(left,Qt.Alignment());columns.row.setAlignment(right,Qt.Alignment())
+    left.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Expanding)
+    layout.addWidget(columns)
+    layout.addWidget(MemoryCarousel(window,recent_memories(window.library)))
     interrupted=window.library.sql.execute("SELECT count(*) FROM play_sessions WHERE state='interrupted'").fetchone()[0]
-    if interrupted:layout.addWidget(action(count_text(interrupted,'sessão para revisar','sessões para revisar'),window.recover_sessions))
+    if interrupted:
+        from .locale import count_text
+        layout.addWidget(action(count_text(interrupted,'sessão para revisar','sessões para revisar'),window.recover_sessions))
     layout.addStretch();scroll.setWidget(body);outer.addWidget(scroll)

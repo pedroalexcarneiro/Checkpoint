@@ -18,12 +18,18 @@ def test_sidebar_keeps_identity_navigation_footer_and_profile_chevron(library,ap
 
 def test_home_has_reference_hero_cta_and_personal_sections(library,app):
     identity=library.save_game({'title':'Meu jogo','status':'Jogando'})
+    from datetime import datetime,timezone
+    with library.sql:library.sql.execute("INSERT INTO play_sessions(game_id,started_at,state,pid) VALUES(?,?,'interrupted',123)",(identity,datetime.now(timezone.utc).isoformat()))
     window=MainWindow(library);window.show();app.processEvents()
-    assert len(window.pages[0].findChildren(Hero))==1
+    from checkpoint.home_components import RecentArtwork
+    assert len(window.pages[0].findChildren(RecentArtwork))==1
     cta=next(button for button in window.pages[0].findChildren(QPushButton) if button.text()=='Continuar jogando')
     labels=[label.text() for label in window.pages[0].findChildren(QLabel)]
-    assert 'Continuar jogando' in labels and 'Sua atividade' in labels and 'Adicionados recentemente' not in labels
-    cta.click();assert window.current_game==identity;window.close()
+    assert 'Últimos jogos abertos' in labels and 'Resumo da semana' in labels and 'Memórias recentes' in labels
+    from unittest.mock import patch
+    with patch.object(window,'edit_game') as setup:
+        cta.click();setup.assert_called_once_with(identity)
+    window.close()
 
 
 def test_detail_play_and_secondary_setup_obey_execution_configuration(library,app,folder,monkeypatch):

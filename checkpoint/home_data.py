@@ -25,7 +25,7 @@ def recent_games(library, limit=2, now=None):
         if game['id'] in seen:continue
         seen.add(game['id']);selected.append({**game,'last_played':record['started_at'],
                                              'seconds':totals.get(game['id'],0)})
-        if len(selected)>=limit:break
+        if limit is not None and len(selected)>=limit:break
     return selected
 
 

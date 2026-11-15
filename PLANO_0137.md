@@ -39,3 +39,15 @@ As duas imagens estão disponíveis; p1.mp4–p4.mp4 citados não foram anexados
 Preservar banco, sessões, arquivos, identidades, originais, cofre, nove temas e assets. Schema inicial 4: preferir dados existentes; justificar antes de acrescentar persistência. Protegidos: tests/test_save_lifecycle.py, worker.py, enrichment.py, game_import.py, completion_queue.py, dialogs.py e contrato test_protected_drive_and_registration_logic_is_unchanged. Não alterar quick_add.py nem A4. Troca automática de ROM foi descartada; fechar apenas a ROM com emulador vivo continua limitação.
 
 Não enfraquecer asserções, criar skips/xfails ou detectar testes em produção. Expectativas incompatíveis com novos requisitos serão substituídas apenas na cobertura pertinente, preservando a intenção e os testes protegidos. Novas leituras UTF-8, arquivos novos/alterados LF, sem normalizar protegidos. Evidências integrais de comandos e resultados em RELATORIO_0137_TESTES.md e arquivos externos de evidência; limitações e SHAs em RELATORIO_0137.md.
+
+## Complemento visual posterior — Início
+
+Após a primeira captura, o dono pediu capa em vez de banner nos cards recentes, aumentando a presença vertical, e a base do bloco esquerdo na mesma altura da base das ofertas à direita. Essa instrução substitui somente a arte desses cards no item 4.1; banners das fichas continuam inteiros e proporcionais. Capas inteiras, sem recorte; ausência de capa permite banner como alternativa. Memórias começam abaixo de ambos os blocos. Mostrar nova captura antes de fechar o layout.
+
+Complemento visual posterior: título do painel passa a Ofertas (substitui Ofertas dos desejos). Conteúdo continua vindo dos desejos, com política/identidade preservadas. Linhas organizadas, uniformes e centralizadas no espaço disponível, imagem/nome/contexto/preço alinhados; preço sem caixa de botão. Não preencher o painel distribuindo título e linhas arbitrariamente.
+
+Complementos visuais posteriores prevalecem: três jogos recentes visíveis em carrossel horizontal com setas/teclado; área de cada capa acompanha exatamente a proporção da imagem, sem limite de altura que crie faixas ou recorte. Não cortar cantos da arte. Ofertas deve ser lista de linhas consecutivas imediatamente abaixo do título, alinhada ao topo, sem centralização vertical dos itens no painel. Bases dos blocos principais continuam alinhadas.
+
+Complemento visual posterior de Ofertas: usar exclusivamente logo do jogo na linha, inteira e proporcional; não usar capa como miniatura. Sem logo, ícone neutro. Preservar nome/contexto/preço e navegação.
+
+Complemento posterior nos cards recentes: remover plataforma; manter status, última vez e tempo total em três linhas separadas, cada informação sem quebra. Data local curta (hoje/ontem/dia e mês, horário), data completa no tooltip/acessibilidade. Esse recorte é dos cards recentes; plataforma permanece nas ofertas para impedir confusão de edição.
