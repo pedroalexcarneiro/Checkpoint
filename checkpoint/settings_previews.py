@@ -30,10 +30,14 @@ class CoverSizePreview(QWidget):
         super().__init__();self.percent=percent;self.setObjectName('coverSizePreview');self.setFixedSize(260,150)
         self.setAccessibleName('Prévia do tamanho das capas')
     def set_percent(self,value):self.percent=value;self.update()
+    def active_index(self):return min(range(3),key=lambda index:abs((70,100,150)[index]-self.percent))
+    def cover_rects(self):
+        return [QRectF(12+index*80,140-height,round(height*2/3),height) for index,height in enumerate((68,98,126))]
     def paintEvent(self,event):
-        p=QPainter(self);p.setRenderHint(QPainter.Antialiasing);c=colors()
-        for index,height in enumerate((68,98,126)):
-            height=round(height*(.85+self.percent/100*.15));width=round(height*2/3);x=15+index*80;y=140-height
-            p.setBrush(QColor(c['panel']));p.setPen(QPen(QColor(c['accent'] if index==1 else c['border']),1));p.drawRoundedRect(QRectF(x,y,width,height),5,5)
-            p.setPen(QColor(c['accent'] if index==1 else c['muted']));p.drawText(QRectF(x,y,width,height),Qt.AlignCenter,'Capa')
+        from .theme import get_theme
+        p=QPainter(self);p.setRenderHint(QPainter.Antialiasing);c=colors();green=get_theme('green').colors['accent']
+        for index,rect in enumerate(self.cover_rects()):
+            active=index==self.active_index()
+            p.setBrush(QColor(c['panel']));p.setPen(QPen(QColor(green if active else c['border']),2 if active else 1));p.drawRoundedRect(rect,5,5)
+            p.setPen(QColor(green if active else c['muted']));p.drawText(rect,Qt.AlignCenter,'Capa')
         p.end()
