@@ -83,7 +83,8 @@ def build_settings(window):
     for title,description,name,actions in [('Biblioteca','Seu banco de jogos e suas preferências.','library',[('Criar backup',window.backup_database),('Abrir pasta de dados',lambda:QDesktopServices.openUrl(QUrl.fromLocalFile(str(window.library.db.path.parent.resolve()))))]),('Saves tradicionais','Cópias de segurança dos saves configurados.','folder',[('Criar backup',window.backup_saves),('Restaurar saves',window.restore_saves)])]:
         frame,inside=card();head=QHBoxLayout();head.addWidget(Badge(name));head.addWidget(text(title,'cardTitle'),1);inside.addLayout(head);inside.addWidget(text(description,'secondary'))
         row=QHBoxLayout()
-        for caption,callback in actions:row.addWidget(action(caption,callback))
+        for caption,callback in actions:row.addWidget(action(caption,callback,caption=='Criar backup'))
+        row.addStretch()
         inside.addLayout(row);grid.add_card(frame)
     data.addWidget(grid)
     frame,inside=card();inside.addWidget(text('Atualizações do Checkpoint','cardTitle'));inside.addWidget(text('Consulte as versões disponíveis sem alterar sua biblioteca.','secondary'))

@@ -17,3 +17,10 @@ def test_connections_standard_buttons(ui,app):
  assert len(buttons)==4
  assert all(b.minimumWidth()==120 and b.minimumHeight()==36 for b in buttons)
  assert all(b.objectName()=='primary' for b in buttons)
+
+def test_backup_action_emphasis(ui,app):
+ w,i=ui;w.navigate(5);app.processEvents();w.settings_tabs.setCurrentIndex(3)
+ buttons=w.settings_tabs.widget(3).findChildren(QPushButton)
+ backups=[b for b in buttons if b.text()=='Criar backup']
+ assert len(backups)==2 and all(b.objectName()=='primary' for b in backups)
+ assert all(b.objectName()!='primary' for b in buttons if b.text() in ('Restaurar saves','Abrir pasta de dados'))
