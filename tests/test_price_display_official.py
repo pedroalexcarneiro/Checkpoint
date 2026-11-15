@@ -32,8 +32,8 @@ def test_wishlist_and_detail_have_active_attribution_and_no_steam_queue(library,
     window=MainWindow(library);window.navigate(2)
     label=window.pages[2].findChild(QLabel,'ggdealsAttribution')
     assert label.openExternalLinks() and 'https://gg.deals/' in label.text() and 'Preços: GG.deals' in label.text()
-    assert window.pages[2].findChild(QComboBox,'wishlistOrder').currentData()=='name'
-    assert library.setting('wishlist.order')=='name'
+    assert window.pages[2].findChild(QComboBox,'wishlistOrder').currentData()=='discount'
+    assert library.setting('wishlist.order')=='discount'
     window.detail(identity)
     label=window.detail_page.findChild(QLabel,'ggdealsAttribution')
     assert label.openExternalLinks() and 'https://gg.deals/' in label.text()

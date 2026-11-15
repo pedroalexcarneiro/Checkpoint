@@ -393,3 +393,308 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## antes-02-03
+
+UTC: 2026-11-15T15:55:34.660105+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_prices_0135.py", "tests/test_price_display_official.py", "tests/test_prices_0129.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+...........                                                              [100%]
+11 passed in 0.95s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## antes-02-03-novos
+
+UTC: 2026-11-15T15:56:32.705010+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_price_integrity_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+_ test_non_pc_never_uses_steam_cache_or_calls_pc_provider[Zelda Phantom Hourglass-Nintendo DS] _
+
+library = <checkpoint.library.Library object at 0x7f0d68421c40>
+title = 'Zelda Phantom Hourglass', platform = 'Nintendo DS'
+
+    @pytest.mark.parametrize('title,platform',[('Zelda Phantom Hourglass','Nintendo DS'),('Metroid Dread','Nintendo Switch')])
+    def test_non_pc_never_uses_steam_cache_or_calls_pc_provider(library,title,platform):
+        i=library.save_game({'title':title,'platform':platform})
+        library.sql.execute('INSERT INTO external_identifiers VALUES(?,?,?)',(i,'steam','42'));library.sql.commit()
+        previous={'lowest':1200,'current_kind':'retail','currency':'BRL'};library.set_setting(f'prices.ggdeals.{i}',previous)
+        class Provider:
+            def prices(self,*a,**k):raise AssertionError('Não consultar preço PC para console')
+>       assert selected_quote(library,i).get('lowest') is None
+E       AssertionError: assert 1200 is None
+E        +  where 1200 = <built-in method get of dict object at 0x7f0d6846a780>('lowest')
+E        +    where <built-in method get of dict object at 0x7f0d6846a780> = {'lowest': 1200, 'current_kind': 'retail', 'currency': 'BRL', 'current': 1200, ...}.get
+E        +      where {'lowest': 1200, 'current_kind': 'retail', 'currency': 'BRL', 'current': 1200, ...} = selected_quote(<checkpoint.library.Library object at 0x7f0d68421c40>, 1)
+
+tests/test_price_integrity_0136.py:14: AssertionError
+_ test_non_pc_never_uses_steam_cache_or_calls_pc_provider[Metroid Dread-Nintendo Switch] _
+
+library = <checkpoint.library.Library object at 0x7f0d68421cd0>
+title = 'Metroid Dread', platform = 'Nintendo Switch'
+
+    @pytest.mark.parametrize('title,platform',[('Zelda Phantom Hourglass','Nintendo DS'),('Metroid Dread','Nintendo Switch')])
+    def test_non_pc_never_uses_steam_cache_or_calls_pc_provider(library,title,platform):
+        i=library.save_game({'title':title,'platform':platform})
+        library.sql.execute('INSERT INTO external_identifiers VALUES(?,?,?)',(i,'steam','42'));library.sql.commit()
+        previous={'lowest':1200,'current_kind':'retail','currency':'BRL'};library.set_setting(f'prices.ggdeals.{i}',previous)
+        class Provider:
+            def prices(self,*a,**k):raise AssertionError('Não consultar preço PC para console')
+>       assert selected_quote(library,i).get('lowest') is None
+E       AssertionError: assert 1200 is None
+E        +  where 1200 = <built-in method get of dict object at 0x7f0d684938c0>('lowest')
+E        +    where <built-in method get of dict object at 0x7f0d684938c0> = {'lowest': 1200, 'current_kind': 'retail', 'currency': 'BRL', 'current': 1200, ...}.get
+E        +      where {'lowest': 1200, 'current_kind': 'retail', 'currency': 'BRL', 'current': 1200, ...} = selected_quote(<checkpoint.library.Library object at 0x7f0d68421cd0>, 1)
+
+tests/test_price_integrity_0136.py:14: AssertionError
+______ test_discount_requires_same_offer_and_confirmed_context[Portal 2] _______
+
+library = <checkpoint.library.Library object at 0x7f0d684238c0>
+title = 'Portal 2'
+
+    @pytest.mark.parametrize('title',['Portal 2','Hades II'])
+    def test_discount_requires_same_offer_and_confirmed_context(library,title):
+        i=library.save_game({'title':title,'platform':'PC'});library.sql.execute('INSERT INTO external_identifiers VALUES(?,?,?)',(i,'steam',str(i)));library.sql.commit()
+        quote={'lowest':6000,'retail':6000,'currency':'BRL','original':10000,'discount':40,'historical':1000,'current_kind':'retail','offers':[{'cents':6000,'original':10000,'kind':'retail','shop':'Loja','url':'https://gg.deals/br/redirect/store/'}]}
+        library.set_setting(f'prices.ggdeals.{i}',quote)
+        assert selected_quote(library,i).get('discount') is None
+        quote['offer_context']={'platform':'PC','steam':str(i)};library.set_setting(f'prices.ggdeals.{i}',quote)
+>       assert selected_quote(library,i)['discount']==40
+E       assert None == 40
+
+tests/test_price_integrity_0136.py:26: AssertionError
+______ test_discount_requires_same_offer_and_confirmed_context[Hades II] _______
+
+library = <checkpoint.library.Library object at 0x7f0d684239e0>
+title = 'Hades II'
+
+    @pytest.mark.parametrize('title',['Portal 2','Hades II'])
+    def test_discount_requires_same_offer_and_confirmed_context(library,title):
+        i=library.save_game({'title':title,'platform':'PC'});library.sql.execute('INSERT INTO external_identifiers VALUES(?,?,?)',(i,'steam',str(i)));library.sql.commit()
+        quote={'lowest':6000,'retail':6000,'currency':'BRL','original':10000,'discount':40,'historical':1000,'current_kind':'retail','offers':[{'cents':6000,'original':10000,'kind':'retail','shop':'Loja','url':'https://gg.deals/br/redirect/store/'}]}
+        library.set_setting(f'prices.ggdeals.{i}',quote)
+        assert selected_quote(library,i).get('discount') is None
+        quote['offer_context']={'platform':'PC','steam':str(i)};library.set_setting(f'prices.ggdeals.{i}',quote)
+>       assert selected_quote(library,i)['discount']==40
+E       assert None == 40
+
+tests/test_price_integrity_0136.py:26: AssertionError
+____________________ test_discount_sort_and_keyshop_policy _____________________
+
+library = <checkpoint.library.Library object at 0x7f0d68423e90>
+
+    def test_discount_sort_and_keyshop_policy(library):
+        ids=[]
+        for n,title in enumerate(['Portal 2','Hades II','Sem oferta']):
+            i=library.save_game({'title':title});ids.append(i)
+            library.sql.execute('INSERT INTO external_identifiers VALUES(?,?,?)',(i,'steam',str(i)))
+            library.set_setting(f'prices.ggdeals.{i}',{'currency':'BRL','retail':6000,'keyshop':2000 if n else 4000,'offer_context':{'platform':'PC','steam':str(i)},'offers':[] if n==2 else [{'kind':'retail','cents':6000,'original':10000 if n==0 else 8000,'shop':'Oficial','url':'https://gg.deals/br/redirect/retail/'},{'kind':'keyshop','cents':2000 if n else 4000,'original':10000,'shop':'Keys','url':'https://gg.deals/br/redirect/keys/'}]})
+>       assert [g['id'] for g in wishlist_order(library,library.games(),'discount')]==ids
+E       assert [2, 1, 3] == [1, 2, 3]
+E         
+E         At index 0 diff: 2 != 1
+E         Use -v to get more diff
+
+tests/test_price_integrity_0136.py:39: AssertionError
+____________ test_comparison_has_reason_instead_of_bare_unavailable ____________
+
+library = <checkpoint.library.Library object at 0x7f0d6850cf80>
+app = <PySide6.QtWidgets.QApplication(0x20f26290) at 0x7f0d6849d6c0>
+
+    def test_comparison_has_reason_instead_of_bare_unavailable(library,app):
+        for title,platform in [('Portal 2','PC'),('Zelda','Nintendo DS')]:
+            i=library.save_game({'title':title,'platform':platform});frame=comparison(SimpleNamespace(library=library),library.get(i))
+            labels=[l.text() for l in frame.findChildren(QLabel)]
+>           assert 'Sem preço salvo' in labels and 'Indisponível' not in labels
+E           assert ('Sem preço salvo' in ['Preços atuais', '<a href="https://gg.deals/">Preços: GG.deals</a>', 'Sem ID da Steam para consulta', 'Lojas oficiais', 'Indisponível', 'Lojas de chaves', ...])
+
+tests/test_price_integrity_0136.py:48: AssertionError
+----------------------------- Captured stderr call -----------------------------
+Fontconfig error: No writable cache directories
+=========================== short test summary info ============================
+FAILED tests/test_price_integrity_0136.py::test_non_pc_never_uses_steam_cache_or_calls_pc_provider[Zelda Phantom Hourglass-Nintendo DS]
+FAILED tests/test_price_integrity_0136.py::test_non_pc_never_uses_steam_cache_or_calls_pc_provider[Metroid Dread-Nintendo Switch]
+FAILED tests/test_price_integrity_0136.py::test_discount_requires_same_offer_and_confirmed_context[Portal 2]
+FAILED tests/test_price_integrity_0136.py::test_discount_requires_same_offer_and_confirmed_context[Hades II]
+FAILED tests/test_price_integrity_0136.py::test_discount_sort_and_keyshop_policy
+FAILED tests/test_price_integrity_0136.py::test_comparison_has_reason_instead_of_bare_unavailable
+6 failed in 0.22s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## depois-02-03
+
+UTC: 2026-11-15T15:57:19.867382+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_price_integrity_0136.py", "tests/test_prices_0135.py", "tests/test_price_display_official.py", "tests/test_prices_0129.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+.................                                                        [100%]
+17 passed in 0.99s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## depois-02-03-final
+
+UTC: 2026-11-15T15:58:03.724807+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_price_integrity_0136.py", "tests/test_prices_0135.py", "tests/test_price_display_official.py", "tests/test_prices_0129.py", "tests/test_wishlist_prices.py", "tests/test_time_prices_0134.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+......F.....................                                             [100%]
+=================================== FAILURES ===================================
+___________ test_discount_visible_only_for_offer_and_rounds_half_up ____________
+
+library = <checkpoint.library.Library object at 0x7f2c421b4740>
+app = <PySide6.QtWidgets.QApplication(0x19ba2280) at 0x7f2c41e802c0>
+
+    def test_discount_visible_only_for_offer_and_rounds_half_up(library,app):
+        from checkpoint.price_view import price_summary
+        i=library.save_game({'title':'Portal 2'});library.sql.execute('INSERT INTO external_identifiers VALUES(?,?,?)',(i,'steam','620'));library.sql.commit()
+        quote={'currency':'BRL','retail':9950,'offer_context':{'platform':'PC','steam':'620'},'offers':[{'kind':'retail','cents':9950,'original':10000,'shop':'Loja','url':'https://gg.deals/br/redirect/shop/'}]}
+        library.set_setting(f'prices.ggdeals.{i}',quote)
+        labels=price_summary(library,library.get(i)).findChildren(QLabel)
+>       assert any(l.text()=='-1%' for l in labels)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_price_integrity_0136.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <list_iterator object at 0x7f2c421b5de0>
+
+>   assert any(l.text()=='-1%' for l in labels)
+               ^^^^^^^^
+E   RuntimeError: Internal C++ object (PySide6.QtWidgets.QLabel) already deleted.
+
+tests/test_price_integrity_0136.py:58: RuntimeError
+=========================== short test summary info ============================
+FAILED tests/test_price_integrity_0136.py::test_discount_visible_only_for_offer_and_rounds_half_up
+1 failed, 27 passed in 4.24s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## antes-07-08
+
+UTC: 2026-11-15T15:58:35.904720+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_statistics_0136.py", "tests/test_ui_polish.py::test_statistics_chart_uses_library_totals", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+
+==================================== ERRORS ====================================
+________________ ERROR collecting tests/test_statistics_0136.py ________________
+ImportError while importing test module '/workspace/work/Checkpoint/tests/test_statistics_0136.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_statistics_0136.py:4: in <module>
+    from checkpoint.statistics_periods import period_bounds,period_stats
+E   ModuleNotFoundError: No module named 'checkpoint.statistics_periods'
+=========================== short test summary info ============================
+ERROR tests/test_statistics_0136.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.24s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 2
+
+## depois-02-03-verificado
+
+UTC: 2026-11-15T15:59:58.029430+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_price_integrity_0136.py", "tests/test_prices_0135.py", "tests/test_price_display_official.py", "tests/test_prices_0129.py", "tests/test_wishlist_prices.py", "tests/test_time_prices_0134.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+............................                                             [100%]
+28 passed in 3.83s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## depois-07-08
+
+UTC: 2026-11-15T16:00:48.021630+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_statistics_0136.py", "tests/test_ui_polish.py", "tests/test_wishlist_prices.py", "tests/test_library.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+.....................                                                    [100%]
+21 passed in 2.38s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0

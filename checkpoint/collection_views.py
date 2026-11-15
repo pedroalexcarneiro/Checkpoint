@@ -90,8 +90,8 @@ def build_wishlist(window):
     from .card_layout import cover_size
     from .prices import wishlist_order
     selected_order=window.library.setting('wishlist.order','name')
-    if selected_order not in ('name','price'):selected_order='name';window.library.set_setting('wishlist.order',selected_order)
-    order=QComboBox();order.setObjectName('wishlistOrder');order.addItem('Nome A–Z','name');order.addItem('Menor preço atual','price');order.setCurrentIndex(max(0,order.findData(selected_order)))
+    if selected_order not in ('name','price','discount'):selected_order='name';window.library.set_setting('wishlist.order',selected_order)
+    order=QComboBox();order.setObjectName('wishlistOrder');order.addItem('Nome A–Z','name');order.addItem('Menor preço atual','price');order.addItem('Maior desconto','discount');order.setCurrentIndex(max(0,order.findData(selected_order)))
     from .price_view import attribution_link
     top.insertWidget(1,attribution_link())
     def change_order(index):
