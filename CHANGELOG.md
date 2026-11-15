@@ -2,6 +2,15 @@
 
 Registros anteriores descrevem o estado de cada versão; não são instruções atuais.
 
+## 0.1.35 — ajustes de uso e interface
+
+- ROM vinculada na ação Jogar; encerramento do processo atualiza o registro de sessão.
+- Tempo total app/Steam, calendário local, status editável e ficha exclusiva de desejos.
+- Desejos com cards limitados e lojas oficiais por padrão; opção keyshops e ausência de preço explícita.
+- Memórias com orientação inicial, alinhamento e exclusão confirmada; prévias de aparência e logos de serviço corrigidas.
+- Captura configurável e descoberta de instalações Steam; texto e navegação ajustados.
+- Pendências: detecção de fechar apenas a ROM, A4 e validação real de captura/uso no PC do dono. Schema 4 e contratos protegidos preservados.
+
 ## 0.1.33 — busca No-Intro no Drive (sem release)
 
 - Título de ROM com artigo No-Intro e subtítulo normalizados antes de pesquisar.

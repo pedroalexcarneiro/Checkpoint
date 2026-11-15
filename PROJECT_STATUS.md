@@ -1,4 +1,12 @@
-# Estado atual — Checkpoint 0.1.34 (local, com pendência A4)
+# Estado atual — Checkpoint 0.1.35
+
+## Lançamento 0.1.35 autorizado pelo dono
+
+Versão declarada atualizada para 0.1.35, schema 4. O dono autorizou o lançamento após o envio da branch fix/0.1.35-ajustes em f0a5514. Publicação de pré-release pelo workflow Windows release, sem alterar os workflows ou as releases protegidas. A publicação depende dos testes Windows, build e smokes do pacote extraído.
+
+Pendências preservadas nas notas públicas: fechar somente a ROM mantendo o emulador aberto ainda pode exigir fim manual do registro; A4 ainda exige escolha/confirmação; captura real de jogos no Windows e homologação no PC do dono não foram validadas. Os 542 testes Linux da entrega anterior não substituem essa homologação. Resultados da execução Windows e arquivos verificados acompanham a release.
+
+Os registros abaixo são históricos e descrevem a entrega antes da autorização de lançamento.
 
 ## Trabalho local 0.1.35 — validação Linux, com bloqueio parcial do item 2
 
