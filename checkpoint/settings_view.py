@@ -50,13 +50,15 @@ def build_settings(window):
         name=text(theme.name,'caption');name.setAlignment(Qt.AlignCenter);column.addWidget(name);swatches.addWidget(entry)
     swatches.addStretch();inside.addLayout(swatches)
     from .card_layout import cover_size
-    row=QHBoxLayout();row.addWidget(text('Tamanho das capas','muted'))
+    appearance.addWidget(frame)
+    frame,inside=card();frame.setObjectName('coverSizeCard')
+    row=QHBoxLayout();label=text('Tamanho das capas','sectionTitle');label.setObjectName('coverSizeLabel');row.addWidget(label)
     slider=QSlider(Qt.Horizontal);slider.setObjectName('coverSizeSlider');slider.setRange(70,150);slider.setValue(cover_size(window.library));slider.setMinimumWidth(180)
     percentage=text(str(slider.value())+'%','muted');percentage.setFixedWidth(48)
     slider.valueChanged.connect(lambda value:(percentage.setText(str(value)+'%'),window.set_cover_size(value)))
     row.addWidget(slider,1);row.addWidget(percentage);inside.addLayout(row)
     appearance.addWidget(frame);appearance.addStretch()
-    grid=CardGrid(320,max_columns=2);grid.setObjectName('connectionsGrid');grid.setMaximumWidth(1200)
+    grid=CardGrid(320,max_columns=2);grid.setObjectName('connectionsGrid')
     for provider,callback in [('Steam',window.steam),('Google Drive',window.drive),('SteamGridDB',lambda:window.configure_key('steamgriddb')),('RAWG',lambda:window.configure_key('rawg'))]:
         frame,inside=card();frame.setMinimumHeight(120);head=QHBoxLayout();badge=text('');badge.setPixmap(service_icon(provider));badge.setFixedSize(48,48);head.addWidget(badge)
         words=QVBoxLayout();words.addWidget(text(provider,'cardTitle'));configured=window.integration_status(provider).startswith('Credencial salva');state=QHBoxLayout();dot=text('●');dot.setObjectName('connectionStateDot');dot.setFixedWidth(12);dot.setProperty('configured',configured)
