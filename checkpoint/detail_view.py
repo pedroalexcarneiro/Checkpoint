@@ -3,7 +3,7 @@ import json
 from .locale import date_display,datetime_display
 from pathlib import Path
 from PySide6.QtCore import Qt,QSize
-from PySide6.QtGui import QPixmap,QIcon
+from PySide6.QtGui import QPixmap,QIcon,QFont
 from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QScrollArea,QTabWidget,QToolButton,QMenu,QTextEdit,QCheckBox,QSizePolicy,QComboBox
 from .ui_components import Hero,text,action,card,CurrentPageTabs,nav_icon
 from .design_system import ArtworkButton,AdaptiveColumns,CardGrid,IconButton,Badge,empty_state,CardSurface,ActionCard,StatusChip
@@ -41,7 +41,12 @@ def build_detail(window,game):
     seconds=window.library.sql.execute("SELECT COALESCE(SUM(duration_seconds),0) FROM play_sessions WHERE game_id=? AND state='finished'",(game_id,)).fetchone()[0]
     if owned:
         status_row=QHBoxLayout();dot=text('●');dot.setObjectName('gameStatusDot');dot.setStyleSheet('color: '+(window.theme.colors['accent'] if game['status'] in ('Jogando','Concluído') else window.theme.colors['muted']));status_row.addWidget(dot);status=QComboBox();status.setObjectName('gameStatus');status.setAccessibleName('Status do jogo');status.addItems(['Backlog','Jogando','Pausado','Concluído','Abandonado']);status.setCurrentText('Backlog' if game['status']=='Não iniciado' else game['status'])
+        def highlight_status():
+            for index in range(status.count()):
+                font=QFont();font.setBold(index==status.currentIndex());status.setItemData(index,font,Qt.FontRole)
+        highlight_status()
         def change_status(value):
+            highlight_status()
             window.library.save_game({'title':game['title'],'status':value},game_id)
             dot.setStyleSheet('color: '+(window.theme.colors['accent'] if value in ('Jogando','Concluído') else window.theme.colors['muted']))
             window.refresh_library()
