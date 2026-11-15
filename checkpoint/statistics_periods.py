@@ -3,7 +3,7 @@ from calendar import monthrange
 from collections import defaultdict
 from datetime import datetime,time,timedelta,timezone
 
-PERIODS=(('Diário','daily'),('Semanal','weekly'),('Mensal','monthly'),('Últimos 3 meses','3m'),('Últimos 6 meses','6m'),('Últimos 12 meses','12m'),('Todo o período','all'))
+PERIODS=(('Hoje','daily'),('Esta semana','weekly'),('Este mês','monthly'),('Últimos 3 meses','3m'),('Últimos 6 meses','6m'),('Últimos 12 meses','12m'),('Todo o período','all'))
 
 
 def local(value,zone):

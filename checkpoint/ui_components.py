@@ -1,3 +1,4 @@
+from .library import display_status
 from PySide6.QtCore import Qt, QSize, QSizeF, QRectF, QPointF,QRect
 from PySide6.QtGui import QPixmap, QPainter, QColor, QLinearGradient, QFont, QIcon, QPen, QPolygonF, QRegion, QPainterPath
 from .visual_tokens import SPACE,TYPE,RADIUS
@@ -129,7 +130,7 @@ class Hero(QWidget):
         x=SPACE['xl'];top=64 if self.detail_mode else 56
         if not self.detail_mode:
             font=QFont('Segoe UI');font.setPixelSize(TYPE['caption']);font.setWeight(QFont.DemiBold);p.setFont(font);p.setPen(QColor('#e4edf2'))
-            p.drawText(QRectF(x,20,self.width()-2*x,20),Qt.AlignVCenter,' · '.join(filter(None,(self.game.get('platform'),self.game.get('status')))))
+            p.drawText(QRectF(x,20,self.width()-2*x,20),Qt.AlignVCenter,' · '.join(filter(None,(self.game.get('platform'),display_status(self.game.get('status'))))))
         identity_height=min(100,max(60,self.height()*.34))
         if not self.logo.isNull():
             logo=self.logo.scaled(min(300 if self.detail_mode else 245,self.width()-52),round(identity_height),Qt.KeepAspectRatio,Qt.SmoothTransformation)
@@ -162,7 +163,7 @@ class GameTile(CoverArtwork):
         font=QFont('Segoe UI');font.setPixelSize(14);font.setWeight(QFont.DemiBold);p.setFont(font);p.setPen(QColor(colors['text']))
         p.drawText(QRectF(0,self.art_height+5,self.width(),20),Qt.AlignVCenter,p.fontMetrics().elidedText(self.game['title'],Qt.ElideRight,self.width()))
         font.setPixelSize(12);font.setWeight(QFont.Normal);p.setFont(font);p.setPen(QColor(colors['muted']))
-        p.drawText(QRectF(0,self.art_height+25,self.width(),18),Qt.AlignVCenter,' · '.join(filter(None,[self.game.get('status'),format_time(self.game['seconds']) if self.game.get('seconds') else ''])))
+        p.drawText(QRectF(0,self.art_height+25,self.width(),18),Qt.AlignVCenter,' · '.join(filter(None,[display_status(self.game.get('status')),format_time(self.game['seconds']) if self.game.get('seconds') else ''])))
         if self.hasFocus():p.setPen(QPen(QColor(colors['accent']),1));p.setBrush(Qt.NoBrush);p.drawRoundedRect(self.rect().adjusted(1,1,-1,-1),RADIUS['card'],RADIUS['card'])
         p.end()
 

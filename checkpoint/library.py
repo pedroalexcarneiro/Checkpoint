@@ -3,7 +3,10 @@ from datetime import datetime, timezone, timedelta
 from collections import defaultdict
 from pathlib import Path
 
-STATUSES = ('Não iniciado', 'Backlog', 'Jogando', 'Pausado', 'Concluído', 'Abandonado')
+STATUSES = ('Não iniciado', 'Jogando', 'Pausado', 'Concluído', 'Abandonado')
+
+def display_status(value):
+    return 'Não iniciado' if value == 'Backlog' else value
 FIELDS = ('title','description','developer','publisher','release_date','platform','genre','status',
           'rating','favorite','notes','source','cover','banner','logo','executable','category')
 
@@ -15,7 +18,7 @@ def clean_game_data(data):
     if not clean.get('title', '').strip():
         raise ValueError('Informe o nome do jogo.')
     clean['title'] = clean['title'].strip()
-    if clean.get('status', STATUSES[0]) not in STATUSES:
+    if clean.get('status', STATUSES[0]) not in (*STATUSES, 'Backlog'):
         raise ValueError('Status inválido.')
     if clean.get('rating') is not None and not 0 <= int(clean['rating']) <= 10:
         raise ValueError('A nota deve estar entre 0 e 10.')
@@ -53,7 +56,10 @@ class Library:
             args.append('%'+search.replace('\\','\\\\').replace('%','\\%').replace('_','\\_')+'%')
         for key, value in [('platform',platform),('status',status)]:
             if value:
-                clauses.append(key+'=?'); args.append(value)
+                if key == 'status' and value in ('Não iniciado', 'Backlog'):
+                    clauses.append("status IN ('Não iniciado','Backlog')")
+                else:
+                    clauses.append(key+'=?'); args.append(value)
         if favorite:
             clauses.append('favorite=1')
         order = {'title':'title COLLATE NOCASE','recent':'created_at DESC, id DESC','rating':'rating DESC, title'}.get(sort,'title COLLATE NOCASE')
@@ -147,7 +153,7 @@ class Library:
         genres = defaultdict(int)
         for game in games:
             for genre in {g.strip() for g in game['genre'].split(',') if g.strip()}: genres[genre] += 1
-        return {'total':len(games), 'statuses':{s:sum(g['status']==s for g in games) for s in STATUSES},
+        return {'total':len(games), 'statuses':{s:sum(display_status(g['status'])==s for g in games) for s in STATUSES},
                 'seconds':sum(durations), 'sessions':len(rows), 'average':sum(durations)/len(rows) if rows else 0,
                 'platforms':{p:sum(g['platform']==p for g in games) for p in sorted({g['platform'] for g in games})},
                 'genres':dict(genres),'weekly':dict(sorted(weekly.items())[-8:]),'monthly':dict(sorted(monthly.items())[-12:]),

@@ -28,7 +28,8 @@ class CoverDelegate(QStyledItemDelegate):
         title=game.get('title') or index.data(Qt.DisplayRole).split('\n')[0]
         painter.drawText(QRectF(image_rect.x(),image_rect.bottom()+6,image_rect.width(),23),Qt.AlignLeft|Qt.AlignVCenter,painter.fontMetrics().elidedText(title,Qt.ElideRight,int(image_rect.width())))
         font.setPixelSize(12);font.setWeight(QFont.Normal);painter.setFont(font)
-        status=game.get('status','');active=status=='Jogando'
+        from .library import display_status
+        status=display_status(game.get('status',''));active=status=='Jogando'
         painter.setPen(Qt.NoPen);painter.setBrush(QColor(colors['accent'] if active else colors['muted']))
         # Status sem marcador duplicado.
         painter.setPen(QColor(colors['muted']));painter.drawText(QRectF(image_rect.x(),image_rect.bottom()+26,image_rect.width(),20),Qt.AlignVCenter,status)

@@ -16,19 +16,19 @@ def test_status_is_one_themed_control_without_annotation(ui,app):
         assert control.height()==40 and control.minimumWidth()>=176
         assert frame.rect().contains(control.geometry().translated(control.parentWidget().mapTo(frame,QPoint(0,0))))
         assert not any(l.text()=='2' for l in control.findChildren(QLabel))
-        for status in ['Backlog','Jogando','Pausado','Concluído','Abandonado']:
+        for status in ['Não iniciado','Jogando','Pausado','Concluído','Abandonado']:
             control.setCurrentText(status);app.processEvents()
             image=control.grab().toImage()
             assert image.pixelColor(0,control.height()//2)==QColor(w.theme.colors['accent'])
             assert control.fontMetrics().horizontalAdvance(status)<=control.width()-72
             assert control.itemData(control.currentIndex(),Qt.FontRole).bold()
-            if status!='Backlog':assert w.library.get(i)['status']==status
+            if status!='Não iniciado':assert w.library.get(i)['status']==status
 
 
 def test_click_on_status_dot_opens_menu_and_keyboard_saves_choice(ui,app):
     from PySide6.QtTest import QTest
     w,i=ui;w.detail(i);app.processEvents();control=w.detail_page.findChild(QComboBox,'gameStatus')
-    assert w.library.get(i)['status']=='Não iniciado' and control.currentText()=='Backlog'
+    assert w.library.get(i)['status']=='Não iniciado' and control.currentText()=='Não iniciado'
     dot=control.findChild(QLabel,'gameStatusDot');QTest.mouseClick(control,Qt.LeftButton,Qt.NoModifier,dot.geometry().center());app.processEvents()
     view=control.view()
     try:

@@ -44,7 +44,7 @@ def build_detail(window,game):
     seconds=window.library.sql.execute("SELECT COALESCE(SUM(duration_seconds),0) FROM play_sessions WHERE game_id=? AND state='finished'",(game_id,)).fetchone()[0]
     if owned:
         from .status_control import StatusControl
-        status_row=QHBoxLayout();status_row.setContentsMargins(0,0,0,0);status=StatusControl();status.addItems(['Backlog','Jogando','Pausado','Concluído','Abandonado']);status.setCurrentText('Backlog' if game['status']=='Não iniciado' else game['status'])
+        status_row=QHBoxLayout();status_row.setContentsMargins(0,0,0,0);status=StatusControl();status.addItems(['Não iniciado','Jogando','Pausado','Concluído','Abandonado']);status.setCurrentText('Não iniciado' if game['status']=='Backlog' else game['status'])
         def highlight_status():
             for index in range(status.count()):
                 font=QFont();font.setBold(index==status.currentIndex());status.setItemData(index,font,Qt.FontRole)
