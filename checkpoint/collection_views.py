@@ -108,8 +108,6 @@ def build_wishlist(window):
         panel=WishCard(game);body=QVBoxLayout(panel);body.setContentsMargins(*([SPACE['md']]*4));body.setSpacing(SPACE['sm'])
         logo=WishLogo(game);logo.clicked.connect(lambda checked=False,g=game['id']:window.detail(g));body.addWidget(logo,0,Qt.AlignHCenter)
         body.addWidget(WishTitle(game['title']))
-        from .playtime import total_seconds,format_time
-        body.addWidget(text(format_time(total_seconds(window.library,game['id'])),'caption'))
         body.addWidget(price_summary(window.library,game))
         line=QBoxLayout(QBoxLayout.LeftToRight);line.setSpacing(4)
         offers=source_link(window.library,game);line.addWidget(offers,1)

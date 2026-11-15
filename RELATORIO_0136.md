@@ -81,3 +81,11 @@ Investigados container 48×48, pixmap Steam 32px/Drive 36px, margens/cores e cen
 Arquivo original checkpoint/assets/services/steam.ico intacto; SHA-256 9f890a9debcdfccc339149a7943be9aff9e4c9203c2fa37d5671a5b2c88503ad. Arquivos/funções: ui_components.py::service_icon; tests/test_service_optical_0136.py. Primeira compensação de 1px ainda falhou na medida de centro; aumentada para 2px sem alterar tolerância do teste. Nove regressões passaram, incluindo dois jogos e ocupação relativa Steam/Drive. Captura revisao-conexoes-1280x800.png enviada no chat. Testes de raster não equivalem à aprovação óptica do dono nem DPI Windows.
 
 Complemento de revisão da lista: dono aprovou o estilo e pediu mais destaque no tempo. Mantido layout; apenas o tempo recebeu 16px, peso 600 e cor principal, alinhado à direita. Nove testes pertinentes passaram. HeatmapViewport passou a habilitar explicitamente rolagem horizontal quando necessária (a classe-base a desativa); sem remover rolagem de página.
+
+## 01 — tempo em Desejos e posse — feito
+
+Antes: dois cenários falharam por tempo 2h15min visível no card. A ficha exclusiva já ocultava tempo; preservado. Removido apenas o rótulo temporal dos cards de Desejos. Sessões, snapshots, notas e metadados não apagados.
+
+Para coexistência Biblioteca/Desejos, collection.unowned=false explícito agora conserva posse mesmo com wishlist, enquanto ausência de flag mantém semântica legada (wishlist é exclusiva). Adicionar aos desejos pelo menu de jogo possuído grava false, sem retirar da Biblioteca; retirar dos desejos conserva posse. Adição pelo diálogo que reutiliza identidade existente permanece no contrato anterior protegido por regressão: informa que já pertence à Biblioteca. Aquisição exclusiva preserva registro e histórico.
+
+Arquivos/funções: collection_views.py::build_wishlist; library.py::is_owned/owned_games; window.py::add_wish/remove_wish; tests/test_wish_time_0136.py. Testados dois jogos/fixtures, desejo exclusivo, aquisição, coexistência e retirada, tempos Biblioteca e comparação integral das sessões antes/depois. 29 regressões pertinentes passaram. Sem migração de schema nem apagamento/reescrita de instantes.

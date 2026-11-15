@@ -1105,3 +1105,127 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## depois-01
+
+UTC: 2026-11-15T16:13:22.345488+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_wish_time_0136.py", "tests/test_wishlist_prices.py", "tests/test_registration_0128.py", "tests/test_time_0135.py", "tests/test_time_prices_0134.py", "tests/test_complete_layout.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+.............................                                            [100%]
+29 passed in 4.33s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## antes-10-espacamento
+
+UTC: 2026-11-15T16:14:16.991215+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_cover_preview_0135.py::test_cover_outline_spacing_is_equal_at_both_edges", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+_______ test_cover_outline_spacing_is_equal_at_both_edges[sample0-size0] _______
+
+ui = (<checkpoint.window.MainWindow(0x36bea2f0) at 0x7ff99defd540>, 1)
+app = <PySide6.QtWidgets.QApplication(0x36a7d060) at 0x7ff99dea1900>
+size = (1280, 800)
+
+    @pytest.mark.parametrize('size',[(1280,800),(1920,1080)])
+    def test_cover_outline_spacing_is_equal_at_both_edges(ui,app,size):
+     w,i=ui;w.resize(*size);w.navigate(5)
+     for _ in range(5):app.processEvents()
+     preview=w.pages[5].findChild(CoverSizeChoices);rects=preview.cover_rects()
+     left=rects[0].left();right=preview.width()-rects[-1].right()
+     gaps=[b.left()-a.right() for a,b in zip(rects,rects[1:])]
+>    assert abs(left-right)<=1
+E    assert 31.288888888888962 <= 1
+E     +  where 31.288888888888962 = abs((66.62222222222222 - 35.33333333333326))
+
+tests/test_cover_preview_0135.py:48: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+_______ test_cover_outline_spacing_is_equal_at_both_edges[sample0-size1] _______
+
+ui = (<checkpoint.window.MainWindow(0x370634d0) at 0x7ff9972ca780>, 1)
+app = <PySide6.QtWidgets.QApplication(0x36a7d060) at 0x7ff99dea1900>
+size = (1920, 1080)
+
+    @pytest.mark.parametrize('size',[(1280,800),(1920,1080)])
+    def test_cover_outline_spacing_is_equal_at_both_edges(ui,app,size):
+     w,i=ui;w.resize(*size);w.navigate(5)
+     for _ in range(5):app.processEvents()
+     preview=w.pages[5].findChild(CoverSizeChoices);rects=preview.cover_rects()
+     left=rects[0].left();right=preview.width()-rects[-1].right()
+     gaps=[b.left()-a.right() for a,b in zip(rects,rects[1:])]
+>    assert abs(left-right)<=1
+E    assert 31.28888888888872 <= 1
+E     +  where 31.28888888888872 = abs((130.6222222222222 - 99.33333333333348))
+
+tests/test_cover_preview_0135.py:48: AssertionError
+_______ test_cover_outline_spacing_is_equal_at_both_edges[sample1-size0] _______
+
+ui = (<checkpoint.window.MainWindow(0x36a0db50) at 0x7ff99defd280>, 1)
+app = <PySide6.QtWidgets.QApplication(0x36a7d060) at 0x7ff99dea1900>
+size = (1280, 800)
+
+    @pytest.mark.parametrize('size',[(1280,800),(1920,1080)])
+    def test_cover_outline_spacing_is_equal_at_both_edges(ui,app,size):
+     w,i=ui;w.resize(*size);w.navigate(5)
+     for _ in range(5):app.processEvents()
+     preview=w.pages[5].findChild(CoverSizeChoices);rects=preview.cover_rects()
+     left=rects[0].left();right=preview.width()-rects[-1].right()
+     gaps=[b.left()-a.right() for a,b in zip(rects,rects[1:])]
+>    assert abs(left-right)<=1
+E    assert 31.288888888888962 <= 1
+E     +  where 31.288888888888962 = abs((66.62222222222222 - 35.33333333333326))
+
+tests/test_cover_preview_0135.py:48: AssertionError
+_______ test_cover_outline_spacing_is_equal_at_both_edges[sample1-size1] _______
+
+ui = (<checkpoint.window.MainWindow(0x374f4320) at 0x7ff9972fe3c0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x36a7d060) at 0x7ff99dea1900>
+size = (1920, 1080)
+
+    @pytest.mark.parametrize('size',[(1280,800),(1920,1080)])
+    def test_cover_outline_spacing_is_equal_at_both_edges(ui,app,size):
+     w,i=ui;w.resize(*size);w.navigate(5)
+     for _ in range(5):app.processEvents()
+     preview=w.pages[5].findChild(CoverSizeChoices);rects=preview.cover_rects()
+     left=rects[0].left();right=preview.width()-rects[-1].right()
+     gaps=[b.left()-a.right() for a,b in zip(rects,rects[1:])]
+>    assert abs(left-right)<=1
+E    assert 31.28888888888872 <= 1
+E     +  where 31.28888888888872 = abs((130.6222222222222 - 99.33333333333348))
+
+tests/test_cover_preview_0135.py:48: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_cover_preview_0135.py::test_cover_outline_spacing_is_equal_at_both_edges[sample0-size0]
+FAILED tests/test_cover_preview_0135.py::test_cover_outline_spacing_is_equal_at_both_edges[sample0-size1]
+FAILED tests/test_cover_preview_0135.py::test_cover_outline_spacing_is_equal_at_both_edges[sample1-size0]
+FAILED tests/test_cover_preview_0135.py::test_cover_outline_spacing_is_equal_at_both_edges[sample1-size1]
+4 failed in 0.73s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1

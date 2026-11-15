@@ -439,11 +439,9 @@ class MainWindow(QMainWindow):
         build_memories(self)
 
     def add_wish(self,game_id):
-        if self.library.is_owned(game_id):
-            self.detail_notice=(game_id,'Este jogo já está na sua biblioteca.');self.detail(game_id)
-            self.statusBar().showMessage('Este jogo já está na sua biblioteca.');return
+        owned=self.library.is_owned(game_id)
         with self.library.sql:
-            self.library.sql.execute('INSERT INTO settings VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value',(f'collection.unowned.{game_id}','true'))
+            self.library.sql.execute('INSERT INTO settings VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value',(f'collection.unowned.{game_id}','false' if owned else 'true'))
             self.library.sql.execute('INSERT OR IGNORE INTO wishlist(game_id,target_cents) VALUES(?,0)',(game_id,))
         self.statusBar().showMessage('Jogo adicionado à lista de desejos.')
         self.refresh_library()
@@ -459,8 +457,9 @@ class MainWindow(QMainWindow):
         build_wishlist(self)
 
     def remove_wish(self,game_id):
+        owned=self.library.is_owned(game_id)
         with self.library.sql:
-            self.library.sql.execute('INSERT INTO settings VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value',(f'collection.unowned.{game_id}','true'))
+            self.library.sql.execute('INSERT INTO settings VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value',(f'collection.unowned.{game_id}','false' if owned else 'true'))
             self.library.sql.execute('DELETE FROM wishlist WHERE game_id=?',(game_id,))
         self.navigate(2)
 

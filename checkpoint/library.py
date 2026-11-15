@@ -61,12 +61,14 @@ class Library:
         return [row for row in rows if not genre or genre in {part.strip() for part in row['genre'].split(',')}]
 
     def is_owned(self,game_id):
-        return not self.sql.execute('SELECT 1 FROM wishlist WHERE game_id=?',(game_id,)).fetchone() and not self.setting(f'collection.unowned.{game_id}',False)
+        explicit=self.setting(f'collection.unowned.{game_id}',None)
+        if explicit is not None:return not bool(explicit)
+        return not self.sql.execute('SELECT 1 FROM wishlist WHERE game_id=?',(game_id,)).fetchone()
 
     def owned_games(self,*args,**kwargs):
-        excluded={row[0] for row in self.sql.execute('SELECT game_id FROM wishlist')}
-        excluded.update(int(row[0].rsplit('.',1)[-1]) for row in self.sql.execute("SELECT key FROM settings WHERE key LIKE 'collection.unowned.%' AND value='true'") if row[0].rsplit('.',1)[-1].isdigit())
-        return [game for game in self.games(*args,**kwargs) if game['id'] not in excluded]
+        wishes={row[0] for row in self.sql.execute('SELECT game_id FROM wishlist')}
+        flags={int(row[0].rsplit('.',1)[-1]):json.loads(row[1]) for row in self.sql.execute("SELECT key,value FROM settings WHERE key LIKE 'collection.unowned.%'") if row[0].rsplit('.',1)[-1].isdigit()}
+        return [game for game in self.games(*args,**kwargs) if not flags.get(game['id'],game['id'] in wishes)]
 
     def acquire(self,game_id):
         if not self.get(game_id):raise ValueError('Jogo indisponível.')
