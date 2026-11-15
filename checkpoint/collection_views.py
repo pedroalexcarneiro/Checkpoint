@@ -52,8 +52,8 @@ class WishGrid(CardGrid):
         from .card_layout import card_metrics
         metrics=card_metrics(self.width(),getattr(self,'cover_percent',100))
         spacing=metrics.gap;self.grid.setSpacing(spacing)
-        self.columns=max(1,min(4,(self.width()+spacing)//(300+spacing)))
-        width=max(1,(self.width()-spacing*(self.columns-1))//self.columns)
+        self.columns=max(1,(self.width()+spacing)//(300+spacing))
+        width=min(360,max(1,(self.width()-spacing*(self.columns-1))//self.columns))
         art_width=max(1,width-2*SPACE['md']);art_height=art_width;compact=width<200;height=art_height+(304 if compact else 272)
         while self.grid.count():self.grid.takeAt(0)
         self.grid.setAlignment(Qt.AlignTop|Qt.AlignLeft)
