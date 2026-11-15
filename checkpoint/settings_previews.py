@@ -39,5 +39,4 @@ class CoverSizePreview(QWidget):
         for index,rect in enumerate(self.cover_rects()):
             active=index==self.active_index()
             p.setBrush(QColor(c['panel']));p.setPen(QPen(QColor(green if active else c['border']),2 if active else 1));p.drawRoundedRect(rect,5,5)
-            p.setPen(QColor(green if active else c['muted']));p.drawText(rect,Qt.AlignCenter,'Capa')
         p.end()

@@ -42,7 +42,6 @@ def build_settings(window):
     frame,inside=card();head=QHBoxLayout();head.addWidget(text('Tema de cores','sectionTitle'));head.addStretch();window.theme_selector=QComboBox(frame);window.theme_selector.setObjectName('themeSelector')
     for key,theme in THEMES.items():window.theme_selector.addItem(theme.name,key)
     window.theme_selector.setCurrentIndex(window.theme_selector.findData(window.theme.key));window.theme_selector.currentIndexChanged.connect(window.theme_changed);window.theme_selector.hide();inside.addLayout(head)
-    inside.addWidget(text('O tema acompanha todas as páginas. Ajuste abaixo o tamanho das capas.','secondary'))
     from .settings_previews import ThemePreview,CoverSizePreview
     swatches=CardGrid(300,max_columns=3);swatches.setObjectName('themePreviews')
     for key,theme in THEMES.items():
@@ -69,7 +68,6 @@ def build_settings(window):
     from PySide6.QtWidgets import QKeySequenceEdit
     from PySide6.QtGui import QKeySequence
     frame,inside=card();inside.addWidget(text('Captura da janela do jogo','cardTitle'))
-    inside.addWidget(text('Com o Checkpoint em primeiro plano, salva a janela do jogo iniciado pelo app em Memórias.','muted'))
     shortcut=QKeySequenceEdit(QKeySequence(window.library.setting('capture.shortcut','Ctrl+Shift+S')));shortcut.setObjectName('captureShortcut');shortcut.setAccessibleName('Atalho para capturar jogo');shortcut.editingFinished.connect(lambda:window.set_capture_shortcut(shortcut.keySequence()));inside.addWidget(shortcut)
     appearance.addWidget(frame);appearance.addStretch()
     grid=CardGrid(320,max_columns=2);grid.setObjectName('connectionsGrid')
@@ -82,7 +80,7 @@ def build_settings(window):
     from .ggdeals_connection import GgDealsConnection
     connections.addWidget(GgDealsConnection(window))
     from .design_system import IconButton
-    help_row=QHBoxLayout();help_row.addWidget(text('Serviços para completar fichas, imagens e arquivos.','secondary'),1);help_button=IconButton('help','Ajuda sobre conexões',lambda:QMessageBox.information(window,'Conexões','Configurado indica uma credencial salva. Use Gerenciar para verificar o acesso.'));help_row.addWidget(help_button);connections.insertLayout(0,help_row)
+    help_row=QHBoxLayout();help_row.addStretch();help_button=IconButton('help','Ajuda sobre conexões',lambda:QMessageBox.information(window,'Conexões','Credencial salva não confirma acesso. Use Gerenciar.'));help_row.addWidget(help_button);connections.insertLayout(0,help_row)
     extra=QWidget();inside=QVBoxLayout(extra);inside.setContentsMargins(0,0,0,0);inside.addWidget(action('Completar fichas e imagens da biblioteca',window.complete_library));inside.addWidget(action('Pesquisar metadados manualmente',window.metadata))
     prices=QCheckBox('Consultar preços do GG.deals automaticamente');prices.setChecked(window.library.setting('prices.auto',True));prices.toggled.connect(lambda value:window.library.set_setting('prices.auto',value));inside.addWidget(prices)
     fallback=QCheckBox('Usar a página pública do GG.deals quando não houver chave');fallback.setChecked(window.library.setting('prices.public_fallback',True));inside.addWidget(fallback)
@@ -94,19 +92,19 @@ def build_settings(window):
     for key,title in [('downloads','ROMs baixadas'),('captures','Capturas'),('save_backups','Backups de saves')]:downloads.addWidget(folder_row(window,key,title))
     downloads.addStretch()
     grid=CardGrid(330,max_columns=2)
-    for title,description,name,actions in [('Biblioteca','Seu banco de jogos e suas preferências.','library',[('Criar backup',window.backup_database),('Abrir pasta de dados',lambda:QDesktopServices.openUrl(QUrl.fromLocalFile(str(window.library.db.path.parent.resolve()))))]),('Saves tradicionais','Cópias de segurança dos saves configurados.','folder',[('Criar backup',window.backup_saves),('Restaurar saves',window.restore_saves)])]:
-        frame,inside=card();head=QHBoxLayout();head.addWidget(Badge(name));head.addWidget(text(title,'cardTitle'),1);inside.addLayout(head);inside.addWidget(text(description,'secondary'))
+    for title,name,actions in [('Biblioteca','library',[('Criar backup',window.backup_database),('Abrir pasta de dados',lambda:QDesktopServices.openUrl(QUrl.fromLocalFile(str(window.library.db.path.parent.resolve()))))]),('Saves tradicionais','folder',[('Criar backup',window.backup_saves),('Restaurar saves',window.restore_saves)])]:
+        frame,inside=card();head=QHBoxLayout();head.addWidget(Badge(name));head.addWidget(text(title,'cardTitle'),1);inside.addLayout(head)
         row=QHBoxLayout()
         for caption,callback in actions:row.addWidget(action(caption,callback,caption=='Criar backup'))
         row.addStretch()
         inside.addLayout(row);grid.add_card(frame)
     data.addWidget(grid)
-    frame,inside=card();inside.addWidget(text('Atualizações do Checkpoint','cardTitle'));inside.addWidget(text('Consulte as versões disponíveis sem alterar sua biblioteca.','secondary'))
+    frame,inside=card();inside.addWidget(text('Atualizações do Checkpoint','cardTitle'))
     update=action('Verificar atualizações',window.updates,True);update.setObjectName('checkUpdates');inside.addWidget(update,0,Qt.AlignLeft);data.addWidget(frame)
     extra=QWidget();inside=QVBoxLayout(extra);inside.addWidget(action('Perfis de emuladores',window.emulators));inside.addWidget(action('Revisar sessões interrompidas',window.recover_sessions));disclosure('Avançado',extra,data)
     removed=window.library.sql.execute('SELECT id,title FROM games WHERE deleted_at IS NOT NULL ORDER BY title').fetchall();trash=QWidget();inside=QVBoxLayout(trash)
     if not removed:
-        inside.addWidget(text('A lixeira está vazia.','cardTitle'));inside.addWidget(text('Jogos removidos poderão ser restaurados aqui.','secondary'))
+        inside.addWidget(text('A lixeira está vazia.','cardTitle'))
         inside.addWidget(action('Abrir biblioteca',lambda:window.navigate(1)),0,Qt.AlignLeft)
     for game in removed:
         line=QHBoxLayout();line.addWidget(text(game['title']),1);line.addWidget(action('Restaurar',lambda checked=False,g=game['id']:window.restore_game(g)));inside.addLayout(line)

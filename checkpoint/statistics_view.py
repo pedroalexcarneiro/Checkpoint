@@ -40,7 +40,7 @@ def build_statistics(window):
     from .playtime import collection_times,format_time
     times=collection_times(window.library)
     stats=window.library.stats(display_timezone='local');row=CardGrid(180,max_columns=4);row.setObjectName('statisticsMetrics')
-    for title,value,subtitle in [('Jogos',str(stats['total']),'Na biblioteca'),('Tempo registrado',format_time(sum(times.values())),'App + Steam'),('Sessões',str(stats['sessions']),f"Média de {stats['average']/60:.0f} min"),('Concluídos',str(stats['statuses']['Concluído']),'Jogos finalizados')]:row.add_card(metric(title,value,subtitle))
+    for title,value,subtitle in [('Jogos',str(stats['total']),''),('Tempo registrado',format_time(sum(times.values())),'App + Steam'),('Sessões',str(stats['sessions']),f"Média de {stats['average']/60:.0f} min"),('Concluídos',str(stats['statuses']['Concluído']),'')]:row.add_card(metric(title,value,subtitle))
     layout.addWidget(row)
     charts_left=None;charts_right=None
     frame,inside=card();heading=QHBoxLayout();heading.addWidget(text('Seu ritmo de jogo','sectionTitle'));heading.addStretch();period=QComboBox();period.addItem('Últimos 12 meses',None)

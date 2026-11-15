@@ -8,7 +8,7 @@ from .ui_components import Hero,GameTile,text,action,card,nav_icon,relative_date
 
 
 def activity(window,layout):
-    layout.addWidget(SectionHeader('Sua atividade','Conquistas, sessões e memórias recentes.'))
+    layout.addWidget(SectionHeader('Sua atividade',''))
     events=[]
     queries=[("SELECT g.id,g.title,d.created_at AS time,d.text AS message FROM diary_entries d JOIN games g ON g.id=d.game_id WHERE g.deleted_at IS NULL AND NOT EXISTS (SELECT 1 FROM wishlist w WHERE w.game_id=g.id) AND NOT EXISTS (SELECT 1 FROM settings t WHERE t.key='collection.unowned.'||g.id AND t.value='true') ORDER BY d.created_at DESC LIMIT 3",'Memória'),
              ("SELECT g.id,g.title,a.unlocked_at AS time,a.title AS message FROM achievements a JOIN games g ON g.id=a.game_id WHERE g.deleted_at IS NULL AND NOT EXISTS (SELECT 1 FROM wishlist w WHERE w.game_id=g.id) AND NOT EXISTS (SELECT 1 FROM settings t WHERE t.key='collection.unowned.'||g.id AND t.value='true') ORDER BY a.unlocked_at DESC LIMIT 3",'Marco'),
@@ -17,7 +17,7 @@ def activity(window,layout):
         events.extend((dict(row),kind) for row in window.library.sql.execute(query) if window.library.is_owned(row['id']))
     events.sort(key=lambda item:item[0]['time'] or '',reverse=True)
     if not events:
-        layout.addWidget(ActionCard('clock','Sua história começa ao jogar','Suas sessões, conquistas e anotações aparecerão aqui.',lambda:window.navigate(1),'Abrir biblioteca'))
+        layout.addWidget(ActionCard('clock','Nenhuma atividade','',lambda:window.navigate(1),'Abrir biblioteca'))
     selected=[]
     for preferred in ('Marco','Memória'):
         match=next((item for item in events if item[1]==preferred),None)
@@ -56,7 +56,7 @@ class GameStrip(QScrollArea):
 
 
 def game_strip(window,layout,title,games,maximum=4):
-    layout.addWidget(SectionHeader(title,'Retome de onde você parou.',lambda:window.navigate(1)))
+    layout.addWidget(SectionHeader(title,'',lambda:window.navigate(1)))
     layout.addWidget(GameStrip(window,games,maximum))
 
 
@@ -74,7 +74,7 @@ def build_home(window):
     games=window.library.owned_games(sort='recent')
     if not games:
         from .design_system import empty_state
-        layout.addWidget(empty_state('library','Sua biblioteca começa aqui','Adicione um jogo para reunir capas, progresso e memórias em um só lugar.',window.add_library_game,'Adicionar jogo'))
+        layout.addWidget(empty_state('library','Biblioteca vazia','Adicione um jogo.',window.add_library_game,'Adicionar jogo'))
         activity(window,layout)
     else:
         continuing=in_progress(window.library)
@@ -87,12 +87,12 @@ def build_home(window):
             buttons.addWidget(play);buttons.addStretch();hero.content.addLayout(buttons);layout.addWidget(hero)
         else:
             from .design_system import empty_state
-            layout.addWidget(empty_state('library','Escolha seu próximo jogo','Abra a biblioteca e marque um jogo como Jogando para tê-lo em destaque aqui.',lambda:window.navigate(1),'Abrir biblioteca'))
+            layout.addWidget(empty_state('library','Nenhum jogo em andamento','Abra a ficha de um jogo e selecione Jogando.',lambda:window.navigate(1),'Abrir biblioteca'))
         from .design_system import AdaptiveColumns
         left=QWidget();left.setObjectName('homeContinuation');left.setMinimumWidth(280);left_layout=QVBoxLayout(left);left_layout.setContentsMargins(0,0,0,0);left_layout.setSpacing(14)
         if continuing:game_strip(window,left_layout,'Continuar jogando',continuing)
         else:
-            left_layout.addWidget(SectionHeader('Na sua biblioteca','Jogos prontos para a sua próxima escolha.'))
+            left_layout.addWidget(SectionHeader('Na sua biblioteca',''))
             previews=CardGrid(150,max_columns=4)
             for game in games[:4]:previews.add_card(GameTile(game,window.detail,width=132))
             left_layout.addWidget(previews)

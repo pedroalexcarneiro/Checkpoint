@@ -86,7 +86,7 @@ def build_detail(window,game):
     about_layout.addWidget(text('Sobre o jogo','sectionTitle'))
     if incomplete:
         about.setProperty('emptyState',True)
-        about_layout.addWidget(text('A ficha ainda está incompleta. Adicione informações para organizar este jogo.','emptyDescription'))
+        about_layout.addWidget(text('Ficha incompleta. Edite os dados do jogo.','emptyDescription'))
         about_layout.addWidget(action('Editar ficha',lambda:window.edit_game(game_id)),0,Qt.AlignLeft)
     from .description_provenance import current
     from .wiki_text import intro
@@ -95,7 +95,7 @@ def build_detail(window,game):
     description=intro(game['description']) if wikipedia else game['description']
     if description:about_layout.addWidget(text(description,'bodyText'))
     else:
-        about_layout.addWidget(text('Não há texto descritivo disponível nesta ficha. A fonte pode não fornecer um resumo para este jogo.','muted'))
+        about_layout.addWidget(text('Sem texto descritivo. Pesquise manualmente ou edite a ficha.','muted'))
         about_layout.addWidget(action('Pesquisar manualmente',lambda:window.search_game_data(game_id)),0,Qt.AlignLeft)
         if not incomplete:about_layout.addWidget(action('Editar ficha',lambda:window.edit_game(game_id)),0,Qt.AlignLeft)
     if provenance.get('source','').startswith('https://pt.wikipedia.org/'):
@@ -134,8 +134,8 @@ def build_detail(window,game):
         gallery_layout.addLayout(row)
     else:
         gallery.setProperty('emptyState',True);gallery_layout.addWidget(Badge('memories',40))
-        gallery_layout.addWidget(text('Guarde suas melhores cenas','cardTitle'))
-        gallery_layout.addWidget(text('Adicione capturas e vídeos deste jogo à sua galeria.','emptyDescription'))
+        gallery_layout.addWidget(text('Nenhuma captura','cardTitle'))
+        gallery_layout.addWidget(text('Adicione uma captura ou vídeo.','emptyDescription'))
     add=action('Adicionar captura',lambda:window.import_media(game_id));add.setObjectName('quiet');gallery_layout.addWidget(add,0,Qt.AlignLeft);gallery_layout.addStretch()
     if owned:overview.addWidget(AdaptiveColumns(about,gallery,(3,2),breakpoint=640))
     else:overview.addWidget(about);gallery.deleteLater()
@@ -156,17 +156,17 @@ def build_detail(window,game):
     if accounts:activity.addWidget(action('Gerenciar Steam',window.steam))
     heading=QHBoxLayout();heading.addWidget(text('Marcos pessoais','sectionTitle'));heading.addStretch();heading.addWidget(action('+ Registrar marco',lambda:window.achievement(game_id)));activity.addLayout(heading)
     milestones=window.library.sql.execute('SELECT * FROM achievements WHERE game_id=?',(game_id,)).fetchall()
-    if not milestones:activity.addWidget(ActionCard('trophy','Nenhum marco registrado','Guarde conquistas e objetivos pessoais deste jogo.',lambda:window.achievement(game_id),'Registrar marco'))
+    if not milestones:activity.addWidget(ActionCard('trophy','Nenhum marco registrado','',lambda:window.achievement(game_id),'Registrar marco'))
     for record in milestones:
         frame,inside=card();row=QHBoxLayout();row.addWidget(Badge('trophy'));row.addWidget(text(record['title'],'cardTitle'),1);row.addWidget(text(date_display(record['unlocked_at']),'caption'));inside.addLayout(row);activity.addWidget(frame)
     activity.addWidget(text('Sessões','sectionTitle'))
     sessions=window.library.sql.execute('SELECT * FROM play_sessions WHERE game_id=? ORDER BY id DESC',(game_id,)).fetchall()
-    if not sessions:activity.addWidget(ActionCard('clock','Nenhuma sessão registrada','O tempo jogado aparece aqui quando você inicia um jogo pelo Checkpoint.',lambda:window.edit_game(game_id),'Configurar execução'))
+    if not sessions:activity.addWidget(ActionCard('clock','Nenhuma sessão registrada','',lambda:window.edit_game(game_id),'Configurar execução'))
     for record in sessions:
         frame,inside=card();row=QHBoxLayout();row.addWidget(Badge('clock'));words=QVBoxLayout();words.addWidget(text(datetime_display(record['started_at']),'cardTitle'));words.addWidget(text({'finished':'Concluída','active':'Em andamento','interrupted':'Interrompida'}.get(record['state'],record['state']),'muted'));row.addLayout(words,1);row.addWidget(text(f"{record['duration_seconds']//60} min",'cardTitle'));inside.addLayout(row);activity.addWidget(frame)
     for session,item in window.launcher.active.items():
         if item[2]==game_id:activity.addWidget(action('Encerrar registro desta sessão',lambda checked=False,i=session:window.end_session(i,game_id)))
-    memories.addWidget(text('Diário de jogo','sectionTitle'));entry=QTextEdit();window.detail_diary=entry;entry.setPlainText(draft);entry.setPlaceholderText('O que você quer guardar desta experiência?');entry.setMaximumHeight(110);memories.addWidget(entry)
+    memories.addWidget(text('Diário de jogo','sectionTitle'));entry=QTextEdit();window.detail_diary=entry;entry.setPlainText(draft);entry.setPlaceholderText('Anotação');entry.setMaximumHeight(110);memories.addWidget(entry)
     def save_entry():
         def save():
             window.library.add_diary(game_id,entry.toPlainText());entry.clear();window.detail(game_id)
@@ -180,7 +180,7 @@ def build_detail(window,game):
         for record in records:grid.add_card(memory_card(window,record))
         memories.addWidget(grid)
     technical.addWidget(text('Arquivos e versões','sectionTitle'))
-    if not files:technical.addWidget(ActionCard('folder','Nenhuma ROM associada','Os arquivos e as versões vinculadas a este jogo aparecem aqui.',lambda:window.link_rom(game_id),'Vincular ROM do Drive'))
+    if not files:technical.addWidget(ActionCard('folder','Nenhuma ROM associada','',lambda:window.link_rom(game_id),'Vincular ROM do Drive'))
     for file in files:
         frame,inside=card();row=QHBoxLayout();row.addWidget(Badge('folder'));words=QVBoxLayout();words.addWidget(text(file['original_name'],'cardTitle'));words.addWidget(StatusChip('Disponível neste computador' if file['available'] else 'Somente no Drive'));row.addLayout(words,1)
         row.addWidget(action('Executar versão',lambda checked=False,f=file:window.launch_rom(game_id,f),True) if file['available'] else action('Baixar ROM',lambda:window.link_rom(game_id),True));inside.addLayout(row);technical.addWidget(frame)
@@ -195,7 +195,7 @@ def build_detail(window,game):
         inside.addWidget(action('Fazer backup agora',lambda:window.game_backup(game_id)),0,Qt.AlignLeft);technical.addWidget(frame)
         for backup in GameSaveBackups(window.library).history(game_id):
             frame,inside=card();row=QHBoxLayout();row.addWidget(text(datetime_display(backup['created_at'])),1);row.addWidget(action('Restaurar',lambda checked=False,b=backup:window.restore_game_backup(game_id,b)));inside.addLayout(row);technical.addWidget(frame)
-    else:technical.addWidget(ActionCard('folder','Proteja seus saves','Escolha a pasta de saves tradicionais para preparar seus backups.',lambda:window.configure_saves(game_id),'Configurar saves'))
+    else:technical.addWidget(ActionCard('folder','Saves não configurados','Selecione a pasta de saves.',lambda:window.configure_saves(game_id),'Configurar saves'))
     for inside in layouts:inside.addStretch()
     if not owned:
         del window.detail_diary

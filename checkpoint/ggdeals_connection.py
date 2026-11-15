@@ -13,7 +13,7 @@ class GgDealsConnection(QFrame):
         row=QHBoxLayout();self.entry=QLineEdit();self.entry.setObjectName('ggdealsKey');self.entry.setEchoMode(QLineEdit.Password);self.entry.setPlaceholderText('Chave da API — salva somente no cofre');self.entry.setAccessibleName('Chave da API GG.deals');self.entry.setMaxLength(512)
         row.addWidget(self.entry,1);self.save_button=action('Salvar',self.save,True);self.remove_button=action('Remover',self.remove);row.addWidget(self.save_button);row.addWidget(self.remove_button);body.addLayout(row)
         for button in (self.save_button,self.remove_button):button.setMinimumSize(120,36)
-        self.notice=text('API oficial · valores em reais; histórico não é preço original.','caption');body.addWidget(self.notice)
+        self.notice=text('','caption');body.addWidget(self.notice)
         self.entry.textChanged.connect(lambda value:self.save_button.setEnabled(bool(value.strip())))
         self.entry.returnPressed.connect(self.save);self.save_button.setEnabled(False);self.update_state()
     def vault(self):

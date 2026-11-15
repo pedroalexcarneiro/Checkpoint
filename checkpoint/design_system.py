@@ -67,7 +67,8 @@ class ActionCard(CardSurface):
         from .ui_components import text,action
         layout=QVBoxLayout(self);layout.setContentsMargins(*([SPACE['lg']]*4));layout.setSpacing(SPACE['sm'])
         layout.addWidget(Badge(name,40));layout.addWidget(text(title,'cardTitle'))
-        layout.addWidget(text(description,'secondary'));layout.addWidget(action(button,callback),0,Qt.AlignLeft)
+        if description:layout.addWidget(text(description,'secondary'))
+        layout.addWidget(action(button,callback),0,Qt.AlignLeft)
 
 
 def empty_state(name,title,description,callback=None,button='Adicionar jogo'):
