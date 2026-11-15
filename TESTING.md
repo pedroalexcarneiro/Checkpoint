@@ -1,5 +1,13 @@
 # Validação do Checkpoint
 
+## Rodada 0.1.36
+
+Comando integral: `QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp python -m pytest tests -q -p no:cacheprovider`. Ambiente desta rodada: Linux/Python 3.12.14. `RELATORIO_0136_TESTES.md` contém stdout, stderr e exit integrais, incluindo falhas antes das correções. Resultado final será registrado no relatório da rodada; os 542 testes Windows publicados anteriormente não são resultado 0.1.36.
+
+Novos contratos: hotkey transacional e associação segura por PID; banner proporcional, quatro bordas e estados de janela; preços oficiais/contexto/sem oferta e desconto real; períodos locais, limites/DST de 23/25h e Steam sem datas; cinco capas e margens iguais; DPI 150%/200% em geometria/raster; preservação de histórico/posse e textos externos. Tests autenticados e Windows real não executados. Nenhum skip/xfail criado; arquivos protegidos intactos.
+
+Screenshots de revisão usam cadastro isolado e arte pública Steam; preços/tempos são fixtures identificadas na comunicação. Não são capturas obtidas de um jogo por hotkey real. Nenhum vídeo pessoal, banco, token ou arquivo de ROM faz parte da entrega versionada.
+
 Use Python 3.12 e as dependências de requirements-tested.txt. Não é necessário instalar dependências adicionais nesta revisão.
 
 ```bash

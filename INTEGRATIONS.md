@@ -1,5 +1,13 @@
 # Integrações
 
+## Revisão de capacidade da fonte — 0.1.36 local
+
+Documentação primária GG.deals consultada em 15/11/2026: https://gg.deals/api/prices/ e changelog oficial de 14/10/2026. Há endpoints por app/sub/bundle Steam e by-slug. O app continua usando app-id para consultas confirmadas de PC; não declara o Steam como identidade universal. Resposta documentada não inclui plataforma/edição, loja individual ou preço original; cobertura do site não comprova cobertura da API. Sem credencial real neste ambiente, console em BRL não foi comprovado. Expansão por slug com vínculo explícito plataforma/edição/proveniência permanece parcial, sem migração especulativa.
+
+Consulta/cache de PC não é mostrado em cadastro de console. Cache com contexto de identidade/edição alterada é preservado e ocultado com motivo. Ofertas oficiais por padrão, keyshops opcionais; desconto deriva somente do original maior da mesma oferta individual BRL e contexto confirmado. Inteiro mais próximo, empate para cima; histórico nunca é original. API agregada não produz desconto. Fallback HTML já existente permanece configurável, sem nova coleta/fonte silenciosa ou substituição de links/referrals.
+
+Captura Windows usa atalho global nativo e exige janela elegível em primeiro plano; Checkpoint pode estar em segundo plano/minimizado. Não há homologação de pixels reais/DirectX, emuladores ou processos-filhos no Windows do dono. Não confundir esses limites com a pendência separada de detectar ROM descarregada com emulador vivo.
+
 ## Steam
 
 Importação por SteamID64 público e chave Web API pessoal configurada no cofre. Biblioteca privada e restrições da conta podem impedir acesso. O catálogo público da loja pode fornecer ficha e artes sem garantir cobertura de todos os jogos.

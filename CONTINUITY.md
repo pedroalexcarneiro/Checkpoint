@@ -1,5 +1,15 @@
 # Continuidade do Checkpoint
 
+## Rodada local 0.1.36 — em preparação, sem publicação
+
+Branch local `fix/0.1.36-ajustes`, base remota reconfirmada `818ec80a492a29936782ddb3a43eecaf3ef996e3` de `fix/0.1.35-ajustes`. Versão alvo/declarada 0.1.36, schema 4. Autorização não inclui push, PR, tag, release, troca de assets ou workflow de lançamento; nenhum desses atos foi realizado nesta rodada.
+
+Implementação local: atalho Windows global com associação ao processo em primeiro plano; banner com bloco proporcional à arte inteira ao redimensionar; Início sem descrição sobreposta; Desejos sem tempo, desconto somente de oferta contextual válida e ordenação por desconto; filtros locais em Estatísticas, dados extras visíveis, mapa de calor sem sobra fixa e lista com logo/nome/tempo; cinco tamanhos de capa com espaços iguais; centralização óptica/DPI Steam, asset intacto; títulos de Memórias acessíveis.
+
+**Rodada parcial:** expansão de preços por plataforma/edição (02) sem cobertura autenticada console comprovada; API oficial não documenta original individual (03); captura real e processos-filhos/launchers não homologados (06). Suporte a filhos não confiáveis é recusado. A4 e fechar somente a ROM com emulador vivo continuam separados/bloqueados. Não declarar prontidão Windows ou versão lançada a partir dos testes Linux.
+
+Plano/registro: PLANO_0136.md, RELATORIO_0136.md e RELATORIO_0136_TESTES.md (saídas integrais e resultados atuais). Capturas sintéticas em 1280×800/1920×1080 foram compartilhadas no chat; geometria adicional em escalas Qt 150%/200%. Esses resultados não substituem Windows real nem pacote Windows correspondente. Histórico abaixo é referência, não instrução de publicação.
+
 ## Pré-release 0.1.35 publicada
 
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.35

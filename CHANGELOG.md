@@ -2,6 +2,16 @@
 
 Registros anteriores descrevem o estado de cada versão; não são instruções atuais.
 
+## 0.1.36 — em preparação local, não publicada
+
+- Banner inteiro com área proporcional em qualquer largura; Início sem descrição sobre a arte.
+- Cinco opções de capas clicáveis com base e espaços alinhados; Steam centralizada sem trocar asset.
+- Estatísticas com sete períodos locais, recorte de sessões, lista com logos/tempo e dados extras integrados; Steam agregado separado.
+- Desejos sem tempo; motivo de ausência de preço, proteção de plataforma/edição/cache, desconto da mesma oferta quando confiável e destaque do tema; Maior desconto.
+- Atalho global Windows implementado com registro/conflito/liberação e seleção segura de sessão; captura real e processos-filhos não homologados.
+- Expansão de preços para consoles e original individual pela API oficial continuam parciais; A4 e encerrar somente a ROM permanecem pendências separadas.
+- Schema 4, dados e contratos protegidos preservados. Sem push, PR, tag, release ou workflow de lançamento.
+
 ## 0.1.35 — ajustes de uso e interface
 
 - ROM vinculada na ação Jogar; encerramento do processo atualiza o registro de sessão.

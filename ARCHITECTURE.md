@@ -1,5 +1,11 @@
 # Arquitetura
 
+## Serviços acrescentados na rodada local 0.1.36
+
+`global_hotkey.py` concentra RegisterHotKey/WM_HOTKEY Windows e ciclo de vida; sem dependência adicional. `game_capture.py` valida janela em primeiro plano/PID de sessão vivo e associação única antes/depois da imagem; não altera sessões por foco. Sem associação comprovada de processos-filhos: recusa com motivo.
+
+`statistics_periods.py` calcula limites locais de calendário e recorta durações em instantes UTC, repartindo por meia-noite local/DST. Snapshots Steam não são distribuídos em períodos. SQLite schema 4 inalterado. Contexto de preços e preferências usam settings; dados existentes preservados. Coexistência de posse/Desejos pode ser explícita por collection.unowned=false, preservando semântica legada quando ausente.
+
 Python 3.12, PySide6, SQLite schema 4. Pacote `checkpoint`, entrada `checkpoint.app:main`, launcher `run_checkpoint.py`.
 
 - `app.py`: inicialização, diretório de dados, encerramento e smokes isolados.
