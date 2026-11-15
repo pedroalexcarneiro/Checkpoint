@@ -1,5 +1,11 @@
 # Continuidade do Checkpoint
 
+## Lançamento 0.1.36 autorizado — preparação
+
+O dono autorizou explicitamente lançar a 0.1.36 no GitHub nesta conversa, após a entrega local. A autorização permite enviar fix/0.1.36-ajustes e acionar Windows release para publicar a pré-release, preservando workflows e releases anteriores. Código local validado em da12842e6de663ee4791a6a4010bc622cfed8222, 612 testes Linux; a publicação depende agora dos testes/build/smokes Windows do próprio commit enviado.
+
+Notas públicas atualizadas para a 0.1.36. Itens 02/03/06 continuam com limitações de cobertura da fonte e uso real, sem alegação de homologação no PC do dono. A4 e fechar somente a ROM permanecem separados. Registros anteriores de proibição de publicação descrevem a fase anterior a esta nova autorização. Resultados e links serão registrados em RELATORIO_LANCAMENTO_0136.md.
+
 ## Validação final local 0.1.36
 
 Código `da12842e6de663ee4791a6a4010bc622cfed8222`: **612 passed in 428.94s (0:07:08)**, exit 0, Linux/Python 3.12.14, Qt offscreen e dados em /tmp. Sem alterações no código durante a execução. Planos/relatórios/capturas e patches completos na entrega local; nenhum push/PR/tag/release/workflow. Windows real e console na API não comprovados; itens 02, 03 e 06 parciais. A4/ROM descarregada com emulador vivo continuam separados. Últimos ajustes: ficha em Desejos sem aquisição, favorito persistido e visível, status único conforme molde sem anotação.

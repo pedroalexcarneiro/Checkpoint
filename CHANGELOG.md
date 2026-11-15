@@ -2,7 +2,7 @@
 
 Registros anteriores descrevem o estado de cada versão; não são instruções atuais.
 
-## 0.1.36 — em preparação local, não publicada
+## 0.1.36 — pré-release autorizada, aguardando validação Windows
 
 - Revisão com o dono: ficha permanece em Desejos sem aquisição, favorito com coração preenchido e estado salvo; status único no destaque do tema, sem anotação do molde.
 
