@@ -1317,3 +1317,111 @@ stderr integral:
 ```
 
 Código de saída: 1
+
+## depois-05
+
+UTC: 2026-11-15T16:15:40.189701+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_home_description_0136.py", "tests/test_home_0129.py", "tests/test_banner_render_0135.py", "tests/test_banner_resize_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+...............                                                          [100%]
+15 passed in 1.94s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## antes-12-auditoria
+
+UTC: 2026-11-15T16:16:15.202105+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_visual_audit_0136.py", "tests/test_mockup_exclusions_0135.py", "tests/test_settings_0135.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+FF............                                                           [100%]
+=================================== FAILURES ===================================
+___________ test_long_memory_titles_keep_delete_inside_card[sample0] ___________
+
+ui = (<checkpoint.window.MainWindow(0x327153c0) at 0x7f70f7ecf1c0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x32678110) at 0x7f70f7e4f240>
+
+    def test_long_memory_titles_keep_delete_inside_card(ui,app):
+        w,i=ui
+        for title in ['Portal 2 com título longo '*12,'Metroid Fusion com título longo '*12]:
+            identity=w.library.save_game({'title':title});w.library.add_diary(identity,'Nota curta do usuário.')
+        for size in [(1280,800),(1920,1080)]:
+            w.resize(*size);w.navigate(3)
+            for _ in range(5):app.processEvents()
+            grid=w.pages[3].findChild(CardGrid,'memoriesGrid');assert len(grid.cards)==2
+            for card in grid.cards:
+                delete=card.findChild(IconButton)
+                assert card.rect().contains(delete.geometry())
+                title=card.findChild(QPushButton,'activityLink')
+>               assert title.geometry().right()<delete.geometry().left()
+E               assert 639 < 0
+E                +  where 639 = <built-in method right of PySide6.QtCore.QRect object at 0x7f70f7a97200>()
+E                +    where <built-in method right of PySide6.QtCore.QRect object at 0x7f70f7a97200> = PySide6.QtCore.QRect(0, 0, 640, 480).right
+E                +      where PySide6.QtCore.QRect(0, 0, 640, 480) = <built-in method geometry of PySide6.QtWidgets.QPushButton object at 0x7f70f7abe1c0>()
+E                +        where <built-in method geometry of PySide6.QtWidgets.QPushButton object at 0x7f70f7abe1c0> = <PySide6.QtWidgets.QPushButton(0x32d96650, name="activityLink") at 0x7f70f7abe1c0>.geometry
+E                +  and   0 = <built-in method left of PySide6.QtCore.QRect object at 0x7f70f7a85f00>()
+E                +    where <built-in method left of PySide6.QtCore.QRect object at 0x7f70f7a85f00> = PySide6.QtCore.QRect(0, 0, 34, 34).left
+E                +      where PySide6.QtCore.QRect(0, 0, 34, 34) = <built-in method geometry of IconButton object at 0x7f70f7abe480>()
+E                +        where <built-in method geometry of IconButton object at 0x7f70f7abe480> = <checkpoint.design_system.IconButton(0x32d96500, name="iconButton") at 0x7f70f7abe480>.geometry
+
+tests/test_visual_audit_0136.py:20: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+___________ test_long_memory_titles_keep_delete_inside_card[sample1] ___________
+
+ui = (<checkpoint.window.MainWindow(0x32d82550) at 0x7f70f7ecf100>, 1)
+app = <PySide6.QtWidgets.QApplication(0x32678110) at 0x7f70f7e4f240>
+
+    def test_long_memory_titles_keep_delete_inside_card(ui,app):
+        w,i=ui
+        for title in ['Portal 2 com título longo '*12,'Metroid Fusion com título longo '*12]:
+            identity=w.library.save_game({'title':title});w.library.add_diary(identity,'Nota curta do usuário.')
+        for size in [(1280,800),(1920,1080)]:
+            w.resize(*size);w.navigate(3)
+            for _ in range(5):app.processEvents()
+            grid=w.pages[3].findChild(CardGrid,'memoriesGrid');assert len(grid.cards)==2
+            for card in grid.cards:
+                delete=card.findChild(IconButton)
+                assert card.rect().contains(delete.geometry())
+                title=card.findChild(QPushButton,'activityLink')
+>               assert title.geometry().right()<delete.geometry().left()
+E               assert 639 < 0
+E                +  where 639 = <built-in method right of PySide6.QtCore.QRect object at 0x7f70f7a96ec0>()
+E                +    where <built-in method right of PySide6.QtCore.QRect object at 0x7f70f7a96ec0> = PySide6.QtCore.QRect(0, 0, 640, 480).right
+E                +      where PySide6.QtCore.QRect(0, 0, 640, 480) = <built-in method geometry of PySide6.QtWidgets.QPushButton object at 0x7f70f7a21900>()
+E                +        where <built-in method geometry of PySide6.QtWidgets.QPushButton object at 0x7f70f7a21900> = <PySide6.QtWidgets.QPushButton(0x32dd9950, name="activityLink") at 0x7f70f7a21900>.geometry
+E                +  and   0 = <built-in method left of PySide6.QtCore.QRect object at 0x7f70f7a85f00>()
+E                +    where <built-in method left of PySide6.QtCore.QRect object at 0x7f70f7a85f00> = PySide6.QtCore.QRect(0, 0, 34, 34).left
+E                +      where PySide6.QtCore.QRect(0, 0, 34, 34) = <built-in method geometry of IconButton object at 0x7f70f7ad42c0>()
+E                +        where <built-in method geometry of IconButton object at 0x7f70f7ad42c0> = <checkpoint.design_system.IconButton(0x32aa1f30, name="iconButton") at 0x7f70f7ad42c0>.geometry
+
+tests/test_visual_audit_0136.py:20: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_visual_audit_0136.py::test_long_memory_titles_keep_delete_inside_card[sample0]
+FAILED tests/test_visual_audit_0136.py::test_long_memory_titles_keep_delete_inside_card[sample1]
+2 failed, 12 passed in 2.27s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1

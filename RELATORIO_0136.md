@@ -91,3 +91,9 @@ Para coexistência Biblioteca/Desejos, collection.unowned=false explícito agora
 Arquivos/funções: collection_views.py::build_wishlist; library.py::is_owned/owned_games; window.py::add_wish/remove_wish; tests/test_wish_time_0136.py. Testados dois jogos/fixtures, desejo exclusivo, aquisição, coexistência e retirada, tempos Biblioteca e comparação integral das sessões antes/depois. 29 regressões pertinentes passaram. Sem migração de schema nem apagamento/reescrita de instantes.
 
 Complemento do item 10 solicitado no chat: margens externas das cinco capas estavam desiguais apesar de colunas iguais. Reproduzido por quatro testes nas duas janelas: diferença de 31,29px entre bordas esquerda/direita. CoverSizeChoices passou a distribuir pelos contornos reais da arte, com seis vãos equivalentes (externos e internos), conservando proporção, base, foco e escolha. 21 testes pertinentes passaram, sem afrouxar a tolerância nova de 1–2px de arredondamento.
+
+## 05 — descrição no Início — feito
+
+Antes: duas comparações de pixels falharam porque a descrição alterava a imagem pintada do Hero. Retirado apenas o bloco de pintura sobreposta em ui_components.py::Hero.paintEvent. Banco, descrição em Sobre o jogo, arte/logo, plataforma/status e Continuar jogando preservados. Nenhum slogan substituto. Quinze testes pertinentes passaram, incluindo dois jogos, persistência da descrição, ação dentro do banner e redimensionamentos/contain.
+
+Composição: imagem continua contida e proporcional na área; letterbox necessário quando proporções diferem não foi tratado como prova de recorte. Não foi introduzido preenchimento que corte a arte para eliminar faixa. A ocorrência da ficha Windows permanece separada no item 04. Capturas posteriores serão registradas no índice final.

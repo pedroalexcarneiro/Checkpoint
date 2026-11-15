@@ -117,16 +117,6 @@ class Hero(QWidget):
         elif not (self.detail_mode and getattr(self,'compact',False)):
             p.setPen(QColor('#ffffff'));font=QFont('Segoe UI');font.setPixelSize(TYPE['display']);font.setWeight(QFont.DemiBold);p.setFont(font)
             p.drawText(QRectF(x,top,min(self.width()-52,360),identity_height),Qt.AlignLeft|Qt.AlignVCenter|Qt.TextWordWrap,self.game['title'])
-        if not self.detail_mode and self.game.get('description'):
-            font=QFont('Segoe UI');font.setPixelSize(13);p.setFont(font);p.setPen(QColor('#f0f1f3'))
-            width=round(min(340,self.width()*.46));words=self.game['description'].replace('\n',' ').split()
-            y=round(top+identity_height+12);available=self.height()-y-64
-            for index in range(min(2,max(0,available//20))):
-                line=''
-                while words and p.fontMetrics().horizontalAdvance((line+' '+words[0]).strip())<=width:line=(line+' '+words.pop(0)).strip()
-                if not line:break
-                if index==min(2,max(0,available//20))-1 and words:line=p.fontMetrics().elidedText(line+' '+' '.join(words),Qt.ElideRight,width)
-                p.drawText(QRectF(x,y+index*20,width,20),Qt.AlignVCenter,line)
         p.end()
 
 
