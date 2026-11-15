@@ -91,8 +91,8 @@ class Hero(QWidget):
         rect=self.rect();clip=QPainterPath();clip.addRoundedRect(QRectF(rect),RADIUS['card'],RADIUS['card']);p.setClipPath(clip)
         p.fillRect(rect,QColor(self.theme.colors['elevated']))
         if not self.banner.isNull():
-            pix=self.banner.scaled(rect.size(),Qt.KeepAspectRatioByExpanding,Qt.SmoothTransformation)
-            image_left=rect.right()-pix.width()+1
+            pix=self.banner.scaled(rect.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation)
+            image_left=(rect.width()-pix.width())//2
             p.drawPixmap(image_left,(rect.height()-pix.height())//2,pix)
             if image_left>0:
                 edge=QLinearGradient(image_left,0,image_left+100,0)

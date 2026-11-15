@@ -15,6 +15,7 @@ class WishLogo(CoverArtwork):
         from PySide6.QtGui import QPixmap
         self.pixmap=QPixmap(game.get('logo') or '');self.is_logo=not self.pixmap.isNull()
         if not self.is_logo:self.pixmap=QPixmap(game.get('cover') or '')
+        if self.pixmap.isNull():self.pixmap=QPixmap(game.get('banner') or '')
         if self.is_logo and self.pixmap.hasAlphaChannel():
             from PySide6.QtGui import QRegion
             bounds=QRegion(self.pixmap.mask()).boundingRect()
