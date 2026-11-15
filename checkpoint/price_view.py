@@ -60,7 +60,7 @@ def price_summary(library,game):
         shop=offers[0].get('shop','') if offers else ''
         label=text(kind+(' · '+shop if shop else ''),'secondary');label.setToolTip(label.text());row.addWidget(label)
     if usable and value.get('original') and value.get('discount'):
-        discount=QHBoxLayout();original=text(money(value['original']),'caption');font=original.font();font.setStrikeOut(True);original.setFont(font);discount.addWidget(original);discount.addWidget(text('-'+str(value['discount'])+'%','cardTitle'));discount.addStretch();row.addLayout(discount)
+        discount=QHBoxLayout();original=text(money(value['original']),'caption');font=original.font();font.setStrikeOut(True);original.setFont(font);discount.addWidget(original);discount.addWidget(text('-'+str(value['discount'])+'%','priceDiscount'));discount.addStretch();row.addLayout(discount)
     historical=value.get('historical')
     if type(historical) is int and historical>0:row.addWidget(text('Menor histórico: '+money(historical),'caption'))
     if not has_steam_id(library,game) and usable:row.addWidget(text('Sem ID da Steam para consulta','caption'))

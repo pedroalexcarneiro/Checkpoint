@@ -52,6 +52,7 @@ QFrame#sidebarDivider {{ background: {c['border']}; border: none; max-height: 1p
 QLabel#title, QLabel#pageTitle {{ font-size: {TYPE['title']}px; font-weight: 600; }}
 QLabel#sectionTitle {{ font-size: {TYPE['section']}px; font-weight: 600; }}
 QLabel#cardTitle {{ font-size: {TYPE['card']}px; font-weight: 600; }}
+QLabel#priceDiscount {{ color: {c['accent']}; font-size: {TYPE['card']}px; font-weight: 600; }}
 QLabel#bodyText {{ font-size: 14px; }}
 QLabel#muted {{ color: {c['muted']}; font-size: 13px; }}
 QLabel#caption, QLabel#eyebrow {{ color: {c['muted']}; font-size: 12px; }}

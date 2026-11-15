@@ -60,3 +60,19 @@ def test_discount_visible_only_for_offer_and_rounds_half_up(library,app):
     assert selected_quote(library,i)['lowest']==9950
     quote['offer_context']['steam']='999';library.set_setting(f'prices.ggdeals.{i}',quote)
     assert selected_quote(library,i)['discount'] is None
+
+
+def test_discount_follows_active_theme(library,app):
+    from checkpoint.price_view import price_summary
+    from checkpoint.theme import apply_theme,THEMES
+    from PySide6.QtGui import QPalette
+    i=library.save_game({'title':'Portal 2'});library.sql.execute('INSERT INTO external_identifiers VALUES(?,?,?)',(i,'steam','620'));library.sql.commit()
+    library.set_setting(f'prices.ggdeals.{i}',{'currency':'BRL','retail':6000,'offer_context':{'platform':'PC','steam':'620'},'offers':[{'kind':'retail','cents':6000,'original':10000,'shop':'Loja','url':'https://gg.deals/br/redirect/shop/'}]})
+    frame=price_summary(library,library.get(i));frame.show()
+    try:
+        for key,theme in THEMES.items():
+            apply_theme(app,key);app.processEvents()
+            label=frame.findChild(QLabel,'priceDiscount')
+            assert label.text()=='-40%'
+            assert label.palette().color(QPalette.WindowText).name()==theme.colors['accent']
+    finally:frame.close();apply_theme(app,'green')
