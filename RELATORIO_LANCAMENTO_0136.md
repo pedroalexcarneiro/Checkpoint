@@ -430,3 +430,231 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## push-correcao
+
+UTC: 2026-11-15T19:57:20.714528+00:00
+
+Comando: `["git", "push", "origin", "fix/0.1.36-ajustes"]`
+
+stdout integral:
+```text
+
+```
+
+stderr integral:
+```text
+To https://github.com/pedroalexcarneiro/Checkpoint.git
+   1a8f24c..4e54fc0  fix/0.1.36-ajustes -> fix/0.1.36-ajustes
+
+```
+
+Código de saída: 0
+
+## confirmar-remoto-correcao
+
+UTC: 2026-11-15T19:57:28.162170+00:00
+
+Comando: `["git", "ls-remote", "origin", "refs/heads/fix/0.1.36-ajustes", "refs/tags/v0.1.36"]`
+
+stdout integral:
+```text
+4e54fc0b91ca7a4180307874f72f3b32eb3dca87	refs/heads/fix/0.1.36-ajustes
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## acionar-release-corrigida
+
+UTC: 2026-11-15T19:57:33.744956+00:00
+
+Comando: `["gh", "workflow", "run", "windows-release.yml", "--repo", "pedroalexcarneiro/Checkpoint", "--ref", "fix/0.1.36-ajustes"]`
+
+stdout integral:
+```text
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## Nova execução de lançamento
+
+Correção enviada em 4e54fc0b91ca7a4180307874f72f3b32eb3dca87. Saída de git status --porcelain vazia imediatamente após o commit; depois somente este relatório recebeu registros de envio/acompanhamento. HEAD remoto reconfirmado igual ao commit. Sem force push. Tag v0.1.36 inexistente antes do acionamento.
+
+Suíte completa Linux/Python 3.12.14: **613 passed in 401.33s (0:06:41)**, exit 0, QT_QPA_PLATFORM=offscreen e CHECKPOINT_TEST_ROOT=/tmp. Regressão nova aprovada junto com todas as anteriores; nenhuma asserção existente, skip ou xfail alterado. Renderizador normal também concluiu, e package_ui_review gerou 61 PNGs e índice HTML no ZIP, excluindo bancos e logs.
+
+Diff contra 818ec80a492a29936782ddb3a43eecaf3ef996e3 vazio para workflows, checkpoint/assets, tests/test_save_lifecycle.py, checkpoint/worker.py, checkpoint/enrichment.py, checkpoint/game_import.py, checkpoint/completion_queue.py, checkpoint/dialogs.py e checkpoint/quick_add.py. Arquivos novos/alterados de código UTF-8/LF. Patch git format-patch -1 4e54fc0b91ca7a4180307874f72f3b32eb3dca87 --stdout em /workspace/work/release-0136/correcao-render.patch; SHA-256 eb9ba66cf952555e8a13e726f0b6c6e813581890b299a134ec1b4ddaea9b7dee.
+
+Workflow acionado explicitamente no mesmo ref: https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43755297264, criado em 2026-11-15T19:57:33Z, headSha 4e54fc0b91ca7a4180307874f72f3b32eb3dca87. Nenhuma etapa de testes/build/pacote/revisão foi ignorada ou alterada. Confirmação final de publicação ainda pendente nesta seção de acompanhamento.
+
+## conferir-release-anterior
+
+UTC: 2026-11-15T20:05:35.943171+00:00
+
+Comando: `["git", "ls-remote", "origin", "refs/tags/v0.1.35", "refs/tags/v0.1.36"]`
+
+stdout integral:
+```text
+df5ff41e74b36cea4e2abd160e1172f4166bf32a	refs/tags/v0.1.35
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## release-publicada
+
+UTC: 2026-11-15T20:10:46.477975+00:00
+
+Comando: `["gh", "release", "view", "v0.1.36", "--repo", "pedroalexcarneiro/Checkpoint", "--json", "url,tagName,name,isPrerelease,isDraft,publishedAt,targetCommitish,assets"]`
+
+stdout integral:
+```text
+{"assets":[{"apiUrl":"https://api.github.com/repos/pedroalexcarneiro/Checkpoint/releases/assets/752207421","contentType":"image/png","createdAt":"2026-11-15T20:10:30Z","downloadCount":0,"id":"RA_kwDOVpnrA84s1cY9","label":"","name":"Checkpoint-0.1.36-detail-overview.png","size":96121,"state":"uploaded","updatedAt":"2026-11-15T20:10:30Z","url":"https://github.com/pedroalexcarneiro/Checkpoint/releases/download/v0.1.36/Checkpoint-0.1.36-detail-overview.png"},{"apiUrl":"https://api.github.com/repos/pedroalexcarneiro/Checkpoint/releases/assets/752207418","contentType":"image/png","createdAt":"2026-11-15T20:10:30Z","downloadCount":0,"id":"RA_kwDOVpnrA84s1cY6","label":"","name":"Checkpoint-0.1.36-home.png","size":123033,"state":"uploaded","updatedAt":"2026-11-15T20:10:30Z","url":"https://github.com/pedroalexcarneiro/Checkpoint/releases/download/v0.1.36/Checkpoint-0.1.36-home.png"},{"apiUrl":"https://api.github.com/repos/pedroalexcarneiro/Checkpoint/releases/assets/752207420","contentType":"image/png","createdAt":"2026-11-15T20:10:30Z","downloadCount":0,"id":"RA_kwDOVpnrA84s1cY8","label":"","name":"Checkpoint-0.1.36-library.png","size":143770,"state":"uploaded","updatedAt":"2026-11-15T20:10:30Z","url":"https://github.com/pedroalexcarneiro/Checkpoint/releases/download/v0.1.36/Checkpoint-0.1.36-library.png"},{"apiUrl":"https://api.github.com/repos/pedroalexcarneiro/Checkpoint/releases/assets/752207422","contentType":"text/plain; charset=utf-8","createdAt":"2026-11-15T20:10:30Z","downloadCount":0,"id":"RA_kwDOVpnrA84s1cY-","label":"","name":"Checkpoint-0.1.36-ui-review.txt","size":560,"state":"uploaded","updatedAt":"2026-11-15T20:10:30Z","url":"https://github.com/pedroalexcarneiro/Checkpoint/releases/download/v0.1.36/Checkpoint-0.1.36-ui-review.txt"},{"apiUrl":"https://api.github.com/repos/pedroalexcarneiro/Checkpoint/releases/assets/752207419","contentType":"application/zip","createdAt":"2026-11-15T20:10:30Z","downloadCount":0,"id":"RA_kwDOVpnrA84s1cY7","label":"","name":"Checkpoint-0.1.36-ui-review.zip","size":4095105,"state":"uploaded","updatedAt":"2026-11-15T20:10:31Z","url":"https://github.com/pedroalexcarneiro/Checkpoint/releases/download/v0.1.36/Checkpoint-0.1.36-ui-review.zip"},{"apiUrl":"https://api.github.com/repos/pedroalexcarneiro/Checkpoint/releases/assets/752207433","contentType":"text/plain; charset=utf-8","createdAt":"2026-11-15T20:10:31Z","downloadCount":0,"id":"RA_kwDOVpnrA84s1cZJ","label":"","name":"Checkpoint-0.1.36-validation.txt","size":684,"state":"uploaded","updatedAt":"2026-11-15T20:10:31Z","url":"https://github.com/pedroalexcarneiro/Checkpoint/releases/download/v0.1.36/Checkpoint-0.1.36-validation.txt"},{"apiUrl":"https://api.github.com/repos/pedroalexcarneiro/Checkpoint/releases/assets/752207438","contentType":"application/zip","createdAt":"2026-11-15T20:10:31Z","downloadCount":0,"id":"RA_kwDOVpnrA84s1cZO","label":"","name":"Checkpoint-0.1.36-windows-x64.zip","size":84229223,"state":"uploaded","updatedAt":"2026-11-15T20:10:34Z","url":"https://github.com/pedroalexcarneiro/Checkpoint/releases/download/v0.1.36/Checkpoint-0.1.36-windows-x64.zip"},{"apiUrl":"https://api.github.com/repos/pedroalexcarneiro/Checkpoint/releases/assets/752207440","contentType":"application/octet-stream","createdAt":"2026-11-15T20:10:31Z","downloadCount":0,"id":"RA_kwDOVpnrA84s1cZQ","label":"","name":"Checkpoint-0.1.36-windows-x64.zip.sha256","size":101,"state":"uploaded","updatedAt":"2026-11-15T20:10:31Z","url":"https://github.com/pedroalexcarneiro/Checkpoint/releases/download/v0.1.36/Checkpoint-0.1.36-windows-x64.zip.sha256"}],"isDraft":false,"isPrerelease":true,"name":"Checkpoint 0.1.36 · Interface e PT-BR","publishedAt":"2026-11-15T20:10:34Z","tagName":"v0.1.36","targetCommitish":"main","url":"https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.36"}
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## tag-publicada
+
+UTC: 2026-11-15T20:10:46.973561+00:00
+
+Comando: `["git", "ls-remote", "origin", "refs/tags/v0.1.36"]`
+
+stdout integral:
+```text
+4e54fc0b91ca7a4180307874f72f3b32eb3dca87	refs/tags/v0.1.36
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## conferir-assets-publicados
+
+UTC: 2026-11-15T20:11:08.669157+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "/workspace/work/release-0136/verify_assets.py"]`
+
+stdout integral:
+```text
+Tag confirmada: 4e54fc0b91ca7a4180307874f72f3b32eb3dca87
+0049d9e10aff3cf759c781d90b736c5b8c571d624d7c1e5f99484757d4333d0e 96121 Checkpoint-0.1.36-detail-overview.png
+53d654aa4230529f5b8850559c91ea0e65d5a3dfc5a20e1484a1da7bee226548 123033 Checkpoint-0.1.36-home.png
+526fe30fb3714e3e19a3eb6e5f3a34121a222971ab883e4bcb39d5392c81ab00 143770 Checkpoint-0.1.36-library.png
+66cdff94242415962d84b977c999749fe2b1846f574857ab8bb2afe7cc20ff3f 560 Checkpoint-0.1.36-ui-review.txt
+3b11f04efa73dd31d71bc948442e77386464bb93c3e0bdee17001b60fe705825 4095105 Checkpoint-0.1.36-ui-review.zip
+b534ada487476d094227522020c61c83f9ffedafc2e5ac069df7c8b8e584bd46 684 Checkpoint-0.1.36-validation.txt
+d2fffc594295ec9cd8800300ce4a7535f60ce76211d63454e0544d276cdfb69a 84229223 Checkpoint-0.1.36-windows-x64.zip
+b3828c0a8068d72a5a7b3bf3aeaedefd53e5f6884f5efc7ae81bf3905b8ca3b8 101 Checkpoint-0.1.36-windows-x64.zip.sha256
+
+Validação do pacote:
+Checkpoint 0.1.36 · Windows x64
+Commit: 4e54fc0b91ca7a4180307874f72f3b32eb3dca87
+Python: 3.12.10
+Testes: {'tests': 613, 'failures': 0, 'errors': 0, 'skipped': 0}
+Smoke do fonte: 6 páginas; SQLite íntegro; biblioteca vazia.
+Smoke do ZIP extraído: 6 páginas; SQLite íntegro; biblioteca vazia.
+Auxiliar isolado do fonte e do ZIP extraído: resposta e schema verificados.
+Cadastro completo do fonte e do ZIP: salvar, auxiliar, imagem e SQLite verificados (fixture isolada).
+CheckpointUpdater.exe --check: saída 0.
+ZIP SHA-256: d2fffc594295ec9cd8800300ce4a7535f60ce76211d63454e0544d276cdfb69a
+Steam autenticada e homologação Windows 10/11 pessoal não estão cobertas.
+
+Revisão visual:
+Checkpoint 0.1.36 · Revisão visual
+Plataforma: win32
+Commit: 4e54fc0b91ca7a4180307874f72f3b32eb3dca87
+Capturas Qt: 61
+Janelas: 1920×1080, 1100×740 e 1000×700; editor, cadastro e diálogos em suas dimensões próprias.
+Nove temas escuros, Verde padrão; capturas incluem verde, roxo e azul.
+Fixtures isoladas: jogos, sessões, metas e artes. Nenhuma conta autenticada.
+Conteúdo publicado: capturas PNG e index.html. Base, logs e artes auxiliares excluídos.
+SHA-256 ui-review.zip: 3b11f04efa73dd31d71bc948442e77386464bb93c3e0bdee17001b60fe705825
+
+RELEASE E OITO ARQUIVOS CONFERIDOS
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## execucao-final
+
+UTC: 2026-11-15T20:11:09.845874+00:00
+
+Comando: `["gh", "run", "view", "43755297264", "--repo", "pedroalexcarneiro/Checkpoint", "--json", "status,conclusion,headSha,jobs,url"]`
+
+stdout integral:
+```text
+{"conclusion":"success","headSha":"4e54fc0b91ca7a4180307874f72f3b32eb3dca87","jobs":[{"completedAt":"2026-11-15T20:10:22Z","conclusion":"success","databaseId":132937969644,"name":"build","startedAt":"2026-11-15T19:57:36Z","status":"completed","steps":[{"conclusion":"success","name":"Set up job","number":1,"status":"completed"},{"conclusion":"success","name":"Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262","number":2,"status":"completed"},{"conclusion":"success","name":"Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065","number":3,"status":"completed"},{"conclusion":"success","name":"Check release version","number":4,"status":"completed"},{"conclusion":"success","name":"Install tested Windows dependencies","number":5,"status":"completed"},{"conclusion":"success","name":"Test on Windows","number":6,"status":"completed"},{"conclusion":"success","name":"Build desktop and updater","number":7,"status":"completed"},{"conclusion":"success","name":"Package and validate extracted executable","number":8,"status":"completed"},{"conclusion":"success","name":"Render Windows interface review","number":9,"status":"completed"},{"conclusion":"success","name":"Upload verified release files","number":10,"status":"completed"},{"conclusion":"success","name":"Preserve Windows test report","number":11,"status":"completed"},{"conclusion":"success","name":"Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065","number":21,"status":"completed"},{"conclusion":"success","name":"Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262","number":22,"status":"completed"},{"conclusion":"success","name":"Complete job","number":23,"status":"completed"}],"url":"https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43755297264/job/132937969644"},{"completedAt":"2026-11-15T20:10:36Z","conclusion":"success","databaseId":132941753371,"name":"publish","startedAt":"2026-11-15T20:10:23Z","status":"completed","steps":[{"conclusion":"success","name":"Set up job","number":1,"status":"completed"},{"conclusion":"success","name":"Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262","number":2,"status":"completed"},{"conclusion":"success","name":"Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093","number":3,"status":"completed"},{"conclusion":"success","name":"Publish development release","number":4,"status":"completed"},{"conclusion":"success","name":"Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262","number":8,"status":"completed"},{"conclusion":"success","name":"Complete job","number":9,"status":"completed"}],"url":"https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43755297264/job/132941753371"}],"status":"completed","url":"https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43755297264"}
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## Resultado final — publicada e conferida
+
+Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.36
+Publicada em 2026-11-15T20:10:34Z (17h10min34s em America/Sao_Paulo), pré-release, não rascunho. Tag leve v0.1.36 aponta exatamente para 4e54fc0b91ca7a4180307874f72f3b32eb3dca87. O campo targetCommitish da API informa main, mas a referência efetiva da tag foi conferida pela API Git e por git ls-remote: ambos confirmam o commit validado da branch fix/0.1.36-ajustes. main não foi alterada.
+
+Workflow 43755297264: build e publish success. Windows/Python 3.12.10: **613 passed in 582.04s (0:09:42)**, 0 falhas/erros/skips. Build desktop/updater, pacote extraído, cadastro/auxiliar, revisão visual com 61 PNGs e publicação aprovados. Log completo recebido pela ferramenta GitHub e preservado em /workspace/work/release-0136/segundo-job-plugin.log, SHA-256 309f9f8d031a70fed0af0d0323cb770f1ad8f939b40f4b29c7c76536e6d13b49. Eventuais caracteres substituídos pelo transporte da ferramenta foram preservados.
+
+Download real dos oito assets via gh release download v0.1.36 --repo pedroalexcarneiro/Checkpoint --dir /workspace/work/release-0136/assets: stdout vazio, stderr vazio, exit 0. Todos os tamanhos e SHA-256 locais iguais aos digests publicados pelo GitHub. Checksum do ZIP Windows confere com .sha256 e validation.txt; checksum da revisão confere com ui-review.txt. Ambos os ZIPs passaram também na verificação CRC local. Lista completa e hashes na saída conferir-assets-publicados acima e em /workspace/work/release-0136/asset-hashes.json. Nenhum arquivo pessoal publicado.
+
+Limitações preservadas nas notas públicas: cobertura autenticada de consoles e preço original individual da API (02/03), captura real de jogo/processos-filhos/launchers não homologados (06), A4 e encerrar apenas a ROM mantendo o emulador aberto. Runner Windows e fixtures não validam contas ou o PC do dono. Schema 4 inalterado; nenhuma migração pessoal ou acesso à base do dono. Releases/tags anteriores, workflows, assets fonte e arquivos protegidos preservados; sem force push nem PR.
+
+Atualização documental final em CONTINUITY.md, PROJECT_STATUS.md, CHANGELOG.md, ROADMAP.md e neste relatório; posterior ao código publicado. Não move a tag nem exige novo build, pois não altera código/dependências/assets/workflows. Fonte e correção estão no histórico GitHub; os arquivos de release correspondem ao commit da tag, não a este registro posterior.
+
+## Saída da suíte Windows concluída
+
+Trecho integral de stdout da execução pytest (progresso e resultado), extraído do log do job com seus horários UTC:
+
+```text
+2026-11-15T19:59:01.6512822Z ........................................................................ [ 11%]
+2026-11-15T19:59:10.7364003Z ........................................................................ [ 23%]
+2026-11-15T19:59:25.1976935Z ........................................................................ [ 35%]
+2026-11-15T19:59:31.2281332Z ........................................................................ [ 46%]
+2026-11-15T20:01:19.5628146Z ........................................................................ [ 58%]
+2026-11-15T20:01:57.9379133Z ........................................................................ [ 70%]
+2026-11-15T20:03:41.9144853Z ........................................................................ [ 82%]
+2026-11-15T20:07:57.5205456Z ........................................................................ [ 93%]
+2026-11-15T20:08:32.1942935Z .....................................                                    [100%]
+2026-11-15T20:08:32.1943566Z 613 passed in 582.04s (0:09:42)
+```
+
+LANÇAMENTO 0.1.36 CONCLUÍDO

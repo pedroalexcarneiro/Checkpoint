@@ -1,5 +1,9 @@
 # Próximos passos
 
+## Após a pré-release 0.1.36
+
+Publicado v0.1.36 em 15/11/2026 após 613 testes Windows e validação do pacote extraído. Próximas validações: uso real no PC do dono, captura de jogos/emuladores e DPI; cobertura autenticada de preços por plataforma/edição e original individual da fonte oficial. A4 e encerrar somente a ROM seguem pendências separadas. O lançamento autorizado foi concluído; planos anteriores abaixo descrevem o estado histórico.
+
 ## Prioridades atuais — alvo 0.1.36, sem lançamento
 
 Concluir validação local e revisão visual da rodada em fix/0.1.36-ajustes. Pendências concretas: Windows real/pacote correspondente para captura global e redimensionamento/DPI; associação de filhos/launchers mediante prova; cobertura autenticada GG.deals para plataforma/edição console; contrato de original individual da fonte oficial antes de ampliar descontos.

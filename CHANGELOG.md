@@ -2,7 +2,7 @@
 
 Registros anteriores descrevem o estado de cada versão; não são instruções atuais.
 
-## 0.1.36 — pré-release autorizada, aguardando validação Windows
+## 0.1.36 — pré-release publicada em 15/11/2026
 
 - Revisão com o dono: ficha permanece em Desejos sem aquisição, favorito com coração preenchido e estado salvo; status único no destaque do tema, sem anotação do molde.
 
@@ -12,7 +12,7 @@ Registros anteriores descrevem o estado de cada versão; não são instruções 
 - Desejos sem tempo; motivo de ausência de preço, proteção de plataforma/edição/cache, desconto da mesma oferta quando confiável e destaque do tema; Maior desconto.
 - Atalho global Windows implementado com registro/conflito/liberação e seleção segura de sessão; captura real e processos-filhos não homologados.
 - Expansão de preços para consoles e original individual pela API oficial continuam parciais; A4 e encerrar somente a ROM permanecem pendências separadas.
-- Schema 4, dados e contratos protegidos preservados. Sem push, PR, tag, release ou workflow de lançamento.
+- Schema 4, dados e contratos protegidos preservados. Pré-release v0.1.36 publicada após 613 testes Windows, build, smokes do ZIP extraído e revisão visual aprovados; oito arquivos e hashes conferidos. Corrigido o encerramento entre janelas do renderizador para liberar o atalho global.
 
 ## 0.1.35 — ajustes de uso e interface
 

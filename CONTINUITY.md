@@ -1,5 +1,15 @@
 # Continuidade do Checkpoint
 
+## Pré-release 0.1.36 publicada
+
+Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.36
+
+Código/tag: 4e54fc0b91ca7a4180307874f72f3b32eb3dca87. Workflow https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43755297264: build e publish concluídos com sucesso. **613 passed in 582.04s (0:09:42)** no Windows/Python 3.12.10, zero falhas/erros/skips; Linux: 613 passed in 401.33s. Build, smokes do fonte e do ZIP extraído, atualizador e revisão com 61 capturas aprovados. Oito arquivos publicados baixados e conferidos por tamanho/SHA-256 com os digests do GitHub; CRC dos dois ZIPs válido. ZIP Windows: d2fffc594295ec9cd8800300ce4a7535f60ce76211d63454e0544d276cdfb69a.
+
+A primeira execução atingiu o limite por conflito do atalho entre janelas do renderizador. Correção restrita ao script e regressão; aplicativo, assets, workflows e contratos protegidos preservados. Relatório integral: RELATORIO_LANCAMENTO_0136.md. Esta documentação é posterior ao build e não move a tag. Persistem as limitações 02/03/06, A4 e fechar somente a ROM; captura real, contas e homologação no PC do dono continuam pendentes. Runner Windows não equivale a uso pessoal real.
+
+Registros anteriores abaixo são históricos.
+
 ## Retomada do lançamento 0.1.36 — revisão visual
 
 A execução Windows 43742802876 aprovou 612 testes (453,60 s), build e smokes do pacote extraído, mas excedeu 30 minutos na revisão visual. O renderizador ocultava a primeira MainWindow antes de criar outra, mantendo o mesmo atalho global registrado. O aviso modal de conflito bloqueou o runner. Correção restrita ao ciclo de vida em scripts/render_ui_review.py: fechar a janela e o banco antes dos estados vazios; workflows e aplicativo preservados. Regressão executa o renderizador inteiro com adaptador exclusivo controlado: falhou antes e passou depois, incluindo 13 jogos e quatro telas vazias. Resultados integrais e nova publicação em RELATORIO_LANCAMENTO_0136.md; não declarar lançamento antes da confirmação de tag e arquivos.
