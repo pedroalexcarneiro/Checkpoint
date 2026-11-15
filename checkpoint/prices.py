@@ -22,8 +22,12 @@ def selected_quote(library,game_id):
     for offer in value.get('offers',[]):add(offer.get('cents'),offer.get('kind'))
     amount,kind=min(choices,default=(None,None))
     value.update(lowest=amount,current=amount,current_kind=kind,original=None,discount=None)
-    if amount is None and snapshot(library,game_id).get('lowest'):
-        value['message']='Nenhuma oferta de loja oficial identificada.' if allowed==('retail',) else 'A origem do preço salvo não foi identificada. Consulte novamente.'
+    if amount is None and (not value.get('message') or value.get('state')=='ready'):
+        if allowed==('retail',) and ('retail' in value or value.get('state')=='ready'):
+            value['message']='Consulta sem oferta em lojas oficiais.'
+        elif snapshot(library,game_id).get('lowest'):
+            value['message']='A origem do preço salvo não foi identificada. Consulte novamente.'
+        elif value.get('state')=='ready':value['message']='Consulta sem ofertas disponíveis.'
     return value
 
 
