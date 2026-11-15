@@ -48,7 +48,7 @@ def main():
         for key in ('daily','weekly','monthly','12m','all'):
             period.setCurrentIndex(period.findData(key));capture(prefix+'statistics-'+key)
     from checkpoint.profile_dialog import ProfileDialog
-    dialog=ProfileDialog(lib,window);dialog.show();capture('profile',dialog);dialog.reject()
+    dialog=ProfileDialog(lib,window);dialog.select_photo(lib.get(ids[0])['cover']);dialog.zoom.setValue(150);dialog.show();capture('profile',dialog);dialog.reject()
     (root/'manifest.json').write_text(json.dumps({'platform':'Linux Qt offscreen','fixtures':True,'window_sizes':['1280x800','1920x1080','1000x700'],'device_pixel_ratio':window.devicePixelRatioF(),'screenshots':sorted(p.name for p in root.glob('*.png') if not p.stem[0].isdigit() or 'x' in p.stem)},indent=2),encoding='utf-8')
     window.close();db.close();print(root)
 
