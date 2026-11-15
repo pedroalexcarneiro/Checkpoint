@@ -3,7 +3,7 @@ from PySide6.QtGui import QPixmap, QPainter, QColor, QLinearGradient, QFont, QIc
 from .visual_tokens import SPACE,TYPE,RADIUS
 from .playtime import format_time
 from .cover_art import CoverArtwork,paint_art,cover_pixmap
-from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QFrame, QTabWidget, QSizePolicy
+from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QFrame, QTabWidget, QSizePolicy,QTabBar,QApplication
 
 
 def text(value, kind=None):
@@ -153,10 +153,34 @@ class GameTile(CoverArtwork):
     def open_game(self):self.callback(self.game_id)
 
 
+class ClickTabBar(QTabBar):
+    """Seleciona ao completar um clique, sem trocar abas por arrasto ou roda."""
+    def __init__(self,parent=None):
+        super().__init__(parent);self.press_position=None;self.dragged=False
+    def mousePressEvent(self,event):
+        if event.button()==Qt.LeftButton:
+            self.press_position=event.position().toPoint();self.dragged=False;event.accept()
+        else:super().mousePressEvent(event)
+    def mouseMoveEvent(self,event):
+        if self.press_position is not None:
+            self.dragged|=(event.position().toPoint()-self.press_position).manhattanLength()>=QApplication.startDragDistance()
+            event.accept()
+        else:super().mouseMoveEvent(event)
+    def mouseReleaseEvent(self,event):
+        if event.button()==Qt.LeftButton and self.press_position is not None:
+            position=event.position().toPoint();index=self.tabAt(position)
+            moved=(position-self.press_position).manhattanLength()>=QApplication.startDragDistance()
+            if not self.dragged and not moved and index>=0 and index==self.tabAt(self.press_position) and self.isTabEnabled(index):
+                self.setCurrentIndex(index);self.setFocus(Qt.MouseFocusReason)
+            self.press_position=None;event.accept()
+        else:super().mouseReleaseEvent(event)
+    def wheelEvent(self,event):event.ignore()
+
+
 class CurrentPageTabs(QTabWidget):
     """Uma aba longa não estica as outras páginas da ficha."""
     def __init__(self,parent=None):
-        super().__init__(parent);self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
+        super().__init__(parent);self.setTabBar(ClickTabBar(self));self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
         self.currentChanged.connect(self.page_changed)
 
     def sizeHint(self):
