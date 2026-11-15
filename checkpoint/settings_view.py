@@ -57,6 +57,12 @@ def build_settings(window):
     percentage=text(str(slider.value())+'%','muted');percentage.setFixedWidth(48)
     slider.valueChanged.connect(lambda value:(percentage.setText(str(value)+'%'),window.set_cover_size(value)))
     row.addWidget(slider,1);row.addWidget(percentage);inside.addLayout(row)
+    appearance.addWidget(frame)
+    from PySide6.QtWidgets import QKeySequenceEdit
+    from PySide6.QtGui import QKeySequence
+    frame,inside=card();inside.addWidget(text('Captura da janela do jogo','cardTitle'))
+    inside.addWidget(text('Com o Checkpoint em primeiro plano, salva a janela do jogo iniciado pelo app em Memórias.','muted'))
+    shortcut=QKeySequenceEdit(QKeySequence(window.library.setting('capture.shortcut','Ctrl+Shift+S')));shortcut.setObjectName('captureShortcut');shortcut.setAccessibleName('Atalho para capturar jogo');shortcut.editingFinished.connect(lambda:window.set_capture_shortcut(shortcut.keySequence()));inside.addWidget(shortcut)
     appearance.addWidget(frame);appearance.addStretch()
     grid=CardGrid(320,max_columns=2);grid.setObjectName('connectionsGrid')
     for provider,callback in [('Steam',window.steam),('Google Drive',window.drive),('SteamGridDB',lambda:window.configure_key('steamgriddb')),('RAWG',lambda:window.configure_key('rawg'))]:

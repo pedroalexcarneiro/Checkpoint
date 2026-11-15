@@ -99,6 +99,9 @@ class MainWindow(QMainWindow):
             control.setCheckable(True);control.setChecked(index==self.view.currentIndex());self.header.insertWidget(3+index,control);self.view_buttons.append(control)
         self.view.currentIndexChanged.connect(self.update_view_buttons)
         self.navigate(0)
+        from PySide6.QtGui import QShortcut,QKeySequence
+        self.capture_shortcut=QShortcut(QKeySequence(self.library.setting('capture.shortcut','Ctrl+Shift+S')),self)
+        self.capture_shortcut.activated.connect(self.capture_game_window)
         self.timer = QTimer(self); self.timer.timeout.connect(self.poll_sessions); self.timer.start(1000)
         self.statusBar().setSizeGripEnabled(False);self.statusBar().showMessage('');self.statusBar().hide()
 
@@ -388,6 +391,21 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self,'Mídia indisponível','O arquivo foi movido ou removido.'); return
         if media['kind']=='image': ImageDialog(media['path'],self).exec()
         else: QDesktopServices.openUrl(QUrl.fromLocalFile(media['path']))
+
+    def set_capture_shortcut(self,sequence):
+        from PySide6.QtGui import QKeySequence
+        value=sequence.toString(QKeySequence.PortableText)
+        if not value:return
+        if value in ('Ctrl+Q','Ctrl+F','Ctrl+N'):
+            QMessageBox.information(self,'Atalho','Esse atalho já é usado pelo Checkpoint.');return
+        self.library.set_setting('capture.shortcut',value);self.capture_shortcut.setKey(sequence)
+
+    def capture_game_window(self):
+        from .game_capture import capture_game
+        path=self.guard(lambda:capture_game(self))
+        if path:
+            self.statusBar().showMessage('Captura salva em Memórias.',5000)
+            if self.stack.currentWidget()==getattr(self,'detail_page',None):self.detail(self.current_game)
 
     def delete_memory(self,record):
         if QMessageBox.question(self,'Apagar memória','Apagar esta memória de '+record['title']+'? O arquivo original será preservado.')!=QMessageBox.Yes:
