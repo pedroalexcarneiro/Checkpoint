@@ -81,19 +81,25 @@ class Hero(QWidget):
 
     def resizeEvent(self,event):
         super().resizeEvent(event)
-        ratio=self.banner.width()/self.banner.height() if not self.banner.isNull() else 4.5
         height=(200 if getattr(self,'compact',False) else max(240,min(300,round(event.size().width()/4)))) if self.detail_mode else max(300,min(360,round(event.size().width()/3.5)))
         if height!=self._hero_height:self._hero_height=height;self.setFixedHeight(height)
         self.content.setGeometry(self.rect())
+
+    def banner_rect(self):
+        if self.banner.isNull():return self.rect().adjusted(0,0,-self.width(),-self.height())
+        size=self.banner.size().scaled(self.size(),Qt.KeepAspectRatio)
+        from PySide6.QtCore import QRect
+        return QRect((self.width()-size.width())//2,(self.height()-size.height())//2,size.width(),size.height())
 
     def paintEvent(self, event):
         p=QPainter(self);p.setRenderHint(QPainter.Antialiasing)
         rect=self.rect();clip=QPainterPath();clip.addRoundedRect(QRectF(rect),RADIUS['card'],RADIUS['card']);p.setClipPath(clip)
         p.fillRect(rect,QColor(self.theme.colors['elevated']))
         if not self.banner.isNull():
-            pix=self.banner.scaled(rect.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation)
-            image_left=(rect.width()-pix.width())//2
-            p.drawPixmap(image_left,(rect.height()-pix.height())//2,pix)
+            target=self.banner_rect()
+            image_left=target.left()
+            p.setRenderHint(QPainter.SmoothPixmapTransform)
+            p.drawPixmap(target,self.banner,self.banner.rect())
             if image_left>0:
                 edge=QLinearGradient(image_left,0,image_left+100,0)
                 edge.setColorAt(0,QColor('#15191e'));edge.setColorAt(1,QColor(21,25,30,0))
