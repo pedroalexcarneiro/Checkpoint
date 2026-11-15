@@ -3,7 +3,7 @@ from .locale import count_text
 """Painel de estatísticas com números e gráficos derivados da biblioteca real."""
 from PySide6.QtCore import Qt,QRectF,QPointF
 from PySide6.QtGui import QPainter,QPen,QColor,QFont,QPainterPath,QLinearGradient
-from PySide6.QtWidgets import QWidget,QScrollArea,QVBoxLayout,QHBoxLayout,QGridLayout,QComboBox,QProgressBar,QPushButton
+from PySide6.QtWidgets import QWidget,QScrollArea,QVBoxLayout,QHBoxLayout,QGridLayout,QComboBox,QProgressBar,QPushButton,QLabel
 from .ui_components import text,card,action
 from .theme import blend
 from .design_system import AdaptiveColumns,colors as current_colors,Badge,CardGrid
@@ -79,8 +79,19 @@ def render_statistics(window,layout,selected):
     frame,inside=card();inside.addWidget(text('Mais jogados no período','sectionTitle'))
     if not temporal['top']:inside.addWidget(text('Sem sessões neste período.','muted'))
     for game in temporal['top'][:5]:
-        line=QHBoxLayout();b=GameNameButton(game['title'],lambda checked=False,identity=game['id']:window.detail(identity));line.addWidget(b,1)
-        value=text(format_time(game['seconds']),'muted');value.setWordWrap(False);line.addWidget(value);inside.addLayout(line)
+        game_row=QWidget();game_row.setObjectName('statisticsGameRow');line=QHBoxLayout(game_row);line.setContentsMargins(0,4,0,4);line.setSpacing(16)
+        logo=QLabel();logo.setObjectName('statisticsGameLogo');logo.setFixedSize(140,48);logo.setAlignment(Qt.AlignCenter)
+        stored=window.library.get(game['id'])
+        from PySide6.QtGui import QPixmap
+        from .list_art import list_icon
+        if not QPixmap(stored.get('logo') or '').isNull():logo.setPixmap(list_icon(stored,window.theme.colors['text']).pixmap(140,48))
+        elif not QPixmap(stored.get('cover') or '').isNull():logo.setPixmap(QPixmap(stored['cover']).scaled(132,40,Qt.KeepAspectRatio,Qt.SmoothTransformation))
+        else:
+            from .ui_components import nav_icon
+            logo.setPixmap(nav_icon('library',window.theme.colors['muted'],32).pixmap(32,32))
+        line.addWidget(logo)
+        b=GameNameButton(game['title'],lambda checked=False,identity=game['id']:window.detail(identity));b.setObjectName('statisticsGameName');line.addWidget(b,1)
+        value=text(format_time(game['seconds']),'muted');value.setObjectName('statisticsGameTime');value.setWordWrap(False);value.setAlignment(Qt.AlignRight|Qt.AlignVCenter);line.addWidget(value);inside.addWidget(game_row)
     inside.addStretch();layout.addWidget(frame)
     layout.addWidget(text('Coleção atual','sectionTitle'))
     row=CardGrid(220,max_columns=3);row.setObjectName('collectionMetrics')

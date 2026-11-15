@@ -840,3 +840,121 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## depois-10
+
+UTC: 2026-11-15T16:06:09.031017+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_cover_preview_0135.py", "tests/test_card_layout.py", "tests/test_settings_0135.py", "tests/test_settings_space_0135.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+.......................                                                  [100%]
+23 passed in 2.72s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## antes-lista-mais-jogados
+
+UTC: 2026-11-15T16:07:26.066784+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_statistics_list_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+____________ test_top_list_logo_name_and_time_are_separate[sample0] ____________
+
+ui = (<checkpoint.window.MainWindow(0x417402a0) at 0x7f7ca0673980>, 1)
+app = <PySide6.QtWidgets.QApplication(0x41678ac0) at 0x7f7ca650a200>
+folder = PosixPath('/tmp/0112c6f73a77423da77480fcb3a04a3e')
+
+    def test_top_list_logo_name_and_time_are_separate(ui,app,folder):
+        w,i=ui
+        for n,title in enumerate(['Portal 2','Metroid Fusion com um nome longo '*10]):
+            path=folder/f'logo{n}.png';im=QImage(300,100,QImage.Format_RGB32);im.fill(QColor('cyan' if n else 'yellow'));im.save(str(path))
+            identity=w.library.save_game({'title':title,'logo':str(path)})
+            start=datetime.now(timezone.utc)-timedelta(hours=4)
+            w.library.sql.execute("INSERT INTO play_sessions(game_id,started_at,duration_seconds,state) VALUES(?,?,?,'finished')",(identity,start.isoformat(),3600+n*600))
+        w.library.sql.commit()
+        for size in [(1280,800),(1920,1080)]:
+            w.resize(*size);w.navigate(4)
+            for _ in range(4):app.processEvents()
+>           rows=w.pages[4].findChildren(QWidget,'statisticsGameRow');assert len(rows)==2
+                                                                      ^^^^^^^^^^^^^^^^^^^
+E           assert 0 == 2
+E            +  where 0 = len([])
+
+tests/test_statistics_list_0136.py:18: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+____________ test_top_list_logo_name_and_time_are_separate[sample1] ____________
+
+ui = (<checkpoint.window.MainWindow(0x41968220) at 0x7f7ca0673900>, 1)
+app = <PySide6.QtWidgets.QApplication(0x41678ac0) at 0x7f7ca650a200>
+folder = PosixPath('/tmp/7620c5456c5b438da7c2121f97de22cd')
+
+    def test_top_list_logo_name_and_time_are_separate(ui,app,folder):
+        w,i=ui
+        for n,title in enumerate(['Portal 2','Metroid Fusion com um nome longo '*10]):
+            path=folder/f'logo{n}.png';im=QImage(300,100,QImage.Format_RGB32);im.fill(QColor('cyan' if n else 'yellow'));im.save(str(path))
+            identity=w.library.save_game({'title':title,'logo':str(path)})
+            start=datetime.now(timezone.utc)-timedelta(hours=4)
+            w.library.sql.execute("INSERT INTO play_sessions(game_id,started_at,duration_seconds,state) VALUES(?,?,?,'finished')",(identity,start.isoformat(),3600+n*600))
+        w.library.sql.commit()
+        for size in [(1280,800),(1920,1080)]:
+            w.resize(*size);w.navigate(4)
+            for _ in range(4):app.processEvents()
+>           rows=w.pages[4].findChildren(QWidget,'statisticsGameRow');assert len(rows)==2
+                                                                      ^^^^^^^^^^^^^^^^^^^
+E           assert 0 == 2
+E            +  where 0 = len([])
+
+tests/test_statistics_list_0136.py:18: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_statistics_list_0136.py::test_top_list_logo_name_and_time_are_separate[sample0]
+FAILED tests/test_statistics_list_0136.py::test_top_list_logo_name_and_time_are_separate[sample1]
+2 failed in 0.39s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## depois-lista-mais-jogados
+
+UTC: 2026-11-15T16:07:51.756958+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_statistics_list_0136.py", "tests/test_statistics_0136.py", "tests/test_statistics_visible_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+...........                                                              [100%]
+11 passed in 1.55s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
