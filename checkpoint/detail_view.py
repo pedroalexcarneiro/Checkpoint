@@ -86,7 +86,12 @@ def build_detail(window,game):
     from .wiki_text import intro
     provenance=current(window.library,game)
     wikipedia=provenance.get('source','').startswith('https://pt.wikipedia.org/')
-    if game['description']:about_layout.addWidget(text(intro(game['description']) if wikipedia else game['description'],'bodyText'))
+    description=intro(game['description']) if wikipedia else game['description']
+    if description:about_layout.addWidget(text(description,'bodyText'))
+    else:
+        about_layout.addWidget(text('Não há texto descritivo disponível nesta ficha. A fonte pode não fornecer um resumo para este jogo.','muted'))
+        about_layout.addWidget(action('Pesquisar manualmente',lambda:window.search_game_data(game_id)),0,Qt.AlignLeft)
+        if not incomplete:about_layout.addWidget(action('Editar ficha',lambda:window.edit_game(game_id)),0,Qt.AlignLeft)
     if provenance.get('source','').startswith('https://pt.wikipedia.org/'):
         from PySide6.QtGui import QDesktopServices
         from PySide6.QtCore import QUrl
