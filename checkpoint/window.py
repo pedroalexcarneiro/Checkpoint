@@ -389,6 +389,16 @@ class MainWindow(QMainWindow):
         if media['kind']=='image': ImageDialog(media['path'],self).exec()
         else: QDesktopServices.openUrl(QUrl.fromLocalFile(media['path']))
 
+    def delete_memory(self,record):
+        if QMessageBox.question(self,'Apagar memória','Apagar esta memória de '+record['title']+'? O arquivo original será preservado.')!=QMessageBox.Yes:
+            return
+        table='diary_entries' if record['kind']=='diary' else 'media_files'
+        with self.library.sql:
+            self.library.sql.execute(f'DELETE FROM {table} WHERE id=? AND game_id=?',(record['id'],record['game_id']))
+        if self.stack.currentWidget()==getattr(self,'detail_page',None):
+            self.detail(record['game_id'])
+        else:self.memories()
+
     def first_memory(self):
         games=self.library.owned_games()
         if not games:

@@ -26,3 +26,20 @@ def test_memory_card_geometry_and_title(ui,app,folder,title):
   for c in cards:assert any(b.text()==title for b in c.findChildren(QPushButton))
  finally:
   for c in cards:c.close();c.deleteLater()
+
+@pytest.mark.parametrize('title',['Zelda: A Link to the Past','Metroid Fusion'])
+def test_delete_memory_requires_confirmation(ui,folder,monkeypatch,title):
+ w,i=ui;w.library.save_game({'title':title},i)
+ w.library.add_diary(i,'Guardar isto')
+ row=dict(w.library.sql.execute('SELECT * FROM diary_entries WHERE game_id=?',(i,)).fetchone())
+ row.update(kind='diary',title=title)
+ monkeypatch.setattr(QMessageBox,'question',lambda *a:QMessageBox.No)
+ w.delete_memory(row)
+ assert len(w.library.diary(i))==1
+ monkeypatch.setattr(QMessageBox,'question',lambda *a:QMessageBox.Yes)
+ w.delete_memory(row)
+ assert not w.library.diary(i)
+ p=folder/'external.png';p.write_bytes(b'fixture');w.library.add_media(i,p)
+ media=dict(w.library.sql.execute('SELECT * FROM media_files WHERE game_id=?',(i,)).fetchone());media['title']=title
+ w.delete_memory(media)
+ assert p.exists() and not w.library.sql.execute('SELECT 1 FROM media_files WHERE game_id=?',(i,)).fetchone()

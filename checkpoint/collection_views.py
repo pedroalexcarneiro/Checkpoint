@@ -125,7 +125,7 @@ def build_wishlist(window):
 
 def memory_card(window,record):
     panel,inside=card();panel.setMinimumHeight(320);head=QHBoxLayout();head.addWidget(Badge('memories' if record['kind']=='diary' else 'play' if record['kind']=='video' else 'memories',32))
-    title=action(record['title'],lambda checked=False,g=record['game_id']:window.detail(g));title.setObjectName('activityLink');head.addWidget(title,1);inside.addLayout(head)
+    title=action(record['title'],lambda checked=False,g=record['game_id']:window.detail(g));title.setObjectName('activityLink');head.addWidget(title,1);head.addWidget(IconButton('trash','Apagar memória',lambda checked=False,r=record:window.delete_memory(r)));inside.addLayout(head)
     if record['kind']=='diary':
         content=text(record['text'],'bodyText');content.setToolTip(record['text']);inside.addWidget(content);inside.addStretch()
     else:
