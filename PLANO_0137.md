@@ -53,3 +53,5 @@ Complemento visual posterior de Ofertas: usar exclusivamente logo do jogo na lin
 Complemento posterior nos cards recentes: remover plataforma; manter status, última vez e tempo total em três linhas separadas, cada informação sem quebra. Data local curta (hoje/ontem/dia e mês, horário), data completa no tooltip/acessibilidade. Esse recorte é dos cards recentes; plataforma permanece nas ofertas para impedir confusão de edição.
 
 Última decisão de Ofertas: remover toda miniatura/logo e contexto visual; linha somente nome, original riscado, percentual na cor do tema e atual. Essa decisão substitui o pedido anterior de logo. Identidade/plataforma/edição e política continuam validadas nos dados; original/percentual só aparecem juntos quando confiáveis na mesma oferta. API sem original individual mantém nome/atual, sem dados inventados.
+
+Nova prévia solicitada para Ofertas: um banner horizontal por oferta, inteiro e proporcional, e faixa de nome/original/desconto/atual abaixo. Sem logo/miniatura adicional; sem banner disponível, manter linha de dados. Captura inicio-v10 enviada no chat para comparação, sem alegar aprovação estética.

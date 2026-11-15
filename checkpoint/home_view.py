@@ -3,7 +3,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QLabel,QSizePolicy
 from .design_system import SectionHeader,AdaptiveColumns,CardSurface,empty_state,ArtworkButton,Badge
 from .ui_components import text,action,ElidedAction
-from .home_components import GameStrip,MemoryCarousel,show_execution_history
+from .home_components import GameStrip,MemoryCarousel,show_execution_history,OfferBanner
 from .home_data import recent_games,week_summary,wish_offers,recent_memories
 from .playtime import format_time,total_seconds
 from .smooth_scroll import SmoothScrollArea
@@ -44,7 +44,10 @@ def build_home(window):
     offer_list=QWidget();offer_list.setObjectName('homeOfferList')
     offer_rows=QVBoxLayout(offer_list);offer_rows.setContentsMargins(0,0,0,0);offer_rows.setSpacing(0)
     for game in offers:
-        offer_row=QWidget();offer_row.setObjectName('homeOfferRow');offer_row.setFixedHeight(72)
+        offer_item=QWidget();offer_slot=QVBoxLayout(offer_item);offer_slot.setContentsMargins(0,0,0,12);offer_slot.setSpacing(0)
+        from PySide6.QtGui import QPixmap
+        if not QPixmap(game.get('banner') or '').isNull():offer_slot.addWidget(OfferBanner(game,window))
+        offer_row=QWidget();offer_row.setObjectName('homeOfferRow');offer_row.setFixedHeight(48)
         row=QHBoxLayout(offer_row);row.setContentsMargins(0,8,0,8);row.setSpacing(12);identity=game['id']
         title=ElidedAction(game['title'],lambda checked=False,i=identity:window.detail(i));title.setObjectName('activityLink');row.addWidget(title,1)
         quote=game['quote']
@@ -56,7 +59,7 @@ def build_home(window):
             discount.setStyleSheet('color: '+window.theme.colors['accent']+'; font-weight: 600;');row.addWidget(discount)
         from .price_view import source_link
         from .prices import money
-        price=source_link(window.library,game,money(quote['lowest']));price.setProperty('homeOfferPrice',True);price.setMinimumWidth(72);price.setStyleSheet('color: '+window.theme.colors['accent']+'; font-weight: 600; text-align: right;');row.addWidget(price);offer_rows.addWidget(offer_row)
+        price=source_link(window.library,game,money(quote['lowest']));price.setProperty('homeOfferPrice',True);price.setMinimumWidth(72);price.setStyleSheet('color: '+window.theme.colors['accent']+'; font-weight: 600; text-align: right;');row.addWidget(price);offer_slot.addWidget(offer_row);offer_rows.addWidget(offer_item)
     if not offers:offer_rows.addWidget(text('Nenhuma oferta válida nos desejos.','muted'))
     inside.addWidget(offer_list);inside.addStretch(1)
     right_layout.addWidget(frame,1)

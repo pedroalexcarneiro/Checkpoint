@@ -77,6 +77,12 @@ class RecentGameCard(CardSurface):
         inside.addWidget(SingleLineInfo('Tempo total: '+format_time(game['seconds'])))
 
 
+class OfferBanner(RecentArtwork):
+    def __init__(self,game,window):
+        super().__init__({**game,'cover':'','logo':''},window)
+        self.setObjectName('homeOfferBanner')
+
+
 class GameStrip(QWidget):
     """Três cards por página, com navegação horizontal sem cortar as capas."""
     def __init__(self,window,games,maximum=3):
