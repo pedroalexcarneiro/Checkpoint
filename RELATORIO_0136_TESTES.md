@@ -1666,3 +1666,557 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## escala-150-geometria
+
+UTC: 2026-11-15T16:20:57.366357+00:00
+
+Comando: `["/usr/bin/env", "QT_SCALE_FACTOR=1.5", "/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_statistics_list_0136.py", "tests/test_visual_audit_0136.py", "tests/test_service_optical_0136.py", "tests/test_settings_0135.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+......F......                                                            [100%]
+=================================== FAILURES ===================================
+_________ test_steam_white_mark_optically_centered_and_asset_unchanged _________
+
+app = <PySide6.QtWidgets.QApplication(0x87d5830) at 0x7f5a8cfd28c0>
+
+    def test_steam_white_mark_optically_centered_and_asset_unchanged(app):
+        path=Path('checkpoint/assets/services/steam.ico')
+        assert sha256(path.read_bytes()).hexdigest()=='9f890a9debcdfccc339149a7943be9aff9e4c9203c2fa37d5671a5b2c88503ad'
+        image=service_icon('Steam').toImage()
+        points=[(x,y) for y in range(48) for x in range(48) if min(image.pixelColor(x,y).getRgb()[:3])>180]
+        assert points
+        x=sum(p[0] for p in points)/len(points);y=sum(p[1] for p in points)/len(points)
+>       assert abs(x-23.5)<.6 and abs(y-23.5)<.6
+E       assert (0.84375 < 0.6)
+E        +  where 0.84375 = abs((24.34375 - 23.5))
+
+tests/test_service_optical_0136.py:13: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_service_optical_0136.py::test_steam_white_mark_optically_centered_and_asset_unchanged
+1 failed, 12 passed in 3.10s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## smoke-fonte
+
+UTC: 2026-11-15T16:21:42.811761+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "checkpoint.app", "--smoke-test", "--data-dir", "/tmp/checkpoint-0136-smoke-01"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Checkpoint smoke: 6 pages OK; SQLite integrity=ok
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 0
+
+## smoke-cadastro
+
+UTC: 2026-11-15T16:21:43.787086+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "checkpoint.app", "--save-smoke-test", "--data-dir", "/tmp/checkpoint-0136-save-smoke-01"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Cadastro smoke: salvar, auxiliar, renderização e SQLite OK
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 0
+
+## escala-150-corrigida
+
+UTC: 2026-11-15T16:21:43.802135+00:00
+
+Comando: `["/usr/bin/env", "QT_SCALE_FACTOR=1.5", "/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_statistics_list_0136.py", "tests/test_visual_audit_0136.py", "tests/test_service_optical_0136.py", "tests/test_service_logo_0135.py", "tests/test_settings_0135.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+...............                                                          [100%]
+15 passed in 2.77s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## escala-200
+
+UTC: 2026-11-15T16:21:46.229088+00:00
+
+Comando: `["/usr/bin/env", "QT_SCALE_FACTOR=2", "/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_statistics_list_0136.py", "tests/test_visual_audit_0136.py", "tests/test_service_optical_0136.py", "tests/test_service_logo_0135.py", "tests/test_settings_0135.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+...............                                                          [100%]
+15 passed in 2.15s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## antes-banner-proporcao-exata
+
+UTC: 2026-11-15T16:23:53.817165+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_banner_aspect_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+_ test_banner_area_matches_original_aspect_at_every_window_size[False-Portal 2-shape0] _
+
+app = <PySide6.QtWidgets.QApplication(0x54f8400) at 0x7f9b74a30140>
+folder = PosixPath('/tmp/1ca2e6b23d9e49b4afcca317730f5ad4'), title = 'Portal 2'
+shape = (1920, 620), detail = False
+
+    @pytest.mark.parametrize('title,shape',[('Portal 2',(1920,620)),('Hades',(1920,500))])
+    @pytest.mark.parametrize('detail',[False,True])
+    def test_banner_area_matches_original_aspect_at_every_window_size(app,folder,title,shape,detail):
+        image=QImage(*shape,QImage.Format_RGB32);image.fill(QColor('#50a070'));path=folder/'banner.png';image.save(str(path))
+        hero=Hero({'title':title,'banner':str(path)},get_theme('green'));hero.detail_mode=detail;hero.show()
+        try:
+            for width in [750,1026,1388,1700,1026,750]:
+                hero.resize(width,hero.height())
+                for _ in range(4):app.processEvents()
+                expected=round(width*shape[1]/shape[0]);target=hero.banner_rect()
+>               assert abs(hero.height()-expected)<=1
+E               assert 58 <= 1
+E                +  where 58 = abs((300 - 242))
+E                +    where 300 = <built-in method height of Hero object at 0x7f9b74a87d40>()
+E                +      where <built-in method height of Hero object at 0x7f9b74a87d40> = <checkpoint.ui_components.Hero(0x54a0c40, name="gameHero") at 0x7f9b74a87d40>.height
+
+tests/test_banner_aspect_0136.py:16: AssertionError
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Fontconfig error: No writable cache directories
+_ test_banner_area_matches_original_aspect_at_every_window_size[False-Hades-shape1] _
+
+app = <PySide6.QtWidgets.QApplication(0x54f8400) at 0x7f9b74a30140>
+folder = PosixPath('/tmp/74a02440d1f64c3fb8533a13dc1eeb5d'), title = 'Hades'
+shape = (1920, 500), detail = False
+
+    @pytest.mark.parametrize('title,shape',[('Portal 2',(1920,620)),('Hades',(1920,500))])
+    @pytest.mark.parametrize('detail',[False,True])
+    def test_banner_area_matches_original_aspect_at_every_window_size(app,folder,title,shape,detail):
+        image=QImage(*shape,QImage.Format_RGB32);image.fill(QColor('#50a070'));path=folder/'banner.png';image.save(str(path))
+        hero=Hero({'title':title,'banner':str(path)},get_theme('green'));hero.detail_mode=detail;hero.show()
+        try:
+            for width in [750,1026,1388,1700,1026,750]:
+                hero.resize(width,hero.height())
+                for _ in range(4):app.processEvents()
+                expected=round(width*shape[1]/shape[0]);target=hero.banner_rect()
+>               assert abs(hero.height()-expected)<=1
+E               assert 105 <= 1
+E                +  where 105 = abs((300 - 195))
+E                +    where 300 = <built-in method height of Hero object at 0x7f9b71a64e00>()
+E                +      where <built-in method height of Hero object at 0x7f9b71a64e00> = <checkpoint.ui_components.Hero(0x55cffb0, name="gameHero") at 0x7f9b71a64e00>.height
+
+tests/test_banner_aspect_0136.py:16: AssertionError
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+_ test_banner_area_matches_original_aspect_at_every_window_size[True-Portal 2-shape0] _
+
+app = <PySide6.QtWidgets.QApplication(0x54f8400) at 0x7f9b74a30140>
+folder = PosixPath('/tmp/f80d7721449f4467ac33da97b94ba2ea'), title = 'Portal 2'
+shape = (1920, 620), detail = True
+
+    @pytest.mark.parametrize('title,shape',[('Portal 2',(1920,620)),('Hades',(1920,500))])
+    @pytest.mark.parametrize('detail',[False,True])
+    def test_banner_area_matches_original_aspect_at_every_window_size(app,folder,title,shape,detail):
+        image=QImage(*shape,QImage.Format_RGB32);image.fill(QColor('#50a070'));path=folder/'banner.png';image.save(str(path))
+        hero=Hero({'title':title,'banner':str(path)},get_theme('green'));hero.detail_mode=detail;hero.show()
+        try:
+            for width in [750,1026,1388,1700,1026,750]:
+                hero.resize(width,hero.height())
+                for _ in range(4):app.processEvents()
+                expected=round(width*shape[1]/shape[0]);target=hero.banner_rect()
+>               assert abs(hero.height()-expected)<=1
+E               assert 2 <= 1
+E                +  where 2 = abs((240 - 242))
+E                +    where 240 = <built-in method height of Hero object at 0x7f9b71a58b00>()
+E                +      where <built-in method height of Hero object at 0x7f9b71a58b00> = <checkpoint.ui_components.Hero(0x56c1020, name="gameHero") at 0x7f9b71a58b00>.height
+
+tests/test_banner_aspect_0136.py:16: AssertionError
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+_ test_banner_area_matches_original_aspect_at_every_window_size[True-Hades-shape1] _
+
+app = <PySide6.QtWidgets.QApplication(0x54f8400) at 0x7f9b74a30140>
+folder = PosixPath('/tmp/add8c1e1594740d58080b48effbac85f'), title = 'Hades'
+shape = (1920, 500), detail = True
+
+    @pytest.mark.parametrize('title,shape',[('Portal 2',(1920,620)),('Hades',(1920,500))])
+    @pytest.mark.parametrize('detail',[False,True])
+    def test_banner_area_matches_original_aspect_at_every_window_size(app,folder,title,shape,detail):
+        image=QImage(*shape,QImage.Format_RGB32);image.fill(QColor('#50a070'));path=folder/'banner.png';image.save(str(path))
+        hero=Hero({'title':title,'banner':str(path)},get_theme('green'));hero.detail_mode=detail;hero.show()
+        try:
+            for width in [750,1026,1388,1700,1026,750]:
+                hero.resize(width,hero.height())
+                for _ in range(4):app.processEvents()
+                expected=round(width*shape[1]/shape[0]);target=hero.banner_rect()
+>               assert abs(hero.height()-expected)<=1
+E               assert 45 <= 1
+E                +  where 45 = abs((240 - 195))
+E                +    where 240 = <built-in method height of Hero object at 0x7f9b74aaebc0>()
+E                +      where <built-in method height of Hero object at 0x7f9b74aaebc0> = <checkpoint.ui_components.Hero(0x569fde0, name="gameHero") at 0x7f9b74aaebc0>.height
+
+tests/test_banner_aspect_0136.py:16: AssertionError
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+=========================== short test summary info ============================
+FAILED tests/test_banner_aspect_0136.py::test_banner_area_matches_original_aspect_at_every_window_size[False-Portal 2-shape0]
+FAILED tests/test_banner_aspect_0136.py::test_banner_area_matches_original_aspect_at_every_window_size[False-Hades-shape1]
+FAILED tests/test_banner_aspect_0136.py::test_banner_area_matches_original_aspect_at_every_window_size[True-Portal 2-shape0]
+FAILED tests/test_banner_aspect_0136.py::test_banner_area_matches_original_aspect_at_every_window_size[True-Hades-shape1]
+4 failed in 0.34s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## depois-banner-proporcao-exata
+
+UTC: 2026-11-15T16:24:52.993660+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_banner_aspect_0136.py", "tests/test_banner_resize_0136.py", "tests/test_banner_render_0135.py", "tests/test_ui_polish.py", "tests/test_home_0129.py", "tests/test_home_description_0136.py", "tests/test_tabs_0135.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+.F.F..........F............                                              [100%]
+=================================== FAILURES ===================================
+_ test_banner_area_matches_original_aspect_at_every_window_size[False-Hades-shape1] _
+
+app = <PySide6.QtWidgets.QApplication(0xd40ecc0) at 0x7f5dbd7bec00>
+folder = PosixPath('/tmp/3efc960698b94b548e776e61253789e4'), title = 'Hades'
+shape = (1920, 500), detail = False
+
+    @pytest.mark.parametrize('title,shape',[('Portal 2',(1920,620)),('Hades',(1920,500))])
+    @pytest.mark.parametrize('detail',[False,True])
+    def test_banner_area_matches_original_aspect_at_every_window_size(app,folder,title,shape,detail):
+        image=QImage(*shape,QImage.Format_RGB32);image.fill(QColor('#50a070'));path=folder/'banner.png';image.save(str(path))
+        hero=Hero({'title':title,'banner':str(path)},get_theme('green'));hero.detail_mode=detail;hero.show()
+        try:
+            for width in [750,1026,1388,1700,1026,750]:
+                hero.resize(width,hero.height())
+                for _ in range(4):app.processEvents()
+                expected=round(width*shape[1]/shape[0]);target=hero.banner_rect()
+                assert abs(hero.height()-expected)<=1
+                assert abs(target.left())<=1 and abs(target.top())<=1
+>               assert abs(target.width()-hero.width())<=1 and abs(target.height()-hero.height())<=1
+E               assert (2 <= 1)
+E                +  where 2 = abs((748 - 750))
+E                +    where 748 = <built-in method width of PySide6.QtCore.QRect object at 0x7f5dbd778ec0>()
+E                +      where <built-in method width of PySide6.QtCore.QRect object at 0x7f5dbd778ec0> = PySide6.QtCore.QRect(1, 0, 748, 195).width
+E                +    and   750 = <built-in method width of Hero object at 0x7f5dbd778cc0>()
+E                +      where <built-in method width of Hero object at 0x7f5dbd778cc0> = <checkpoint.ui_components.Hero(0xd1e18f0, name="gameHero") at 0x7f5dbd778cc0>.width
+
+tests/test_banner_aspect_0136.py:18: AssertionError
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+_ test_banner_area_matches_original_aspect_at_every_window_size[True-Hades-shape1] _
+
+app = <PySide6.QtWidgets.QApplication(0xd40ecc0) at 0x7f5dbd7bec00>
+folder = PosixPath('/tmp/afa4fece045447a3b0d2b0b26336c1d6'), title = 'Hades'
+shape = (1920, 500), detail = True
+
+    @pytest.mark.parametrize('title,shape',[('Portal 2',(1920,620)),('Hades',(1920,500))])
+    @pytest.mark.parametrize('detail',[False,True])
+    def test_banner_area_matches_original_aspect_at_every_window_size(app,folder,title,shape,detail):
+        image=QImage(*shape,QImage.Format_RGB32);image.fill(QColor('#50a070'));path=folder/'banner.png';image.save(str(path))
+        hero=Hero({'title':title,'banner':str(path)},get_theme('green'));hero.detail_mode=detail;hero.show()
+        try:
+            for width in [750,1026,1388,1700,1026,750]:
+                hero.resize(width,hero.height())
+                for _ in range(4):app.processEvents()
+                expected=round(width*shape[1]/shape[0]);target=hero.banner_rect()
+                assert abs(hero.height()-expected)<=1
+                assert abs(target.left())<=1 and abs(target.top())<=1
+>               assert abs(target.width()-hero.width())<=1 and abs(target.height()-hero.height())<=1
+E               assert (2 <= 1)
+E                +  where 2 = abs((748 - 750))
+E                +    where 748 = <built-in method width of PySide6.QtCore.QRect object at 0x7f5dbd788140>()
+E                +      where <built-in method width of PySide6.QtCore.QRect object at 0x7f5dbd788140> = PySide6.QtCore.QRect(1, 0, 748, 195).width
+E                +    and   750 = <built-in method width of Hero object at 0x7f5dbd788700>()
+E                +      where <built-in method width of Hero object at 0x7f5dbd788700> = <checkpoint.ui_components.Hero(0xd4dd810, name="gameHero") at 0x7f5dbd788700>.width
+
+tests/test_banner_aspect_0136.py:18: AssertionError
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+___________________ test_banner_is_bounded_at_desktop_width ____________________
+
+library = <checkpoint.library.Library object at 0x7f5dbd445a30>
+app = <PySide6.QtWidgets.QApplication(0xd40ecc0) at 0x7f5dbd7bec00>
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-24/test_banner_is_bounded_at_desk0')
+
+    def test_banner_is_bounded_at_desktop_width(library,app,tmp_path):
+        image=QImage(900,240,QImage.Format_RGB32);image.fill(QColor('red'));path=tmp_path/'wide.png';image.save(str(path))
+        hero=Hero({'title':'Teste','banner':str(path)},__import__('checkpoint.theme',fromlist=['get_theme']).get_theme('green'))
+        hero.resize(750,300);hero.show();app.processEvents()
+        assert abs(hero.height()-round(hero.width()*240/900))<=1
+        assert hero.grab().toImage().pixelColor(hero.width()-20,hero.height()//2).red()>240
+        hero.resize(1700,hero.height());app.processEvents()
+        assert abs(hero.height()-round(hero.width()*240/900))<=1
+>       assert abs(hero.banner_rect().width()-hero.width())<=1 and abs(hero.banner_rect().height()-hero.height())<=1
+E       assert (2 <= 1)
+E        +  where 2 = abs((1698 - 1700))
+E        +    where 1698 = <built-in method width of PySide6.QtCore.QRect object at 0x7f5dbd3aa5c0>()
+E        +      where <built-in method width of PySide6.QtCore.QRect object at 0x7f5dbd3aa5c0> = PySide6.QtCore.QRect(1, 0, 1698, 453).width
+E        +        where PySide6.QtCore.QRect(1, 0, 1698, 453) = banner_rect()
+E        +          where banner_rect = <checkpoint.ui_components.Hero(0xd5aeee0, name="gameHero") at 0x7f5dbd49d500>.banner_rect
+E        +    and   1700 = <built-in method width of Hero object at 0x7f5dbd49d500>()
+E        +      where <built-in method width of Hero object at 0x7f5dbd49d500> = <checkpoint.ui_components.Hero(0xd5aeee0, name="gameHero") at 0x7f5dbd49d500>.width
+
+tests/test_ui_polish.py:17: AssertionError
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+=========================== short test summary info ============================
+FAILED tests/test_banner_aspect_0136.py::test_banner_area_matches_original_aspect_at_every_window_size[False-Hades-shape1]
+FAILED tests/test_banner_aspect_0136.py::test_banner_area_matches_original_aspect_at_every_window_size[True-Hades-shape1]
+FAILED tests/test_ui_polish.py::test_banner_is_bounded_at_desktop_width - ass...
+3 failed, 24 passed in 2.82s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## depois-banner-geometria-fracionaria
+
+UTC: 2026-11-15T16:25:46.514759+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_banner_aspect_0136.py", "tests/test_banner_resize_0136.py", "tests/test_banner_render_0135.py", "tests/test_ui_polish.py", "tests/test_home_0129.py", "tests/test_home_description_0136.py", "tests/test_tabs_0135.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+...........................                                              [100%]
+27 passed in 2.76s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## suite-integral-0136
+
+UTC: 2026-11-15T16:26:44.083371+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+........................................................................ [ 12%]
+........................................................................ [ 24%]
+........................................................................ [ 36%]
+........................................................................ [ 48%]
+........................................................................ [ 61%]
+........................................................................ [ 73%]
+........................................................................ [ 85%]
+........................................................................ [ 97%]
+FF............                                                           [100%]
+=================================== FAILURES ===================================
+_ test_visual_b_steam_has_real_asset_instead_of_initials[Zelda: A Link to the Past] _
+
+app = <PySide6.QtWidgets.QApplication(0x2ac0a070) at 0x7f427c1b5d00>
+library = <checkpoint.library.Library object at 0x7f4270e4c470>
+title = 'Zelda: A Link to the Past'
+
+    @pytest.mark.parametrize('title',['Zelda: A Link to the Past','Metroid Fusion'])
+    def test_visual_b_steam_has_real_asset_instead_of_initials(app,library,title):
+     library.save_game({'title':title})
+     asset=Path(checkpoint.__file__).parent/'assets/services/steam.ico'
+     source=QIcon(str(asset)).pixmap(48,48).scaled(32,32,Qt.KeepAspectRatio,Qt.SmoothTransformation).toImage()
+     rendered=service_icon('Steam').toImage();checked=0
+     for x in range(source.width()):
+      for y in range(source.height()):
+       pixel=source.pixelColor(x,y)
+       if pixel.alpha()==255 and min(pixel.red(),pixel.green(),pixel.blue())>220:
+        actual=rendered.pixelColor(x+8,y+8)
+>       assert actual==pixel
+E       assert PySide6.QtGui.QColor.fromRgbF(0.082353, 0.168627, 0.286275, 1.000000) == PySide6.QtGui.QColor.fromRgbF(1.000000, 1.000000, 1.000000, 1.000000)
+
+tests/test_visual_steam_asset_0135.py:18: AssertionError
+____ test_visual_b_steam_has_real_asset_instead_of_initials[Metroid Fusion] ____
+
+app = <PySide6.QtWidgets.QApplication(0x2ac0a070) at 0x7f427c1b5d00>
+library = <checkpoint.library.Library object at 0x7f4271bf1ca0>
+title = 'Metroid Fusion'
+
+    @pytest.mark.parametrize('title',['Zelda: A Link to the Past','Metroid Fusion'])
+    def test_visual_b_steam_has_real_asset_instead_of_initials(app,library,title):
+     library.save_game({'title':title})
+     asset=Path(checkpoint.__file__).parent/'assets/services/steam.ico'
+     source=QIcon(str(asset)).pixmap(48,48).scaled(32,32,Qt.KeepAspectRatio,Qt.SmoothTransformation).toImage()
+     rendered=service_icon('Steam').toImage();checked=0
+     for x in range(source.width()):
+      for y in range(source.height()):
+       pixel=source.pixelColor(x,y)
+       if pixel.alpha()==255 and min(pixel.red(),pixel.green(),pixel.blue())>220:
+        actual=rendered.pixelColor(x+8,y+8)
+>       assert actual==pixel
+E       assert PySide6.QtGui.QColor.fromRgbF(0.082353, 0.168627, 0.286275, 1.000000) == PySide6.QtGui.QColor.fromRgbF(1.000000, 1.000000, 1.000000, 1.000000)
+
+tests/test_visual_steam_asset_0135.py:18: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_visual_steam_asset_0135.py::test_visual_b_steam_has_real_asset_instead_of_initials[Zelda: A Link to the Past]
+FAILED tests/test_visual_steam_asset_0135.py::test_visual_b_steam_has_real_asset_instead_of_initials[Metroid Fusion]
+2 failed, 588 passed in 398.91s (0:06:38)
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## banner-quatro-bordas-estados
+
+UTC: 2026-11-15T16:27:28.159229+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_banner_aspect_0136.py", "tests/test_banner_resize_0136.py", "tests/test_banner_render_0135.py", "tests/test_ui_polish.py", "tests/test_home_0129.py", "tests/test_home_description_0136.py", "tests/test_tabs_0135.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+.............................                                            [100%]
+29 passed in 2.91s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## depois-pixels-steam-aprovados
+
+UTC: 2026-11-15T16:28:42.754286+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_visual_steam_asset_0135.py", "tests/test_service_optical_0136.py", "tests/test_service_logo_0135.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+.....                                                                    [100%]
+5 passed in 0.56s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## depois-pixels-steam-150
+
+UTC: 2026-11-15T16:28:43.630534+00:00
+
+Comando: `["/usr/bin/env", "QT_SCALE_FACTOR=1.5", "/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_visual_steam_asset_0135.py", "tests/test_service_optical_0136.py", "tests/test_service_logo_0135.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+.....                                                                    [100%]
+5 passed in 0.55s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0

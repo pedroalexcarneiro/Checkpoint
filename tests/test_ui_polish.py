@@ -10,10 +10,11 @@ def test_banner_is_bounded_at_desktop_width(library,app,tmp_path):
     image=QImage(900,240,QImage.Format_RGB32);image.fill(QColor('red'));path=tmp_path/'wide.png';image.save(str(path))
     hero=Hero({'title':'Teste','banner':str(path)},__import__('checkpoint.theme',fromlist=['get_theme']).get_theme('green'))
     hero.resize(750,300);hero.show();app.processEvents()
-    assert 220<=hero.height()<=300
+    assert abs(hero.height()-round(hero.width()*240/900))<=1
     assert hero.grab().toImage().pixelColor(hero.width()-20,hero.height()//2).red()>240
     hero.resize(1700,hero.height());app.processEvents()
-    assert hero.height()<=360
+    assert abs(hero.height()-round(hero.width()*240/900))<=1
+    assert abs(hero.banner_rect().width()-hero.width())<=1 and abs(hero.banner_rect().height()-hero.height())<=1
     hero.close()
 
 

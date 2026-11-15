@@ -15,8 +15,9 @@ def test_detail_repeated_resize_contains_entire_banner(ui,app,folder,shape,wish)
         w.library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)',(i,));w.library.sql.commit()
     for initial in [(1280,800),(1920,1080)]:
         w.resize(*initial);w.detail(i)
-        for size in [(1920,1080),(1280,800),(1600,900),(1280,800)]:
-            w.resize(*size)
+        for size in [(1920,1080),'maximized',(1280,800),(1600,900),(1280,800)]:
+            if size=='maximized':w.showMaximized()
+            else:w.showNormal();w.resize(*size)
             for _ in range(4):app.processEvents()
             hero=w.detail_page.findChild(Hero);r=hero.banner_rect()
             assert hero.rect().contains(r) and not r.isEmpty()

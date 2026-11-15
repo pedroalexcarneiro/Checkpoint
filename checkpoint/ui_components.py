@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt, QSize, QRectF, QPointF,QRect
+from PySide6.QtCore import Qt, QSize, QSizeF, QRectF, QPointF,QRect
 from PySide6.QtGui import QPixmap, QPainter, QColor, QLinearGradient, QFont, QIcon, QPen, QPolygonF, QRegion, QPainterPath
 from .visual_tokens import SPACE,TYPE,RADIUS
 from .playtime import format_time
@@ -89,27 +89,37 @@ class Hero(QWidget):
 
     def set_theme(self, theme):self.theme = theme;self.update()
 
+    def hasHeightForWidth(self):return True
+
+    def heightForWidth(self,width):
+        if not self.banner.isNull():
+            from math import ceil
+            return max(1,ceil(width*self.banner.height()/self.banner.width()))
+        return 200 if self.detail_mode and getattr(self,'compact',False) else 240 if self.detail_mode else 300
+
     def resizeEvent(self,event):
         super().resizeEvent(event)
-        height=(200 if getattr(self,'compact',False) else max(240,min(300,round(event.size().width()/4)))) if self.detail_mode else max(300,min(360,round(event.size().width()/3.5)))
-        if height!=self._hero_height:self._hero_height=height;self.setFixedHeight(height)
+        height=self.heightForWidth(event.size().width())
+        if height!=self._hero_height:
+            self._hero_height=height;self.setFixedHeight(height);self.updateGeometry()
         self.content.setGeometry(self.rect())
 
-    def banner_rect(self):
-        if self.banner.isNull():return self.rect().adjusted(0,0,-self.width(),-self.height())
-        size=self.banner.size().scaled(self.size(),Qt.KeepAspectRatio)
-        from PySide6.QtCore import QRect
-        return QRect((self.width()-size.width())//2,(self.height()-size.height())//2,size.width(),size.height())
+    def banner_target(self):
+        if self.banner.isNull():return QRectF()
+        size=QSizeF(self.banner.size()).scaled(QSizeF(self.size()),Qt.KeepAspectRatio)
+        return QRectF((self.width()-size.width())/2,(self.height()-size.height())/2,size.width(),size.height())
+
+    def banner_rect(self):return self.banner_target().toAlignedRect()
 
     def paintEvent(self, event):
         p=QPainter(self);p.setRenderHint(QPainter.Antialiasing)
         rect=self.rect();clip=QPainterPath();clip.addRoundedRect(QRectF(rect),RADIUS['card'],RADIUS['card']);p.setClipPath(clip)
         p.fillRect(rect,QColor(self.theme.colors['elevated']))
         if not self.banner.isNull():
-            target=self.banner_rect()
+            target=self.banner_target()
             image_left=target.left()
             p.setRenderHint(QPainter.SmoothPixmapTransform)
-            p.drawPixmap(target,self.banner,self.banner.rect())
+            p.drawPixmap(target,self.banner,QRectF(self.banner.rect()))
             if image_left>0:
                 edge=QLinearGradient(image_left,0,image_left+100,0)
                 edge.setColorAt(0,QColor('#15191e'));edge.setColorAt(1,QColor(21,25,30,0))
@@ -162,7 +172,7 @@ class GameTile(CoverArtwork):
 class ClickTabBar(QTabBar):
     """Seleciona ao completar um clique, sem trocar abas por arrasto ou roda."""
     def __init__(self,parent=None):
-        super().__init__(parent);self.press_position=None;self.dragged=False
+        super().__init__(parent);self.setDrawBase(False);self.press_position=None;self.dragged=False
     def mousePressEvent(self,event):
         if event.button()==Qt.LeftButton:
             self.press_position=event.position().toPoint();self.dragged=False;event.accept()
@@ -218,7 +228,7 @@ def service_icon(provider):
     if provider in ('Steam','Google Drive'):
         from pathlib import Path
         source=Path(__file__).resolve().parent/'assets'/'services'/('steam.ico' if provider=='Steam' else 'google-drive.png')
-        official=QIcon(str(source)).pixmap(48,48).scaled(32,32,Qt.KeepAspectRatio,Qt.SmoothTransformation) if provider=='Steam' else QPixmap(str(source)).scaled(36,36,Qt.KeepAspectRatio,Qt.SmoothTransformation)
+        official=QIcon(str(source)).pixmap(QSize(48,48),1.0).scaled(32,32,Qt.KeepAspectRatio,Qt.SmoothTransformation) if provider=='Steam' else QPixmap(str(source)).scaled(36,36,Qt.KeepAspectRatio,Qt.SmoothTransformation)
         official.setDevicePixelRatio(1)
         # Centro de massa dos pixels claros da marca: compensação óptica medida no raster de 32px.
         dx,dy=(2,-1) if provider=='Steam' else (0,0)
