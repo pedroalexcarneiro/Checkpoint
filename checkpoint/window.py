@@ -79,7 +79,7 @@ class MainWindow(QMainWindow):
         self.host = QVBoxLayout(content); self.host.setContentsMargins(*([SPACE['lg']]*4)); self.host.setSpacing(SPACE['md'])
         main_area=QWidget();main_row=QHBoxLayout(main_area);main_row.setContentsMargins(0,0,0,0);main_row.setSpacing(0)
         main_row.addWidget(content,1);layout.addWidget(main_area,1)
-        self.header_widget=QWidget();self.header_widget.setFixedHeight(HEIGHT['button']+SPACE['xs']);self.header = QHBoxLayout(self.header_widget);self.header.setContentsMargins(0,0,0,0); self.heading = label('','title'); self.header.addWidget(self.heading); self.header.addStretch()
+        self.header_widget=QWidget();self.header_widget.setMinimumWidth(self.minimumWidth()-198-2*SPACE['lg']);self.header_widget.setMaximumWidth(1440-2*SPACE['lg']);self.header_widget.setFixedHeight(HEIGHT['button']+SPACE['xs']);self.header = QHBoxLayout(self.header_widget);self.header.setContentsMargins(0,0,0,0); self.heading = label('','title'); self.header.addWidget(self.heading); self.header.addStretch()
         self.add_button=button('+ Adicionar jogo',self.add_library_game,True);self.header.addWidget(self.add_button); self.host.addWidget(self.header_widget)
         self.stack = QStackedWidget(); self.host.addWidget(self.stack,1)
         self.pages = []
@@ -154,6 +154,7 @@ class MainWindow(QMainWindow):
     def navigate(self,index):
         self.detail_notice=None
         self.host.parentWidget().setMaximumWidth(16777215 if index==5 else 1440)
+        self.host.setAlignment(self.header_widget,Qt.AlignLeft if index==5 else Qt.Alignment())
         self.current_page = index; self.current_game = None;self.header_widget.show()
         for i,b in enumerate(self.nav_buttons): b.setChecked(i==index)
         self.heading.show();self.heading.setText(PAGES[index]);self.add_button.setText('+ Adicionar jogo');self.add_button.setVisible(index in (0,1));self.search.setVisible(index in (0,1))

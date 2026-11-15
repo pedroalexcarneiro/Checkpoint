@@ -39,9 +39,9 @@ def build_settings(window):
     for name in ('Aparência','Conexões','Downloads','Dados e backup'):
         page=QWidget();outer=QVBoxLayout(page);outer.setContentsMargins(0,18,0,0);pages.append(page_scroll(outer));tabs.addTab(page,name)
     appearance,connections,downloads,data=pages
-    frame,inside=card();head=QHBoxLayout();head.addWidget(text('Tema de cores','sectionTitle'));head.addStretch();window.theme_selector=QComboBox();window.theme_selector.setObjectName('themeSelector')
+    frame,inside=card();head=QHBoxLayout();head.addWidget(text('Tema de cores','sectionTitle'));head.addStretch();window.theme_selector=QComboBox(frame);window.theme_selector.setObjectName('themeSelector')
     for key,theme in THEMES.items():window.theme_selector.addItem(theme.name,key)
-    window.theme_selector.setCurrentIndex(window.theme_selector.findData(window.theme.key));window.theme_selector.currentIndexChanged.connect(window.theme_changed);head.addWidget(window.theme_selector);inside.addLayout(head)
+    window.theme_selector.setCurrentIndex(window.theme_selector.findData(window.theme.key));window.theme_selector.currentIndexChanged.connect(window.theme_changed);window.theme_selector.hide();inside.addLayout(head)
     inside.addWidget(text('O tema acompanha todas as páginas. Ajuste abaixo o tamanho das capas.','secondary'))
     from .settings_previews import ThemePreview,CoverSizePreview
     swatches=CardGrid(300,max_columns=3);swatches.setObjectName('themePreviews')
