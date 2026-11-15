@@ -126,7 +126,8 @@ def build_detail(window,game):
         gallery_layout.addWidget(text('Guarde suas melhores cenas','cardTitle'))
         gallery_layout.addWidget(text('Adicione capturas e vídeos deste jogo à sua galeria.','emptyDescription'))
     add=action('Adicionar captura',lambda:window.import_media(game_id));add.setObjectName('quiet');gallery_layout.addWidget(add,0,Qt.AlignLeft);gallery_layout.addStretch()
-    overview.addWidget(AdaptiveColumns(about,gallery,(3,2),breakpoint=640))
+    if owned:overview.addWidget(AdaptiveColumns(about,gallery,(3,2),breakpoint=640))
+    else:overview.addWidget(about);gallery.deleteLater()
     from .playtime import format_time
     from .steam_library import game_accounts
     accounts=game_accounts(window.library,game_id)
@@ -185,4 +186,8 @@ def build_detail(window,game):
             frame,inside=card();row=QHBoxLayout();row.addWidget(text(datetime_display(backup['created_at'])),1);row.addWidget(action('Restaurar',lambda checked=False,b=backup:window.restore_game_backup(game_id,b)));inside.addLayout(row);technical.addWidget(frame)
     else:technical.addWidget(ActionCard('folder','Proteja seus saves','Escolha a pasta de saves tradicionais para preparar seus backups.',lambda:window.configure_saves(game_id),'Configurar saves'))
     for inside in layouts:inside.addStretch()
-    tabs.setCurrentIndex(min(saved_tab,3));layout.addWidget(tabs);layout.addStretch();page.setWidget(body);window.stack.addWidget(page);window.stack.setCurrentWidget(page)
+    if not owned:
+        del window.detail_diary
+        for index in (3,2,1):
+            child=tabs.widget(index);tabs.removeTab(index);child.setParent(None);child.deleteLater()
+    tabs.setCurrentIndex(min(saved_tab,tabs.count()-1));layout.addWidget(tabs);layout.addStretch();page.setWidget(body);window.stack.addWidget(page);window.stack.setCurrentWidget(page)
