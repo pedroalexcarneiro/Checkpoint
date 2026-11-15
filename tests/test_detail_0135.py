@@ -8,7 +8,7 @@ def test_wish_detail_only_overview(ui,app,title):
  w.detail(i);app.processEvents()
  assert w.detail_tabs.count()==1
  assert w.detail_page.findChild(type(w.detail_tabs),'detailGallery') is None
- assert any(b.text()=='Adicionar à biblioteca' for b in w.detail_page.findChildren(QPushButton))
+ assert not any(b.text()=='Adicionar à biblioteca' for b in w.detail_page.findChildren(QPushButton))
  assert not any(b.text()=='Configurar execução' for b in w.detail_page.findChildren(QPushButton))
  w.library.acquire(i);w.detail(i)
  assert w.detail_tabs.count()==4

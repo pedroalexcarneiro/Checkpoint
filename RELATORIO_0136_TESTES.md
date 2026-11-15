@@ -2827,3 +2827,338 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## suite-definitiva-0136
+
+UTC: 2026-11-15T16:45:36.139977+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+........................................................................ [ 12%]
+........................................................................ [ 24%]
+........................................................................ [ 36%]
+........................................................................ [ 48%]
+........................................................................ [ 60%]
+........................................................................ [ 72%]
+........................................................................ [ 84%]
+.......................................................
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: -15
+
+## wheel-head-7015fef
+
+UTC: 2026-11-15T16:46:21.973853+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pip", "wheel", ".", "--no-deps", "--no-build-isolation", "--wheel-dir", "/workspace/work/entrega-0136/wheels"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Processing /workspace/work/Checkpoint
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: checkpoint-desktop
+  Building wheel for checkpoint-desktop (pyproject.toml): started
+  Building wheel for checkpoint-desktop (pyproject.toml): finished with status 'done'
+  Created wheel for checkpoint-desktop: filename=checkpoint_desktop-0.1.36-py3-none-any.whl size=233069 sha256=17bde2b571378ddb3a27aa0c8258762473312618e887f59b6b57a46c1a7acc57
+  Stored in directory: /tmp/pip-ephem-wheel-cache-4lfifjxw/wheels/83/77/53/5eb720791fc6f82eaa0f682bd5e5adf7478efb3a3363bfee14
+Successfully built checkpoint-desktop
+
+```
+
+stderr integral:
+```text
+WARNING: The directory '/home/agent/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+
+[notice] A new release of pip is available: 25.0.1 -> 26.3
+[notice] To update, run: /workspace/work/venv/bin/python -m pip install --upgrade pip
+
+```
+
+Código de saída: 0
+
+## instalar-wheel-head-7015fef
+
+UTC: 2026-11-15T16:46:22.488903+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pip", "install", "--upgrade", "--no-deps", "--no-index", "--target", "/workspace/work/wheel-0136-installed", "/workspace/work/entrega-0136/wheels/checkpoint_desktop-0.1.36-py3-none-any.whl"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Processing /workspace/work/entrega-0136/wheels/checkpoint_desktop-0.1.36-py3-none-any.whl
+Installing collected packages: checkpoint-desktop
+Successfully installed checkpoint-desktop-0.1.36
+
+```
+
+stderr integral:
+```text
+WARNING: The directory '/home/agent/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+
+```
+
+Código de saída: 0
+
+## smoke-wheel-head-7015fef
+
+UTC: 2026-11-15T16:46:23.197627+00:00
+
+Comando: `["bash", "-c", "cd /workspace/work/wheel-0136-installed && /workspace/work/venv/bin/python -m checkpoint.app --smoke-test --data-dir /tmp/checkpoint-0136-head7015-smoke"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Checkpoint smoke: 6 pages OK; SQLite integrity=ok
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 0
+
+## cadastro-wheel-head-7015fef
+
+UTC: 2026-11-15T16:46:23.872555+00:00
+
+Comando: `["bash", "-c", "cd /workspace/work/wheel-0136-installed && /workspace/work/venv/bin/python -m checkpoint.app --save-smoke-test --data-dir /tmp/checkpoint-0136-head7015-save-smoke"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Cadastro smoke: salvar, auxiliar, renderização e SQLite OK
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 0
+
+## correspondencia-wheel-fonte
+
+UTC: 2026-11-15T16:49:44.871371+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-c", "from pathlib import Path;from zipfile import ZipFile;import hashlib;root=Path('.');wheel=Path('/workspace/work/entrega-0136/wheels/checkpoint_desktop-0.1.36-py3-none-any.whl');z=ZipFile(wheel);files=[n for n in z.namelist() if n.startswith('checkpoint/') and not n.endswith('/')];assert 'checkpoint/global_hotkey.py' in files and 'checkpoint/statistics_periods.py' in files;[(None if z.read(n)==(root/n).read_bytes() else (_ for _ in ()).throw(AssertionError(n))) for n in files];print('Conteúdo do wheel idêntico ao fonte/assets:',len(files),'arquivos');print('SHA-256 wheel:',hashlib.sha256(wheel.read_bytes()).hexdigest());print('Pacote técnico local; Windows não homologado.')"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Conteúdo do wheel idêntico ao fonte/assets: 121 arquivos
+SHA-256 wheel: 17bde2b571378ddb3a27aa0c8258762473312618e887f59b6b57a46c1a7acc57
+Pacote técnico local; Windows não homologado.
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## suite-head-7015fef-0136
+
+UTC: 2026-11-15T16:52:25.937216+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+........................................................................ [ 12%]
+........................................................................ [ 24%]
+........................................................................ [ 36%]
+........................................................................ [ 48%]
+........................................................................ [ 60%]
+........................................................................ [ 72%]
+........................................................................ [ 84%]
+........................................................................ [ 96%]
+........................                                                 [100%]
+600 passed in 408.20s (0:06:48)
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## antes-navegacao-desejos
+
+UTC: 2026-11-15T16:53:56.312408+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_wish_navigation_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+______ test_open_wish_stays_in_wishes_and_does_not_acquire[sample0-False] ______
+
+ui = (<checkpoint.window.MainWindow(0xb765c80) at 0x7efcf178f340>, 1)
+app = <PySide6.QtWidgets.QApplication(0xb6f7430) at 0x7efcf1742c80>
+folder = PosixPath('/tmp/caf7ea84409c4346b27a4cc8c288d822'), has_banner = False
+
+    @pytest.mark.parametrize('has_banner',[False,True])
+    def test_open_wish_stays_in_wishes_and_does_not_acquire(ui,app,folder,has_banner):
+        w,i=ui;lib=w.library
+        if has_banner:
+            path=folder/'banner.png';im=QImage(1920,620,QImage.Format_RGB32);im.fill(QColor('blue'));im.save(str(path));lib.save_game({'title':lib.get(i)['title'],'banner':str(path)},i)
+        lib.set_setting(f'collection.unowned.{i}',True);w.add_wish(i);w.navigate(2);app.processEvents()
+        before=lib.get(i);wishlist=[tuple(r) for r in lib.sql.execute('SELECT * FROM wishlist')]
+        card=next(c for c in w.pages[2].findChildren(WishCard) if c.isVisible())
+        card.findChild(WishLogo).click();app.processEvents()
+>       assert w.current_page==2 and w.nav_buttons[2].isChecked() and not w.nav_buttons[1].isChecked()
+E       assert (1 == 2)
+E        +  where 1 = <checkpoint.window.MainWindow(0xb765c80) at 0x7efcf178f340>.current_page
+
+tests/test_wish_navigation_0136.py:16: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+______ test_open_wish_stays_in_wishes_and_does_not_acquire[sample0-True] _______
+
+ui = (<checkpoint.window.MainWindow(0xb9b8100) at 0x7efcf178f380>, 1)
+app = <PySide6.QtWidgets.QApplication(0xb6f7430) at 0x7efcf1742c80>
+folder = PosixPath('/tmp/b5f89f2a489b4a5e831aed16ddd1ffba'), has_banner = True
+
+    @pytest.mark.parametrize('has_banner',[False,True])
+    def test_open_wish_stays_in_wishes_and_does_not_acquire(ui,app,folder,has_banner):
+        w,i=ui;lib=w.library
+        if has_banner:
+            path=folder/'banner.png';im=QImage(1920,620,QImage.Format_RGB32);im.fill(QColor('blue'));im.save(str(path));lib.save_game({'title':lib.get(i)['title'],'banner':str(path)},i)
+        lib.set_setting(f'collection.unowned.{i}',True);w.add_wish(i);w.navigate(2);app.processEvents()
+        before=lib.get(i);wishlist=[tuple(r) for r in lib.sql.execute('SELECT * FROM wishlist')]
+        card=next(c for c in w.pages[2].findChildren(WishCard) if c.isVisible())
+        card.findChild(WishLogo).click();app.processEvents()
+>       assert w.current_page==2 and w.nav_buttons[2].isChecked() and not w.nav_buttons[1].isChecked()
+E       assert (1 == 2)
+E        +  where 1 = <checkpoint.window.MainWindow(0xb9b8100) at 0x7efcf178f380>.current_page
+
+tests/test_wish_navigation_0136.py:16: AssertionError
+______ test_open_wish_stays_in_wishes_and_does_not_acquire[sample1-False] ______
+
+ui = (<checkpoint.window.MainWindow(0xbe11060) at 0x7efcf1377dc0>, 1)
+app = <PySide6.QtWidgets.QApplication(0xb6f7430) at 0x7efcf1742c80>
+folder = PosixPath('/tmp/63402f98052f48838ff4651689e2b04c'), has_banner = False
+
+    @pytest.mark.parametrize('has_banner',[False,True])
+    def test_open_wish_stays_in_wishes_and_does_not_acquire(ui,app,folder,has_banner):
+        w,i=ui;lib=w.library
+        if has_banner:
+            path=folder/'banner.png';im=QImage(1920,620,QImage.Format_RGB32);im.fill(QColor('blue'));im.save(str(path));lib.save_game({'title':lib.get(i)['title'],'banner':str(path)},i)
+        lib.set_setting(f'collection.unowned.{i}',True);w.add_wish(i);w.navigate(2);app.processEvents()
+        before=lib.get(i);wishlist=[tuple(r) for r in lib.sql.execute('SELECT * FROM wishlist')]
+        card=next(c for c in w.pages[2].findChildren(WishCard) if c.isVisible())
+        card.findChild(WishLogo).click();app.processEvents()
+>       assert w.current_page==2 and w.nav_buttons[2].isChecked() and not w.nav_buttons[1].isChecked()
+E       assert (1 == 2)
+E        +  where 1 = <checkpoint.window.MainWindow(0xbe11060) at 0x7efcf1377dc0>.current_page
+
+tests/test_wish_navigation_0136.py:16: AssertionError
+______ test_open_wish_stays_in_wishes_and_does_not_acquire[sample1-True] _______
+
+ui = (<checkpoint.window.MainWindow(0xb984980) at 0x7efcf767b800>, 1)
+app = <PySide6.QtWidgets.QApplication(0xb6f7430) at 0x7efcf1742c80>
+folder = PosixPath('/tmp/3a77929a13d744a98130864c348bf866'), has_banner = True
+
+    @pytest.mark.parametrize('has_banner',[False,True])
+    def test_open_wish_stays_in_wishes_and_does_not_acquire(ui,app,folder,has_banner):
+        w,i=ui;lib=w.library
+        if has_banner:
+            path=folder/'banner.png';im=QImage(1920,620,QImage.Format_RGB32);im.fill(QColor('blue'));im.save(str(path));lib.save_game({'title':lib.get(i)['title'],'banner':str(path)},i)
+        lib.set_setting(f'collection.unowned.{i}',True);w.add_wish(i);w.navigate(2);app.processEvents()
+        before=lib.get(i);wishlist=[tuple(r) for r in lib.sql.execute('SELECT * FROM wishlist')]
+        card=next(c for c in w.pages[2].findChildren(WishCard) if c.isVisible())
+        card.findChild(WishLogo).click();app.processEvents()
+>       assert w.current_page==2 and w.nav_buttons[2].isChecked() and not w.nav_buttons[1].isChecked()
+E       assert (1 == 2)
+E        +  where 1 = <checkpoint.window.MainWindow(0xb984980) at 0x7efcf767b800>.current_page
+
+tests/test_wish_navigation_0136.py:16: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_wish_navigation_0136.py::test_open_wish_stays_in_wishes_and_does_not_acquire[sample0-False]
+FAILED tests/test_wish_navigation_0136.py::test_open_wish_stays_in_wishes_and_does_not_acquire[sample0-True]
+FAILED tests/test_wish_navigation_0136.py::test_open_wish_stays_in_wishes_and_does_not_acquire[sample1-False]
+FAILED tests/test_wish_navigation_0136.py::test_open_wish_stays_in_wishes_and_does_not_acquire[sample1-True]
+4 failed in 0.72s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## depois-navegacao-desejos
+
+UTC: 2026-11-15T16:54:59.541660+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_wish_navigation_0136.py", "tests/test_detail_0135.py", "tests/test_wishlist_prices.py", "tests/test_registration_0128.py", "tests/test_wish_time_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+............................                                             [100%]
+28 passed in 3.32s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## depois-ficha-contexto-desejos
+
+UTC: 2026-11-15T16:57:13.011495+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_wish_navigation_0136.py", "tests/test_detail_0135.py", "tests/test_wishlist_prices.py", "tests/test_registration_0128.py", "tests/test_wish_time_0136.py", "tests/test_visual_0132.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+.....................................................................    [100%]
+69 passed in 17.34s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0

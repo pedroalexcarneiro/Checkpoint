@@ -464,7 +464,7 @@ class MainWindow(QMainWindow):
         self.navigate(2)
 
     def acquire_wish(self,game_id):
-        self.library.acquire(game_id);self.refresh_library();self.detail(game_id)
+        self.library.acquire(game_id);self.refresh_library();self.current_page=1;self.detail(game_id)
 
     def statistics(self):
         from .statistics_view import build_statistics

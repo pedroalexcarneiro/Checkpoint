@@ -14,9 +14,13 @@ def build_detail(window,game):
     window.host.parentWidget().setMaximumWidth(1440)
     game_id=game['id'];saved_tab=window.detail_tabs.currentIndex() if getattr(window,'current_game',None)==game_id and hasattr(window,'detail_tabs') else 0
     draft=window.detail_diary.toPlainText() if getattr(window,'current_game',None)==game_id and hasattr(window,'detail_diary') else ''
-    window.current_game=game_id;window.current_page=1;window.header_widget.hide();window.heading.hide();window.search.hide();window.add_button.hide()
+    owned=window.library.is_owned(game_id)
+    is_wish=bool(window.library.sql.execute('SELECT 1 FROM wishlist WHERE game_id=?',(game_id,)).fetchone())
+    return_page=2 if window.current_page==2 or (is_wish and not owned) else 1
+    back_title='Voltar aos desejos' if return_page==2 else 'Voltar à biblioteca'
+    window.current_game=game_id;window.current_page=return_page;window.header_widget.hide();window.heading.hide();window.search.hide();window.add_button.hide()
     for control in window.view_buttons:control.hide()
-    for index,nav in enumerate(window.nav_buttons):nav.setChecked(index==1)
+    for index,nav in enumerate(window.nav_buttons):nav.setChecked(index==return_page)
     if hasattr(window,'detail_page'):
         window.stack.removeWidget(window.detail_page);window.detail_page.deleteLater()
     page=QScrollArea();page.setWidgetResizable(True);window.detail_page=page
@@ -24,20 +28,19 @@ def build_detail(window,game):
     from .metadata_state import has_game_data,display_source
     incomplete=not has_game_data(window.library,game)
     hero=Hero(game,window.theme);hero.detail_mode=True;hero.compact=incomplete
-    back=QHBoxLayout();back_button=action('←',lambda:window.navigate(1));back_button.setFixedSize(32,32);back_button.setObjectName('heroBack');back_button.setAccessibleName('Voltar à biblioteca');back_button.setToolTip('Voltar à biblioteca');back.addWidget(back_button);back.addStretch();hero.content.insertLayout(0,back)
+    back=QHBoxLayout();back_button=action('←',lambda:window.navigate(return_page));back_button.setFixedSize(32,32);back_button.setObjectName('heroBack');back_button.setAccessibleName(back_title);back_button.setToolTip(back_title);back.addWidget(back_button);back.addStretch();hero.content.insertLayout(0,back)
     layout.addWidget(hero)
     if hero.compact or (hero.banner.isNull() and hero.logo.isNull()):
         if hero.banner.isNull() and hero.logo.isNull():hero.hide()
-        heading=QHBoxLayout();heading.addWidget(action('←',lambda:window.navigate(1)))
+        heading=QHBoxLayout();fallback_back=action('←',lambda:window.navigate(return_page));fallback_back.setObjectName('detailBack');fallback_back.setAccessibleName(back_title);fallback_back.setToolTip(back_title);heading.addWidget(fallback_back)
         title=text(game['title'],'sectionTitle');title.setObjectName('gameDetailTitle')
         heading.addWidget(title,1);layout.addLayout(heading)
     actions_frame=QWidget();actions_frame.setObjectName('gameActions');actions_frame.setFixedHeight(HEIGHT['actions']);actions_frame.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed);bar=QHBoxLayout(actions_frame);bar.setContentsMargins(14,8,14,8);bar.setSpacing(20)
     files=[dict(r) for r in window.library.sql.execute('SELECT * FROM game_files WHERE game_id=? ORDER BY original_name',(game_id,))]
     available=[f for f in files if f['available']]
-    owned=window.library.is_owned(game_id)
-    if not owned:bar.addWidget(action('Adicionar à biblioteca',lambda:window.acquire_wish(game_id),True))
-    elif game['executable'] or available:bar.addWidget(action('Jogar',lambda:window.start_game(game),True))
-    else:bar.addWidget(action('Configurar execução',lambda:window.edit_game(game_id)))
+    if owned:
+        if game['executable'] or available:bar.addWidget(action('Jogar',lambda:window.start_game(game),True))
+        else:bar.addWidget(action('Configurar execução',lambda:window.edit_game(game_id)))
     seconds=window.library.sql.execute("SELECT COALESCE(SUM(duration_seconds),0) FROM play_sessions WHERE game_id=? AND state='finished'",(game_id,)).fetchone()[0]
     if owned:
         status_row=QHBoxLayout();dot=text('●');dot.setObjectName('gameStatusDot');dot.setStyleSheet('color: '+(window.theme.colors['accent'] if game['status'] in ('Jogando','Concluído') else window.theme.colors['muted']));status_row.addWidget(dot);status=QComboBox();status.setObjectName('gameStatus');status.setAccessibleName('Status do jogo');status.addItems(['Backlog','Jogando','Pausado','Concluído','Abandonado']);status.setCurrentText('Backlog' if game['status']=='Não iniciado' else game['status'])
@@ -62,7 +65,11 @@ def build_detail(window,game):
     more=QToolButton();more.setFixedSize(40,36);more.setIcon(nav_icon('more',window.theme.colors['text'],20));more.setIconSize(QSize(20,20));more.setAccessibleName('Gerenciar jogo');more.setPopupMode(QToolButton.InstantPopup)
     from .window_menu import WindowMenu
     menu=WindowMenu(more)
-    for title,callback in [('Editar ficha',lambda:window.edit_game(game_id)),('Trocar imagens',lambda:window.artworks(game_id)),('Obter ficha e imagens faltantes',lambda:window.completion_queue.submit([game_id],force=True)),('Adicionar aos desejos',lambda:window.add_wish(game_id)),('Remover da biblioteca',lambda:window.remove_game(game_id))]:
+    menu_actions=[('Editar ficha',lambda:window.edit_game(game_id)),('Trocar imagens',lambda:window.artworks(game_id)),('Obter ficha e imagens faltantes',lambda:window.completion_queue.submit([game_id],force=True))]
+    if owned:menu_actions.extend([('Adicionar aos desejos',lambda:window.add_wish(game_id)),('Remover da biblioteca',lambda:window.remove_game(game_id))])
+    elif is_wish:menu_actions.append(('Retirar dos desejos',lambda:window.remove_wish(game_id)))
+    else:menu_actions.append(('Adicionar aos desejos',lambda:window.add_wish(game_id)))
+    for title,callback in menu_actions:
         item=menu.addAction(title);item.triggered.connect(callback)
     more.setMenu(menu);bar.addWidget(more);layout.addWidget(actions_frame)
     notice=getattr(window,'detail_notice',None)

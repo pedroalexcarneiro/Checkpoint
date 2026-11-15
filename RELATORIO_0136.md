@@ -139,3 +139,13 @@ Pacote técnico wheel 0.1.36 construído localmente e instalado isoladamente; sm
 Metadados de renderização: fonte solicitada Segoe UI, resolvida OpenAI Sans neste Linux, corpo 14px; DPR 1, DPI lógico 96; tela virtual 800×800. Janelas Qt capturadas em 1280×800 e 1920×1080 lógicos, mesmo quando maiores que essa tela virtual. Escalas de geometria/raster 150%/200% testadas separadamente; não declarar que o desktop Windows ou seu DPI foram reproduzidos.
 
 Verificação remota somente leitura: fix/0.1.35-ajustes continua 818ec80a492a29936782ddb3a43eecaf3ef996e3 e v0.1.35 continua df5ff41e74b36cea4e2abd160e1172f4166bf32a. Nenhuma ref remota fix/0.1.36-ajustes retornada. Sem push/PR/tag/release/workflow. Contratos/assets/workflows comparados byte a byte com a base; UTF-8/LF e diff --check passaram nos arquivos alterados.
+
+## Complemento posterior — ficha continua em Desejos, sem aquisição na ficha
+
+Dono observou que abrir um desejo marcava Biblioteca na lateral. Quatro testes reproduziram a troca indevida de contexto em dois jogos, com/sem banner. build_detail agora conserva Desejos como origem quando aberto pela lista ou quando é desejo exclusivo; ambos os botões de voltar (banner e cabeçalho sem arte) retornam aos desejos. Abrir a ficha preserva integralmente jogo, wishlist e posse. Quando o usuário executa uma aquisição explícita na lista, acquire_wish passa ao contexto Biblioteca.
+
+Após pergunta específica, o dono respondeu Retirar o botão da ficha. Removido Adicionar à biblioteca somente da ficha exclusiva de Desejos. Menu dessa ficha oferece Retirar dos desejos, sem Remover da biblioteca nem ação duplicada de adicionar aos desejos. Aquisição pela lista permanece ação explícita para quando tiver o jogo; abrir/ver detalhes nunca a executa.
+
+Arquivos/funções: checkpoint/detail_view.py::build_detail; window.py::acquire_wish; tests/test_wish_navigation_0136.py. Teste test_detail_0135 foi atualizado apenas da presença para ausência do botão, por aprovação direta, mantendo aba única, ausência de Galeria/Configurar execução e quatro abas depois da aquisição. Sessões/metadados/IDs não apagados. 69 regressões pertinentes passaram, incluindo o contrato protegido test_visual_0132 sem qualquer alteração nele. Esta decisão posterior substitui a exigência anterior de manter o botão na ficha.
+
+Validação intermediária concluída com 600 passed em 408,20s, antes de consolidar esse último complemento; não é homologação do novo contexto da ficha. Uma execução substituída pelo pedido do hífen foi interrompida e teve stdout/stderr/código −15 preservados. A validação integral final terá como base o último commit de código, sem mudanças de produção durante a execução.
