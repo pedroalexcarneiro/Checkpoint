@@ -188,7 +188,7 @@ class MainWindow(QMainWindow):
         self.search.textChanged.connect(self.search_changed); filters.addWidget(self.search,2)
         self.platform = QComboBox(); self.genre = QComboBox(); self.status = QComboBox()
         self.extra_filters=QWidget();extra_layout=QHBoxLayout(self.extra_filters);extra_layout.setContentsMargins(0,0,0,0)
-        self.platform.addItem('Todas as plataformas',''); self.genre.addItem('Todos os gêneros','')
+        self.platform.addItem('Todas',''); self.genre.addItem('Todos os gêneros','')
         self.status.addItem('Todos os status','')
         for value in STATUSES: self.status.addItem(value,value)
         for combo in [self.platform,self.genre,self.status]:
@@ -234,7 +234,7 @@ class MainWindow(QMainWindow):
 
     def refresh_library(self,*args):
         if not hasattr(self,'gallery'): return
-        for combo,key,caption in [(self.platform,'platform','Plataforma: Todas'),(self.genre,'genre','Todos os gêneros')]:
+        for combo,key,caption in [(self.platform,'platform','Todas'),(self.genre,'genre','Todos os gêneros')]:
             selected = combo.currentData(); values = sorted({value.strip() for g in self.library.owned_games() for value in (g[key].split(',') if key=='genre' else [g[key]]) if value.strip()})
             combo.blockSignals(True); combo.clear(); combo.addItem(caption,'')
             for value in values: combo.addItem(value,value)
@@ -587,7 +587,7 @@ class MainWindow(QMainWindow):
         files=[dict(row) for row in self.library.sql.execute(
             'SELECT * FROM game_files WHERE game_id=? ORDER BY available DESC,id',(game['id'],))]
         if files:
-            if files[0]['available']:
+            if files[0]['available'] or not files[0]['drive_id']:
                 return self.launch_rom(game['id'],files[0])
             QMessageBox.information(self,'ROM indisponível','Baixe a ROM vinculada na aba Arquivos antes de jogar.'); return
         self.guard(lambda:self.launcher.start(game))
@@ -596,13 +596,32 @@ class MainWindow(QMainWindow):
         if game_id in self.save_jobs:
             QMessageBox.information(self,'Saves','Aguarde a operação de saves antes de jogar.'); return
         from .launcher import EmulatorCommand
-        profiles = [dict(r) for r in self.library.sql.execute('SELECT p.*,e.name,e.executable FROM emulator_profiles p JOIN emulators e ON e.id=p.emulator_id')]
-        profiles = [p for p in profiles if p['platform']==file['platform'] and (not p['extensions'].strip() or file['extension'].casefold() in [e.strip().casefold() for e in p['extensions'].split(',')])]
+        from .local_rom import validate_path,compatible_profiles,identity_problem
+        try:
+            checked=validate_path(file.get('local_path') or '')
+            file={**file,'extension':checked['extension']}
+        except ValueError as error:
+            if file.get('drive_id'):
+                QMessageBox.information(self,'ROM indisponível','Baixe novamente a ROM vinculada na aba Arquivos.');return
+            if QMessageBox.question(self,'ROM indisponível',str(error)+' Localizar novamente?')==QMessageBox.Yes:self.choose_local_rom(game_id)
+            return
+        problem=identity_problem(self.library.get(game_id),file)
+        if problem:QMessageBox.warning(self,'Confira a edição',problem);return
+        if not file.get('drive_id'):
+            profiles=compatible_profiles(self.library,file['platform'],file['extension'])
+        else:
+            profiles=[dict(r) for r in self.library.sql.execute('SELECT p.*,e.name,e.executable FROM emulator_profiles p JOIN emulators e ON e.id=p.emulator_id')]
+            profiles=[p for p in profiles if p['platform']==file['platform'] and (not p['extensions'].strip() or file['extension'].casefold() in [e.strip().casefold() for e in p['extensions'].split(',')])]
         if not profiles:
-            QMessageBox.information(self,'Emuladores','Nenhum perfil compatível. Configure plataforma e extensões do emulador.'); return
-        choice,ok = QInputDialog.getItem(self,'Executar versão','Escolha o perfil:',[p['name'] for p in profiles],0,False)
-        if not ok: return
-        profile = profiles[[p['name'] for p in profiles].index(choice)]
+            if QMessageBox.question(self,'Emuladores','Nenhum perfil compatível. Configurar plataforma e extensões?')==QMessageBox.Yes:self.emulators()
+            return
+        saved=self.library.sql.execute('SELECT profile_id FROM rom_versions WHERE file_id=?',(file['id'],)).fetchone()
+        profile=next((p for p in profiles if saved and p['id']==saved[0]),None)
+        if profile is None:
+            names=[p['name'] for p in profiles]
+            choice,ok=QInputDialog.getItem(self,'Executar versão','Escolha o perfil:',names,0,False)
+            if not ok:return
+            profile=profiles[names.index(choice)]
         if QMessageBox.question(self,'Registro da sessão','Este emulador não possui detecção validada de encerramento da ROM. Você deverá encerrar o registro manualmente ao terminar de jogar. Iniciar?')!=QMessageBox.Yes: return
         def launch():
             command = EmulatorCommand.build(profile['executable'],profile['arguments_json'],file['local_path'])
@@ -623,9 +642,22 @@ class MainWindow(QMainWindow):
             self.refresh_library(); self.detail(dialog.imported_id)
 
     def link_rom(self,game_id):
+        from .local_rom_dialog import RomSourceDialog
+        dialog=RomSourceDialog(self.library,game_id,self)
+        if dialog.exec()==QDialog.Accepted:
+            self.refresh_library();self.detail(dialog.game_id)
+            if dialog.outcome:self.statusBar().showMessage(dialog.outcome.get('message','ROM vinculada.'))
+
+    def choose_local_rom(self,game_id):
+        from .local_rom_dialog import LocalRomDialog
+        dialog=LocalRomDialog(self.library,game_id,self);dialog.choose_file()
+        if dialog.file and dialog.exec()==QDialog.Accepted:
+            self.refresh_library();self.detail(dialog.game_id);self.statusBar().showMessage('ROM local vinculada.')
+
+    def link_drive_rom(self,game_id):
         from .rom_link_dialog import RomLinkDialog
         dialog=RomLinkDialog(self.library,game_id,self);dialog.exec()
-        self.refresh_library();self.detail(game_id)
+        self.refresh_library();self.detail(dialog.game_id)
         if dialog.outcome:self.statusBar().showMessage(dialog.outcome.get('message','ROM vinculada.'))
 
     def drive(self):

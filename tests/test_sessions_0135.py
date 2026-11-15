@@ -5,11 +5,11 @@ from PySide6.QtWidgets import QMessageBox,QInputDialog
 def test_rom_session_finishes_after_real_process_exit(app,library,folder,monkeypatch,title,platform,extension):
  monkeypatch.setattr('checkpoint.credentials.CredentialVault.get',lambda *a:None)
  library.set_setting('artwork.auto',False);library.set_setting('prices.auto',False)
- game=library.save_game({'title':title})
+ game=library.save_game({'title':title,'platform':platform})
  rom=folder/('jogo'+extension);rom.write_bytes(b'x')
  with library.sql:
   e=library.sql.execute('INSERT INTO emulators(name,executable) VALUES(?,?)',('Python teste',sys.executable)).lastrowid
-  library.sql.execute('INSERT INTO emulator_profiles(emulator_id,platform,arguments_json) VALUES(?,?,?)',(e,platform,'["-c","pass", "{rom}"]'))
+  library.sql.execute('INSERT INTO emulator_profiles(emulator_id,platform,arguments_json,extensions) VALUES(?,?,?,?)',(e,platform,'["-c","pass", "{rom}"]',extension))
   f=library.sql.execute('INSERT INTO game_files(game_id,original_name,platform,extension,local_path,available) VALUES(?,?,?,?,?,1)',(game,rom.name,platform,extension,str(rom))).lastrowid
   library.sql.execute('INSERT INTO rom_versions(file_id) VALUES(?)',(f,))
  monkeypatch.setattr(QInputDialog,'getItem',lambda *a:('Python teste',True))

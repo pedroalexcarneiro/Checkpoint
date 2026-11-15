@@ -49,6 +49,16 @@ def main():
             period.setCurrentIndex(period.findData(key));capture(prefix+'statistics-'+key)
     from checkpoint.profile_dialog import ProfileDialog
     dialog=ProfileDialog(lib,window);dialog.select_photo(lib.get(ids[0])['cover']);dialog.zoom.setValue(150);dialog.show();capture('profile',dialog);dialog.reject()
+    from checkpoint.local_rom_dialog import RomSourceDialog,LocalRomDialog
+    import sys
+    local=lib.save_game({'title':'Programa Á','platform':'CHIP-8'})
+    path=root/'ROMs de teste'/'Programa Á.ch8';path.parent.mkdir();path.write_bytes(bytes.fromhex('00e01200'))
+    with lib.sql:
+        emulator=lib.sql.execute('INSERT INTO emulators(name,executable) VALUES(?,?)',('Perfil controlado CHIP-8',sys.executable)).lastrowid
+        lib.sql.execute('INSERT INTO emulator_profiles(emulator_id,platform,arguments_json,extensions) VALUES(?,?,?,?)',(emulator,'CHIP-8',json.dumps(['-c','pass','{rom}']),'.ch8'))
+    source=RomSourceDialog(lib,local,window);source.show();capture('rom-origem',source);source.reject()
+    link=LocalRomDialog(lib,local,window);link.select_path(path);link.show();capture('rom-local',link);link.save()
+    window.detail(local);window.detail_tabs.setCurrentIndex(3);capture('rom-local-vinculada')
     (root/'manifest.json').write_text(json.dumps({'platform':'Linux Qt offscreen','fixtures':True,'window_sizes':['1280x800','1920x1080','1000x700'],'device_pixel_ratio':window.devicePixelRatioF(),'screenshots':sorted(p.name for p in root.glob('*.png') if not p.stem[0].isdigit() or 'x' in p.stem)},indent=2),encoding='utf-8')
     window.close();db.close();print(root)
 

@@ -1810,3 +1810,419 @@ This plugin does not support propagateSizeHints()
 ```
 
 Código de saída: 0
+
+## rom-local-antes
+
+UTC: 2026-11-15T22:13:05.849530+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_local_rom_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+FFFFFFFFF                                                                [100%]
+=================================== FAILURES ===================================
+_______ test_bind_launch_and_reopen_local_rom_without_drive[local_rom0] ________
+
+library = <checkpoint.library.Library object at 0x7fbd34c7d250>
+local_rom = (1, PosixPath('/tmp/27c7773f8bb644b3ae96ea30e00f0bde/ROMs com espaço/Programa Á.ch8'), 1, b'\x00\xe0\x12\x00')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fbd34c7d2b0>
+
+    def test_bind_launch_and_reopen_local_rom_without_drive(library,local_rom,monkeypatch):
+>       from checkpoint.local_rom import bind_local,compatible_profiles
+E       ModuleNotFoundError: No module named 'checkpoint.local_rom'
+
+tests/test_local_rom_0137.py:23: ModuleNotFoundError
+_______ test_bind_launch_and_reopen_local_rom_without_drive[local_rom1] ________
+
+library = <checkpoint.library.Library object at 0x7fbd34e0f110>
+local_rom = (1, PosixPath('/tmp/41b7df57865c4402a78750c9f081f102/ROMs com espaço/Programa Bê.ch8'), 1, b'\x00\xe0`\x01p\x01\x12\x04')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fbd34e0f1a0>
+
+    def test_bind_launch_and_reopen_local_rom_without_drive(library,local_rom,monkeypatch):
+>       from checkpoint.local_rom import bind_local,compatible_profiles
+E       ModuleNotFoundError: No module named 'checkpoint.local_rom'
+
+tests/test_local_rom_0137.py:23: ModuleNotFoundError
+_ test_local_replacement_keeps_previous_file_and_failed_selection_is_atomic[local_rom0] _
+
+library = <checkpoint.library.Library object at 0x7fbd34c7e810>
+local_rom = (1, PosixPath('/tmp/77ecf4e2c0dd4216ae4b0bd60c7b7376/ROMs com espaço/Programa Á.ch8'), 1, b'\x00\xe0\x12\x00')
+
+    def test_local_replacement_keeps_previous_file_and_failed_selection_is_atomic(library,local_rom):
+>       from checkpoint.local_rom import bind_local
+E       ModuleNotFoundError: No module named 'checkpoint.local_rom'
+
+tests/test_local_rom_0137.py:46: ModuleNotFoundError
+_ test_local_replacement_keeps_previous_file_and_failed_selection_is_atomic[local_rom1] _
+
+library = <checkpoint.library.Library object at 0x7fbd34c7e0f0>
+local_rom = (1, PosixPath('/tmp/aeaa7286e9984c6b9e8c49f015cedea6/ROMs com espaço/Programa Bê.ch8'), 1, b'\x00\xe0`\x01p\x01\x12\x04')
+
+    def test_local_replacement_keeps_previous_file_and_failed_selection_is_atomic(library,local_rom):
+>       from checkpoint.local_rom import bind_local
+E       ModuleNotFoundError: No module named 'checkpoint.local_rom'
+
+tests/test_local_rom_0137.py:46: ModuleNotFoundError
+_ test_local_link_requires_explicit_profile_capability_and_read_access[local_rom0] _
+
+library = <checkpoint.library.Library object at 0x7fbd34e0eb70>
+local_rom = (1, PosixPath('/tmp/73e96a85133a4426bcaaf3a7d58e6b64/ROMs com espaço/Programa Á.ch8'), 1, b'\x00\xe0\x12\x00')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fbd34e0e810>
+
+    def test_local_link_requires_explicit_profile_capability_and_read_access(library,local_rom,monkeypatch):
+>       from checkpoint.local_rom import bind_local,compatible_profiles
+E       ModuleNotFoundError: No module named 'checkpoint.local_rom'
+
+tests/test_local_rom_0137.py:59: ModuleNotFoundError
+_ test_local_link_requires_explicit_profile_capability_and_read_access[local_rom1] _
+
+library = <checkpoint.library.Library object at 0x7fbd34c7e690>
+local_rom = (1, PosixPath('/tmp/befc1af72e344806a352044b0d9bca83/ROMs com espaço/Programa Bê.ch8'), 1, b'\x00\xe0`\x01p\x01\x12\x04')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fbd34c7dd60>
+
+    def test_local_link_requires_explicit_profile_capability_and_read_access(library,local_rom,monkeypatch):
+>       from checkpoint.local_rom import bind_local,compatible_profiles
+E       ModuleNotFoundError: No module named 'checkpoint.local_rom'
+
+tests/test_local_rom_0137.py:59: ModuleNotFoundError
+________ test_distinct_ocarina_platform_and_edition_are_not_equivalent _________
+
+library = <checkpoint.library.Library object at 0x7fbd34c7ddc0>
+folder = PosixPath('/tmp/ff120da24c5a4191a73b294312e3e4cc')
+
+    def test_distinct_ocarina_platform_and_edition_are_not_equivalent(library,folder):
+>       from checkpoint.local_rom import identity_problem
+E       ModuleNotFoundError: No module named 'checkpoint.local_rom'
+
+tests/test_local_rom_0137.py:75: ModuleNotFoundError
+__________ test_cancel_local_dialog_does_not_change_link[local_rom0] ___________
+
+library = <checkpoint.library.Library object at 0x7fbd34a83f50>
+local_rom = (1, PosixPath('/tmp/98cf347b650f46cfae248d19ee109870/ROMs com espaço/Programa Á.ch8'), 1, b'\x00\xe0\x12\x00')
+app = <PySide6.QtWidgets.QApplication(0x21b2cda0) at 0x7fbd34cb2b40>
+
+    def test_cancel_local_dialog_does_not_change_link(library,local_rom,app):
+>       from checkpoint.local_rom import bind_local
+E       ModuleNotFoundError: No module named 'checkpoint.local_rom'
+
+tests/test_local_rom_0137.py:84: ModuleNotFoundError
+__________ test_cancel_local_dialog_does_not_change_link[local_rom1] ___________
+
+library = <checkpoint.library.Library object at 0x7fbd34ab3050>
+local_rom = (1, PosixPath('/tmp/1c606dee4e484e378d006e7140bca437/ROMs com espaço/Programa Bê.ch8'), 1, b'\x00\xe0`\x01p\x01\x12\x04')
+app = <PySide6.QtWidgets.QApplication(0x21b2cda0) at 0x7fbd34cb2b40>
+
+    def test_cancel_local_dialog_does_not_change_link(library,local_rom,app):
+>       from checkpoint.local_rom import bind_local
+E       ModuleNotFoundError: No module named 'checkpoint.local_rom'
+
+tests/test_local_rom_0137.py:84: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_local_rom_0137.py::test_bind_launch_and_reopen_local_rom_without_drive[local_rom0]
+FAILED tests/test_local_rom_0137.py::test_bind_launch_and_reopen_local_rom_without_drive[local_rom1]
+FAILED tests/test_local_rom_0137.py::test_local_replacement_keeps_previous_file_and_failed_selection_is_atomic[local_rom0]
+FAILED tests/test_local_rom_0137.py::test_local_replacement_keeps_previous_file_and_failed_selection_is_atomic[local_rom1]
+FAILED tests/test_local_rom_0137.py::test_local_link_requires_explicit_profile_capability_and_read_access[local_rom0]
+FAILED tests/test_local_rom_0137.py::test_local_link_requires_explicit_profile_capability_and_read_access[local_rom1]
+FAILED tests/test_local_rom_0137.py::test_distinct_ocarina_platform_and_edition_are_not_equivalent
+FAILED tests/test_local_rom_0137.py::test_cancel_local_dialog_does_not_change_link[local_rom0]
+FAILED tests/test_local_rom_0137.py::test_cancel_local_dialog_does_not_change_link[local_rom1]
+9 failed in 0.28s
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 1
+
+## perfil-zoom-redondo
+
+UTC: 2026-11-15T22:15:20.621007+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/perfil-v2"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/perfil-v2
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
+
+## rom-local-servico-depois
+
+UTC: 2026-11-15T22:17:28.342174+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_local_rom_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+.........                                                                [100%]
+9 passed in 0.34s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## rom-local-ficha-execucao
+
+UTC: 2026-11-15T22:19:44.846327+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_local_rom_0137.py", "tests/test_launch_0135.py", "tests/test_sessions_0135.py", "tests/test_layout_0134.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+.............
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: -15
+
+## rom-edicao-antes
+
+UTC: 2026-11-15T22:20:37.347960+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_rom_edition_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+_____ test_drive_worker_rejects_distinct_ocarina_edition_before_binding[] ______
+
+library = <checkpoint.library.Library object at 0x7fa8df398140>, platform = ''
+
+    @pytest.mark.parametrize('platform',['','Nintendo 64'])
+    def test_drive_worker_rejects_distinct_ocarina_edition_before_binding(library,platform):
+        game=library.save_game({'title':'The Legend of Zelda: Ocarina of Time','platform':platform,'description':'Manter original'})
+        DriveScanner(library,None).record({'id':'edition-3d','name':'The Legend of Zelda - Ocarina of Time 3D.3ds'},'/Nintendo 3DS');library.sql.commit()
+        file=library.sql.execute('SELECT * FROM game_files').fetchone();before=library.get(game)
+        class NoDownload:
+            def download(self,*args):pytest.fail('Não baixar uma edição divergente')
+>       with pytest.raises(ValueError):complete_link(library,file['id'],game,client=NoDownload(),sources={})
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_rom_edition_0137.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+checkpoint/rom_link.py:68: in complete_link
+    DriveScanner(library,client or GoogleDriveClient.authenticate(None,CredentialVault())).download(file_id,directory)
+checkpoint/integrations/drive.py:305: in download
+    self.client.download(row['drive_id'],partial)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_rom_edition_0137.test_drive_worker_rejects_distinct_ocarina_edition_before_binding.<locals>.NoDownload object at 0x7fa8df398650>
+args = ('edition-3d', PosixPath('/tmp/9551f34979eb4077a40a4e6d55e00273/ROMs/edition-3d.3ds.b636145762cf41279310561917076f00.partial'))
+
+>   def download(self,*args):pytest.fail('Não baixar uma edição divergente')
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: Não baixar uma edição divergente
+
+tests/test_rom_edition_0137.py:14: Failed
+_ test_drive_worker_rejects_distinct_ocarina_edition_before_binding[Nintendo 64] _
+
+library = <checkpoint.library.Library object at 0x7fa8df0a2b40>
+platform = 'Nintendo 64'
+
+    @pytest.mark.parametrize('platform',['','Nintendo 64'])
+    def test_drive_worker_rejects_distinct_ocarina_edition_before_binding(library,platform):
+        game=library.save_game({'title':'The Legend of Zelda: Ocarina of Time','platform':platform,'description':'Manter original'})
+        DriveScanner(library,None).record({'id':'edition-3d','name':'The Legend of Zelda - Ocarina of Time 3D.3ds'},'/Nintendo 3DS');library.sql.commit()
+        file=library.sql.execute('SELECT * FROM game_files').fetchone();before=library.get(game)
+        class NoDownload:
+            def download(self,*args):pytest.fail('Não baixar uma edição divergente')
+>       with pytest.raises(ValueError):complete_link(library,file['id'],game,client=NoDownload(),sources={})
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_rom_edition_0137.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+checkpoint/rom_link.py:68: in complete_link
+    DriveScanner(library,client or GoogleDriveClient.authenticate(None,CredentialVault())).download(file_id,directory)
+checkpoint/integrations/drive.py:305: in download
+    self.client.download(row['drive_id'],partial)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_rom_edition_0137.test_drive_worker_rejects_distinct_ocarina_edition_before_binding.<locals>.NoDownload object at 0x7fa8df0a3530>
+args = ('edition-3d', PosixPath('/tmp/2a51fe4f5549499985c8aa3b6ae301ca/ROMs/edition-3d.3ds.8b1f3e1bcbc241a0bd6bb8332d755207.partial'))
+
+>   def download(self,*args):pytest.fail('Não baixar uma edição divergente')
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: Não baixar uma edição divergente
+
+tests/test_rom_edition_0137.py:14: Failed
+____________ test_drive_sheet_shows_divergence_without_starting_job ____________
+
+library = <checkpoint.library.Library object at 0x7fa8df398680>
+app = <PySide6.QtWidgets.QApplication(0x37251560) at 0x7fa8df157d40>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fa8df16cf20>
+
+    def test_drive_sheet_shows_divergence_without_starting_job(library,app,monkeypatch):
+        from checkpoint.rom_link_dialog import RomLinkDialog
+        game=library.save_game({'title':'The Legend of Zelda: Ocarina of Time'})
+        DriveScanner(library,None).record({'id':'edition-3d','name':'The Legend of Zelda - Ocarina of Time 3D.3ds'},'/Nintendo 3DS');library.sql.commit()
+        called=[];monkeypatch.setattr('checkpoint.rom_link_dialog.run_link',lambda *a:called.append(a) or {'errors':[],'message':'fixture'})
+>       dialog=RomLinkDialog(library,game);dialog.show();app.processEvents();assert dialog.results.count()==1
+                                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       assert 0 == 1
+E        +  where 0 = <built-in method count of PySide6.QtWidgets.QListWidget object at 0x7fa8df01e440>()
+E        +    where <built-in method count of PySide6.QtWidgets.QListWidget object at 0x7fa8df01e440> = <PySide6.QtWidgets.QListWidget(0x37454910, name="romLinkResults") at 0x7fa8df01e440>.count
+E        +      where <PySide6.QtWidgets.QListWidget(0x37454910, name="romLinkResults") at 0x7fa8df01e440> = <checkpoint.rom_link_dialog.RomLinkDialog(0x3733b8d0) at 0x7fa8defd97c0>.results
+
+tests/test_rom_edition_0137.py:25: AssertionError
+----------------------------- Captured stderr call -----------------------------
+Fontconfig error: No writable cache directories
+This plugin does not support propagateSizeHints()
+=========================== short test summary info ============================
+FAILED tests/test_rom_edition_0137.py::test_drive_worker_rejects_distinct_ocarina_edition_before_binding[]
+FAILED tests/test_rom_edition_0137.py::test_drive_worker_rejects_distinct_ocarina_edition_before_binding[Nintendo 64]
+FAILED tests/test_rom_edition_0137.py::test_drive_sheet_shows_divergence_without_starting_job
+3 failed in 0.26s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## rom-local-ficha-execucao-corrigida
+
+UTC: 2026-11-15T22:21:33.268820+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_local_rom_0137.py", "tests/test_launch_0135.py", "tests/test_sessions_0135.py", "tests/test_layout_0134.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+.............
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: -15
+
+## rom-local-ficha-regressao
+
+UTC: 2026-11-15T22:21:35.527473+00:00
+
+Comando: `["timeout", "60s", "/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_local_rom_0137.py", "tests/test_launch_0135.py", "tests/test_sessions_0135.py", "tests/test_layout_0134.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+.............................                                            [100%]
+29 passed in 1.72s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## rom-edicao-depois
+
+UTC: 2026-11-15T22:22:08.524068+00:00
+
+Comando: `["timeout", "60s", "/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_rom_edition_0137.py", "tests/test_rom_link_0134.py", "tests/test_visual_0132.py::test_protected_drive_and_registration_logic_is_unchanged", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+................                                                         [100%]
+16 passed in 1.99s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## rom-local-capturas
+
+UTC: 2026-11-15T22:23:23.971030+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/rom-local-v1"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/rom-local-v1
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
+
+## rom-local-regressoes-completas
+
+UTC: 2026-11-15T22:24:56.066542+00:00
+
+Comando: `["timeout", "90s", "/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_local_rom_0137.py", "tests/test_rom_edition_0137.py", "tests/test_rom_link_0134.py", "tests/test_launch_0135.py", "tests/test_sessions_0135.py", "tests/test_layout_0134.py", "tests/test_visual_0132.py::test_protected_drive_and_registration_logic_is_unchanged", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+.................................................                        [100%]
+49 passed in 3.73s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0

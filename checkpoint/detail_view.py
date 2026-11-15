@@ -188,10 +188,13 @@ def build_detail(window,game):
         for record in records:grid.add_card(memory_card(window,record))
         memories.addWidget(grid)
     technical.addWidget(text('Arquivos e versões','sectionTitle'))
-    if not files:technical.addWidget(ActionCard('folder','Nenhuma ROM associada','',lambda:window.link_rom(game_id),'Vincular ROM do Drive'))
+    if not files:
+        source,source_layout=card();source_layout.addWidget(text('Nenhuma ROM associada','cardTitle'));choices=QHBoxLayout()
+        choices.addWidget(action('Escolher ROM local',lambda:window.choose_local_rom(game_id),True));choices.addWidget(action('Vincular ROM do Drive',lambda:window.link_drive_rom(game_id)));choices.addStretch();source_layout.addLayout(choices);technical.addWidget(source)
     for file in files:
-        frame,inside=card();row=QHBoxLayout();row.addWidget(Badge('folder'));words=QVBoxLayout();words.addWidget(text(file['original_name'],'cardTitle'));words.addWidget(StatusChip('Disponível neste computador' if file['available'] else 'Somente no Drive'));row.addLayout(words,1)
-        row.addWidget(action('Executar versão',lambda checked=False,f=file:window.launch_rom(game_id,f),True) if file['available'] else action('Baixar ROM',lambda:window.link_rom(game_id),True));inside.addLayout(row);technical.addWidget(frame)
+        present=bool((file['available'] or not file['drive_id']) and Path(file['local_path'] or '').is_file())
+        frame,inside=card();row=QHBoxLayout();row.addWidget(Badge('folder'));words=QVBoxLayout();words.addWidget(text(file['original_name'],'cardTitle'));words.addWidget(StatusChip('Disponível neste computador' if present else 'Somente no Drive' if file['drive_id'] else 'Arquivo não encontrado'));row.addLayout(words,1)
+        row.addWidget(action('Executar versão',lambda checked=False,f=file:window.launch_rom(game_id,f),True) if present else action('Baixar ROM',lambda:window.link_drive_rom(game_id),True) if file['drive_id'] else action('Localizar ROM',lambda:window.choose_local_rom(game_id),True));inside.addLayout(row);technical.addWidget(frame)
     if files:technical.addWidget(action('Substituir ROM vinculada',lambda:window.link_rom(game_id)),0,Qt.AlignLeft)
     heading=QHBoxLayout();heading.addWidget(text('Saves tradicionais','sectionTitle'));heading.addStretch();heading.addWidget(action('Configurar saves',lambda:window.configure_saves(game_id)));technical.addLayout(heading)
     from .save_profiles import SaveProfiles

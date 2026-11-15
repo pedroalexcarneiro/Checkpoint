@@ -56,6 +56,12 @@ def complete_link(library,file_id,game_id=None,*,client=None,sources=None,art_pr
     from .integrations.drive import GoogleDriveClient
     row=library.sql.execute('SELECT * FROM game_files WHERE id=?',(file_id,)).fetchone()
     if not row:raise ValueError('A ROM selecionada não está mais no índice.')
+    if game_id is not None:
+        from .local_rom import identity_problem
+        game=library.get(game_id)
+        if not game:raise ValueError('Jogo indisponível.')
+        problem=identity_problem(game,dict(row))
+        if problem:raise ValueError(problem)
     with atomic(library.sql):
         if game_id is None:
             game_id=save_import(library,{'title':normalize_rom_name(row['original_name']),'platform':row['platform'] or '','source':'Drive'},file_id)
@@ -81,6 +87,8 @@ def complete_link(library,file_id,game_id=None,*,client=None,sources=None,art_pr
                 match=MetadataResult('rawg',match.identifiers['rawg'],match.title)
             result=selected_details(match.provider,match.external_id,game['platform'],sources)
             if normalized(result.title)!=normalized(game['title']):raise ValueError('Identidade divergente.')
+            from .local_rom import canonical_platform
+            if game['platform'] and result.platforms and not any(canonical_platform(p).casefold()==canonical_platform(game['platform']).casefold() for p in result.platforms):raise ValueError('Plataforma de catálogo divergente.')
             complete_identity(library,game_id,result)
             if any((result.description,result.developer,result.publisher)):
                 with library.sql:library.sql.execute("UPDATE games SET source='Busca' WHERE id=? AND source IN ('Drive','Google Drive','Não identificada','Manual','')",(game_id,))
