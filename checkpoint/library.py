@@ -110,25 +110,26 @@ class Library:
             self.sql.execute('INSERT INTO media_files(game_id,path,caption,created_at,kind) VALUES(?,?,?,?,?)',
                              (game_id,str(path),caption,now(),'image' if extension in {'.png','.jpg','.jpeg','.webp'} else 'video'))
 
-    def stats(self):
+    def stats(self,display_timezone=timezone.utc):
         games = self.owned_games()
         rows = self.sql.execute("SELECT s.*,g.title FROM play_sessions s JOIN games g ON g.id=s.game_id WHERE g.deleted_at IS NULL AND s.state='finished'").fetchall()
         owned_ids={game['id'] for game in games};rows=[row for row in rows if row['game_id'] in owned_ids]
         durations = [r['duration_seconds'] for r in rows]
         today = datetime.now(timezone.utc).date()
         weekly, monthly, top = defaultdict(int), defaultdict(int), defaultdict(int)
-        # Distribui sessões entre dias em UTC, em vez de atribuir tudo ao dia de início.
+        # O contrato padrão é UTC; a interface solicita o fuso local sem alterar registros.
         daily = defaultdict(float)
         for row in rows:
             top[(row['game_id'],row['title'])] += row['duration_seconds']
             try: start = datetime.fromisoformat(row['started_at'].replace('Z','+00:00'))
             except ValueError: continue
             if start.tzinfo is None: start = start.replace(tzinfo=timezone.utc)
-            start = start.astimezone(timezone.utc)
+            start = start.astimezone(None if display_timezone=='local' else display_timezone)
             remaining = row['duration_seconds']
             while remaining > 0:
                 midnight = (start+timedelta(days=1)).replace(hour=0,minute=0,second=0,microsecond=0)
-                portion = min(remaining,(midnight-start).total_seconds())
+                if display_timezone=='local':midnight=midnight.replace(tzinfo=None).astimezone()
+                portion = min(remaining,midnight.timestamp()-start.timestamp())
                 daily[start.date()] += portion
                 remaining -= portion; start = midnight
         for day,seconds in daily.items():

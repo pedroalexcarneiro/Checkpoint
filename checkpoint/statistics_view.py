@@ -39,16 +39,16 @@ def build_statistics(window):
     outer=window.clear_page(4);scroll=SmoothScrollArea();scroll.setWidgetResizable(True);body=QWidget();layout=QVBoxLayout(body);layout.setContentsMargins(0,0,8,0);layout.setSpacing(20)
     from .playtime import collection_times,format_time
     times=collection_times(window.library)
-    stats=window.library.stats();row=CardGrid(180,max_columns=4);row.setObjectName('statisticsMetrics')
+    stats=window.library.stats(display_timezone='local');row=CardGrid(180,max_columns=4);row.setObjectName('statisticsMetrics')
     for title,value,subtitle in [('Jogos',str(stats['total']),'Na biblioteca'),('Tempo registrado',format_time(sum(times.values())),'App + Steam'),('Sessões',str(stats['sessions']),f"Média de {stats['average']/60:.0f} min"),('Concluídos',str(stats['statuses']['Concluído']),'Jogos finalizados')]:row.add_card(metric(title,value,subtitle))
     layout.addWidget(row)
     charts_left=None;charts_right=None
     frame,inside=card();heading=QHBoxLayout();heading.addWidget(text('Seu ritmo de jogo','sectionTitle'));heading.addStretch();period=QComboBox();period.addItem('Últimos 12 meses',None)
     from datetime import datetime,timezone
-    years={int(day[:4]) for day in stats['daily']}|{datetime.now(timezone.utc).year}
+    years={int(day[:4]) for day in stats['daily']}|{datetime.now().year}
     for year in sorted(years,reverse=True):period.addItem(str(year),year)
     heading.addWidget(period);inside.addLayout(heading)
-    chart=TimeChart(stats['daily'],window.theme);period.currentIndexChanged.connect(lambda index:chart.set_year(period.itemData(index)));inside.addWidget(chart)
+    chart=TimeChart(stats['daily'],window.theme,display_timezone='local');period.currentIndexChanged.connect(lambda index:chart.set_year(period.itemData(index)));inside.addWidget(chart)
     layout.addWidget(frame)
     bottom_left=None;bottom_right=None
     frame,inside=card();inside.addWidget(text('Mais jogados','sectionTitle'))

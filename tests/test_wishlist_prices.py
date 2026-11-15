@@ -60,9 +60,9 @@ def test_heatmap_uses_real_daily_sessions_and_has_calendar_tooltips(library,app)
     from datetime import datetime,timezone,timedelta
     from checkpoint.activity_heatmap import ActivityHeatmap
     identity=library.save_game({'title':'Daily fixture'})
-    start=(datetime.now(timezone.utc)-timedelta(days=2)).replace(hour=23,minute=30,second=0,microsecond=0)
-    with library.sql:library.sql.execute("INSERT INTO play_sessions(game_id,started_at,ended_at,duration_seconds,state) VALUES(?,?,?,?, 'finished')",(identity,start.isoformat(),(start+timedelta(hours=1)).isoformat(),3600))
-    daily=library.stats()['daily'];assert sorted(daily.values())==[1800,1800]
+    start=(datetime.now().astimezone()-timedelta(days=2)).replace(hour=23,minute=30,second=0,microsecond=0)
+    with library.sql:library.sql.execute("INSERT INTO play_sessions(game_id,started_at,ended_at,duration_seconds,state) VALUES(?,?,?,?, 'finished')",(identity,start.astimezone(timezone.utc).isoformat(),(start+timedelta(hours=1)).astimezone(timezone.utc).isoformat(),3600))
+    daily=library.stats(display_timezone='local')['daily'];assert sorted(daily.values())==[1800,1800]
     window=MainWindow(library);window.navigate(4);window.show();app.processEvents();chart=window.findChild(ActivityHeatmap)
     assert chart is not None and chart.values==daily and len(chart.cells)==365
     assert sum(seconds for rect,day,seconds in chart.cells)==3600

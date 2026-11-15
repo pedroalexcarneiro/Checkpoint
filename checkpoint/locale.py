@@ -16,7 +16,9 @@ def date_storage(value):
 
 def datetime_display(value):
     if not value:return ''
-    try:return datetime.fromisoformat(value.replace('Z','+00:00')).strftime('%d/%m/%Y %H:%M')
+    try:
+        instant=datetime.fromisoformat(value.replace('Z','+00:00'))
+        return (instant.astimezone() if instant.tzinfo else instant).strftime('%d/%m/%Y %H:%M')
     except ValueError:return str(value)
 
 
