@@ -1,5 +1,9 @@
 # Estado atual — Checkpoint 0.1.36 local
 
+## Validação final local 0.1.36
+
+Código `da12842e6de663ee4791a6a4010bc622cfed8222`: **612 passed in 428.94s (0:07:08)**, exit 0, Linux/Python 3.12.14, Qt offscreen e dados em /tmp. Sem alterações no código durante a execução. Planos/relatórios/capturas e patches completos na entrega local; nenhum push/PR/tag/release/workflow. Windows real e console na API não comprovados; itens 02, 03 e 06 parciais. A4/ROM descarregada com emulador vivo continuam separados. Últimos ajustes: ficha em Desejos sem aquisição, favorito persistido e visível, status único conforme molde sem anotação.
+
 ## Rodada local 0.1.36 — em preparação, sem publicação
 
 Branch local `fix/0.1.36-ajustes`, base remota reconfirmada `818ec80a492a29936782ddb3a43eecaf3ef996e3` de `fix/0.1.35-ajustes`. Versão alvo/declarada 0.1.36, schema 4. Autorização não inclui push, PR, tag, release, troca de assets ou workflow de lançamento; nenhum desses atos foi realizado nesta rodada.

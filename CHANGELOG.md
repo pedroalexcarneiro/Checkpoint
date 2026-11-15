@@ -4,6 +4,8 @@ Registros anteriores descrevem o estado de cada versão; não são instruções 
 
 ## 0.1.36 — em preparação local, não publicada
 
+- Revisão com o dono: ficha permanece em Desejos sem aquisição, favorito com coração preenchido e estado salvo; status único no destaque do tema, sem anotação do molde.
+
 - Banner inteiro com área proporcional em qualquer largura; Início sem descrição sobre a arte.
 - Cinco opções de capas clicáveis com base e espaços alinhados; Steam centralizada sem trocar asset.
 - Estatísticas com sete períodos locais, recorte de sessões, lista com logos/tempo e dados extras integrados; Steam agregado separado.

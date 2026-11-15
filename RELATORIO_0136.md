@@ -1,3 +1,128 @@
+# Relatório local — Checkpoint 0.1.36: preparação parcial
+
+Código final validado: `da12842e6de663ee4791a6a4010bc622cfed8222`. Branch local `fix/0.1.36-ajustes`; base `818ec80a492a29936782ddb3a43eecaf3ef996e3`. Versão alvo 0.1.36, schema 4. **Sem push, PR, tag, release ou workflow. A rodada não está pronta para lançamento.**
+
+Suíte integral Linux/Python 3.12.14: **612 passed in 428.94s (0:07:08)**, exit 0, sem falhas/erros/skips. O código de produção permaneceu inalterado durante essa execução. Smokes do wheel correspondente instalado isoladamente e verificação byte a byte de fonte/assets também fazem parte da entrega. Isso não valida o pacote Windows nem o PC do dono.
+
+Situação: nove itens feitos no ambiente disponível; 02, 03 e 06 parciais pelos limites concretos abaixo. A4 e detectar apenas a ROM fechada com emulador vivo seguem pendências separadas, sem alteração de contrato. Não há suporte universal de console, original inventado ou associação presumida de processo-filho.
+
+Decisões posteriores do dono prevalecem: preço ausente usa `-` com motivo; percentual usa a cor do tema; ficha exclusiva permanece em Desejos e não tem Adicionar à biblioteca; coração marcado fica preenchido e persistido; status segue o recorte visual, sem anotação 2; banner ocupa bloco proporcional à arte inteira em cada largura.
+
+## Situação por item e SHAs
+
+Todos os estados feito abaixo referem-se ao Linux/offscreen e aos contratos/dados isolados testados; homologação Windows permanece não testada. Arquivos, funções, reproduções, evidências e limitações detalhadas constam nas seções de cada item.
+
+| Item | Status | SHAs de implementação/correção | Resultado e limite |
+| --- | --- | --- | --- |
+| 01 | feito | `e019050fba6f211d7d8ddb0e13b1d4e82646978c`<br>`432afcf9fe64028d3af0878e9e3277943ec3e511`<br>`d3ecbb2f77e87c08b4f7faa4cbab110f284c316c` | Cards sem tempo; posse/histórico preservados; ficha fica em Desejos sem aquisição. |
+| 02 | parcial | `0b5dda51693840a47b65f7a6a0a6ba7a963ef8fc`<br>`015fe0388ec78bd8e64e180bceb8e74b0d61c5b2`<br>`03f8ef3f0689ee50b0f91ec0aea66370c804baf9` | Guarda de plataforma/edição/cache entregue; cobertura autenticada console e vínculo por slug não comprovados. |
+| 03 | parcial | `0b5dda51693840a47b65f7a6a0a6ba7a963ef8fc`<br>`c6714f96619276e9ac937f920f8c1ebb0bde09e0`<br>`03f8ef3f0689ee50b0f91ec0aea66370c804baf9`<br>`7015fef4a8480c5f912c829514cf919e042b9693` | Desconto/ordenação/origem da mesma oferta, cor do tema e ausência com hífen; API oficial não traz original individual. |
+| 04 | feito | `9ebb264db2a6bc05cc855d94cb1387286ae4cab9`<br>`4da67d5eb00d48884813697068c47153b561a8ec` | Proporção original governa altura; geometria fracionária, quatro bordas e estados Qt testados; Windows real pendente. |
+| 05 | feito | `fa755f370a0d9bca82e1d899acaec0f19f5abe2f`<br>`4da67d5eb00d48884813697068c47153b561a8ec` | Sem descrição sobre o Início; cadastro/Sobre e arte inteira preservados. |
+| 06 | parcial | `bf4b682cc72c388de1c9486b3cee2fc7294870a7` | Hotkey nativa, conflito/liberação e alvo por PID implementados; filhos não associados recusados; pixels/atalho reais Windows não homologados. |
+| 07 | feito | `799d49d844734d13707bd51a339dcb2664d9e381`<br>`e9ad0dd37e7a4ef094af9c7f8b372ff6db060bd0`<br>`9919f4de4c08c929ee249349a5272d02f7f64336`<br>`ef2fb4ce83e8b2366f3536fa371d756c48006201` | Métricas alinhadas, nomes/valores separados, mapa sem sobra fixa e lista com logo/nome/tempo destacado. |
+| 08 | feito | `799d49d844734d13707bd51a339dcb2664d9e381` | Sete períodos locais; limites de calendário/DST; Steam agregado fora de recortes temporais. |
+| 09 | feito | `ef2fb4ce83e8b2366f3536fa371d756c48006201` | Mais estatísticas removido; gêneros e conclusões integrados sem apagar registros. |
+| 10 | feito | `5cb36d5396c22057b7a6454ed74ffdb47344894b`<br>`9dd88167bd0ba3e3bdbe3d89a666fc255c5abbe2` | Cinco capas, base e vãos iguais, teclado/foco/persistência; valores legados preservados até escolha. |
+| 11 | feito | `e149d11beb84bffc6ed6d59a154477a8a95450b6`<br>`4da67d5eb00d48884813697068c47153b561a8ec` | Centro óptico e raster explícito/DPI; ICO original inteiro e inalterado; Windows não homologado. |
+| 12 | feito | `c1d4ef872fedb4ae2505df2f068fc2f66a6852fc`<br>`d3ecbb2f77e87c08b4f7faa4cbab110f284c316c`<br>`affecc6569d2446ea70c279beddfc4716a4ea72e`<br>`da12842e6de663ee4791a6a4010bc622cfed8222` | Revisão visual, títulos acessíveis, contexto Desejos, coração preenchido e controle de status conforme referência. |
+
+## Como revisar e o que falta
+
+No pacote de entrega, abrir REVISAO_VISUAL_0136.html para comparar PNGs integrais de 1280×800/1920×1080. São dados de teste e arte pública Steam, nunca a base pessoal do dono nem capturas por hotkey real. Os vídeos recebidos/quadros pessoais ficaram fora do repositório e do pacote. Fonte resolvida no Linux: OpenAI Sans, solicitada Segoe UI, 96 DPI lógicos/DPR 1; escalas de geometria/raster 150% e 200% documentadas separadamente.
+
+Para prontidão Windows: testar hotkey/registro/liberação e conteúdo de jogo/emulador, app minimizado, processos/launchers compatíveis, restauração/maximização/DPI e pacote Windows correspondente. Código de captura só admite processo raiz de sessão e alvo em primeiro plano verificado; não foi executado em jogo real. Filhos/launchers sem associação comprovada permanecem recusados.
+
+Para os preços: comprovar resposta autenticada por slug da edição/plataforma console em BRL e seu vínculo explícito antes de ampliar suporte. A API oficial documentada só oferece mínimos agregados, sem original/loja individual; desconto depende de oferta individual contextual confiável do fallback já existente. Nenhuma nova coleta/fonte foi adotada. Não usar preço PC para Nintendo DS nem inferir edição por título. Sem chave real disponível no ambiente.
+
+Dados: sem migração de schema, recriação de banco ou limpeza. Sessões/instantes/ROMs/IDs/arquivos/proveniência preservados; flags de posse e contexto de cache usam settings. Percentuais legados ficam armazenados até escolha; apresentação usa valor mais próximo (empate menor). Favoritar não adquire jogo. Os arquivos protegidos, todos os assets e workflows foram comparados byte a byte com a base.
+
+## Execução integral final
+
+Comando: `QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp python -m pytest tests -q -p no:cacheprovider` (Python usado: /workspace/work/venv/bin/python).
+
+stdout integral:
+```text
+........................................................................ [ 11%]
+........................................................................ [ 23%]
+........................................................................ [ 35%]
+........................................................................ [ 47%]
+........................................................................ [ 58%]
+........................................................................ [ 70%]
+........................................................................ [ 82%]
+........................................................................ [ 94%]
+....................................                                     [100%]
+612 passed in 428.94s (0:07:08)
+```
+
+stderr integral:
+```text
+```
+
+Código de saída: 0. Histórico integral de cada teste/comando, inclusive reproduções vermelhas e execução substituída/interrompida, em RELATORIO_0136_TESTES.md; bytes originais em raw-tests no pacote. Resultados 598/600/604/608 anteriores são intermediários e não substituem esta execução final de 612.
+
+## Commits locais da entrega
+
+```text
+da12842 style(detail): agrupar status conforme referência sem anotação de mockup
+affecc6 fix(favorites): mostrar coração marcado e preservar estado ao reabrir
+d3ecbb2 fix(wishes): manter ficha em Desejos e retirar aquisição da ficha exclusiva
+7015fef style(prices): mostrar hífen sem preço e preservar motivo da ausência
+432afcf fix(library): preservar semântica de posse com preferência legada nula
+03f8ef3 fix(prices): manter loja e desconto na mesma oferta em preços empatados
+77b5765 chore: preparar versão local 0.1.36 e documentar limites da rodada
+015fe03 fix(prices): recusar cache de uma identidade ou edição anterior
+4da67d5 fix(ui): encaixar banner na proporção original e estabilizar raster em DPI alto
+c6714f9 style(prices): usar destaque do tema no percentual de desconto
+c1d4ef8 fix(ui): manter títulos longos de memórias acessíveis e ações alinhadas
+fa755f3 fix(home): retirar descrição sobreposta preservando cadastro e ficha
+9dd8816 fix(settings): igualar margens e espaços entre as cinco capas
+e019050 fix(wishes): ocultar tempo sem perder histórico nem posse da biblioteca
+9919f4d style(stats): destacar tempo na lista de mais jogados
+e149d11 fix(ui): compensar centro óptico da marca Steam sem alterar asset
+5cb36d5 feat(settings): escolher tamanho das capas em cinco exemplos clicáveis
+e9ad0dd fix(stats): mostrar mais jogados com logo nome e tempo em colunas
+ef2fb4c fix(stats): integrar dados extras e ajustar altura do mapa de calor
+799d49d feat(stats): filtrar períodos locais e alinhar métricas sem distribuir Steam
+0b5dda5 fix(prices): validar contexto de ofertas e apresentar descontos comprovados
+9ebb264 fix(ui): recalcular área contida do banner na geometria atual
+bf4b682 fix(capture): registrar atalho global e identificar sessão pelo primeiro plano
+```
+
+## Patches completos e SHA-256
+
+Cada arquivo foi produzido por `git format-patch -1 <sha> --stdout`; conteúdo completo no diretório patches. A documentação final posterior a este relatório tem seu patch/SHA no manifesto externo, evitando autorreferência do hash deste próprio documento. Não há publicação desses commits.
+
+| Arquivo | SHA-256 |
+| --- | --- |
+| patches/01-bf4b682cc72c388de1c9486b3cee2fc7294870a7.patch | `7db062410dbbd2e256bfbeded878f0e7dc6c00cce3d2d9ec6522c4f2575cc73a` |
+| patches/02-9ebb264db2a6bc05cc855d94cb1387286ae4cab9.patch | `acebbf30d1c8b32833fb40e44e4ea00b53f624665395b7c7d66cdddae81a8355` |
+| patches/03-0b5dda51693840a47b65f7a6a0a6ba7a963ef8fc.patch | `0e359850552891f0e82bb3a33246cdc3377978773b30865a7aa71726c35c3486` |
+| patches/04-799d49d844734d13707bd51a339dcb2664d9e381.patch | `7713e7a7474d4c48e8f9877784cd913b87d905063c127e84c7754c8d205a4900` |
+| patches/05-ef2fb4ce83e8b2366f3536fa371d756c48006201.patch | `08abad5fc8eaa29e84d73ef598f392dcc6d78e4416853c727e00525f399b088d` |
+| patches/06-e9ad0dd37e7a4ef094af9c7f8b372ff6db060bd0.patch | `8dd9c3bec67a9489ba07966f92137063339e205aea9106434e43b12c721a7814` |
+| patches/07-5cb36d5396c22057b7a6454ed74ffdb47344894b.patch | `309c1ecb7defdfd4b75e6caffd9756bf09d37caa82242543dcea95145111a112` |
+| patches/08-e149d11beb84bffc6ed6d59a154477a8a95450b6.patch | `ebe857eeaa515a2ced8b9b98ef8abaab19536708af3a3a605b4370964ba799e5` |
+| patches/09-9919f4de4c08c929ee249349a5272d02f7f64336.patch | `2e6c40c8bd744086d5a90f087cc0920074940c745b20978e6bc3ee03cf1c18a8` |
+| patches/10-e019050fba6f211d7d8ddb0e13b1d4e82646978c.patch | `9b88c8eaee7d64c28a14c9d66621e246a9f742e4e1f4964a5dfdd69c733cf283` |
+| patches/11-9dd88167bd0ba3e3bdbe3d89a666fc255c5abbe2.patch | `50843e950a92072a1c5ec05ae58270c54298ce44c89cb41ebd6380c8fe533c54` |
+| patches/12-fa755f370a0d9bca82e1d899acaec0f19f5abe2f.patch | `7e6dd0dc389e0b158928c8b36ca4652d9afbaca3d4abe04eaec936bcf26f8096` |
+| patches/13-c1d4ef872fedb4ae2505df2f068fc2f66a6852fc.patch | `57b7db58206c7de05732593686c2c791ba3302ccb33e65e0aaa6e5d9bddcd058` |
+| patches/14-c6714f96619276e9ac937f920f8c1ebb0bde09e0.patch | `8c5dadbcd51b0f5c4d3c2598c7952f1b33c3f1b6854a0bdff2f60367f28f04c1` |
+| patches/15-4da67d5eb00d48884813697068c47153b561a8ec.patch | `6bb51258d7db16a8ba4565161d8a00110033a2c59e8e2cd30df341d6d862cc96` |
+| patches/16-015fe0388ec78bd8e64e180bceb8e74b0d61c5b2.patch | `1fadc95d67a252edde7cb627be4a8feec13302b3d3adc798656168322bb30982` |
+| patches/17-77b57657ed36b5eedbf78de01b7c3f01a6394434.patch | `3cb0be08681f59e6efa30bc96edd22b986f04f17b681ecf2df4904dcbc331e96` |
+| patches/18-03f8ef3f0689ee50b0f91ec0aea66370c804baf9.patch | `fd30e1d372e33eefc3cecf0d8bee23a8a054ae61f8f6f74e65a87eee60993d03` |
+| patches/19-432afcf9fe64028d3af0878e9e3277943ec3e511.patch | `dccbed4a64ebc48eaa1f3909d94403e23a4edfda637affcf087acf6a4d682632` |
+| patches/20-7015fef4a8480c5f912c829514cf919e042b9693.patch | `dd5ca752a3c32097a68dd3e627afd7fb34e87db2a43bc682a842a97ddd96a441` |
+| patches/21-d3ecbb2f77e87c08b4f7faa4cbab110f284c316c.patch | `2cbcb4b187f977ce3a3c6bbd4b637f1b5ac1937a07a8af1d2cb3f85e3fddc1a2` |
+| patches/22-affecc6569d2446ea70c279beddfc4716a4ea72e.patch | `5bbae3fa6a589c8b21ee08f7e87b8a9a98b3db04b72a00070e27059829b24c08` |
+| patches/23-da12842e6de663ee4791a6a4010bc622cfed8222.patch | `066caf1a44ce9f838a67b6fca01d114d6573e8db4ed580347ad52b0800aa2452` |
+
+## Histórico detalhado de implementação e revisão
+
+Os registros seguintes são cronológicos; decisões posteriores e a situação consolidada acima prevalecem.
+
 # Relatório em andamento — Checkpoint 0.1.36
 
 Base: 818ec80a492a29936782ddb3a43eecaf3ef996e3. Branch local fix/0.1.36-ajustes. Não publicada. Plano: PLANO_0136.md. Resultados atuais: RELATORIO_0136_TESTES.md.

@@ -3604,3 +3604,181 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## suite-final-status-0136
+
+UTC: 2026-11-15T17:27:47.698825+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+........................................................................ [ 11%]
+........................................................................ [ 23%]
+........................................................................ [ 35%]
+........................................................................ [ 47%]
+........................................................................ [ 58%]
+........................................................................ [ 70%]
+........................................................................ [ 82%]
+........................................................................ [ 94%]
+....................................                                     [100%]
+612 passed in 428.94s (0:07:08)
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## wheel-final-status
+
+UTC: 2026-11-15T17:28:20.750970+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pip", "wheel", ".", "--no-deps", "--no-build-isolation", "--wheel-dir", "/workspace/work/entrega-0136/wheels"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Processing /workspace/work/Checkpoint
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: checkpoint-desktop
+  Building wheel for checkpoint-desktop (pyproject.toml): started
+  Building wheel for checkpoint-desktop (pyproject.toml): finished with status 'done'
+  Created wheel for checkpoint-desktop: filename=checkpoint_desktop-0.1.36-py3-none-any.whl size=234393 sha256=1fa97373ba8768c1e7b5927d26214ea1697667875bbcd8d9a6009c546b6da902
+  Stored in directory: /tmp/pip-ephem-wheel-cache-7y9eora5/wheels/83/77/53/5eb720791fc6f82eaa0f682bd5e5adf7478efb3a3363bfee14
+Successfully built checkpoint-desktop
+
+```
+
+stderr integral:
+```text
+WARNING: The directory '/home/agent/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+
+[notice] A new release of pip is available: 25.0.1 -> 26.3
+[notice] To update, run: /workspace/work/venv/bin/python -m pip install --upgrade pip
+
+```
+
+Código de saída: 0
+
+## instalar-wheel-final-status
+
+UTC: 2026-11-15T17:28:21.343664+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pip", "install", "--upgrade", "--no-deps", "--no-index", "--target", "/workspace/work/wheel-0136-installed", "/workspace/work/entrega-0136/wheels/checkpoint_desktop-0.1.36-py3-none-any.whl"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Processing /workspace/work/entrega-0136/wheels/checkpoint_desktop-0.1.36-py3-none-any.whl
+Installing collected packages: checkpoint-desktop
+Successfully installed checkpoint-desktop-0.1.36
+
+```
+
+stderr integral:
+```text
+WARNING: The directory '/home/agent/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+
+```
+
+Código de saída: 0
+
+## smoke-wheel-final-status
+
+UTC: 2026-11-15T17:28:22.127399+00:00
+
+Comando: `["bash", "-c", "cd /workspace/work/wheel-0136-installed && /workspace/work/venv/bin/python -m checkpoint.app --smoke-test --data-dir /tmp/checkpoint-0136-status-smoke"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Checkpoint smoke: 6 pages OK; SQLite integrity=ok
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 0
+
+## status-escala-150
+
+UTC: 2026-11-15T17:28:22.621826+00:00
+
+Comando: `["/usr/bin/env", "QT_SCALE_FACTOR=1.5", "/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_status_pill_0136.py", "tests/test_status_0135.py", "tests/test_visual_status_0135.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+............                                                             [100%]
+12 passed in 1.57s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## cadastro-wheel-final-status
+
+UTC: 2026-11-15T17:28:22.711468+00:00
+
+Comando: `["bash", "-c", "cd /workspace/work/wheel-0136-installed && /workspace/work/venv/bin/python -m checkpoint.app --save-smoke-test --data-dir /tmp/checkpoint-0136-status-save-smoke"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Cadastro smoke: salvar, auxiliar, renderização e SQLite OK
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 0
+
+## auditoria-final-status
+
+UTC: 2026-11-15T17:32:32.797192+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-c", "import subprocess,hashlib;from pathlib import Path;from zipfile import ZipFile;base='818ec80a492a29936782ddb3a43eecaf3ef996e3';files=['tests/test_save_lifecycle.py','checkpoint/worker.py','checkpoint/enrichment.py','checkpoint/game_import.py','checkpoint/completion_queue.py','checkpoint/dialogs.py','checkpoint/quick_add.py','tests/test_visual_0132.py'];files += subprocess.check_output(['git','ls-files','.github/workflows','checkpoint/assets'],text=True,encoding='utf-8').splitlines();[(None if Path(n).read_bytes()==subprocess.check_output(['git','show',base+':'+n]) else (_ for _ in ()).throw(AssertionError(n))) for n in files];print('Intactos: arquivos protegidos, todos os assets e workflows:',len(files));changed=subprocess.check_output(['git','diff','--name-only',base],text=True,encoding='utf-8').splitlines();[(Path(n).read_text(encoding='utf-8'),None if b'\\r' not in Path(n).read_bytes() else (_ for _ in ()).throw(AssertionError(n))) for n in changed if Path(n).is_file()];subprocess.run(['git','diff','--check'],check=True);wheel=Path('/workspace/work/entrega-0136/wheels/checkpoint_desktop-0.1.36-py3-none-any.whl');z=ZipFile(wheel);members=[n for n in z.namelist() if n.startswith('checkpoint/') and not n.endswith('/')];assert 'checkpoint/status_control.py' in members;[(None if z.read(n)==Path(n).read_bytes() else (_ for _ in ()).throw(AssertionError(n))) for n in members];print('Wheel idêntico ao fonte/assets:',len(members));print('SHA-256 wheel:',hashlib.sha256(wheel.read_bytes()).hexdigest());print('UTF-8/LF e diff --check OK');print('HEAD:',subprocess.check_output(['git','rev-parse','HEAD'],text=True,encoding='utf-8').strip())"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Intactos: arquivos protegidos, todos os assets e workflows: 41
+Wheel idêntico ao fonte/assets: 122
+SHA-256 wheel: 1fa97373ba8768c1e7b5927d26214ea1697667875bbcd8d9a6009c546b6da902
+UTF-8/LF e diff --check OK
+HEAD: da12842e6de663ee4791a6a4010bc622cfed8222
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
