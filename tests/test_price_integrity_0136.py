@@ -76,3 +76,13 @@ def test_discount_follows_active_theme(library,app):
             assert label.text()=='-40%'
             assert label.palette().color(QPalette.WindowText).name()==theme.colors['accent']
     finally:frame.close();apply_theme(app,'green')
+
+@pytest.mark.parametrize('title',['Portal 2','Hades'])
+def test_cached_quote_from_different_edition_is_not_shown(library,title):
+    i=library.save_game({'title':title,'platform':'PC'});library.sql.execute('INSERT INTO external_identifiers VALUES(?,?,?)',(i,'steam','620'));library.sql.commit()
+    cached={'currency':'BRL','retail':6000,'offer_context':{'platform':'PC','steam':'620'}};library.set_setting(f'prices.ggdeals.{i}',cached)
+    assert selected_quote(library,i)['lowest']==6000
+    library.sql.execute("UPDATE external_identifiers SET external_id='999' WHERE game_id=? AND provider='steam'",(i,));library.sql.commit()
+    quote=selected_quote(library,i)
+    assert quote.get('lowest') is None and 'identidade' in quote.get('message','').lower()
+    assert library.setting(f'prices.ggdeals.{i}')==cached

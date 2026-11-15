@@ -2220,3 +2220,86 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## antes-cache-edicao
+
+UTC: 2026-11-15T16:30:30.490762+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_price_integrity_0136.py::test_cached_quote_from_different_edition_is_not_shown", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_______ test_cached_quote_from_different_edition_is_not_shown[Portal 2] ________
+
+library = <checkpoint.library.Library object at 0x7f4364d73a70>
+title = 'Portal 2'
+
+    @pytest.mark.parametrize('title',['Portal 2','Hades'])
+    def test_cached_quote_from_different_edition_is_not_shown(library,title):
+        i=library.save_game({'title':title,'platform':'PC'});library.sql.execute('INSERT INTO external_identifiers VALUES(?,?,?)',(i,'steam','620'));library.sql.commit()
+        cached={'currency':'BRL','retail':6000,'offer_context':{'platform':'PC','steam':'620'}};library.set_setting(f'prices.ggdeals.{i}',cached)
+        assert selected_quote(library,i)['lowest']==6000
+        library.sql.execute("UPDATE external_identifiers SET external_id='999' WHERE game_id=? AND provider='steam'",(i,));library.sql.commit()
+        quote=selected_quote(library,i)
+>       assert quote.get('lowest') is None and 'identidade' in quote.get('message','').lower()
+E       AssertionError: assert (6000 is None)
+E        +  where 6000 = <built-in method get of dict object at 0x7f4364d9b4c0>('lowest')
+E        +    where <built-in method get of dict object at 0x7f4364d9b4c0> = {'currency': 'BRL', 'retail': 6000, 'offer_context': {'platform': 'PC', 'steam': '620'}, 'lowest': 6000, ...}.get
+
+tests/test_price_integrity_0136.py:87: AssertionError
+_________ test_cached_quote_from_different_edition_is_not_shown[Hades] _________
+
+library = <checkpoint.library.Library object at 0x7f4364d73950>, title = 'Hades'
+
+    @pytest.mark.parametrize('title',['Portal 2','Hades'])
+    def test_cached_quote_from_different_edition_is_not_shown(library,title):
+        i=library.save_game({'title':title,'platform':'PC'});library.sql.execute('INSERT INTO external_identifiers VALUES(?,?,?)',(i,'steam','620'));library.sql.commit()
+        cached={'currency':'BRL','retail':6000,'offer_context':{'platform':'PC','steam':'620'}};library.set_setting(f'prices.ggdeals.{i}',cached)
+        assert selected_quote(library,i)['lowest']==6000
+        library.sql.execute("UPDATE external_identifiers SET external_id='999' WHERE game_id=? AND provider='steam'",(i,));library.sql.commit()
+        quote=selected_quote(library,i)
+>       assert quote.get('lowest') is None and 'identidade' in quote.get('message','').lower()
+E       AssertionError: assert (6000 is None)
+E        +  where 6000 = <built-in method get of dict object at 0x7f4364dbac80>('lowest')
+E        +    where <built-in method get of dict object at 0x7f4364dbac80> = {'currency': 'BRL', 'retail': 6000, 'offer_context': {'platform': 'PC', 'steam': '620'}, 'lowest': 6000, ...}.get
+
+tests/test_price_integrity_0136.py:87: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_price_integrity_0136.py::test_cached_quote_from_different_edition_is_not_shown[Portal 2]
+FAILED tests/test_price_integrity_0136.py::test_cached_quote_from_different_edition_is_not_shown[Hades]
+2 failed in 0.20s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## depois-cache-edicao
+
+UTC: 2026-11-15T16:30:52.361442+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_price_integrity_0136.py", "tests/test_prices_0135.py", "tests/test_prices_0129.py", "tests/test_price_display_official.py", "tests/test_wishlist_prices.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+...........................                                              [100%]
+27 passed in 3.38s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0

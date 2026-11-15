@@ -14,7 +14,7 @@ def source_url(library,game):
     value=snapshot(library,game['id'])
     from .prices import platform_problem
     if platform_problem(game):return 'https://gg.deals/br/games/?'+urlencode({'title':game['title']+' '+game.get('platform','')})
-    if value.get('url'):return value['url']
+    if value.get('url') and selected_quote(library,game['id']).get('state')!='identity_mismatch':return value['url']
     steam=library.sql.execute("SELECT external_id FROM external_identifiers WHERE game_id=? AND provider='steam'",(game['id'],)).fetchone()
     return f'https://gg.deals/br/steam/app/{steam[0]}/' if steam else 'https://gg.deals/br/games/?'+urlencode({'title':game['title']})
 

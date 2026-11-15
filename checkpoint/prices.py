@@ -23,6 +23,11 @@ def selected_quote(library,game_id):
     problem=platform_problem(game)
     if problem:return {'message':problem,'state':'unsupported_platform'}
     if value.get('currency','BRL')!='BRL':return {'message':'Preço salvo em outra moeda. Consulte ofertas em reais.'}
+    context=value.get('offer_context',{})
+    steam=library.sql.execute("SELECT external_id FROM external_identifiers WHERE game_id=? AND provider='steam'",(game_id,)).fetchone()
+    confirmed=bool(steam and context.get('steam')==steam[0] and context.get('platform')==game.get('platform'))
+    if context and not confirmed:
+        return {'lowest':None,'current':None,'original':None,'discount':None,'state':'identity_mismatch','message':'Identidade alterada. Consulte preços da edição atual.'}
     allowed=('retail','keyshop') if library.setting('prices.include_keyshops',False) else ('retail',)
     choices=[]
     def add(amount,kind):
@@ -32,9 +37,6 @@ def selected_quote(library,game_id):
     for offer in value.get('offers',[]):add(offer.get('cents'),offer.get('kind'))
     amount,kind=min(choices,default=(None,None))
     value.update(lowest=amount,current=amount,current_kind=kind,original=None,discount=None)
-    context=value.get('offer_context',{})
-    steam=library.sql.execute("SELECT external_id FROM external_identifiers WHERE game_id=? AND provider='steam'",(game_id,)).fetchone()
-    confirmed=bool(steam and context.get('steam')==steam[0] and context.get('platform')==game.get('platform'))
     # Um original só acompanha exatamente a oferta escolhida, nunca o histórico/agregado.
     offers=[o for o in value.get('offers',[]) if o.get('cents')==amount and o.get('kind')==kind]
     from urllib.parse import urlsplit
