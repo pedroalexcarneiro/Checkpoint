@@ -958,3 +958,128 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## depois-11
+
+UTC: 2026-11-15T16:08:47.808087+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_service_logo_0135.py", "tests/test_service_optical_0136.py", "tests/test_settings_0135.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+..F......                                                                [100%]
+=================================== FAILURES ===================================
+_________ test_steam_white_mark_optically_centered_and_asset_unchanged _________
+
+app = <PySide6.QtWidgets.QApplication(0xf414550) at 0x7fcc44f60a80>
+
+    def test_steam_white_mark_optically_centered_and_asset_unchanged(app):
+        path=Path('checkpoint/assets/services/steam.ico')
+        import subprocess
+        original=subprocess.check_output(['git','show','818ec80a492a29936782ddb3a43eecaf3ef996e3:checkpoint/assets/services/steam.ico'])
+        assert sha256(path.read_bytes()).digest()==sha256(original).digest()
+        image=service_icon('Steam').toImage()
+        points=[(x,y) for y in range(48) for x in range(48) if min(image.pixelColor(x,y).getRgb()[:3])>180]
+        assert points
+        x=sum(p[0] for p in points)/len(points);y=sum(p[1] for p in points)/len(points)
+>       assert abs(x-23.5)<.6 and abs(y-23.5)<.6
+E       assert (0.6153846153846168 < 0.6)
+E        +  where 0.6153846153846168 = abs((22.884615384615383 - 23.5))
+
+tests/test_service_optical_0136.py:15: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_service_optical_0136.py::test_steam_white_mark_optically_centered_and_asset_unchanged
+1 failed, 8 passed in 1.06s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## depois-11-medida-final
+
+UTC: 2026-11-15T16:09:40.159979+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_service_logo_0135.py", "tests/test_service_optical_0136.py", "tests/test_settings_0135.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+.........                                                                [100%]
+9 passed in 0.98s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## antes-01
+
+UTC: 2026-11-15T16:12:00.383576+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_wish_time_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_wish_exclusive_and_owned_keep_sessions_but_only_library_shows_time[sample0] _
+
+ui = (<checkpoint.window.MainWindow(0x1fdc6390) at 0x7f8394d3b840>, 1)
+app = <PySide6.QtWidgets.QApplication(0x1fd61cd0) at 0x7f8394eaec80>
+
+    def test_wish_exclusive_and_owned_keep_sessions_but_only_library_shows_time(ui,app):
+        w,i=ui;lib=w.library
+        lib.sql.execute("INSERT INTO play_sessions(game_id,started_at,duration_seconds,state) VALUES(?,'2026-11-10T12:00:00Z',8100,'finished')",(i,));lib.sql.commit()
+        original=[tuple(r) for r in lib.sql.execute('SELECT * FROM play_sessions')]
+        lib.set_setting(f'collection.unowned.{i}',True);w.add_wish(i);w.navigate(2);app.processEvents()
+        card=w.pages[2].findChild(WishCard)
+>       assert not any(l.text()=='2h15min' for l in card.findChildren(QLabel))
+E       assert not True
+E        +  where True = any(<generator object test_wish_exclusive_and_owned_keep_sessions_but_only_library_shows_time.<locals>.<genexpr> at 0x7f839485dd80>)
+
+tests/test_wish_time_0136.py:13: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+_ test_wish_exclusive_and_owned_keep_sessions_but_only_library_shows_time[sample1] _
+
+ui = (<checkpoint.window.MainWindow(0x1ffb5a90) at 0x7f8394d0e740>, 1)
+app = <PySide6.QtWidgets.QApplication(0x1fd61cd0) at 0x7f8394eaec80>
+
+    def test_wish_exclusive_and_owned_keep_sessions_but_only_library_shows_time(ui,app):
+        w,i=ui;lib=w.library
+        lib.sql.execute("INSERT INTO play_sessions(game_id,started_at,duration_seconds,state) VALUES(?,'2026-11-10T12:00:00Z',8100,'finished')",(i,));lib.sql.commit()
+        original=[tuple(r) for r in lib.sql.execute('SELECT * FROM play_sessions')]
+        lib.set_setting(f'collection.unowned.{i}',True);w.add_wish(i);w.navigate(2);app.processEvents()
+        card=w.pages[2].findChild(WishCard)
+>       assert not any(l.text()=='2h15min' for l in card.findChildren(QLabel))
+E       assert not True
+E        +  where True = any(<generator object test_wish_exclusive_and_owned_keep_sessions_but_only_library_shows_time.<locals>.<genexpr> at 0x7f839343cfb0>)
+
+tests/test_wish_time_0136.py:13: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_wish_time_0136.py::test_wish_exclusive_and_owned_keep_sessions_but_only_library_shows_time[sample0]
+FAILED tests/test_wish_time_0136.py::test_wish_exclusive_and_owned_keep_sessions_but_only_library_shows_time[sample1]
+2 failed in 0.37s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1

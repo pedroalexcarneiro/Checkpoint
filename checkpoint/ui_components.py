@@ -219,7 +219,10 @@ def service_icon(provider):
         from pathlib import Path
         source=Path(__file__).resolve().parent/'assets'/'services'/('steam.ico' if provider=='Steam' else 'google-drive.png')
         official=QIcon(str(source)).pixmap(48,48).scaled(32,32,Qt.KeepAspectRatio,Qt.SmoothTransformation) if provider=='Steam' else QPixmap(str(source)).scaled(36,36,Qt.KeepAspectRatio,Qt.SmoothTransformation)
-        p.drawPixmap((48-official.width())//2,(48-official.height())//2,official)
+        official.setDevicePixelRatio(1)
+        # Centro de massa dos pixels claros da marca: compensação óptica medida no raster de 32px.
+        dx,dy=(2,-1) if provider=='Steam' else (0,0)
+        p.drawPixmap((48-official.width())//2+dx,(48-official.height())//2+dy,official)
     else:
         p.setPen(QColor('#ffffff'));font=QFont('Segoe UI');font.setPixelSize(16 if provider=='SteamGridDB' else 20);font.setWeight(QFont.Bold);p.setFont(font)
         p.drawText(QRectF(0,0,48,48),Qt.AlignCenter,'SG' if provider=='SteamGridDB' else 'R')
