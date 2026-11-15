@@ -13,7 +13,7 @@ MONTHS=('Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez')
 
 class ActivityHeatmap(QWidget):
     def __init__(self,values,theme,parent=None,display_timezone=timezone.utc):
-        super().__init__(parent);self.display_timezone=display_timezone;self.theme=theme;self.year=None;self.cells=[];self.setMinimumHeight(166);self.setMouseTracking(True);self.set_values(values)
+        super().__init__(parent);self.display_timezone=display_timezone;self.theme=theme;self.year=None;self.period_interval=None;self.cells=[];self.setMinimumHeight(166);self.setMouseTracking(True);self.set_values(values)
     def sizeHint(self):return QSize(740,166)
     def cell_size(self,columns):return max(3,min(20,(self.width()-34)//columns-3))
     def resizeEvent(self,event):
@@ -25,7 +25,10 @@ class ActivityHeatmap(QWidget):
         self.values=values;self.setAccessibleName('Horas de jogo por dia')
         self.setAccessibleDescription('; '.join(date_display(day)+': '+format_time(seconds) for day,seconds in values.items()) or 'Nenhuma sessão registrada');self.update()
     def set_year(self,year):self.year=year;self.update()
+    def set_interval(self,first,last):
+        self.period_interval=(first,last);self.updateGeometry();self.update()
     def interval(self):
+        if self.period_interval is not None:return self.period_interval
         today=(datetime.now() if self.display_timezone=='local' else datetime.now(self.display_timezone)).date()
         if self.year is None:return today-timedelta(days=364),today
         return date(self.year,1,1),min(today,date(self.year,12,31))

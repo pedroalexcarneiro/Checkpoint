@@ -698,3 +698,25 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## depois-07-08-final
+
+UTC: 2026-11-15T16:02:38.717145+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_statistics_0136.py", "tests/test_ui_polish.py", "tests/test_wishlist_prices.py", "tests/test_library.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+......................                                                   [100%]
+22 passed in 2.32s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0

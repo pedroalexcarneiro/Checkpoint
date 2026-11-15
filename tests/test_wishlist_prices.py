@@ -64,7 +64,8 @@ def test_heatmap_uses_real_daily_sessions_and_has_calendar_tooltips(library,app)
     with library.sql:library.sql.execute("INSERT INTO play_sessions(game_id,started_at,ended_at,duration_seconds,state) VALUES(?,?,?,?, 'finished')",(identity,start.astimezone(timezone.utc).isoformat(),(start+timedelta(hours=1)).astimezone(timezone.utc).isoformat(),3600))
     daily=library.stats(display_timezone='local')['daily'];assert sorted(daily.values())==[1800,1800]
     window=MainWindow(library);window.navigate(4);window.show();app.processEvents();chart=window.findChild(ActivityHeatmap)
-    assert chart is not None and chart.values==daily and len(chart.cells)==365
+    assert chart is not None and chart.values==daily
+    first,last=chart.interval();assert len(chart.cells)==(last-first).days+1
     assert sum(seconds for rect,day,seconds in chart.cells)==3600
     assert chart.accessibleName()=='Horas de jogo por dia';window.close()
 
