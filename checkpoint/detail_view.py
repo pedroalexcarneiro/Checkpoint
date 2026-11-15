@@ -35,7 +35,7 @@ def build_detail(window,game):
         heading=QHBoxLayout();fallback_back=action('←',lambda:window.navigate(return_page));fallback_back.setObjectName('detailBack');fallback_back.setAccessibleName(back_title);fallback_back.setToolTip(back_title);heading.addWidget(fallback_back)
         title=text(game['title'],'sectionTitle');title.setObjectName('gameDetailTitle')
         heading.addWidget(title,1);layout.addLayout(heading)
-    actions_frame=QWidget();actions_frame.setObjectName('gameActions');actions_frame.setFixedHeight(HEIGHT['actions']);actions_frame.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed);bar=QHBoxLayout(actions_frame);bar.setContentsMargins(14,8,14,8);bar.setSpacing(20)
+    actions_frame=QWidget();actions_frame.setObjectName('gameActions');actions_frame.setFixedHeight(HEIGHT['actions']);actions_frame.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed);bar=QHBoxLayout(actions_frame);bar.setContentsMargins(14,8,14,8);bar.setSpacing(12)
     files=[dict(r) for r in window.library.sql.execute('SELECT * FROM game_files WHERE game_id=? ORDER BY original_name',(game_id,))]
     available=[f for f in files if f['available']]
     if owned:
@@ -43,7 +43,8 @@ def build_detail(window,game):
         else:bar.addWidget(action('Configurar execução',lambda:window.edit_game(game_id)))
     seconds=window.library.sql.execute("SELECT COALESCE(SUM(duration_seconds),0) FROM play_sessions WHERE game_id=? AND state='finished'",(game_id,)).fetchone()[0]
     if owned:
-        status_row=QHBoxLayout();dot=text('●');dot.setObjectName('gameStatusDot');dot.setStyleSheet('color: '+(window.theme.colors['accent'] if game['status'] in ('Jogando','Concluído') else window.theme.colors['muted']));status_row.addWidget(dot);status=QComboBox();status.setObjectName('gameStatus');status.setAccessibleName('Status do jogo');status.addItems(['Backlog','Jogando','Pausado','Concluído','Abandonado']);status.setCurrentText('Backlog' if game['status']=='Não iniciado' else game['status'])
+        from .status_control import StatusControl
+        status_row=QHBoxLayout();status_row.setContentsMargins(0,0,0,0);status=StatusControl();status.addItems(['Backlog','Jogando','Pausado','Concluído','Abandonado']);status.setCurrentText('Backlog' if game['status']=='Não iniciado' else game['status'])
         def highlight_status():
             for index in range(status.count()):
                 font=QFont();font.setBold(index==status.currentIndex());status.setItemData(index,font,Qt.FontRole)
@@ -51,7 +52,7 @@ def build_detail(window,game):
         def change_status(value):
             highlight_status()
             window.library.save_game({'title':game['title'],'status':value},game_id)
-            dot.setStyleSheet('color: '+(window.theme.colors['accent'] if value in ('Jogando','Concluído') else window.theme.colors['muted']))
+            status.update()
             window.refresh_library()
         status.currentTextChanged.connect(change_status);status_row.addWidget(status);bar.addLayout(status_row)
         times=QVBoxLayout();times.setSpacing(2)

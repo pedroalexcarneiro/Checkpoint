@@ -3344,3 +3344,263 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## wheel-final-favoritos
+
+UTC: 2026-11-15T17:08:44.881156+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pip", "wheel", ".", "--no-deps", "--no-build-isolation", "--wheel-dir", "/workspace/work/entrega-0136/wheels"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Processing /workspace/work/Checkpoint
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: checkpoint-desktop
+  Building wheel for checkpoint-desktop (pyproject.toml): started
+  Building wheel for checkpoint-desktop (pyproject.toml): finished with status 'done'
+  Created wheel for checkpoint-desktop: filename=checkpoint_desktop-0.1.36-py3-none-any.whl size=233297 sha256=f84978f27312cc9402ec4389151eecc111f7ae97d743c95489553d22a1dc74bd
+  Stored in directory: /tmp/pip-ephem-wheel-cache-ows932k3/wheels/83/77/53/5eb720791fc6f82eaa0f682bd5e5adf7478efb3a3363bfee14
+Successfully built checkpoint-desktop
+
+```
+
+stderr integral:
+```text
+WARNING: The directory '/home/agent/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+
+[notice] A new release of pip is available: 25.0.1 -> 26.3
+[notice] To update, run: /workspace/work/venv/bin/python -m pip install --upgrade pip
+
+```
+
+Código de saída: 0
+
+## instalar-wheel-final-favoritos
+
+UTC: 2026-11-15T17:08:45.656402+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pip", "install", "--upgrade", "--no-deps", "--no-index", "--target", "/workspace/work/wheel-0136-installed", "/workspace/work/entrega-0136/wheels/checkpoint_desktop-0.1.36-py3-none-any.whl"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Processing /workspace/work/entrega-0136/wheels/checkpoint_desktop-0.1.36-py3-none-any.whl
+Installing collected packages: checkpoint-desktop
+Successfully installed checkpoint-desktop-0.1.36
+
+```
+
+stderr integral:
+```text
+WARNING: The directory '/home/agent/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+
+```
+
+Código de saída: 0
+
+## smoke-wheel-final-favoritos
+
+UTC: 2026-11-15T17:08:46.574810+00:00
+
+Comando: `["bash", "-c", "cd /workspace/work/wheel-0136-installed && /workspace/work/venv/bin/python -m checkpoint.app --smoke-test --data-dir /tmp/checkpoint-0136-favoritos-smoke"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Checkpoint smoke: 6 pages OK; SQLite integrity=ok
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 0
+
+## cadastro-wheel-final-favoritos
+
+UTC: 2026-11-15T17:08:47.187368+00:00
+
+Comando: `["bash", "-c", "cd /workspace/work/wheel-0136-installed && /workspace/work/venv/bin/python -m checkpoint.app --save-smoke-test --data-dir /tmp/checkpoint-0136-favoritos-save-smoke"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Cadastro smoke: salvar, auxiliar, renderização e SQLite OK
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 0
+
+## verificacao-final-fonte-wheel
+
+UTC: 2026-11-15T17:11:56.130633+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-c", "import subprocess,hashlib;from pathlib import Path;from zipfile import ZipFile;base='818ec80a492a29936782ddb3a43eecaf3ef996e3';files=['tests/test_save_lifecycle.py','checkpoint/worker.py','checkpoint/enrichment.py','checkpoint/game_import.py','checkpoint/completion_queue.py','checkpoint/dialogs.py','checkpoint/quick_add.py','tests/test_visual_0132.py'];files += subprocess.check_output(['git','ls-files','.github/workflows','checkpoint/assets'],text=True,encoding='utf-8').splitlines();[(None if Path(n).read_bytes()==subprocess.check_output(['git','show',base+':'+n]) else (_ for _ in ()).throw(AssertionError(n))) for n in files];print('Contratos, arquivos protegidos, workflows e todos os assets intactos:',len(files));changed=subprocess.check_output(['git','diff','--name-only',base],text=True,encoding='utf-8').splitlines();[(Path(n).read_text(encoding='utf-8'),None if b'\\r' not in Path(n).read_bytes() else (_ for _ in ()).throw(AssertionError(n))) for n in changed if Path(n).is_file()];subprocess.run(['git','diff','--check'],check=True);wheel=Path('/workspace/work/entrega-0136/wheels/checkpoint_desktop-0.1.36-py3-none-any.whl');z=ZipFile(wheel);members=[n for n in z.namelist() if n.startswith('checkpoint/') and not n.endswith('/')];[(None if z.read(n)==Path(n).read_bytes() else (_ for _ in ()).throw(AssertionError(n))) for n in members];print('Wheel idêntico ao fonte/assets:',len(members));print('SHA-256 wheel:',hashlib.sha256(wheel.read_bytes()).hexdigest());print('UTF-8/LF e diff --check OK');print('HEAD do código:',subprocess.check_output(['git','rev-parse','HEAD'],text=True,encoding='utf-8').strip())"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Contratos, arquivos protegidos, workflows e todos os assets intactos: 41
+Wheel idêntico ao fonte/assets: 121
+SHA-256 wheel: f84978f27312cc9402ec4389151eecc111f7ae97d743c95489553d22a1dc74bd
+UTF-8/LF e diff --check OK
+HEAD do código: affecc6569d2446ea70c279beddfc4716a4ea72e
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## suite-final-favoritos-0136
+
+UTC: 2026-11-15T17:14:09.025243+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+........................................................................ [ 11%]
+........................................................................ [ 23%]
+........................................................................ [ 35%]
+........................................................................ [ 47%]
+........................................................................ [ 59%]
+........................................................................ [ 71%]
+........................................................................ [ 82%]
+........................................................................ [ 94%]
+................................                                         [100%]
+608 passed in 409.72s (0:06:49)
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## antes-status-referencia
+
+UTC: 2026-11-15T17:16:25.834441+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_status_pill_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+________ test_status_is_one_themed_control_without_annotation[sample0] _________
+
+ui = (<checkpoint.window.MainWindow(0x178b8be0) at 0x7f2845a05540>, 1)
+app = <PySide6.QtWidgets.QApplication(0x17855ae0) at 0x7f2845bc19c0>
+
+    def test_status_is_one_themed_control_without_annotation(ui,app):
+        w,i=ui
+        for size in [(1280,800),(1920,1080)]:
+            w.resize(*size);w.detail(i)
+            for _ in range(4):app.processEvents()
+            control=w.detail_page.findChild(QComboBox,'gameStatus');frame=w.detail_page.findChild(QWidget,'gameActions')
+            dot=control.findChild(QLabel,'gameStatusDot')
+>           assert dot is not None and control.rect().contains(dot.geometry())
+E           assert (None is not None)
+
+tests/test_status_pill_0136.py:15: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+________ test_status_is_one_themed_control_without_annotation[sample1] _________
+
+ui = (<checkpoint.window.MainWindow(0x181158a0) at 0x7f2845a05400>, 1)
+app = <PySide6.QtWidgets.QApplication(0x17855ae0) at 0x7f2845bc19c0>
+
+    def test_status_is_one_themed_control_without_annotation(ui,app):
+        w,i=ui
+        for size in [(1280,800),(1920,1080)]:
+            w.resize(*size);w.detail(i)
+            for _ in range(4):app.processEvents()
+            control=w.detail_page.findChild(QComboBox,'gameStatus');frame=w.detail_page.findChild(QWidget,'gameActions')
+            dot=control.findChild(QLabel,'gameStatusDot')
+>           assert dot is not None and control.rect().contains(dot.geometry())
+E           assert (None is not None)
+
+tests/test_status_pill_0136.py:15: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_status_pill_0136.py::test_status_is_one_themed_control_without_annotation[sample0]
+FAILED tests/test_status_pill_0136.py::test_status_is_one_themed_control_without_annotation[sample1]
+2 failed in 0.40s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## depois-status-referencia
+
+UTC: 2026-11-15T17:16:51.911636+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_status_pill_0136.py", "tests/test_status_0135.py", "tests/test_visual_status_0135.py", "tests/test_reference_layout_0128.py", "tests/test_favorite_0136.py", "tests/test_wish_navigation_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+......................                                                   [100%]
+22 passed in 2.78s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## status-mouse-teclado
+
+UTC: 2026-11-15T17:18:28.530012+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_status_pill_0136.py", "tests/test_status_0135.py", "tests/test_visual_status_0135.py", "tests/test_reference_layout_0128.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+................                                                         [100%]
+16 passed in 1.61s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0

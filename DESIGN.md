@@ -1,5 +1,7 @@
 # Referência visual do Checkpoint 0.1.29
 
+Status usa controle único com ponto interno, fundo suave, borda/texto/seta no destaque do tema e menu nativo com cinco estados; sem anotação 2 da referência. Favorito marcado usa coração preenchido na cor do tema, com estado persistido.
+
 Revisão posterior: ficha exclusiva mantém Desejos selecionado e retorno aos desejos; sem botão Adicionar à biblioteca na ficha, por decisão explícita do dono. A aquisição permanece uma ação manual na lista.
 
 Decisão posterior do dono na revisão 0.1.36: ausência de preço usa `-` no valor principal, mantendo o motivo curto logo abaixo. Substitui somente o texto Sem preço salvo.
