@@ -531,6 +531,12 @@ class MainWindow(QMainWindow):
     def start_game(self,game):
         if game['id'] in self.save_jobs:
             QMessageBox.information(self,'Saves','Aguarde a operação de saves antes de jogar.'); return
+        files=[dict(row) for row in self.library.sql.execute(
+            'SELECT * FROM game_files WHERE game_id=? ORDER BY available DESC,id',(game['id'],))]
+        if files:
+            if files[0]['available']:
+                return self.launch_rom(game['id'],files[0])
+            QMessageBox.information(self,'ROM indisponível','Baixe a ROM vinculada na aba Arquivos antes de jogar.'); return
         self.guard(lambda:self.launcher.start(game))
 
     def launch_rom(self,game_id,file):
