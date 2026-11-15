@@ -1,0 +1,31 @@
+# Plano 0.1.37 — implementação local
+
+Pedido integral recebido em 15/11/2026; referências: imagem A (Início) e imagem B (Biblioteca em lista), anexadas nesta conversa. Base local/remota reconfirmada: fix/0.1.36-ajustes em 58b0c118c534dbdbc3bc080db4a95e7ecd1554d1; tag v0.1.36 em 4e54fc0b91ca7a4180307874f72f3b32eb3dca87. Checkout inicial limpo. Branch nova fix/0.1.37-ajustes. Sem push, PR, tag, release ou workflow de publicação.
+
+## Sequência de unidades e critérios
+
+1. Diagnóstico: código, sessões e esquema; capacidade atual de preços e reprodução da lista/grade/estatísticas. Preservar código publicado e registrar evidências antes de corrigir.
+2. Item 8: rótulos Não iniciado, Nome: A–Z, Adicionados recentemente e períodos Hoje/Esta semana/Este mês. Mesmos dados e cálculos; status ausente das linhas da lista.
+3. Item 4: serviço de dados do Início a partir de play_sessions válidas, sem criar histórico retroativo. Histórico existente contém início e PID após Popen bem-sucedido; não exige nova tabela. Resumo usa semana segunda-feira 00h local até agora; somente sessões finalizadas com duração comprovada entram em tempo/sessões/jogos, sessões ativas/interrompidas ficam fora até revisão. Documentar essa limitação, sem duração inventada.
+4. Item 4: composição do Início com dois jogos recentes, ficha/execução separadas, histórico real, resumo semanal navegável, ofertas atuais e carrossel de memórias reais. Sem execuções: ação Biblioteca; sem jogos: Adicionar jogo. Rolagem vertical e colunas adaptativas.
+5. Item 5: substituir tabela por cards horizontais com logo/nome/tempo/favorito; preservar filtros e busca, sem status/plataforma/gênero nas linhas ou tooltips. Teclado e clique do coração independentes da ficha.
+6. Item 6: medir grade antes/depois em volume, identificar decodificações/escala no paint, cache limitado e atualizações sem reconstrução desnecessária; preservar posição, margens e proporção inteira. Não extrapolar benchmark Linux para fluidez no PC do dono.
+7. Item 7: verificar cinco capas 70/90/100/125/150, verticais, mesma proporção/base, gaps equilibrados, destaque verde e teclado; corrigir apenas divergências reproduzidas.
+8. Item 9: gráficos adequados a dia/semana/mês/3/6/12 meses/todo histórico; remover Gêneros da coleção sem apagar dados; preservar métricas/tempos e fuso. Compartilhar imagens de períodos curto e longo.
+9. Item 14: editor de avatar com recorte, arrasto, zoom, orientação e prévia, confirmação/cancelamento e persistência, preservando original. Sem migração destrutiva.
+10. Item 10: investigar integração de moldura Windows preservando controles nativos, snap, bordas e fechamento protegido; implementar somente dentro da capacidade verificável, registrar validação Windows real ausente. Nunca contornar closeEvent.
+11. Item 11: investigar manifesto e bootstrap do pacote Windows; elevação explícita com UAC, preservação de argumentos/diretório/dados/identidade e cancelamento sem laço. Não elevar auxiliares indiscriminadamente. Sem homologação do pacote Windows nesta rodada Linux, marcar parcial/não testado conforme evidência.
+12. Itens 12/13/15/17/18: integridade de preços e regressões de Desejos, banner, favorito, logo Steam, captura e contratos. Console e original individual dependem de capacidade/autenticação comprovadas; sem credencial no ambiente, não inventar suporte nem pedir token no chat.
+13. Item 20: documentação, notas locais, versão alvo 0.1.37, suíte completa Linux offscreen, smokes isolados, capturas em 1280×800/1920×1080 e DPI disponíveis; commits locais por unidade, patches integrais e hashes quando entregues.
+
+## Ofertas do Início — critério viável antes da implementação
+
+Usar o mesmo selected_quote/discount_percent de Desejos e respeitar prices.include_keyshops. Candidatos somente com preço atual positivo BRL, origem classificada, identidade/plataforma/edição compatíveis. Desconto individual confiável: grupo inicial em percentual decrescente, desempate nome normalizado/ID; sem desconto confiável: grupo de ofertas atuais por nome/ID, sem rótulo de oportunidade ou recorde. Não há série de observações comparáveis persistida que permita comprovar redução em relação à consulta anterior; não criar histórico fictício nem ranking por redução absoluta. Menor histórico não é original. Não ordenar jogos diferentes pelo menor preço para sugerir atratividade. Sem nova fonte ou scraping; diagnóstico da API será registrado no relatório. Histórico e data da consulta ficam na ficha, nunca nos rodapés do Início.
+
+## Limites e preservação
+
+As duas imagens estão disponíveis; p1.mp4–p4.mp4 citados não foram anexados nesta rodada. Achados descritos são relatos do dono, não reprodução do implementador. Testes isolados usam dois jogos quando aplicável. Imagens geradas são grabs reais do Qt com fixtures identificadas, não aprovação visual nem contas autenticadas.
+
+Preservar banco, sessões, arquivos, identidades, originais, cofre, nove temas e assets. Schema inicial 4: preferir dados existentes; justificar antes de acrescentar persistência. Protegidos: tests/test_save_lifecycle.py, worker.py, enrichment.py, game_import.py, completion_queue.py, dialogs.py e contrato test_protected_drive_and_registration_logic_is_unchanged. Não alterar quick_add.py nem A4. Troca automática de ROM foi descartada; fechar apenas a ROM com emulador vivo continua limitação.
+
+Não enfraquecer asserções, criar skips/xfails ou detectar testes em produção. Expectativas incompatíveis com novos requisitos serão substituídas apenas na cobertura pertinente, preservando a intenção e os testes protegidos. Novas leituras UTF-8, arquivos novos/alterados LF, sem normalizar protegidos. Evidências integrais de comandos e resultados em RELATORIO_0137_TESTES.md e arquivos externos de evidência; limitações e SHAs em RELATORIO_0137.md.
