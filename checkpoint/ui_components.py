@@ -1,6 +1,7 @@
 from PySide6.QtCore import Qt, QSize, QRectF, QPointF,QRect
 from PySide6.QtGui import QPixmap, QPainter, QColor, QLinearGradient, QFont, QIcon, QPen, QPolygonF, QRegion, QPainterPath
 from .visual_tokens import SPACE,TYPE,RADIUS
+from .playtime import format_time
 from .cover_art import CoverArtwork,paint_art,cover_pixmap
 from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QFrame, QTabWidget, QSizePolicy
 
@@ -145,7 +146,7 @@ class GameTile(CoverArtwork):
         font=QFont('Segoe UI');font.setPixelSize(14);font.setWeight(QFont.DemiBold);p.setFont(font);p.setPen(QColor(colors['text']))
         p.drawText(QRectF(0,self.art_height+5,self.width(),20),Qt.AlignVCenter,p.fontMetrics().elidedText(self.game['title'],Qt.ElideRight,self.width()))
         font.setPixelSize(12);font.setWeight(QFont.Normal);p.setFont(font);p.setPen(QColor(colors['muted']))
-        p.drawText(QRectF(0,self.art_height+25,self.width(),18),Qt.AlignVCenter,' · '.join(filter(None,[self.game.get('status'),f"{self.game['seconds']/3600:.0f} h" if self.game.get('seconds') else ''])))
+        p.drawText(QRectF(0,self.art_height+25,self.width(),18),Qt.AlignVCenter,' · '.join(filter(None,[self.game.get('status'),format_time(self.game['seconds']) if self.game.get('seconds') else ''])))
         if self.hasFocus():p.setPen(QPen(QColor(colors['accent']),1));p.setBrush(Qt.NoBrush);p.drawRoundedRect(self.rect().adjusted(1,1,-1,-1),RADIUS['card'],RADIUS['card'])
         p.end()
 

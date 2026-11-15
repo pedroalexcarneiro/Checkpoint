@@ -1,14 +1,14 @@
 from PySide6.QtWidgets import QLabel
 from test_bugs_0134 import ui,sample
 
-def test_app_and_steam_times_are_separate(ui,app):
+def test_app_and_steam_times_are_combined(ui,app):
     w,i=ui
     with w.library.sql:
         w.library.sql.execute("INSERT INTO play_sessions(game_id,started_at,state,duration_seconds) VALUES(?,'2026-11-10','finished',3600)",(i,))
         w.library.sql.execute("INSERT INTO steam_owned_games(steam_id,app_id,game_id,title,minutes,checked_at) VALUES('76561198000000001',?,?,?,180,'2026-11-10')",(str(i),i,w.library.get(i)['title']))
     w.detail(i);app.processEvents()
-    assert w.detail_page.findChild(QLabel,'localPlaytime').text()=='Tempo jogado: 1 h'
-    assert w.detail_page.findChild(QLabel,'steamPlaytime').text()=='Steam: 3 h'
+    assert w.detail_page.findChild(QLabel,'localPlaytime').text()=='Tempo jogado: 4h00min'
+    assert not w.detail_page.findChildren(QLabel,'steamPlaytime')
     assert not any('4 h' in label.text() for label in w.detail_page.findChildren(QLabel))
 
 def test_wish_card_keeps_price_and_explains_no_price(ui,app):

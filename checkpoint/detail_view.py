@@ -41,11 +41,8 @@ def build_detail(window,game):
     if owned:
         status_row=QHBoxLayout();dot=text('●');dot.setObjectName('gameStatusDot');dot.setStyleSheet('color: '+(window.theme.colors['accent'] if game['status'] in ('Jogando','Concluído') else window.theme.colors['muted']));status_row.addWidget(dot);status_row.addWidget(text(game['status'],'muted'));bar.addLayout(status_row)
         times=QVBoxLayout();times.setSpacing(2)
-        local=text('Tempo jogado: '+f'{seconds/3600:g}'.replace('.',',')+' h','muted');local.setObjectName('localPlaytime');times.addWidget(local)
-        from .steam_library import game_accounts
-        for account in game_accounts(window.library,game_id):
-            value='Não disponível' if account['minutes'] is None else f"{account['minutes']/60:g}".replace('.',',')+' h'
-            remote=text('Steam: '+value,'caption');remote.setObjectName('steamPlaytime');times.addWidget(remote)
+        from .playtime import total_seconds,format_time
+        local=text('Tempo jogado: '+format_time(total_seconds(window.library,game_id)),'muted');local.setObjectName('localPlaytime');times.addWidget(local)
         bar.addLayout(times)
         actions_frame.setFixedHeight(max(HEIGHT['actions'],16+times.count()*18))
     else:bar.addWidget(text('Na lista de desejos' if window.library.sql.execute('SELECT 1 FROM wishlist WHERE game_id=?',(game_id,)).fetchone() else 'Desejo arquivado','muted'))
@@ -125,11 +122,12 @@ def build_detail(window,game):
         gallery_layout.addWidget(text('Adicione capturas e vídeos deste jogo à sua galeria.','emptyDescription'))
     add=action('Adicionar captura',lambda:window.import_media(game_id));add.setObjectName('quiet');gallery_layout.addWidget(add,0,Qt.AlignLeft);gallery_layout.addStretch()
     overview.addWidget(AdaptiveColumns(about,gallery,(3,2),breakpoint=640))
+    from .playtime import format_time
     from .steam_library import game_accounts
     accounts=game_accounts(window.library,game_id)
     if accounts:activity.addWidget(text('Steam','sectionTitle'))
     for account in accounts:
-        frame,inside=card();hours='Tempo não disponível' if account['minutes'] is None else f"{account['minutes']/60:.1f} h na Steam"
+        frame,inside=card();hours='Tempo não disponível' if account['minutes'] is None else format_time(account['minutes']*60)+' na Steam'
         inside.addWidget(text(hours,'sectionTitle'));inside.addWidget(text(f"AppID {account['app_id']} · Consulta {date_display(account['checked_at'])}",'muted'))
         if account['achievements_checked_at']:
             inside.addWidget(text(f"Conquistas: {account['achievement_unlocked']}/{account['achievement_total']}"))

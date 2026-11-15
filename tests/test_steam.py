@@ -210,7 +210,7 @@ def test_dialog_async_query_selection_import_achievements_and_account_change(app
         window.detail(library.games()[0]['id'])
         from PySide6.QtWidgets import QLabel
         texts = [label.text() for label in window.findChildren(QLabel)]
-        assert any('2.0 h na Steam' in text for text in texts)
+        assert any('2h00min na Steam' in text for text in texts)
         assert any('Marco Steam' in text and 'Desbloqueada' in text for text in texts)
         assert library.stats()['seconds'] == 0
         dialog.account.setText(OTHER_ACCOUNT)

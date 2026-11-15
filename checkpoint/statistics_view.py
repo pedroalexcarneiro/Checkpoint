@@ -37,8 +37,10 @@ def metric(title,value,subtitle=''):
 
 def build_statistics(window):
     outer=window.clear_page(4);scroll=SmoothScrollArea();scroll.setWidgetResizable(True);body=QWidget();layout=QVBoxLayout(body);layout.setContentsMargins(0,0,8,0);layout.setSpacing(20)
+    from .playtime import collection_times,format_time
+    times=collection_times(window.library)
     stats=window.library.stats();row=CardGrid(180,max_columns=4);row.setObjectName('statisticsMetrics')
-    for title,value,subtitle in [('Jogos',str(stats['total']),'Na biblioteca'),('Tempo registrado',f"{stats['seconds']/3600:.1f} h".replace('.',','),'Sessões locais confirmadas'),('Sessões',str(stats['sessions']),f"Média de {stats['average']/60:.0f} min"),('Concluídos',str(stats['statuses']['Concluído']),'Jogos finalizados')]:row.add_card(metric(title,value,subtitle))
+    for title,value,subtitle in [('Jogos',str(stats['total']),'Na biblioteca'),('Tempo registrado',format_time(sum(times.values())),'App + Steam'),('Sessões',str(stats['sessions']),f"Média de {stats['average']/60:.0f} min"),('Concluídos',str(stats['statuses']['Concluído']),'Jogos finalizados')]:row.add_card(metric(title,value,subtitle))
     layout.addWidget(row)
     charts_left=None;charts_right=None
     frame,inside=card();heading=QHBoxLayout();heading.addWidget(text('Seu ritmo de jogo','sectionTitle'));heading.addStretch();period=QComboBox();period.addItem('Últimos 12 meses',None)
@@ -51,8 +53,9 @@ def build_statistics(window):
     bottom_left=None;bottom_right=None
     frame,inside=card();inside.addWidget(text('Mais jogados','sectionTitle'))
     if not stats['top']:inside.addWidget(text('Sem sessões','muted'))
-    for game in stats['top'][:5]:
-        line=QHBoxLayout();b=action(game['title'],lambda checked=False,identity=game['id']:window.detail(identity));b.setObjectName('quiet');line.addWidget(b,1);line.addWidget(text(f"{game['seconds']/3600:.1f} h".replace('.',','),'muted'));inside.addLayout(line)
+    top=sorted(({'id':i,'title':window.library.get(i)['title'],'seconds':seconds} for i,seconds in times.items() if seconds),key=lambda g:g['seconds'],reverse=True)
+    for game in top[:5]:
+        line=QHBoxLayout();b=action(game['title'],lambda checked=False,identity=game['id']:window.detail(identity));b.setObjectName('quiet');line.addWidget(b,1);line.addWidget(text(format_time(game['seconds']),'muted'));inside.addLayout(line)
     inside.addStretch();bottom_left=frame
     frame,inside=card();inside.addWidget(text('Sua coleção','sectionTitle'));inside.addWidget(StatusRing(stats['statuses'],window.theme));inside.addStretch();layout.addWidget(AdaptiveColumns(frame,bottom_left,(3,2),breakpoint=640))
     frame,inside=card();inside.addWidget(text('Plataformas','sectionTitle'))

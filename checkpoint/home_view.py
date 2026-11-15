@@ -63,6 +63,8 @@ def game_strip(window,layout,title,games,maximum=4):
 def in_progress(library):
     sessions={row['game_id']:dict(row) for row in library.sql.execute("SELECT game_id,MAX(started_at) AS last_played,SUM(CASE WHEN state='finished' THEN duration_seconds ELSE 0 END) AS seconds FROM play_sessions GROUP BY game_id")}
     games=[{**game,**sessions.get(game['id'],{})} for game in library.owned_games() if game['status'] in ('Jogando','Pausado')]
+    from .playtime import total_seconds
+    for game in games:game['seconds']=total_seconds(library,game['id'])
     return sorted(games,key=lambda game:game.get('last_played') or game.get('updated_at') or game['created_at'],reverse=True)
 
 

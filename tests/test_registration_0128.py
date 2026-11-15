@@ -104,5 +104,5 @@ def test_activity_summary_uses_singular_day_and_brazilian_date(app,monkeypatch):
     day=datetime.now(timezone.utc).date();painter=Mock()
     monkeypatch.setattr('checkpoint.activity_heatmap.QPainter',Mock(return_value=painter))
     chart=ActivityHeatmap({day.isoformat():3600},get_theme('green'));chart.paintEvent(None)
-    assert '1,0 h em 1 dia de jogo' in [call.args[-1] for call in painter.drawText.call_args_list]
+    assert '1h00min em 1 dia de jogo' in [call.args[-1] for call in painter.drawText.call_args_list]
     assert day.strftime('%d/%m/%Y') in chart.accessibleDescription();chart.close()
