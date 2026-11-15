@@ -13,17 +13,16 @@ class CoverDelegate(QStyledItemDelegate):
     def paint(self,painter,option,index):
         painter.save();painter.setRenderHint(QPainter.Antialiasing)
         colors=self.parent().theme.colors
-        rect=QRectF(option.rect).adjusted(0,0,-self.parent().card_gap,-self.parent().card_gap)
         hovered=bool(option.state & QStyle.State_MouseOver)
         selected=bool(option.state & QStyle.State_Selected)
         painter.setPen(QPen(QColor(colors['accent']),1) if selected else Qt.NoPen)
         painter.setBrush(QColor(colors['selected']) if hovered or selected else Qt.NoBrush)
         # O foco envolve somente a arte, sem pintar um card atrás do título.
-        art=QRectF(rect.x()+2,rect.y()+2,rect.width()-4,(rect.width()-4)*self.parent().art_ratio)
+        art=self.parent().art_rect(option.rect)
         game=index.data(Qt.UserRole+1) or {}
         icon=index.data(Qt.DecorationRole);image_rect=art
-        pix=cover_pixmap(game)
-        CoverArtwork.paint_art(painter,art,pix,game.get('title','Jogo sem imagem'),colors,selected or hovered,fill=True)
+        pix=self.parent().art_cache.cover(game,art.size().toSize())
+        CoverArtwork.paint_art(painter,art,pix,game.get('title','Jogo sem imagem'),colors,selected or hovered,fill=False)
         font=QFont('Segoe UI');font.setPixelSize(14);font.setWeight(QFont.DemiBold);painter.setFont(font);painter.setPen(QColor(colors['text']))
         title=game.get('title') or index.data(Qt.DisplayRole).split('\n')[0]
         painter.drawText(QRectF(image_rect.x(),image_rect.bottom()+6,image_rect.width(),23),Qt.AlignLeft|Qt.AlignVCenter,painter.fontMetrics().elidedText(title,Qt.ElideRight,int(image_rect.width())))
@@ -43,13 +42,22 @@ class CoverGrid(SmoothScrollMixin,QListWidget):
     def __init__(self,theme,parent=None):
         super().__init__(parent);self.enable_smooth_scroll();self.setVerticalScrollMode(QListWidget.ScrollPerPixel);self.theme=theme;self.cover_percent=100;self.last_grid=None;self.art_ratio=1.5;self.card_gap=SPACE['lg']
         self.setProperty('cardComponent','coverCard')
+        from .artwork_cache import ArtworkCache
+        self.art_cache=ArtworkCache();self.setUniformItemSizes(True)
         self.setItemDelegate(CoverDelegate(self));self.setMouseTracking(True)
         self.setViewMode(QListWidget.IconMode);self.setResizeMode(QListWidget.Adjust)
         self.setMovement(QListWidget.Static);self.setSpacing(0);self.setWordWrap(False)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff);self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
 
     def set_cover_size(self,percent):
+        if self.cover_percent==percent and self.last_grid is not None:return
         self.cover_percent=percent;self.update_grid()
+
+    def art_rect(self,item_rect):
+        occupied=self.columns*self.gridSize().width()-self.card_gap
+        margin=max(0,(self.viewport().width()-occupied)/2)
+        rect=QRectF(item_rect).adjusted(margin,0,margin-self.card_gap,-self.card_gap)
+        return QRectF(rect.x()+2,rect.y()+2,max(1,rect.width()-4),max(1,rect.width()-4)*self.art_ratio)
 
     def update_grid(self):
         self.art_ratio=1.5

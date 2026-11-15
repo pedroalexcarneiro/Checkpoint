@@ -1073,3 +1073,390 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## grade-desempenho-antes
+
+UTC: 2026-11-15T21:51:49.196676+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_grid_performance_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+____ test_collection_totals_use_bounded_queries_without_duplicate_snapshots ____
+
+library = <checkpoint.library.Library object at 0x7f84257d7560>
+
+    def test_collection_totals_use_bounded_queries_without_duplicate_snapshots(library):
+        ids=[library.save_game({'title':f'Jogo {n}'}) for n in range(100)]
+        with library.sql:
+            library.sql.execute("INSERT INTO play_sessions(game_id,started_at,duration_seconds,state) VALUES(?,'2026-01-01',1200,'finished')",(ids[0],))
+            for account,minutes in [('1',20),('2',30)]:
+                library.sql.execute("INSERT INTO steam_owned_games(steam_id,app_id,game_id,title,minutes,checked_at) VALUES(?,'620',?,'Jogo',?,'2026-01-01')",(account,ids[0],minutes))
+        queries=[];library.sql.set_trace_callback(queries.append)
+        try:totals=collection_times(library)
+        finally:library.sql.set_trace_callback(None)
+        assert totals[ids[0]]==3000 and all(totals[i]==0 for i in ids[1:])
+>       assert len(queries)<=8
+E       assert 401 <= 8
+E        +  where 401 = len(['SELECT * FROM games WHERE deleted_at IS NULL ORDER BY title COLLATE NOCASE', "SELECT value FROM settings WHERE key='...inutes),0) FROM steam_owned_games WHERE game_id=1', "SELECT value FROM settings WHERE key='collection.unowned.2'", ...])
+
+tests/test_grid_performance_0137.py:17: AssertionError
+_____________ test_cache_is_bounded_and_invalidates_changed_files ______________
+
+app = <PySide6.QtWidgets.QApplication(0x2a81c930) at 0x7f84257ff280>
+folder = PosixPath('/tmp/343b1a5090714625a8fdac612816479c')
+
+    def test_cache_is_bounded_and_invalidates_changed_files(app,folder):
+>       from checkpoint.artwork_cache import ArtworkCache
+E       ModuleNotFoundError: No module named 'checkpoint.artwork_cache'
+
+tests/test_grid_performance_0137.py:21: ModuleNotFoundError
+___ test_refresh_preserves_items_and_scroll_with_equal_grid_margins[sample0] ___
+
+ui = (<checkpoint.window.MainWindow(0x2a94d030) at 0x7f84256f3bc0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x2a81c930) at 0x7f84257ff280>
+
+    def test_refresh_preserves_items_and_scroll_with_equal_grid_margins(ui,app):
+        w,i=ui
+        for n in range(100):w.library.save_game({'title':f'Jogo {n:03}'})
+        for size in ((1280,800),(1920,1080)):
+            w.resize(*size);w.navigate(1)
+            for _ in range(6):app.processEvents()
+            grid=w.gallery;bar=grid.verticalScrollBar();bar.setValue(bar.maximum()//2);position=bar.value();item=grid.item(0)
+            w.refresh_library()
+            for _ in range(4):app.processEvents()
+            assert grid.item(0) is item and bar.value()==position
+>           first=grid.art_rect(grid.visualItemRect(grid.item(0)))
+                  ^^^^^^^^^^^^^
+E           AttributeError: 'CoverGrid' object has no attribute 'art_rect'
+
+tests/test_grid_performance_0137.py:43: AttributeError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+___ test_refresh_preserves_items_and_scroll_with_equal_grid_margins[sample1] ___
+
+ui = (<checkpoint.window.MainWindow(0x2ac08e00) at 0x7f8425523a40>, 1)
+app = <PySide6.QtWidgets.QApplication(0x2a81c930) at 0x7f84257ff280>
+
+    def test_refresh_preserves_items_and_scroll_with_equal_grid_margins(ui,app):
+        w,i=ui
+        for n in range(100):w.library.save_game({'title':f'Jogo {n:03}'})
+        for size in ((1280,800),(1920,1080)):
+            w.resize(*size);w.navigate(1)
+            for _ in range(6):app.processEvents()
+            grid=w.gallery;bar=grid.verticalScrollBar();bar.setValue(bar.maximum()//2);position=bar.value();item=grid.item(0)
+            w.refresh_library()
+            for _ in range(4):app.processEvents()
+            assert grid.item(0) is item and bar.value()==position
+>           first=grid.art_rect(grid.visualItemRect(grid.item(0)))
+                  ^^^^^^^^^^^^^
+E           AttributeError: 'CoverGrid' object has no attribute 'art_rect'
+
+tests/test_grid_performance_0137.py:43: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_grid_performance_0137.py::test_collection_totals_use_bounded_queries_without_duplicate_snapshots
+FAILED tests/test_grid_performance_0137.py::test_cache_is_bounded_and_invalidates_changed_files
+FAILED tests/test_grid_performance_0137.py::test_refresh_preserves_items_and_scroll_with_equal_grid_margins[sample0]
+FAILED tests/test_grid_performance_0137.py::test_refresh_preserves_items_and_scroll_with_equal_grid_margins[sample1]
+4 failed in 0.58s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## grade-desempenho-depois
+
+UTC: 2026-11-15T21:52:39.426169+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_grid_performance_0137.py", "tests/test_card_layout.py", "tests/test_smooth_scroll.py", "tests/test_ui_polish.py", "tests/test_registration_0128.py", "tests/test_library_list_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+..FF...................                                                  [100%]
+=================================== FAILURES ===================================
+___ test_refresh_preserves_items_and_scroll_with_equal_grid_margins[sample0] ___
+
+ui = (<checkpoint.window.MainWindow(0x8c8ae50) at 0x7f41cf695380>, 1)
+app = <PySide6.QtWidgets.QApplication(0x8b996a0) at 0x7f41cf85c300>
+
+    def test_refresh_preserves_items_and_scroll_with_equal_grid_margins(ui,app):
+        w,i=ui
+        for n in range(100):w.library.save_game({'title':f'Jogo {n:03}'})
+        for size in ((1280,800),(1920,1080)):
+            w.resize(*size);w.navigate(1)
+            for _ in range(6):app.processEvents()
+            grid=w.gallery;bar=grid.verticalScrollBar();bar.setValue(bar.maximum()//2);position=bar.value();item=grid.item(0)
+            w.refresh_library()
+            for _ in range(4):app.processEvents()
+            assert grid.item(0) is item and bar.value()==position
+            first=grid.art_rect(grid.visualItemRect(grid.item(0)))
+            last=grid.art_rect(grid.visualItemRect(grid.item(grid.columns-1)))
+>           assert abs(first.left()-(grid.viewport().width()-last.right()))<=2
+E           assert 771.0 <= 2
+E            +  where 771.0 = abs((14.0 - (1028 - 243.0)))
+E            +    where 14.0 = <built-in method left of PySide6.QtCore.QRectF object at 0x7f41cea7ab40>()
+E            +      where <built-in method left of PySide6.QtCore.QRectF object at 0x7f41cea7ab40> = PySide6.QtCore.QRectF(14.000000, -6865.000000, 229.000000, 343.500000).left
+E            +    and   1028 = <built-in method width of PySide6.QtWidgets.QWidget object at 0x7f41d5914940>()
+E            +      where <built-in method width of PySide6.QtWidgets.QWidget object at 0x7f41d5914940> = <PySide6.QtWidgets.QWidget(0x8b4c000, name="qt_scrollarea_viewport") at 0x7f41d5914940>.width
+E            +        where <PySide6.QtWidgets.QWidget(0x8b4c000, name="qt_scrollarea_viewport") at 0x7f41d5914940> = <built-in method viewport of CoverGrid object at 0x7f41cea9f840>()
+E            +          where <built-in method viewport of CoverGrid object at 0x7f41cea9f840> = <checkpoint.cover_grid.CoverGrid(0x8e5ed70, name="coverGrid") at 0x7f41cea9f840>.viewport
+E            +    and   243.0 = <built-in method right of PySide6.QtCore.QRectF object at 0x7f41ce804500>()
+E            +      where <built-in method right of PySide6.QtCore.QRectF object at 0x7f41ce804500> = PySide6.QtCore.QRectF(14.000000, -6443.000000, 229.000000, 343.500000).right
+
+tests/test_grid_performance_0137.py:45: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+___ test_refresh_preserves_items_and_scroll_with_equal_grid_margins[sample1] ___
+
+ui = (<checkpoint.window.MainWindow(0x8bd5a80) at 0x7f41cf695440>, 1)
+app = <PySide6.QtWidgets.QApplication(0x8b996a0) at 0x7f41cf85c300>
+
+    def test_refresh_preserves_items_and_scroll_with_equal_grid_margins(ui,app):
+        w,i=ui
+        for n in range(100):w.library.save_game({'title':f'Jogo {n:03}'})
+        for size in ((1280,800),(1920,1080)):
+            w.resize(*size);w.navigate(1)
+            for _ in range(6):app.processEvents()
+            grid=w.gallery;bar=grid.verticalScrollBar();bar.setValue(bar.maximum()//2);position=bar.value();item=grid.item(0)
+            w.refresh_library()
+            for _ in range(4):app.processEvents()
+            assert grid.item(0) is item and bar.value()==position
+            first=grid.art_rect(grid.visualItemRect(grid.item(0)))
+            last=grid.art_rect(grid.visualItemRect(grid.item(grid.columns-1)))
+>           assert abs(first.left()-(grid.viewport().width()-last.right()))<=2
+E           assert 771.0 <= 2
+E            +  where 771.0 = abs((14.0 - (1028 - 243.0)))
+E            +    where 14.0 = <built-in method left of PySide6.QtCore.QRectF object at 0x7f41d6457c00>()
+E            +      where <built-in method left of PySide6.QtCore.QRectF object at 0x7f41d6457c00> = PySide6.QtCore.QRectF(14.000000, -6865.000000, 229.000000, 343.500000).left
+E            +    and   1028 = <built-in method width of PySide6.QtWidgets.QWidget object at 0x7f41d58577c0>()
+E            +      where <built-in method width of PySide6.QtWidgets.QWidget object at 0x7f41d58577c0> = <PySide6.QtWidgets.QWidget(0x90972e0, name="qt_scrollarea_viewport") at 0x7f41d58577c0>.width
+E            +        where <PySide6.QtWidgets.QWidget(0x90972e0, name="qt_scrollarea_viewport") at 0x7f41d58577c0> = <built-in method viewport of CoverGrid object at 0x7f41ce821e80>()
+E            +          where <built-in method viewport of CoverGrid object at 0x7f41ce821e80> = <checkpoint.cover_grid.CoverGrid(0x8e60d30, name="coverGrid") at 0x7f41ce821e80>.viewport
+E            +    and   243.0 = <built-in method right of PySide6.QtCore.QRectF object at 0x7f41d5961200>()
+E            +      where <built-in method right of PySide6.QtCore.QRectF object at 0x7f41d5961200> = PySide6.QtCore.QRectF(14.000000, -6443.000000, 229.000000, 343.500000).right
+
+tests/test_grid_performance_0137.py:45: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_grid_performance_0137.py::test_refresh_preserves_items_and_scroll_with_equal_grid_margins[sample0]
+FAILED tests/test_grid_performance_0137.py::test_refresh_preserves_items_and_scroll_with_equal_grid_margins[sample1]
+2 failed, 21 passed in 2.62s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## grade-benchmark-depois
+
+UTC: 2026-11-15T21:52:45.119562+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "/workspace/work/evidence-0137/bench_grid.py", "/workspace/work/evidence-0137/bench-depois"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+{
+  "games": 500,
+  "distinct_images": 100,
+  "image_size": [
+    300,
+    450
+  ],
+  "window": [
+    1280,
+    800
+  ],
+  "initialization_seconds": 0.1754999780023354,
+  "refresh_seconds": [
+    0.037296402999345446,
+    0.03442418199847452,
+    0.03322569200099679
+  ],
+  "refresh_sql_statements": [
+    15,
+    15,
+    15
+  ],
+  "frame_seconds": [
+    0.010084289002406877,
+    0.017297159000008833,
+    0.01608193300126004,
+    0.006626524998864625,
+    0.006460222000896465,
+    0.006279310000536498,
+    0.006162944002426229,
+    0.006620304000534816,
+    0.009715853000670904,
+    0.011750978002964985,
+    0.006764232999557862,
+    0.007066539001243655,
+    0.006949442002223805,
+    0.0068786849988100585,
+    0.0070865600027900655,
+    0.006077925001591211
+  ],
+  "median_frame_ms": 6.9140635005169315,
+  "scroll_before_refresh": 34930,
+  "scroll_after_refresh": 34930,
+  "max_rss_kib": 104380
+}
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 0
+
+## grade-desempenho-regressoes
+
+UTC: 2026-11-15T21:54:24.526993+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_grid_performance_0137.py", "tests/test_card_layout.py", "tests/test_smooth_scroll.py", "tests/test_ui_polish.py", "tests/test_complete_layout.py", "tests/test_registration_0128.py", "tests/test_library_list_0137.py", "tests/test_layout_0134.py", "tests/test_folder_platforms.py", "tests/test_visual_0132.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+........................................................................ [ 79%]
+...................                                                      [100%]
+91 passed in 48.34s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## grade-benchmark-final
+
+UTC: 2026-11-15T21:54:25.984193+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "/workspace/work/evidence-0137/bench_grid.py", "/workspace/work/evidence-0137/bench-final"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+{
+  "games": 500,
+  "distinct_images": 100,
+  "image_size": [
+    300,
+    450
+  ],
+  "window": [
+    1280,
+    800
+  ],
+  "initialization_seconds": 0.15071668699965812,
+  "refresh_seconds": [
+    0.036365174000820844,
+    0.03456521500265808,
+    0.03507108900157618
+  ],
+  "refresh_sql_statements": [
+    15,
+    15,
+    15
+  ],
+  "frame_seconds": [
+    0.005398475997935748,
+    0.02069255899914424,
+    0.020401169000251684,
+    0.015599505000864156,
+    0.01572859899897594,
+    0.00797658000010415,
+    0.006690537000395125,
+    0.008557927998481318,
+    0.015311560000554891,
+    0.006854395000118529,
+    0.006797748999815667,
+    0.008191283999622101,
+    0.015136574998905417,
+    0.00679625699922326,
+    0.006733932998031378,
+    0.006657156998699065
+  ],
+  "median_frame_ms": 8.083931999863125,
+  "scroll_before_refresh": 25943,
+  "scroll_after_refresh": 25943,
+  "max_rss_kib": 107904
+}
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 0
+
+## grade-lista-capturas
+
+UTC: 2026-11-15T21:54:39.603908+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/biblioteca-v1"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/biblioteca-v1
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
+
+## rotulo-alfabeticamente
+
+UTC: 2026-11-15T21:54:54.580407+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_labels_0137.py", "tests/test_prices_0129.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+.........                                                                [100%]
+9 passed in 1.20s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0

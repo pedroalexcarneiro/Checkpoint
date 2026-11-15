@@ -61,3 +61,17 @@ window.py::build_library/refresh_library/open_selected/toggle_favorite substitui
 ## Complemento — prévia de banners nas Ofertas (implementado em Linux, revisão visual pendente)
 
 Após pedir apenas nome/preços, o dono propôs um banner por linha. OfferBanner reutiliza arte proporcional sem logo sobreposta e sem recorte; nome/original/desconto/atual ficam abaixo. Sem banner disponível, mantém a linha de dados. Não muda identidade, ranking ou fonte. Prévia inicio-v10 enviada no chat; não presumir aprovação estética. Teste novo verifica as quatro bordas em larguras 300/480/680, banner em vez de capa e repetição de resize. 18 testes de Início/dados passaram; incluídos também na rodada de 52 regressões. Nenhuma informação comercial inventada; valores da imagem são fixtures declaradas.
+
+## Item 6 — grade, cache e atualização (feito em Linux; Windows do dono não homologado)
+
+Medição antes/depois com 500 jogos e 100 PNGs distintos 300×450, janela 1280×800, mesmo benchmark isolado. Antes: inicialização 1,747 s; refresh 0,759–0,788 s; mediana de quadro 27,25 ms; pico RSS 389.916 KiB. Depois final: inicialização 0,151 s; refresh 0,0346–0,0364 s; mediana de quadro 8,08 ms; pico RSS 107.904 KiB. Não é FPS garantido nem reprodução do travamento no PC do dono. Posição preservada antes/depois de refresh em ambas as rodadas.
+
+Mudanças: artwork_cache.py::ArtworkCache mantém LRU de rasters escalados sob demanda (32 MiB grade, 8 MiB lista), invalida por caminho/mtime_ns/tamanho/dimensões e limita imagens; logos têm somente margem transparente removida na apresentação. Nenhum asset original alterado. CoverGrid/CoverDelegate usam cache e arte inteira (sem fill com recorte); ausência de imagem mantém título. CardMetrics e art_rect equilibram margens e vãos, preservando alinhamento da última linha; reserva final de um pixel evita quebra de coluna no QListView. Tentativa intermediária sem essa reserva reduziu colunas indevidamente, falhou no teste e foi corrigida antes da medição final.
+
+playtime.collection_times agrega sessões e MAX Steam separadamente, depois combina por jogo, sem joins multiplicadores. Teste com 100 jogos encontrou 401 consultas antes; agora no máximo 8, valores idênticos (local + maior snapshot). Refresh da lista/grade já reutiliza itens e não decodifica toda a biblioteca na construção. A contagem total de SQL do benchmark subiu de 10 para 15 por trazer os tempos da nova lista, mas não cresce por jogo e o tempo total caiu. Nenhum temporizador de contorno.
+
+91 testes aprovados em 48,34 s: margens/colunas, imagem atualizada, limite de cache, totais, roda com 500 jogos, scroll preservado, lista, fontes, preferências, contratos protegidos e imagens. Saídas integrais e benchmarks em RELATORIO_0137_TESTES.md e /workspace/work/evidence-0137/bench-antes/bench-final; captura biblioteca-v1 enviada no chat. Nenhuma mudança de schema ou dado pessoal.
+
+## Complemento — rótulo Alfabeticamente
+
+A instrução posterior do dono substitui Nome: A–Z por Alfabeticamente na Biblioteca e Desejos; chaves title/name e ordenação permanecem. Combo da Biblioteca ampliado para exibir também Adicionados recentemente sem corte. Teste de rótulos atualizado somente no texto autorizado. Não altera filtros, dados ou precedência de ordenação.

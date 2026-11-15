@@ -13,7 +13,8 @@ def card_metrics(available,percent=100):
     gap=SPACE['md'] if scale<1 else SPACE['lg'] if scale<=1.25 else SPACE['xl']
     target=round(200*scale)
     columns=max(1,(max(1,int(available))+gap)//(target+gap))
-    width=max(1,max(1,int(available)-16)//columns-gap)
+    # QListView reserva a borda final do viewport ao decidir a quebra de linha.
+    width=max(1,max(1,int(available)-1)//columns-gap)
     return CardMetrics(columns,width,gap)
 
 def cover_size(library):

@@ -16,9 +16,8 @@ class ListDelegate(QStyledItemDelegate):
         p.setBrush(QColor(c['selected'] if active else c['panel']));p.setPen(QPen(QColor(c['accent'] if active else c['border']),1))
         p.drawRoundedRect(QRectF(bounds).adjusted(.5,.5,-.5,-.5),9,9)
         logo_area=QRect(bounds.left()+14,bounds.center().y()-24,96,48)
-        logo=QPixmap(game.get('logo') or '')
+        logo=self.parent().art_cache.load(game.get('logo'),logo_area.width(),logo_area.height(),trim=True)
         if logo.isNull():logo=lucide_icon('library',c['muted'],24).pixmap(24,24)
-        else:logo=logo.scaled(logo_area.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation)
         p.drawPixmap(logo_area.center().x()-logo.width()//2,logo_area.center().y()-logo.height()//2,logo)
         heart=self.parent().heart_rect(option.rect)
         p.drawPixmap(heart.topLeft(),lucide_icon('heart',c['accent'] if game.get('favorite') else c['muted'],28,filled=bool(game.get('favorite'))).pixmap(28,28))
@@ -36,6 +35,8 @@ class LibraryList(SmoothScrollMixin,QListWidget):
     favorite_requested=Signal(int)
     def __init__(self,parent=None):
         super().__init__(parent);self.enable_smooth_scroll();self.setObjectName('libraryList')
+        from .artwork_cache import ArtworkCache
+        self.art_cache=ArtworkCache(max_bytes=8*1024*1024)
         self.setUniformItemSizes(True);self.setVerticalScrollMode(QListWidget.ScrollPerPixel)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff);self.setFrameShape(self.Shape.NoFrame)
         self.setStyleSheet('QListWidget#libraryList { background: transparent; border: none; }')
