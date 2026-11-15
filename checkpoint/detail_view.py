@@ -4,7 +4,7 @@ from .locale import date_display,datetime_display
 from pathlib import Path
 from PySide6.QtCore import Qt,QSize
 from PySide6.QtGui import QPixmap,QIcon
-from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QScrollArea,QTabWidget,QToolButton,QMenu,QTextEdit,QCheckBox,QSizePolicy
+from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QScrollArea,QTabWidget,QToolButton,QMenu,QTextEdit,QCheckBox,QSizePolicy,QComboBox
 from .ui_components import Hero,text,action,card,CurrentPageTabs,nav_icon
 from .design_system import ArtworkButton,AdaptiveColumns,CardGrid,IconButton,Badge,empty_state,CardSurface,ActionCard,StatusChip
 from .visual_tokens import SPACE,HEIGHT
@@ -39,7 +39,12 @@ def build_detail(window,game):
     else:bar.addWidget(action('Configurar execução',lambda:window.edit_game(game_id)))
     seconds=window.library.sql.execute("SELECT COALESCE(SUM(duration_seconds),0) FROM play_sessions WHERE game_id=? AND state='finished'",(game_id,)).fetchone()[0]
     if owned:
-        status_row=QHBoxLayout();dot=text('●');dot.setObjectName('gameStatusDot');dot.setStyleSheet('color: '+(window.theme.colors['accent'] if game['status'] in ('Jogando','Concluído') else window.theme.colors['muted']));status_row.addWidget(dot);status_row.addWidget(text(game['status'],'muted'));bar.addLayout(status_row)
+        status_row=QHBoxLayout();dot=text('●');dot.setObjectName('gameStatusDot');dot.setStyleSheet('color: '+(window.theme.colors['accent'] if game['status'] in ('Jogando','Concluído') else window.theme.colors['muted']));status_row.addWidget(dot);status=QComboBox();status.setObjectName('gameStatus');status.setAccessibleName('Status do jogo');status.addItems(['Backlog','Jogando','Pausado','Concluído','Abandonado']);status.setCurrentText('Backlog' if game['status']=='Não iniciado' else game['status'])
+        def change_status(value):
+            window.library.save_game({'title':game['title'],'status':value},game_id)
+            dot.setStyleSheet('color: '+(window.theme.colors['accent'] if value in ('Jogando','Concluído') else window.theme.colors['muted']))
+            window.refresh_library()
+        status.currentTextChanged.connect(change_status);status_row.addWidget(status);bar.addLayout(status_row)
         times=QVBoxLayout();times.setSpacing(2)
         from .playtime import total_seconds,format_time
         local=text('Tempo jogado: '+format_time(total_seconds(window.library,game_id)),'muted');local.setObjectName('localPlaytime');times.addWidget(local)

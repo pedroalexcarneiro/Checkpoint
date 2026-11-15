@@ -15,8 +15,8 @@ from .activity_heatmap import ActivityHeatmap as TimeChart
 class StatusRing(QWidget):
     """Distribuição em barras; nome mantido por compatibilidade com ferramentas."""
     def __init__(self,statuses,theme,parent=None):
-        super().__init__(parent);self.statuses=statuses;self.theme=theme;self.setMinimumHeight(204)
-        self.setAccessibleName('Distribuição dos jogos por status');self.setAccessibleDescription('; '.join(f'{name}: {value}' for name,value in statuses.items()))
+        super().__init__(parent);self.statuses=dict(statuses);self.statuses['Backlog']=self.statuses.get('Backlog',0)+self.statuses.pop('Não iniciado',0);self.theme=theme;self.setMinimumHeight(204)
+        self.setAccessibleName('Distribuição dos jogos por status');self.setAccessibleDescription('; '.join(f'{name}: {value}' for name,value in self.statuses.items()))
     def paintEvent(self,event):
         p=QPainter(self);p.setRenderHint(QPainter.Antialiasing);colors=current_colors();font=QFont('Segoe UI');font.setPixelSize(12);p.setFont(font)
         total=sum(self.statuses.values());track=max(1,self.width()-4)
