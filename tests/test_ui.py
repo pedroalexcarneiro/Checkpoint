@@ -21,7 +21,7 @@ def test_navigate_and_game_detail_with_real_database(app,library,folder):
     library.add_diary(game,'Memória de teste')
     window.navigate(1); window.search.setText('automatizado'); app.processEvents()
     assert window.gallery.count()==1
-    window.view.setCurrentIndex(1); assert window.table.rowCount()==1
+    window.view.setCurrentIndex(1); assert window.game_list.count()==1
     window.detail(game); app.processEvents()
     assert window.current_game==game
     window.navigate(0); app.processEvents()

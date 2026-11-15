@@ -66,8 +66,13 @@ def test_add_sources_do_not_start_network_or_nested_loading(library,app):
 def test_home_tiles_are_full_height_and_open_real_game(library,app):
     identity=library.save_game({'title':'Fixture','status':'Jogando'})
     window=MainWindow(library);window.show();app.processEvents()
-    tiles=window.pages[0].findChildren(GameTile)
-    assert tiles and all(tile.height()==tile.art_height+48 for tile in tiles)
+    from datetime import datetime,timezone
+    from checkpoint.home_components import RecentArtwork
+    with library.sql:library.sql.execute("INSERT INTO play_sessions(game_id,started_at,state,pid) VALUES(?,?,'finished',123)",(identity,datetime.now(timezone.utc).isoformat()))
+    window.navigate(0)
+    for _ in range(5):app.processEvents()
+    tiles=window.pages[0].findChildren(RecentArtwork)
+    assert len(tiles)==1 and tiles[0].height()>0
     tiles[0].click();assert window.current_game==identity
     window.close()
 
@@ -105,8 +110,10 @@ def test_home_places_activity_beside_continuity(library,app):
     from PySide6.QtWidgets import QWidget
     library.save_game({'title':'Fixture','status':'Jogando'})
     window=MainWindow(library);window.resize(1440,980);window.show();app.processEvents()
-    continuation=window.pages[0].findChild(QWidget,'homeContinuation')
-    activity=window.pages[0].findChild(QWidget,'homeActivity')
-    assert continuation.geometry().top()==activity.geometry().top()
-    assert activity.geometry().left()>continuation.geometry().right()
+    continuation=window.pages[0].findChild(QWidget,'homeRecentSection')
+    activity=window.pages[0].findChild(QWidget,'homeWeekSummary')
+    from PySide6.QtCore import QPoint
+    page=window.pages[0];left=continuation.mapTo(page,QPoint());right=activity.mapTo(page,QPoint())
+    assert left.y()==right.y()
+    assert right.x()>left.x()+continuation.width()
     window.close()

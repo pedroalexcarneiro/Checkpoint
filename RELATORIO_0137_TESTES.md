@@ -705,3 +705,371 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## lista-antes
+
+UTC: 2026-11-15T21:45:33.759998+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_library_list_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+_____ test_horizontal_list_has_logo_time_and_independent_favorite[sample0] _____
+
+ui = (<checkpoint.window.MainWindow(0x1df0f300) at 0x7f28524d7c00>, 1)
+app = <PySide6.QtWidgets.QApplication(0x1e2479d0) at 0x7f2852648e40>
+folder = PosixPath('/tmp/bd0d6442c689451ca7861e7d8474ad87')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2852667920>
+
+    def test_horizontal_list_has_logo_time_and_independent_favorite(ui,app,folder,monkeypatch):
+>       from checkpoint.library_list import LibraryList
+E       ModuleNotFoundError: No module named 'checkpoint.library_list'
+
+tests/test_library_list_0137.py:9: ModuleNotFoundError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+_____ test_horizontal_list_has_logo_time_and_independent_favorite[sample1] _____
+
+ui = (<checkpoint.window.MainWindow(0x1e0c0420) at 0x7f28524a6ac0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x1e2479d0) at 0x7f2852648e40>
+folder = PosixPath('/tmp/2ffb6bd1a727407bbe1230c839507132')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f2851feb770>
+
+    def test_horizontal_list_has_logo_time_and_independent_favorite(ui,app,folder,monkeypatch):
+>       from checkpoint.library_list import LibraryList
+E       ModuleNotFoundError: No module named 'checkpoint.library_list'
+
+tests/test_library_list_0137.py:9: ModuleNotFoundError
+____________ test_list_search_and_sort_preserve_filtering[sample0] _____________
+
+ui = (<checkpoint.window.MainWindow(0x1e445440) at 0x7f2851fe2740>, 1)
+app = <PySide6.QtWidgets.QApplication(0x1e2479d0) at 0x7f2852648e40>
+
+    def test_list_search_and_sort_preserve_filtering(ui,app):
+        w,i=ui;j=w.library.save_game({'title':'ZZZ Segundo jogo','favorite':1})
+        w.navigate(1);w.view.setCurrentIndex(1);app.processEvents()
+>       assert w.game_list.count()==2
+               ^^^^^^^^^^^
+E       AttributeError: 'MainWindow' object has no attribute 'game_list'
+
+tests/test_library_list_0137.py:38: AttributeError
+____________ test_list_search_and_sort_preserve_filtering[sample1] _____________
+
+ui = (<checkpoint.window.MainWindow(0x1e4eda80) at 0x7f2851ff5c00>, 1)
+app = <PySide6.QtWidgets.QApplication(0x1e2479d0) at 0x7f2852648e40>
+
+    def test_list_search_and_sort_preserve_filtering(ui,app):
+        w,i=ui;j=w.library.save_game({'title':'ZZZ Segundo jogo','favorite':1})
+        w.navigate(1);w.view.setCurrentIndex(1);app.processEvents()
+>       assert w.game_list.count()==2
+               ^^^^^^^^^^^
+E       AttributeError: 'MainWindow' object has no attribute 'game_list'
+
+tests/test_library_list_0137.py:38: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_library_list_0137.py::test_horizontal_list_has_logo_time_and_independent_favorite[sample0]
+FAILED tests/test_library_list_0137.py::test_horizontal_list_has_logo_time_and_independent_favorite[sample1]
+FAILED tests/test_library_list_0137.py::test_list_search_and_sort_preserve_filtering[sample0]
+FAILED tests/test_library_list_0137.py::test_list_search_and_sort_preserve_filtering[sample1]
+4 failed in 0.53s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## lista-depois
+
+UTC: 2026-11-15T21:46:17.953195+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_library_list_0137.py", "tests/test_favorite_0136.py", "tests/test_ui_redesign.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+
+==================================== ERRORS ====================================
+_______________ ERROR collecting tests/test_library_list_0137.py _______________
+../venv/lib/python3.12/site-packages/_pytest/python.py:528: in importtestmodule
+    mod = import_path(
+../venv/lib/python3.12/site-packages/_pytest/pathlib.py:640: in import_path
+    importlib.import_module(module_name)
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+../venv/lib/python3.12/site-packages/_pytest/assertion/rewrite.py:185: in exec_module
+    exec(co, module.__dict__)
+tests/test_library_list_0137.py:5: in <module>
+    from test_bugs_0134 import ui,sample
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+../venv/lib/python3.12/site-packages/_pytest/assertion/rewrite.py:185: in exec_module
+    exec(co, module.__dict__)
+tests/test_bugs_0134.py:6: in <module>
+    from checkpoint.window import MainWindow
+E     File "/workspace/work/Checkpoint/checkpoint/window.py", line 328
+E       self.statusBar().showMessage(message)
+E   IndentationError: unexpected indent
+_________________ ERROR collecting tests/test_favorite_0136.py _________________
+../venv/lib/python3.12/site-packages/_pytest/python.py:528: in importtestmodule
+    mod = import_path(
+../venv/lib/python3.12/site-packages/_pytest/pathlib.py:640: in import_path
+    importlib.import_module(module_name)
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+../venv/lib/python3.12/site-packages/_pytest/assertion/rewrite.py:185: in exec_module
+    exec(co, module.__dict__)
+tests/test_favorite_0136.py:4: in <module>
+    from test_bugs_0134 import ui,sample
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+../venv/lib/python3.12/site-packages/_pytest/assertion/rewrite.py:185: in exec_module
+    exec(co, module.__dict__)
+tests/test_bugs_0134.py:6: in <module>
+    from checkpoint.window import MainWindow
+E     File "/workspace/work/Checkpoint/checkpoint/window.py", line 328
+E       self.statusBar().showMessage(message)
+E   IndentationError: unexpected indent
+__________________ ERROR collecting tests/test_ui_redesign.py __________________
+../venv/lib/python3.12/site-packages/_pytest/python.py:528: in importtestmodule
+    mod = import_path(
+../venv/lib/python3.12/site-packages/_pytest/pathlib.py:640: in import_path
+    importlib.import_module(module_name)
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap>:1387: in _gcd_import
+    ???
+<frozen importlib._bootstrap>:1360: in _find_and_load
+    ???
+<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked
+    ???
+<frozen importlib._bootstrap>:935: in _load_unlocked
+    ???
+../venv/lib/python3.12/site-packages/_pytest/assertion/rewrite.py:185: in exec_module
+    exec(co, module.__dict__)
+tests/test_ui_redesign.py:5: in <module>
+    from checkpoint.window import MainWindow
+E     File "/workspace/work/Checkpoint/checkpoint/window.py", line 328
+E       self.statusBar().showMessage(message)
+E   IndentationError: unexpected indent
+=========================== short test summary info ============================
+ERROR tests/test_library_list_0137.py
+ERROR tests/test_favorite_0136.py
+ERROR tests/test_ui_redesign.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 3 errors during collection !!!!!!!!!!!!!!!!!!!!
+3 errors in 0.38s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 2
+
+## lista-depois-correcao
+
+UTC: 2026-11-15T21:47:02.468535+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_library_list_0137.py", "tests/test_favorite_0136.py", "tests/test_ui_redesign.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+............F..F                                                         [100%]
+=================================== FAILURES ===================================
+______________ test_home_tiles_are_full_height_and_open_real_game ______________
+
+library = <checkpoint.library.Library object at 0x7f4864b830b0>
+app = <PySide6.QtWidgets.QApplication(0x2d1e54f0) at 0x7f4864ab6940>
+
+    def test_home_tiles_are_full_height_and_open_real_game(library,app):
+        identity=library.save_game({'title':'Fixture','status':'Jogando'})
+        window=MainWindow(library);window.show();app.processEvents()
+        tiles=window.pages[0].findChildren(GameTile)
+>       assert tiles and all(tile.height()==tile.art_height+48 for tile in tiles)
+E       assert ([])
+
+tests/test_ui_redesign.py:70: AssertionError
+_________________ test_home_places_activity_beside_continuity __________________
+
+library = <checkpoint.library.Library object at 0x7f486262b920>
+app = <PySide6.QtWidgets.QApplication(0x2d1e54f0) at 0x7f4864ab6940>
+
+    def test_home_places_activity_beside_continuity(library,app):
+        from PySide6.QtWidgets import QWidget
+        library.save_game({'title':'Fixture','status':'Jogando'})
+        window=MainWindow(library);window.resize(1440,980);window.show();app.processEvents()
+        continuation=window.pages[0].findChild(QWidget,'homeContinuation')
+        activity=window.pages[0].findChild(QWidget,'homeActivity')
+>       assert continuation.geometry().top()==activity.geometry().top()
+               ^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NoneType' object has no attribute 'geometry'
+
+tests/test_ui_redesign.py:110: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_ui_redesign.py::test_home_tiles_are_full_height_and_open_real_game
+FAILED tests/test_ui_redesign.py::test_home_places_activity_beside_continuity
+2 failed, 14 passed in 3.00s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## inicio-ofertas-banner-previa
+
+UTC: 2026-11-15T21:47:36.103210+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/inicio-v10"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/inicio-v10
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
+
+## ofertas-banner-regressao
+
+UTC: 2026-11-15T21:48:27.706455+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_home_layout_0137.py", "tests/test_home_data_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+..................                                                       [100%]
+18 passed in 1.60s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## lista-regressoes
+
+UTC: 2026-11-15T21:50:10.834702+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_library_list_0137.py", "tests/test_layout_0134.py", "tests/test_folder_platforms.py", "tests/test_ui.py::test_navigate_and_game_detail_with_real_database", "tests/test_ui_redesign.py", "tests/test_favorite_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+.................................F....                                   [100%]
+=================================== FAILURES ===================================
+_________________ test_home_places_activity_beside_continuity __________________
+
+library = <checkpoint.library.Library object at 0x7f13cc33dd00>
+app = <PySide6.QtWidgets.QApplication(0x2a2d3420) at 0x7f13ccb4c340>
+
+    def test_home_places_activity_beside_continuity(library,app):
+        from PySide6.QtWidgets import QWidget
+        library.save_game({'title':'Fixture','status':'Jogando'})
+        window=MainWindow(library);window.resize(1440,980);window.show();app.processEvents()
+        continuation=window.pages[0].findChild(QWidget,'homeRecentSection')
+        activity=window.pages[0].findChild(QWidget,'homeWeekSummary')
+        assert continuation.geometry().top()==activity.geometry().top()
+>       assert activity.geometry().left()>continuation.geometry().right()
+E       assert 0 > 697
+E        +  where 0 = <built-in method left of PySide6.QtCore.QRect object at 0x7f13c9c005c0>()
+E        +    where <built-in method left of PySide6.QtCore.QRect object at 0x7f13c9c005c0> = PySide6.QtCore.QRect(0, 0, 466, 200).left
+E        +      where PySide6.QtCore.QRect(0, 0, 466, 200) = <built-in method geometry of CardSurface object at 0x7f13c9b3e6c0>()
+E        +        where <built-in method geometry of CardSurface object at 0x7f13c9b3e6c0> = <checkpoint.design_system.CardSurface(0x2e4f8e90, name="homeWeekSummary") at 0x7f13c9b3e6c0>.geometry
+E        +  and   697 = <built-in method right of PySide6.QtCore.QRect object at 0x7f13c9bdba80>()
+E        +    where <built-in method right of PySide6.QtCore.QRect object at 0x7f13c9bdba80> = PySide6.QtCore.QRect(0, 0, 698, 360).right
+E        +      where PySide6.QtCore.QRect(0, 0, 698, 360) = <built-in method geometry of CardSurface object at 0x7f13c9b3de40>()
+E        +        where <built-in method geometry of CardSurface object at 0x7f13c9b3de40> = <checkpoint.design_system.CardSurface(0x2e4d8b60, name="homeRecentSection") at 0x7f13c9b3de40>.geometry
+
+tests/test_ui_redesign.py:116: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_ui_redesign.py::test_home_places_activity_beside_continuity
+1 failed, 37 passed in 4.76s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## lista-regressoes-finais
+
+UTC: 2026-11-15T21:50:39.615748+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_library_list_0137.py", "tests/test_layout_0134.py", "tests/test_folder_platforms.py", "tests/test_ui.py::test_navigate_and_game_detail_with_real_database", "tests/test_ui_redesign.py", "tests/test_favorite_0136.py", "tests/test_home_layout_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+....................................................                     [100%]
+52 passed in 6.22s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0

@@ -60,6 +60,7 @@ def test_create_confirmed_game_and_link_version(library):
 
 def test_folder_dialog_saves_rule_and_gallery_has_cover_icons(library,app,folder):
     from checkpoint.folder_platform_dialog import FolderPlatformDialog
+    from PySide6.QtCore import Qt
     from PySide6.QtGui import QImage,QColor
     from checkpoint.window import MainWindow
     seed(library)
@@ -68,6 +69,10 @@ def test_folder_dialog_saves_rule_and_gallery_has_cover_icons(library,app,folder
     assert library.setting('drive_folder_platforms')['custom']=='PlayStation 2'
     image=QImage(30,40,QImage.Format_RGB32);image.fill(QColor('blue'));path=folder/'cover.png';image.save(str(path))
     library.save_game({'title':'Has cover','cover':str(path)})
-    window=MainWindow(library);window.refresh_library()
-    assert not window.table.item(0,0).icon().isNull()
+    window=MainWindow(library);window.resize(1280,800);window.show();window.navigate(1)
+    for _ in range(5):app.processEvents()
+    grid=window.gallery;item=next(grid.item(n) for n in range(grid.count()) if grid.item(n).data(Qt.UserRole+1)['title']=='Has cover')
+    grid.scrollToItem(item);app.processEvents()
+    rect=grid.visualItemRect(item);frame=grid.viewport().grab(rect).toImage()
+    assert frame.pixelColor(frame.width()//2,frame.width()//2).blue()>200
     window.close();dialog.close()

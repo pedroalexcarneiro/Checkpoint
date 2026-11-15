@@ -208,16 +208,17 @@ class MainWindow(QMainWindow):
         self.gallery=CoverGrid(self.theme,self.pages[1]);self.gallery.setIconSize(QSize(174,232))
         self.gallery.itemActivated.connect(lambda item:self.detail(item.data(Qt.UserRole)))
         self.gallery.itemClicked.connect(lambda item:self.detail(item.data(Qt.UserRole)))
-        self.table = QTableWidget(0,6);self.table.setAlternatingRowColors(True);self.table.verticalHeader().hide();self.table.setShowGrid(False); self.table.setIconSize(QSize(140,48)); self.table.setHorizontalHeaderLabels(['Logo','Jogo','Plataforma','Status','Gênero','Nota'])
-        self.table.horizontalHeader().setStretchLastSection(True); self.table.setSelectionBehavior(QAbstractItemView.SelectRows)
-        self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.table.cellDoubleClicked.connect(lambda row,col:self.detail(self.table.item(row,0).data(Qt.UserRole)))
+        from .library_list import LibraryList
+        self.game_list=LibraryList(self.pages[1])
+        self.game_list.itemClicked.connect(lambda item:self.detail(item.data(Qt.UserRole)))
+        self.game_list.itemActivated.connect(lambda item:self.detail(item.data(Qt.UserRole)))
+        self.game_list.favorite_requested.connect(lambda identity:self.toggle_favorite(identity,open_detail=False))
         from .ui_components import ResponsiveToolbar
         layout.removeWidget(self.library_tabs);options.setSpacing(8);options.removeWidget(self.count)
         layout.removeItem(options);options.setParent(None);controls=QWidget();controls.setLayout(options)
         layout.removeItem(filters);layout.insertWidget(0,ResponsiveToolbar(self.library_tabs,controls));self.count.hide()
         layout.setSpacing(SPACE['lg'])
-        layout.addWidget(self.gallery,1); layout.addWidget(self.table,1)
+        layout.addWidget(self.gallery,1); layout.addWidget(self.game_list,1)
         from .design_system import empty_state
         self.library_empty=empty_state('library','Biblioteca vazia','',self.add_library_game,'Adicionar jogo');layout.addWidget(self.library_empty);self.library_empty.hide()
         self.gallery.setObjectName('coverGrid');self.gallery.setFrameShape(QFrame.NoFrame);self.gallery.setTextElideMode(Qt.ElideRight)
@@ -241,19 +242,26 @@ class MainWindow(QMainWindow):
         games = self.library.owned_games(self.search.text(),self.platform.currentData(),self.genre.currentData(),self.status.currentData(),self.favorites.isChecked(),self.sort.currentData())
         from .card_layout import cover_size,nearest_cover_choice
         self.gallery.theme=self.theme;self.gallery.set_cover_size(nearest_cover_choice(cover_size(self.library)))
-        self.gallery.clear(); self.table.setRowCount(len(games)); self.count.setText(count_text(len(games),'jogo'))
-        for row,game in enumerate(games):
-            from .cover_art import cover_pixmap
-            pix=cover_pixmap(game)
-            item = QListWidgetItem(QIcon(pix),('★ ' if game['favorite'] else '')+game['title']+'\n'+game['status'])
-            item.setData(Qt.UserRole,game['id']);item.setData(Qt.UserRole+1,game);self.gallery.addItem(item)
-            from .list_art import list_icon
-            logo=QTableWidgetItem();logo.setIcon(list_icon(game,self.theme.colors['text']));logo.setData(Qt.UserRole,game['id']);self.table.setItem(row,0,logo)
-            for col,key in enumerate(['title','platform','status','genre','rating'],1):
-                cell = QTableWidgetItem(str(game[key]) if game[key] is not None else '—'); cell.setData(Qt.UserRole,game['id']);
-                self.table.setItem(row,col,cell)
-            self.table.setRowHeight(row,64)
-        self.table.resizeColumnsToContents();self.table.setColumnWidth(0,160); self.gallery.setVisible(bool(games) and self.view.currentIndex()==0); self.table.setVisible(bool(games) and self.view.currentIndex()==1);self.library_empty.setVisible(not games)
+        self.count.setText(count_text(len(games),'jogo'))
+        from .playtime import collection_times,format_time
+        times=collection_times(self.library)
+        for view in (self.gallery,self.game_list):
+            position=view.verticalScrollBar().value()
+            old_ids=[view.item(n).data(Qt.UserRole) for n in range(view.count())]
+            same=old_ids==[g['id'] for g in games]
+            if not same:view.clear()
+            for row,game in enumerate(games):
+                item=view.item(row) if same else QListWidgetItem()
+                title=('★ ' if game['favorite'] else '')+game['title']+'\n'+game['status'] if view is self.gallery else game['title']
+                if item.data(Qt.UserRole+1)!=game or item.text()!=title:
+                    item.setText(title);item.setData(Qt.UserRole,game['id']);item.setData(Qt.UserRole+1,game)
+                if view is self.game_list:
+                    value=format_time(times.get(game['id'],0));item.setData(Qt.UserRole+2,value)
+                    item.setToolTip(game['title']);item.setData(Qt.AccessibleTextRole,game['title']+'; '+value+('; Favorito' if game['favorite'] else ''))
+                    item.setFlags(item.flags()|Qt.ItemIsUserCheckable);item.setCheckState(Qt.Checked if game['favorite'] else Qt.Unchecked)
+                if not same:view.addItem(item)
+            view.doItemsLayout();view.verticalScrollBar().setValue(min(position,view.verticalScrollBar().maximum()))
+        self.gallery.setVisible(bool(games) and self.view.currentIndex()==0);self.game_list.setVisible(bool(games) and self.view.currentIndex()==1);self.library_empty.setVisible(not games)
         if not games:self.update_library_empty()
 
     def clear_library_filters(self):
@@ -284,7 +292,7 @@ class MainWindow(QMainWindow):
         if self.view.currentIndex()==0:
             item = self.gallery.currentItem()
         else:
-            row = self.table.currentRow(); item = self.table.item(row,0) if row>=0 else None
+            item = self.game_list.currentItem()
         if item: self.detail(item.data(Qt.UserRole))
 
     def search_game_data(self,game_id):
@@ -323,11 +331,12 @@ class MainWindow(QMainWindow):
                     self.completion_queue.submit([game_id])
             self.guard(save)
 
-    def toggle_favorite(self,game_id):
+    def toggle_favorite(self,game_id,*,open_detail=True):
         game=self.library.get(game_id)
         if game:
             self.library.save_game({'title':game['title'],'favorite':int(not game['favorite'])},game_id)
-            self.refresh_library();self.detail(game_id)
+            self.refresh_library()
+            if open_detail:self.detail(game_id)
 
     def edit_game(self,game_id):
         dialog = GameDialog(self,self.library.get(game_id),library=self.library)

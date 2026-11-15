@@ -10,8 +10,10 @@ def test_list_uses_fixed_logo_area_or_title(ui,app,folder):
     image.fill(QColor('#ff0000'));cover=folder/'cover.png';assert image.save(str(cover))
     w.library.save_game({'title':w.library.get(i)['title'],'logo':str(logo),'cover':str(cover)},i)
     w.view.setCurrentIndex(1);w.refresh_library();app.processEvents()
-    assert w.table.columnWidth(0)==160 and w.table.item(0,1).text()==w.library.get(i)['title']
-    assert w.table.item(0,0).icon().pixmap(140,48).toImage().pixelColor(70,24)==QColor('#18aa60')
+    assert w.game_list.item(0).text()==w.library.get(i)['title']
+    rect=w.game_list.visualItemRect(w.game_list.item(0))
+    frame=w.game_list.viewport().grab(rect).toImage()
+    assert frame.pixelColor(62,36)==QColor('#18aa60')
     from checkpoint.list_art import list_icon
     game={**w.library.get(i),'logo':''};pix=list_icon(game,'#ffffff').pixmap(140,48)
     assert not QRegion(pix.mask()).boundingRect().isEmpty()
