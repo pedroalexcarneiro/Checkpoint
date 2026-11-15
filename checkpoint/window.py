@@ -99,9 +99,10 @@ class MainWindow(QMainWindow):
             control.setCheckable(True);control.setChecked(index==self.view.currentIndex());self.header.insertWidget(3+index,control);self.view_buttons.append(control)
         self.view.currentIndexChanged.connect(self.update_view_buttons)
         self.navigate(0)
-        from PySide6.QtGui import QShortcut,QKeySequence
-        self.capture_shortcut=QShortcut(QKeySequence(self.library.setting('capture.shortcut','Ctrl+Shift+S')),self)
-        self.capture_shortcut.activated.connect(self.capture_game_window)
+        from .global_hotkey import GlobalCaptureHotkey
+        self.capture_shortcut=GlobalCaptureHotkey(self,self.capture_game_window,None)
+        configured=self.library.setting('capture.shortcut','Ctrl+Shift+S')
+        self.guard(lambda:self.capture_shortcut.setKey(configured))
         self.timer = QTimer(self); self.timer.timeout.connect(self.poll_sessions); self.timer.start(1000)
         self.statusBar().setSizeGripEnabled(False);self.statusBar().showMessage('');self.statusBar().hide()
 
@@ -402,7 +403,10 @@ class MainWindow(QMainWindow):
         if not value:return
         if value in ('Ctrl+Q','Ctrl+F','Ctrl+N'):
             QMessageBox.information(self,'Atalho','Esse atalho já é usado pelo Checkpoint.');return
-        self.library.set_setting('capture.shortcut',value);self.capture_shortcut.setKey(sequence)
+        try:self.capture_shortcut.setKey(sequence)
+        except ValueError as error:
+            QMessageBox.warning(self,'Atalho de captura',str(error));return
+        self.library.set_setting('capture.shortcut',value)
 
     def capture_game_window(self):
         from .game_capture import capture_game
@@ -746,4 +750,4 @@ class MainWindow(QMainWindow):
         if self.launcher.active:
             if QMessageBox.question(self,'Sessões ativas','Fechar o Checkpoint? O jogo continuará aberto e a sessão precisará de revisão manual.')!=QMessageBox.Yes:
                 event.ignore(); return
-        self.price_queue.stop();self.timer.stop();self.status_timer.stop();self.launcher.interrupt();event.accept()
+        self.capture_shortcut.close();self.price_queue.stop();self.timer.stop();self.status_timer.stop();self.launcher.interrupt();event.accept()

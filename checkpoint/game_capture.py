@@ -1,52 +1,67 @@
-"""Captura de uma janela pertencente a uma sessão iniciada pelo Checkpoint."""
+"""Captura somente a janela em primeiro plano de uma sessão elegível."""
 import sys
 from pathlib import Path
 from uuid import uuid4
 
 
 class WindowsCapture:
-    def capture(self,pid):
-        if sys.platform!='win32':
-            raise ValueError('Captura de janela de jogo disponível no Windows.')
+    def __init__(self):
+        if sys.platform != 'win32':
+            raise ValueError('Captura global de janela de jogo disponível no Windows.')
         import ctypes
         from ctypes import wintypes
+        self.ctypes = ctypes; self.types = wintypes
+        self.user = ctypes.WinDLL('user32', use_last_error=True)
+        self.user.GetForegroundWindow.restype = wintypes.HWND
+        self.user.GetWindowThreadProcessId.argtypes = [wintypes.HWND, ctypes.POINTER(wintypes.DWORD)]
+        self.user.IsWindowVisible.argtypes = [wintypes.HWND]
+        self.user.IsIconic.argtypes = [wintypes.HWND]
+        self.user.IsWindow.argtypes = [wintypes.HWND]
+        self.handle = None
+
+    def foreground_pid(self):
+        hwnd = self.user.GetForegroundWindow()
+        if not hwnd or not self.user.IsWindow(hwnd) or not self.user.IsWindowVisible(hwnd) or self.user.IsIconic(hwnd):
+            raise ValueError('Deixe a janela do jogo aberta e em primeiro plano para capturar.')
+        owner = self.types.DWORD()
+        self.user.GetWindowThreadProcessId(hwnd, self.ctypes.byref(owner))
+        self.handle = hwnd
+        return owner.value
+
+    def capture(self, pid):
         from PySide6.QtWidgets import QApplication
-        user=ctypes.WinDLL('user32',use_last_error=True)
-        callback_type=ctypes.WINFUNCTYPE(wintypes.BOOL,wintypes.HWND,wintypes.LPARAM)
-        user.EnumWindows.argtypes=[callback_type,wintypes.LPARAM]
-        user.IsWindowVisible.argtypes=[wintypes.HWND]
-        user.IsIconic.argtypes=[wintypes.HWND]
-        user.GetWindowThreadProcessId.argtypes=[wintypes.HWND,ctypes.POINTER(wintypes.DWORD)]
-        windows=[]
-        @callback_type
-        def visit(hwnd,param):
-            owner=wintypes.DWORD()
-            user.GetWindowThreadProcessId(hwnd,ctypes.byref(owner))
-            if owner.value==pid and user.IsWindowVisible(hwnd) and not user.IsIconic(hwnd):windows.append(hwnd)
-            return True
-        user.EnumWindows(visit,0)
-        if len(windows)!=1:
-            raise ValueError('Não foi possível identificar uma única janela do jogo. Deixe a janela do jogo aberta e tente novamente.')
-        screen=QApplication.primaryScreen()
-        if screen is None:raise ValueError('Tela indisponível para captura.')
-        return screen.grabWindow(int(windows[0]))
+        expected = self.handle
+        if self.foreground_pid() != pid or self.handle != expected:
+            raise ValueError('A janela em primeiro plano mudou. Tente capturar novamente.')
+        screen = QApplication.primaryScreen()
+        if screen is None:
+            raise ValueError('Tela indisponível para captura.')
+        pixmap = screen.grabWindow(int(expected))
+        if self.foreground_pid() != pid or self.handle != expected:
+            raise ValueError('A janela em primeiro plano mudou durante a captura. Nenhum arquivo foi salvo.')
+        return pixmap
 
 
-def capture_game(window,adapter=None):
-    if not window.isActiveWindow():return None
-    sessions={item[2]:item[0] for item in window.launcher.active.values()}
-    if not sessions:raise ValueError('Nenhum jogo aberto pelo Checkpoint está em sessão para capturar.')
-    current=getattr(window,'current_game',None)
-    if current not in sessions:
-        if len(sessions)!=1:raise ValueError('Abra a ficha do jogo em sessão que deseja capturar.')
-        current=next(iter(sessions))
-    pixmap=(adapter or WindowsCapture()).capture(sessions[current].pid)
-    if pixmap.isNull():raise ValueError('A janela do jogo não forneceu uma captura. Tente o jogo em modo janela.')
-    directory=Path(window.library.setting('captures','') or window.library.db.path.parent/'captures')
-    directory.mkdir(parents=True,exist_ok=True)
-    path=directory/(uuid4().hex+'.png')
-    if not pixmap.save(str(path),'PNG'):raise ValueError('Não foi possível salvar a captura.')
-    try:window.library.add_media(current,path,'Captura do jogo')
+def capture_game(window, adapter=None):
+    sessions = list(window.launcher.active.values())
+    if not sessions:
+        raise ValueError('Nenhum jogo aberto pelo Checkpoint está em sessão para capturar.')
+    adapter = adapter or WindowsCapture()
+    pid = adapter.foreground_pid()
+    eligible = [item for item in sessions if item[0].pid == pid and item[0].poll() is None]
+    if len(eligible) != 1:
+        raise ValueError('A janela em primeiro plano não corresponde a uma única sessão iniciada pelo Checkpoint. Ative o jogo; processos-filhos de launchers ainda não são reconhecidos.')
+    current = eligible[0][2]
+    pixmap = adapter.capture(pid)
+    if pixmap.isNull():
+        raise ValueError('A janela do jogo não forneceu uma captura. Tente o jogo em modo janela.')
+    directory = Path(window.library.setting('captures', '') or window.library.db.path.parent / 'captures')
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / (uuid4().hex + '.png')
+    if not pixmap.save(str(path), 'PNG'):
+        raise ValueError('Não foi possível salvar a captura.')
+    try:
+        window.library.add_media(current, path, 'Captura do jogo')
     except Exception:
         path.unlink(missing_ok=True)
         raise
