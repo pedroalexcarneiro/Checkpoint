@@ -1,5 +1,13 @@
 # Continuidade do Checkpoint
 
+## Pré-release 0.1.35 publicada
+
+Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.35
+
+Código/tag: df5ff41e74b36cea4e2abd160e1172f4166bf32a. Workflow https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43670989335: build e publish concluídos com sucesso; **542 passed in 379.76s**, 0 falhas/erros/skips no Windows Python 3.12.10. Smokes do fonte e do ZIP extraído, auxiliar, cadastro isolado, atualizador e revisão visual passaram. ZIP SHA-256: c006662506343dfd5c102e075e3faa13927db7df359177796a7461b18cadc571, igual ao digest publicado pelo GitHub.
+
+Versão 0.1.35, schema 4. Persistem A4, detecção de encerrar apenas a ROM e validação real de captura/contas/emuladores no PC do dono. Não confundir runner Windows com homologação pessoal. tzdata fixado nas dependências de teste para os fusos IANA no Windows; asserções e workflows intactos. Relatório integral: RELATORIO_LANCAMENTO_0135.md. Esta atualização documental é posterior ao commit do build e não muda o aplicativo publicado.
+
 ## Lançamento 0.1.35 autorizado pelo dono
 
 Versão declarada atualizada para 0.1.35, schema 4. O dono autorizou o lançamento após o envio da branch fix/0.1.35-ajustes em f0a5514. Publicação de pré-release pelo workflow Windows release, sem alterar os workflows ou as releases protegidas. A publicação depende dos testes Windows, build e smokes do pacote extraído.
