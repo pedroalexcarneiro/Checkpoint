@@ -3162,3 +3162,185 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## antes-favorito-feedback
+
+UTC: 2026-11-15T17:04:03.245667+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_favorite_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+___ test_favorite_click_is_visible_persistent_and_reversible[sample0-False] ____
+
+ui = (<checkpoint.window.MainWindow(0x3c553240) at 0x7f9d284cd980>, 1)
+app = <PySide6.QtWidgets.QApplication(0x3c4f4bc0) at 0x7f9d28485580>
+wish = False
+
+    @pytest.mark.parametrize('wish',[False,True])
+    def test_favorite_click_is_visible_persistent_and_reversible(ui,app,wish):
+        w,i=ui;lib=w.library
+        lib.save_game({'title':lib.get(i)['title'],'notes':'Nota preservada','description':'Descrição externa'},i)
+        if wish:lib.set_setting(f'collection.unowned.{i}',True);w.add_wish(i);w.navigate(2)
+        else:w.navigate(1)
+        original=[tuple(r) for r in lib.sql.execute('SELECT * FROM wishlist')]
+        w.detail(i);app.processEvents()
+        def heart():return next(b for b in w.detail_page.findChildren(IconButton) if b.name=='heart')
+        for enabled in [True,False]:
+            heart().click();app.processEvents()
+            assert lib.get(i)['favorite']==int(enabled)
+>           control=heart();assert control.isCheckable() and control.isChecked()==enabled
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           assert (False)
+E            +  where False = <built-in method isCheckable of IconButton object at 0x7f9d26ba1440>()
+E            +    where <built-in method isCheckable of IconButton object at 0x7f9d26ba1440> = <checkpoint.design_system.IconButton(0x3ce03190, name="iconButton") at 0x7f9d26ba1440>.isCheckable
+
+tests/test_favorite_0136.py:18: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+____ test_favorite_click_is_visible_persistent_and_reversible[sample0-True] ____
+
+ui = (<checkpoint.window.MainWindow(0x3c42c290) at 0x7f9d284cd900>, 1)
+app = <PySide6.QtWidgets.QApplication(0x3c4f4bc0) at 0x7f9d28485580>
+wish = True
+
+    @pytest.mark.parametrize('wish',[False,True])
+    def test_favorite_click_is_visible_persistent_and_reversible(ui,app,wish):
+        w,i=ui;lib=w.library
+        lib.save_game({'title':lib.get(i)['title'],'notes':'Nota preservada','description':'Descrição externa'},i)
+        if wish:lib.set_setting(f'collection.unowned.{i}',True);w.add_wish(i);w.navigate(2)
+        else:w.navigate(1)
+        original=[tuple(r) for r in lib.sql.execute('SELECT * FROM wishlist')]
+        w.detail(i);app.processEvents()
+        def heart():return next(b for b in w.detail_page.findChildren(IconButton) if b.name=='heart')
+        for enabled in [True,False]:
+            heart().click();app.processEvents()
+            assert lib.get(i)['favorite']==int(enabled)
+>           control=heart();assert control.isCheckable() and control.isChecked()==enabled
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           assert (False)
+E            +  where False = <built-in method isCheckable of IconButton object at 0x7f9d26bd0e00>()
+E            +    where <built-in method isCheckable of IconButton object at 0x7f9d26bd0e00> = <checkpoint.design_system.IconButton(0x3c87aa90, name="iconButton") at 0x7f9d26bd0e00>.isCheckable
+
+tests/test_favorite_0136.py:18: AssertionError
+___ test_favorite_click_is_visible_persistent_and_reversible[sample1-False] ____
+
+ui = (<checkpoint.window.MainWindow(0x3c78b900) at 0x7f9d28320d00>, 1)
+app = <PySide6.QtWidgets.QApplication(0x3c4f4bc0) at 0x7f9d28485580>
+wish = False
+
+    @pytest.mark.parametrize('wish',[False,True])
+    def test_favorite_click_is_visible_persistent_and_reversible(ui,app,wish):
+        w,i=ui;lib=w.library
+        lib.save_game({'title':lib.get(i)['title'],'notes':'Nota preservada','description':'Descrição externa'},i)
+        if wish:lib.set_setting(f'collection.unowned.{i}',True);w.add_wish(i);w.navigate(2)
+        else:w.navigate(1)
+        original=[tuple(r) for r in lib.sql.execute('SELECT * FROM wishlist')]
+        w.detail(i);app.processEvents()
+        def heart():return next(b for b in w.detail_page.findChildren(IconButton) if b.name=='heart')
+        for enabled in [True,False]:
+            heart().click();app.processEvents()
+            assert lib.get(i)['favorite']==int(enabled)
+>           control=heart();assert control.isCheckable() and control.isChecked()==enabled
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           assert (False)
+E            +  where False = <built-in method isCheckable of IconButton object at 0x7f9d26c2a540>()
+E            +    where <built-in method isCheckable of IconButton object at 0x7f9d26c2a540> = <checkpoint.design_system.IconButton(0x3cc7c030, name="iconButton") at 0x7f9d26c2a540>.isCheckable
+
+tests/test_favorite_0136.py:18: AssertionError
+____ test_favorite_click_is_visible_persistent_and_reversible[sample1-True] ____
+
+ui = (<checkpoint.window.MainWindow(0x3cb73660) at 0x7f9d27fc06c0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x3c4f4bc0) at 0x7f9d28485580>
+wish = True
+
+    @pytest.mark.parametrize('wish',[False,True])
+    def test_favorite_click_is_visible_persistent_and_reversible(ui,app,wish):
+        w,i=ui;lib=w.library
+        lib.save_game({'title':lib.get(i)['title'],'notes':'Nota preservada','description':'Descrição externa'},i)
+        if wish:lib.set_setting(f'collection.unowned.{i}',True);w.add_wish(i);w.navigate(2)
+        else:w.navigate(1)
+        original=[tuple(r) for r in lib.sql.execute('SELECT * FROM wishlist')]
+        w.detail(i);app.processEvents()
+        def heart():return next(b for b in w.detail_page.findChildren(IconButton) if b.name=='heart')
+        for enabled in [True,False]:
+            heart().click();app.processEvents()
+            assert lib.get(i)['favorite']==int(enabled)
+>           control=heart();assert control.isCheckable() and control.isChecked()==enabled
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           assert (False)
+E            +  where False = <built-in method isCheckable of IconButton object at 0x7f9d26bb1780>()
+E            +    where <built-in method isCheckable of IconButton object at 0x7f9d26bb1780> = <checkpoint.design_system.IconButton(0x3cf14f60, name="iconButton") at 0x7f9d26bb1780>.isCheckable
+
+tests/test_favorite_0136.py:18: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_favorite_0136.py::test_favorite_click_is_visible_persistent_and_reversible[sample0-False]
+FAILED tests/test_favorite_0136.py::test_favorite_click_is_visible_persistent_and_reversible[sample0-True]
+FAILED tests/test_favorite_0136.py::test_favorite_click_is_visible_persistent_and_reversible[sample1-False]
+FAILED tests/test_favorite_0136.py::test_favorite_click_is_visible_persistent_and_reversible[sample1-True]
+4 failed in 0.71s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## depois-favorito-feedback
+
+UTC: 2026-11-15T17:04:59.447224+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_favorite_0136.py", "tests/test_wish_navigation_0136.py", "tests/test_ui_redesign.py", "tests/test_icons_0134.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+.......................                                                  [100%]
+23 passed in 3.45s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## suite-final-contexto-desejos-0136
+
+UTC: 2026-11-15T17:06:01.806349+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+........................................................................ [ 11%]
+........................................................................ [ 23%]
+........................................................................ [ 35%]
+........................................................................ [ 47%]
+........................................................................ [ 59%]
+........................................................................ [ 71%]
+........................................................................ [ 83%]
+........................................................................ [ 95%]
+............................                                             [100%]
+604 passed in 405.37s (0:06:45)
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0

@@ -32,7 +32,12 @@ class IconButton(QPushButton):
     def __init__(self,name,tooltip,callback,parent=None):
         super().__init__(parent);self.name=name;self.setObjectName('iconButton');self.setFixedSize(34,34);self.setToolTip(tooltip);self.setAccessibleName(tooltip);self.clicked.connect(callback)
     def paintEvent(self,event):
-        super().paintEvent(event);p=QPainter(self);pix=icon(self.name);p.drawPixmap((self.width()-pix.width())//2,(self.height()-pix.height())//2,pix);p.end()
+        super().paintEvent(event);p=QPainter(self)
+        if self.name=='heart' and self.isChecked():
+            from .icons import lucide_icon
+            pix=lucide_icon('heart',colors()['accent'],20,filled=True).pixmap(20,20)
+        else:pix=icon(self.name)
+        p.drawPixmap((self.width()-pix.width())//2,(self.height()-pix.height())//2,pix);p.end()
 
 
 class CardSurface(QFrame):

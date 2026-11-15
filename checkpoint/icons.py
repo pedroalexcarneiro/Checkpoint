@@ -14,9 +14,10 @@ NAMES={'home':'house','library':'layout-grid','stats':'chart-no-axes-column',
        'check':'check','warning':'circle-alert','busy':'loader-circle'}
 
 @lru_cache(maxsize=512)
-def lucide_icon(name,color,size=24):
+def lucide_icon(name,color,size=24,filled=False):
     size=max(1,int(size));path=Path(__file__).parent/'assets'/'lucide'/(NAMES.get(name,'file-text')+'.svg')
     data=path.read_text(encoding='utf-8').replace('currentColor',QColor(color).name())
+    if filled:data=data.replace('fill="none"','fill="'+QColor(color).name()+'"')
     renderer=QSvgRenderer(QByteArray(data.encode()))
     if not renderer.isValid():raise ValueError('Ícone Lucide inválido: '+name)
     pix=QPixmap(size,size);pix.fill(Qt.transparent);p=QPainter(pix);renderer.render(p);p.end()

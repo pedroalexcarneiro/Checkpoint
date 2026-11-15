@@ -34,3 +34,4 @@ Não alterar arquivos/testes protegidos nem sequência A4; quick_add fora do esc
 - Banner: proporção original fixa; altura do bloco acompanha a largura, imagem inteira em escala uniforme e geometria fracionária, sem faixa lateral. Testar quatro bordas e alternar maximizado/restaurado no ambiente disponível.
 - Aprovação específica recebida para atualizar coordenadas do teste da logo Steam de x+8/y+8 para x+10/y+7 e raster explícito em 100%, mantendo igualdade de pixels e arquivo original.
 - Complemento posterior aprovado: ficha exclusiva aberta em Desejos mantém esse contexto e volta à lista, sem adquirir o jogo. Retirar Adicionar à biblioteca da ficha; menu coerente com Desejos; manter aquisição somente por ação explícita na lista.
+- Complemento posterior: coração de favorito deve indicar o estado gravado, preenchido na cor do tema quando marcado; persistir/reabrir/desmarcar, sem adquirir desejo nem alterar metadados.

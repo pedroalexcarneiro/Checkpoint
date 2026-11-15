@@ -61,7 +61,7 @@ def build_detail(window,game):
         actions_frame.setFixedHeight(max(HEIGHT['actions'],16+times.count()*18))
     else:bar.addWidget(text('Na lista de desejos' if window.library.sql.execute('SELECT 1 FROM wishlist WHERE game_id=?',(game_id,)).fetchone() else 'Desejo arquivado','muted'))
     bar.addStretch()
-    bar.addWidget(IconButton('heart','Retirar dos favoritos' if game['favorite'] else 'Marcar como favorito',lambda:window.toggle_favorite(game_id)))
+    favorite=IconButton('heart','Retirar dos favoritos' if game['favorite'] else 'Marcar como favorito',lambda:window.toggle_favorite(game_id));favorite.setCheckable(True);favorite.setChecked(bool(game['favorite']));bar.addWidget(favorite)
     more=QToolButton();more.setFixedSize(40,36);more.setIcon(nav_icon('more',window.theme.colors['text'],20));more.setIconSize(QSize(20,20));more.setAccessibleName('Gerenciar jogo');more.setPopupMode(QToolButton.InstantPopup)
     from .window_menu import WindowMenu
     menu=WindowMenu(more)

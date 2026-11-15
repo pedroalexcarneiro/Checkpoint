@@ -149,3 +149,11 @@ Após pergunta específica, o dono respondeu Retirar o botão da ficha. Removido
 Arquivos/funções: checkpoint/detail_view.py::build_detail; window.py::acquire_wish; tests/test_wish_navigation_0136.py. Teste test_detail_0135 foi atualizado apenas da presença para ausência do botão, por aprovação direta, mantendo aba única, ausência de Galeria/Configurar execução e quatro abas depois da aquisição. Sessões/metadados/IDs não apagados. 69 regressões pertinentes passaram, incluindo o contrato protegido test_visual_0132 sem qualquer alteração nele. Esta decisão posterior substitui a exigência anterior de manter o botão na ficha.
 
 Validação intermediária concluída com 600 passed em 408,20s, antes de consolidar esse último complemento; não é homologação do novo contexto da ficha. Uma execução substituída pelo pedido do hífen foi interrompida e teve stdout/stderr/código −15 preservados. A validação integral final terá como base o último commit de código, sem mudanças de produção durante a execução.
+
+## Complemento posterior — coração de favorito
+
+Relato do dono: botão de coração parece não funcionar. Reproduzido em dois jogos, Biblioteca e Desejos: o clique já gravava favorite=1 no SQLite, mas o coração permanecia sempre contornado e não indicava estado marcado. Quatro testes falharam na ausência desse feedback, depois de confirmar a gravação.
+
+Correção: botão checkable carrega o estado persistido; marcado fica preenchido na cor do tema, desmarcado volta ao contorno. Tooltip/acessibilidade Marcar/Retirar preservados. Ícone Lucide recebe preenchimento somente na renderização; arquivo SVG original não é editado/substituído e nenhuma marca de serviço é alterada. Sem mensagens decorativas novas.
+
+Arquivos/funções: detail_view.py::build_detail, design_system.py::IconButton.paintEvent, icons.py::lucide_icon (parâmetro filled opcional). Tests/test_favorite_0136.py valida marcar/desmarcar, pixels do centro, reabrir ficha, leitura por outra conexão SQLite e filtro Favoritos positivo/negativo, preservação de notas/descrição/wishlist/posse (favoritar desejo não o adquire). 23 regressões pertinentes passaram, incluindo navegação de Desejos e ícones. Capturas específicas de marcado/desmarcado acompanham a revisão.
