@@ -2303,3 +2303,196 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## verificacao-contratos
+
+UTC: 2026-11-15T16:33:27.380793+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-c", "import subprocess,hashlib;from pathlib import Path;base='818ec80a492a29936782ddb3a43eecaf3ef996e3';files=['tests/test_save_lifecycle.py','checkpoint/worker.py','checkpoint/enrichment.py','checkpoint/game_import.py','checkpoint/completion_queue.py','checkpoint/dialogs.py','checkpoint/quick_add.py','tests/test_visual_0132.py','checkpoint/assets/services/steam.ico','checkpoint/assets/services/google-drive.png','release-notes.md'];files += subprocess.check_output(['git','ls-files','.github/workflows'],text=True,encoding='utf-8').splitlines();[(print(name,hashlib.sha256(Path(name).read_bytes()).hexdigest(),'INTACTO'),None if Path(name).read_bytes()==subprocess.check_output(['git','show',base+':'+name]) else (_ for _ in ()).throw(AssertionError(name))) for name in files if Path(name).exists()];changed=subprocess.check_output(['git','diff','--name-only',base],text=True,encoding='utf-8').splitlines();[(Path(name).read_text(encoding='utf-8'),None if b'\\r' not in Path(name).read_bytes() else (_ for _ in ()).throw(AssertionError('CR em '+name))) for name in changed if Path(name).is_file()];subprocess.run(['git','diff','--check'],check=True);print('UTF-8/LF e diff --check OK; contratos e workflows intactos')"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+tests/test_save_lifecycle.py cef7190411246741cc418df6d9e9f7a8faa72343b0268079f33fc017c98069ab INTACTO
+checkpoint/worker.py d5bd6ee0eb977466ba604afc06be1a29ec109aa81f306e45d98f42c6fa8a331a INTACTO
+checkpoint/enrichment.py bc81557c2230f82ddaee166a2b3df237caee4d14550e5df0281b8df713f75811 INTACTO
+checkpoint/game_import.py 5e82553fc7059b6530f2a9f832ac52e08ebd928964e2e57d9b8c12510d9d74ca INTACTO
+checkpoint/completion_queue.py d6f66be83feb3891c65d93a6bb7ea9e728b604c024339077d44f2218cf4d70d5 INTACTO
+checkpoint/dialogs.py ef86cc4b503340dd141519a4a47ab573a3a1fa373caac04f943120296747ccff INTACTO
+checkpoint/quick_add.py ea3468a6aa45fef65f567e097e881a4eeb36d15a286c77a650eb2697a2c1634a INTACTO
+tests/test_visual_0132.py 0f89dc3ce676756a505e80c6bb37c46c45b08c226594ea5f4737b21881e74ac3 INTACTO
+checkpoint/assets/services/steam.ico 9f890a9debcdfccc339149a7943be9aff9e4c9203c2fa37d5671a5b2c88503ad INTACTO
+checkpoint/assets/services/google-drive.png 72ea8d2de5e0568158cf48029cb9121564ab20c275465a65453776baf1160ebd INTACTO
+.github/workflows/publish-0.1.28.yml f4679399903233c471550b751fd8b78984e812c2775e7ab908f344f5939dd547 INTACTO
+.github/workflows/windows-release.yml 575522aac5608bd07b1142db96e9fc1b5860337088d1f560a6ad0852332ca4f4 INTACTO
+.github/workflows/windows-ui-validation.yml 83d552e70b56a173ebbe436feab6fbd3a23c2bba2831cc34114f8b5d758232e4 INTACTO
+UTF-8/LF e diff --check OK; contratos e workflows intactos
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## wheel-local
+
+UTC: 2026-11-15T16:33:27.796245+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pip", "wheel", ".", "--no-deps", "--no-build-isolation", "--wheel-dir", "/workspace/work/entrega-0136/wheels"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+Processing /workspace/work/Checkpoint
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: checkpoint-desktop
+  Building wheel for checkpoint-desktop (pyproject.toml): started
+  Building wheel for checkpoint-desktop (pyproject.toml): finished with status 'done'
+  Created wheel for checkpoint-desktop: filename=checkpoint_desktop-0.1.36-py3-none-any.whl size=233033 sha256=0e7e6a335ce1a0d7cf1bee5facd1dc58f91af6f6d5a27c99ab0bdd97148d26dd
+  Stored in directory: /tmp/pip-ephem-wheel-cache-94234t1e/wheels/83/77/53/5eb720791fc6f82eaa0f682bd5e5adf7478efb3a3363bfee14
+Successfully built checkpoint-desktop
+
+```
+
+stderr integral:
+```text
+WARNING: The directory '/home/agent/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+
+[notice] A new release of pip is available: 25.0.1 -> 26.3
+[notice] To update, run: /workspace/work/venv/bin/python -m pip install --upgrade pip
+
+```
+
+Código de saída: 0
+
+## geometria-final-150
+
+UTC: 2026-11-15T16:33:29.034811+00:00
+
+Comando: `["/usr/bin/env", "QT_SCALE_FACTOR=1.5", "/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_statistics_list_0136.py", "tests/test_visual_audit_0136.py", "tests/test_service_optical_0136.py", "tests/test_visual_steam_asset_0135.py", "tests/test_service_logo_0135.py", "tests/test_settings_0135.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+.................                                                        [100%]
+17 passed in 2.67s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## antes-ofertas-empatadas
+
+UTC: 2026-11-15T16:35:45.503543+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_price_integrity_0136.py::test_price_store_and_original_do_not_mix_tied_offers", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____________ test_price_store_and_original_do_not_mix_tied_offers _____________
+
+library = <checkpoint.library.Library object at 0x7f6504c6b260>
+app = <PySide6.QtWidgets.QApplication(0x114687b0) at 0x7f6504c4cc40>
+
+    def test_price_store_and_original_do_not_mix_tied_offers(library,app):
+        from checkpoint.price_view import price_summary
+        i=library.save_game({'title':'Portal 2'});library.sql.execute('INSERT INTO external_identifiers VALUES(?,?,?)',(i,'steam','620'));library.sql.commit()
+        offers=[{'kind':'keyshop','cents':6000,'original':10000,'shop':'Chaves','url':'https://gg.deals/br/redirect/keys/'},
+                {'kind':'retail','cents':6000,'original':None,'shop':'Oficial A','url':'https://gg.deals/br/redirect/a/'},
+                {'kind':'retail','cents':6000,'original':10000,'shop':'Oficial B','url':'https://gg.deals/br/redirect/b/'}]
+        library.set_setting(f'prices.ggdeals.{i}',{'currency':'BRL','retail':6000,'keyshop':6000,'offer_context':{'platform':'PC','steam':'620'},'offers':offers})
+        frame=price_summary(library,library.get(i));labels=[l.text() for l in frame.findChildren(QLabel)]
+>       assert 'Loja oficial · Oficial A' in labels
+E       AssertionError: assert 'Loja oficial · Oficial A' in ['Menor preço atual', 'R$ 60,00', 'Loja oficial · Chaves', 'R$ 100,00', '-40%']
+
+tests/test_price_integrity_0136.py:99: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_price_integrity_0136.py::test_price_store_and_original_do_not_mix_tied_offers
+1 failed in 0.13s
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 1
+
+## depois-ofertas-empatadas
+
+UTC: 2026-11-15T16:36:01.081868+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_price_integrity_0136.py", "tests/test_prices_0129.py", "tests/test_prices_0135.py", "tests/test_price_display_official.py", "tests/test_wishlist_prices.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+............................                                             [100%]
+28 passed in 2.54s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## antes-posse-nula
+
+UTC: 2026-11-15T16:37:11.159124+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_wish_time_0136.py::test_nullable_legacy_ownership_flag_agrees_with_collection", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________ test_nullable_legacy_ownership_flag_agrees_with_collection __________
+
+library = <checkpoint.library.Library object at 0x7f81d2c36ff0>
+
+    def test_nullable_legacy_ownership_flag_agrees_with_collection(library):
+        i=library.save_game({'title':'Portal 2'})
+        library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)',(i,));library.sql.commit()
+        for flag,owned in [(None,False),(True,False),(False,True)]:
+            library.set_setting(f'collection.unowned.{i}',flag)
+            assert library.is_owned(i)==owned
+>           assert (i in {g['id'] for g in library.owned_games()})==owned
+E           assert (1 in {1}) == False
+
+tests/test_wish_time_0136.py:32: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_wish_time_0136.py::test_nullable_legacy_ownership_flag_agrees_with_collection
+1 failed in 0.14s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1

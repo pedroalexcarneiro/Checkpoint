@@ -40,7 +40,8 @@ def selected_quote(library,game_id):
     # Um original só acompanha exatamente a oferta escolhida, nunca o histórico/agregado.
     offers=[o for o in value.get('offers',[]) if o.get('cents')==amount and o.get('kind')==kind]
     from urllib.parse import urlsplit
-    for offer in offers if confirmed and value.get('currency')=='BRL' else []:
+    value['selected_offer']=offers[0] if offers else {}
+    for offer in offers[:1] if confirmed and value.get('currency')=='BRL' else []:
         original=offer.get('original');url=urlsplit(offer.get('url',''))
         if type(original) is int and original>amount and offer.get('shop') and url.scheme=='https' and url.netloc=='gg.deals' and url.path.startswith('/br/redirect/'):
             # Inteiro mais próximo; empate arredonda para cima. Nenhum 0% inventado.

@@ -56,8 +56,7 @@ def price_summary(library,game):
     if not usable:row.addWidget(text(value.get('message') or ('Preços ainda não consultados.' if has_steam_id(library,game) else 'Sem ID da Steam para consultar ofertas.'),'caption'))
     kind={'retail':'Loja oficial','keyshop':'Keyshop'}.get(value.get('current_kind'))
     if kind and usable:
-        offers=[offer for offer in value.get('offers',[]) if offer.get('cents')==current]
-        shop=offers[0].get('shop','') if offers else ''
+        shop=value.get('selected_offer',{}).get('shop','')
         label=text(kind+(' · '+shop if shop else ''),'secondary');label.setToolTip(label.text());row.addWidget(label)
     if usable and value.get('original') and value.get('discount'):
         discount=QHBoxLayout();original=text(money(value['original']),'caption');font=original.font();font.setStrikeOut(True);original.setFont(font);discount.addWidget(original);discount.addWidget(text('-'+str(value['discount'])+'%','priceDiscount'));discount.addStretch();row.addLayout(discount)

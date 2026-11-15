@@ -86,3 +86,16 @@ def test_cached_quote_from_different_edition_is_not_shown(library,title):
     quote=selected_quote(library,i)
     assert quote.get('lowest') is None and 'identidade' in quote.get('message','').lower()
     assert library.setting(f'prices.ggdeals.{i}')==cached
+
+
+def test_price_store_and_original_do_not_mix_tied_offers(library,app):
+    from checkpoint.price_view import price_summary
+    i=library.save_game({'title':'Portal 2'});library.sql.execute('INSERT INTO external_identifiers VALUES(?,?,?)',(i,'steam','620'));library.sql.commit()
+    offers=[{'kind':'keyshop','cents':6000,'original':10000,'shop':'Chaves','url':'https://gg.deals/br/redirect/keys/'},
+            {'kind':'retail','cents':6000,'original':None,'shop':'Oficial A','url':'https://gg.deals/br/redirect/a/'},
+            {'kind':'retail','cents':6000,'original':10000,'shop':'Oficial B','url':'https://gg.deals/br/redirect/b/'}]
+    library.set_setting(f'prices.ggdeals.{i}',{'currency':'BRL','retail':6000,'keyshop':6000,'offer_context':{'platform':'PC','steam':'620'},'offers':offers})
+    frame=price_summary(library,library.get(i));labels=[l.text() for l in frame.findChildren(QLabel)]
+    assert 'Loja oficial · Oficial A' in labels
+    assert selected_quote(library,i).get('original') is None
+    assert not any('%' in t for t in labels)
