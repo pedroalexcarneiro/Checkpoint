@@ -553,7 +553,7 @@ class MainWindow(QMainWindow):
         if QMessageBox.question(self,'Registro da sessão','Este emulador não possui detecção validada de encerramento da ROM. Você deverá encerrar o registro manualmente ao terminar de jogar. Iniciar?')!=QMessageBox.Yes: return
         def launch():
             command = EmulatorCommand.build(profile['executable'],profile['arguments_json'],file['local_path'])
-            self.launcher.start_command(game_id,command,False)
+            self.launcher.start_command(game_id,command,True)
             with self.library.sql:
                 self.library.sql.execute('UPDATE rom_versions SET profile_id=? WHERE file_id=?',(profile['id'],file['id']))
             self.detail(game_id)
@@ -694,6 +694,7 @@ class MainWindow(QMainWindow):
     def poll_sessions(self):
         for game_id in self.launcher.poll():
             self.statusBar().showMessage('Sessão encerrada e tempo salvo.'); self.auto_backup(game_id)
+            if self.current_game==game_id and self.stack.currentWidget()==getattr(self,'detail_page',None):self.detail(game_id)
 
     def closeEvent(self,event):
         from .jobs import Job
