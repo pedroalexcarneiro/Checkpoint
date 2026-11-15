@@ -26,20 +26,6 @@ def last_played_text(value):
     return 'Última vez: '+day+', '+stamp.strftime('%H:%M')
 
 
-class OfferLogo(ArtworkButton):
-    def __init__(self,game,callback):
-        super().__init__(game.get('logo') or '',game['title'],callback,height=48)
-        self.setObjectName('homeOfferLogo');self.setFixedWidth(84)
-    def paintEvent(self,event):
-        p=QPainter(self);p.setRenderHint(QPainter.SmoothPixmapTransform)
-        if not self.pixmap.isNull():
-            pix=self.pixmap.scaled(self.width()-8,self.height()-8,Qt.KeepAspectRatio,Qt.SmoothTransformation)
-        else:
-            from .ui_components import nav_icon
-            pix=nav_icon('library',colors()['muted'],24).pixmap(24,24)
-        p.drawPixmap((self.width()-pix.width())//2,(self.height()-pix.height())//2,pix);p.end()
-
-
 class RecentArtwork(QPushButton):
     """Capa inteira; banner é alternativa somente quando não há capa."""
     def __init__(self,game,window):

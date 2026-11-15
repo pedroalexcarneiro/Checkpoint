@@ -594,3 +594,114 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## grade-benchmark-antes
+
+UTC: 2026-11-15T21:42:25.073092+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "/workspace/work/evidence-0137/bench_grid.py", "/workspace/work/evidence-0137/bench-antes"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+{
+  "games": 500,
+  "distinct_images": 100,
+  "image_size": [
+    300,
+    450
+  ],
+  "window": [
+    1280,
+    800
+  ],
+  "initialization_seconds": 1.746569217000797,
+  "refresh_seconds": [
+    0.7873271179996664,
+    0.7594353940003202,
+    0.7884724640025524
+  ],
+  "refresh_sql_statements": [
+    10,
+    10,
+    10
+  ],
+  "frame_seconds": [
+    0.01957371000025887,
+    0.03425789999892004,
+    0.03018155500103603,
+    0.0337869690010848,
+    0.03296220199990785,
+    0.024321164000866702,
+    0.02194282900018152,
+    0.03249420499923872,
+    0.033179494999785675,
+    0.022936576999200042,
+    0.02425610099817277,
+    0.03297773500162293,
+    0.03478646899748128,
+    0.022543536997545743,
+    0.023715177998383297,
+    0.022761446998629253
+  ],
+  "median_frame_ms": 27.251359500951366,
+  "scroll_before_refresh": 25693,
+  "scroll_after_refresh": 25693,
+  "max_rss_kib": 389916
+}
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 0
+
+## inicio-ofertas-quatro-campos
+
+UTC: 2026-11-15T21:44:23.612878+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/inicio-v9"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/inicio-v9
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
+
+## inicio-ofertas-dados-confiaveis
+
+UTC: 2026-11-15T21:44:33.286775+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_home_layout_0137.py", "tests/test_home_data_0137.py", "tests/test_home_0129.py", "tests/test_home_description_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+.....................                                                    [100%]
+21 passed in 1.92s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0

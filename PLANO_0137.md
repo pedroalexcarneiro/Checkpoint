@@ -51,3 +51,5 @@ Complementos visuais posteriores prevalecem: três jogos recentes visíveis em c
 Complemento visual posterior de Ofertas: usar exclusivamente logo do jogo na linha, inteira e proporcional; não usar capa como miniatura. Sem logo, ícone neutro. Preservar nome/contexto/preço e navegação.
 
 Complemento posterior nos cards recentes: remover plataforma; manter status, última vez e tempo total em três linhas separadas, cada informação sem quebra. Data local curta (hoje/ontem/dia e mês, horário), data completa no tooltip/acessibilidade. Esse recorte é dos cards recentes; plataforma permanece nas ofertas para impedir confusão de edição.
+
+Última decisão de Ofertas: remover toda miniatura/logo e contexto visual; linha somente nome, original riscado, percentual na cor do tema e atual. Essa decisão substitui o pedido anterior de logo. Identidade/plataforma/edição e política continuam validadas nos dados; original/percentual só aparecem juntos quando confiáveis na mesma oferta. API sem original individual mantém nome/atual, sem dados inventados.

@@ -3,7 +3,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QLabel,QSizePolicy
 from .design_system import SectionHeader,AdaptiveColumns,CardSurface,empty_state,ArtworkButton,Badge
 from .ui_components import text,action,ElidedAction
-from .home_components import GameStrip,MemoryCarousel,show_execution_history,OfferLogo
+from .home_components import GameStrip,MemoryCarousel,show_execution_history
 from .home_data import recent_games,week_summary,wish_offers,recent_memories
 from .playtime import format_time,total_seconds
 from .smooth_scroll import SmoothScrollArea
@@ -46,13 +46,17 @@ def build_home(window):
     for game in offers:
         offer_row=QWidget();offer_row.setObjectName('homeOfferRow');offer_row.setFixedHeight(72)
         row=QHBoxLayout(offer_row);row.setContentsMargins(0,8,0,8);row.setSpacing(12);identity=game['id']
-        logo=OfferLogo(game,lambda checked=False,i=identity:window.detail(i));row.addWidget(logo)
-        words=QVBoxLayout();words.setSpacing(3);title=ElidedAction(game['title'],lambda checked=False,i=identity:window.detail(i));title.setObjectName('activityLink');words.addWidget(title)
-        quote=game['quote'];kind='Loja oficial' if quote['current_kind']=='retail' else 'Keyshop'
-        words.addWidget(text(game['platform']+' · '+kind,'caption'));row.addLayout(words,1)
+        title=ElidedAction(game['title'],lambda checked=False,i=identity:window.detail(i));title.setObjectName('activityLink');row.addWidget(title,1)
+        quote=game['quote']
+        from .prices import money
+        if quote.get('original') and quote.get('discount'):
+            original=text(money(quote['original']),'caption');original.setObjectName('homeOfferOriginal');original.setWordWrap(False)
+            font=original.font();font.setStrikeOut(True);original.setFont(font);row.addWidget(original)
+            discount=text('-'+str(quote['discount'])+'%','priceDiscount');discount.setObjectName('homeOfferDiscount');discount.setWordWrap(False)
+            discount.setStyleSheet('color: '+window.theme.colors['accent']+'; font-weight: 600;');row.addWidget(discount)
         from .price_view import source_link
         from .prices import money
-        price=source_link(window.library,game,money(quote['lowest']));price.setProperty('homeOfferPrice',True);price.setMinimumWidth(88);price.setStyleSheet('color: '+window.theme.colors['accent']+'; font-weight: 600; text-align: right;');row.addWidget(price);offer_rows.addWidget(offer_row)
+        price=source_link(window.library,game,money(quote['lowest']));price.setProperty('homeOfferPrice',True);price.setMinimumWidth(72);price.setStyleSheet('color: '+window.theme.colors['accent']+'; font-weight: 600; text-align: right;');row.addWidget(price);offer_rows.addWidget(offer_row)
     if not offers:offer_rows.addWidget(text('Nenhuma oferta válida nos desejos.','muted'))
     inside.addWidget(offer_list);inside.addStretch(1)
     right_layout.addWidget(frame,1)

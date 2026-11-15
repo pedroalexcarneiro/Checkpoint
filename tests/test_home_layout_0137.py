@@ -106,17 +106,18 @@ def test_three_recent_games_carousel_preserves_every_cover_edge(ui,app,folder):
         assert [c.game_id for c in strip.tiles]==identities[1:]
 
 
-def test_offers_show_logo_and_rows_start_below_heading(app,folder):
-    from checkpoint.home_components import OfferLogo
-    from PySide6.QtGui import QPixmap,QColor
-    game={'title':'Logo sem capa'}
-    for kind,color in (('logo','cyan'),('cover','magenta')):
-        pix=QPixmap(120,40);pix.fill(QColor(color));path=folder/(kind+'.png');assert pix.save(str(path));game[kind]=str(path)
-    control=OfferLogo(game,lambda:None);control.show();app.processEvents()
-    try:
-        image=control.grab().toImage();pixel=image.pixelColor(control.width()//2,control.height()//2)
-        assert pixel.green()>200 and pixel.blue()>200 and pixel.red()<20
-        control.close();game['logo']='';fallback=OfferLogo(game,lambda:None)
-        assert fallback.pixmap.isNull()
-        fallback.close()
-    finally:control.close()
+def test_offers_show_only_same_offer_original_discount_and_current(ui,app):
+    from checkpoint.home_data import wish_offers
+    w,i=ui
+    with w.library.sql:
+        w.library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)',(i,))
+        w.library.sql.execute("INSERT INTO external_identifiers VALUES(?,'steam','620')",(i,))
+    w.library.set_setting(f'prices.ggdeals.{i}',{'state':'ready','retail':3000,'currency':'BRL',
+        'offer_context':{'steam':'620','platform':'PC'},'offers':[{'cents':3000,'original':6000,'kind':'retail','shop':'Loja teste','url':'https://gg.deals/br/redirect/test/'}]})
+    w.navigate(0);app.processEvents();frame=w.pages[0].findChild(QWidget,'homeWishOffers')
+    assert frame.findChild(QLabel,'homeOfferOriginal').text()=='R$ 60,00'
+    assert frame.findChild(QLabel,'homeOfferOriginal').font().strikeOut()
+    assert frame.findChild(QLabel,'homeOfferDiscount').text()=='-50%'
+    assert not frame.findChildren(QWidget,'homeOfferLogo')
+    assert not any(label.text().startswith('PC') for label in frame.findChildren(QLabel))
+    assert wish_offers(w.library)[0]['quote']['lowest']==3000
