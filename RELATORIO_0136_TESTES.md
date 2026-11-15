@@ -1425,3 +1425,244 @@ stderr integral:
 ```
 
 Código de saída: 1
+
+## depois-12
+
+UTC: 2026-11-15T16:17:35.585588+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_visual_audit_0136.py", "tests/test_mockup_exclusions_0135.py", "tests/test_settings_0135.py", "tests/test_complete_layout.py", "tests/test_memories_0135.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+FF..............................                                         [100%]
+=================================== FAILURES ===================================
+___________ test_long_memory_titles_keep_delete_inside_card[sample0] ___________
+
+ui = (<checkpoint.window.MainWindow(0x21a43a90) at 0x7f641c5f1880>, 1)
+app = <PySide6.QtWidgets.QApplication(0x21987a50) at 0x7f64224e1bc0>
+
+    def test_long_memory_titles_keep_delete_inside_card(ui,app):
+        w,i=ui
+        for title in ['Portal 2 com título longo '*12,'Metroid Fusion com título longo '*12]:
+            identity=w.library.save_game({'title':title});w.library.add_diary(identity,'Nota curta do usuário.')
+        for size in [(1280,800),(1920,1080)]:
+            w.resize(*size);w.navigate(3)
+            for _ in range(5):app.processEvents()
+            grid=w.pages[3].findChild(CardGrid,'memoriesGrid');assert len(grid.cards)==2
+            for card in grid.cards:
+                delete=card.findChild(IconButton)
+                assert card.rect().contains(delete.geometry())
+                title=card.findChild(QPushButton,'activityLink')
+>               assert title.geometry().right()<delete.geometry().left()
+E               assert 639 < 0
+E                +  where 639 = <built-in method right of PySide6.QtCore.QRect object at 0x7f641c4551c0>()
+E                +    where <built-in method right of PySide6.QtCore.QRect object at 0x7f641c4551c0> = PySide6.QtCore.QRect(0, 0, 640, 480).right
+E                +      where PySide6.QtCore.QRect(0, 0, 640, 480) = <built-in method geometry of ElidedAction object at 0x7f641c1177c0>()
+E                +        where <built-in method geometry of ElidedAction object at 0x7f641c1177c0> = <checkpoint.ui_components.ElidedAction(0x220fd590, name="activityLink") at 0x7f641c1177c0>.geometry
+E                +  and   0 = <built-in method left of PySide6.QtCore.QRect object at 0x7f641c456c80>()
+E                +    where <built-in method left of PySide6.QtCore.QRect object at 0x7f641c456c80> = PySide6.QtCore.QRect(0, 0, 34, 34).left
+E                +      where PySide6.QtCore.QRect(0, 0, 34, 34) = <built-in method geometry of IconButton object at 0x7f641c117b40>()
+E                +        where <built-in method geometry of IconButton object at 0x7f641c117b40> = <checkpoint.design_system.IconButton(0x221089f0, name="iconButton") at 0x7f641c117b40>.geometry
+
+tests/test_visual_audit_0136.py:20: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+___________ test_long_memory_titles_keep_delete_inside_card[sample1] ___________
+
+ui = (<checkpoint.window.MainWindow(0x21ca75c0) at 0x7f641c5f19c0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x21987a50) at 0x7f64224e1bc0>
+
+    def test_long_memory_titles_keep_delete_inside_card(ui,app):
+        w,i=ui
+        for title in ['Portal 2 com título longo '*12,'Metroid Fusion com título longo '*12]:
+            identity=w.library.save_game({'title':title});w.library.add_diary(identity,'Nota curta do usuário.')
+        for size in [(1280,800),(1920,1080)]:
+            w.resize(*size);w.navigate(3)
+            for _ in range(5):app.processEvents()
+            grid=w.pages[3].findChild(CardGrid,'memoriesGrid');assert len(grid.cards)==2
+            for card in grid.cards:
+                delete=card.findChild(IconButton)
+                assert card.rect().contains(delete.geometry())
+                title=card.findChild(QPushButton,'activityLink')
+>               assert title.geometry().right()<delete.geometry().left()
+E               assert 639 < 0
+E                +  where 639 = <built-in method right of PySide6.QtCore.QRect object at 0x7f641c0f11c0>()
+E                +    where <built-in method right of PySide6.QtCore.QRect object at 0x7f641c0f11c0> = PySide6.QtCore.QRect(0, 0, 640, 480).right
+E                +      where PySide6.QtCore.QRect(0, 0, 640, 480) = <built-in method geometry of ElidedAction object at 0x7f642250b600>()
+E                +        where <built-in method geometry of ElidedAction object at 0x7f642250b600> = <checkpoint.ui_components.ElidedAction(0x21f7ef20, name="activityLink") at 0x7f642250b600>.geometry
+E                +  and   0 = <built-in method left of PySide6.QtCore.QRect object at 0x7f641c1455c0>()
+E                +    where <built-in method left of PySide6.QtCore.QRect object at 0x7f641c1455c0> = PySide6.QtCore.QRect(0, 0, 34, 34).left
+E                +      where PySide6.QtCore.QRect(0, 0, 34, 34) = <built-in method geometry of IconButton object at 0x7f641c0f3ec0>()
+E                +        where <built-in method geometry of IconButton object at 0x7f641c0f3ec0> = <checkpoint.design_system.IconButton(0x22031850, name="iconButton") at 0x7f641c0f3ec0>.geometry
+
+tests/test_visual_audit_0136.py:20: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_visual_audit_0136.py::test_long_memory_titles_keep_delete_inside_card[sample0]
+FAILED tests/test_visual_audit_0136.py::test_long_memory_titles_keep_delete_inside_card[sample1]
+2 failed, 30 passed in 5.16s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## diagnostico-12-grade-visivel
+
+UTC: 2026-11-15T16:17:53.459023+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_visual_audit_0136.py::test_long_memory_titles_keep_delete_inside_card", "-q", "-s", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+GEOMETRIA (1280, 800) [(False, (640, 480), [(False, (308, 480)), (False, (308, 480))]), (True, (1030, 320), [(True, (327, 320)), (True, (327, 320))])]
+GEOMETRIA (1920, 1080) [(False, (640, 480), [(False, (308, 480)), (False, (308, 480))]), (True, (1388, 320), [(True, (329, 320)), (True, (329, 320))])]
+.GEOMETRIA (1280, 800) [(False, (640, 480), [(False, (308, 480)), (False, (308, 480))]), (True, (1030, 320), [(True, (327, 320)), (True, (327, 320))])]
+GEOMETRIA (1920, 1080) [(False, (640, 480), [(False, (308, 480)), (False, (308, 480))]), (True, (1388, 320), [(True, (329, 320)), (True, (329, 320))])]
+.
+2 passed in 0.48s
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 0
+
+## antes-12-corrigido-na-base
+
+UTC: 2026-11-15T16:18:30.842703+00:00
+
+Comando: `["bash", "-c", "cd /workspace/work/base-0136-visual && /workspace/work/venv/bin/python -m pytest tests/test_visual_audit_0136.py::test_long_memory_titles_keep_delete_inside_card -q -p no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+___________ test_long_memory_titles_keep_delete_inside_card[sample0] ___________
+
+ui = (<checkpoint.window.MainWindow(0x24ee5e00) at 0x7f5922f41000>, 1)
+app = <PySide6.QtWidgets.QApplication(0x24f4bfb0) at 0x7f5922f1ba80>
+
+    def test_long_memory_titles_keep_delete_inside_card(ui,app):
+        w,i=ui
+        for title in ['Portal 2 com título longo '*12,'Metroid Fusion com título longo '*12]:
+            identity=w.library.save_game({'title':title});w.library.add_diary(identity,'Nota curta do usuário.')
+        for size in [(1280,800),(1920,1080)]:
+            w.resize(*size);w.navigate(3)
+            for _ in range(5):app.processEvents()
+            grids=w.pages[3].findChildren(CardGrid,'memoriesGrid')
+            print('GEOMETRIA',size,[(g.isVisible(),g.size().toTuple(),[(c.isVisible(),c.size().toTuple()) for c in g.cards]) for g in grids])
+            grid=next(g for g in grids if g.isVisible());assert len(grid.cards)==2
+            for card in grid.cards:
+                delete=card.findChild(IconButton)
+                assert card.rect().contains(delete.geometry())
+                title=card.findChild(QPushButton,'activityLink')
+                assert title.geometry().right()<delete.geometry().left()
+>               assert title.toolTip() and title.accessibleName()
+E               assert ('')
+E                +  where '' = <built-in method toolTip of PySide6.QtWidgets.QPushButton object at 0x7f5922a50980>()
+E                +    where <built-in method toolTip of PySide6.QtWidgets.QPushButton object at 0x7f5922a50980> = <PySide6.QtWidgets.QPushButton(0x2560f860, name="activityLink") at 0x7f5922a50980>.toolTip
+
+tests/test_visual_audit_0136.py:23: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+----------------------------- Captured stdout call -----------------------------
+GEOMETRIA (1280, 800) [(False, (640, 480), [(False, (308, 480)), (False, (308, 480))]), (True, (1030, 320), [(True, (327, 320)), (True, (327, 320))])]
+___________ test_long_memory_titles_keep_delete_inside_card[sample1] ___________
+
+ui = (<checkpoint.window.MainWindow(0x25219c30) at 0x7f5922f41080>, 1)
+app = <PySide6.QtWidgets.QApplication(0x24f4bfb0) at 0x7f5922f1ba80>
+
+    def test_long_memory_titles_keep_delete_inside_card(ui,app):
+        w,i=ui
+        for title in ['Portal 2 com título longo '*12,'Metroid Fusion com título longo '*12]:
+            identity=w.library.save_game({'title':title});w.library.add_diary(identity,'Nota curta do usuário.')
+        for size in [(1280,800),(1920,1080)]:
+            w.resize(*size);w.navigate(3)
+            for _ in range(5):app.processEvents()
+            grids=w.pages[3].findChildren(CardGrid,'memoriesGrid')
+            print('GEOMETRIA',size,[(g.isVisible(),g.size().toTuple(),[(c.isVisible(),c.size().toTuple()) for c in g.cards]) for g in grids])
+            grid=next(g for g in grids if g.isVisible());assert len(grid.cards)==2
+            for card in grid.cards:
+                delete=card.findChild(IconButton)
+                assert card.rect().contains(delete.geometry())
+                title=card.findChild(QPushButton,'activityLink')
+                assert title.geometry().right()<delete.geometry().left()
+>               assert title.toolTip() and title.accessibleName()
+E               assert ('')
+E                +  where '' = <built-in method toolTip of PySide6.QtWidgets.QPushButton object at 0x7f5922acad80>()
+E                +    where <built-in method toolTip of PySide6.QtWidgets.QPushButton object at 0x7f5922acad80> = <PySide6.QtWidgets.QPushButton(0x2560a460, name="activityLink") at 0x7f5922acad80>.toolTip
+
+tests/test_visual_audit_0136.py:23: AssertionError
+----------------------------- Captured stdout call -----------------------------
+GEOMETRIA (1280, 800) [(False, (640, 480), [(False, (308, 480)), (False, (308, 480))]), (True, (1030, 320), [(True, (327, 320)), (True, (327, 320))])]
+=========================== short test summary info ============================
+FAILED tests/test_visual_audit_0136.py::test_long_memory_titles_keep_delete_inside_card[sample0]
+FAILED tests/test_visual_audit_0136.py::test_long_memory_titles_keep_delete_inside_card[sample1]
+2 failed in 0.41s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## depois-12-corrigido
+
+UTC: 2026-11-15T16:18:36.013639+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_visual_audit_0136.py", "tests/test_mockup_exclusions_0135.py", "tests/test_settings_0135.py", "tests/test_complete_layout.py", "tests/test_memories_0135.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+................................                                         [100%]
+32 passed in 4.62s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## depois-desconto-cor-tema
+
+UTC: 2026-11-15T16:19:20.615099+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_price_integrity_0136.py", "tests/test_prices_0129.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp; Linux, Python 3.12.14.
+
+stdout integral:
+```text
+...........                                                              [100%]
+11 passed in 0.87s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0

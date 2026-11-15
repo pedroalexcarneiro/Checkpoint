@@ -51,6 +51,16 @@ def action(title, callback, primary=False):
     return button
 
 
+class ElidedAction(QPushButton):
+    def __init__(self,title,callback,parent=None):
+        super().__init__(parent);self.full_title=title;self.setToolTip(title);self.setAccessibleName(title)
+        self.setMinimumWidth(0);self.setSizePolicy(QSizePolicy.Ignored,QSizePolicy.Fixed)
+        self.setMinimumHeight(32);self.clicked.connect(callback)
+    def resizeEvent(self,event):
+        super().resizeEvent(event)
+        self.setText(self.fontMetrics().elidedText(self.full_title,Qt.ElideRight,max(0,self.width()-8)))
+
+
 def card():
     from .design_system import CardSurface
     from .visual_tokens import SPACE
