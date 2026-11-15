@@ -63,7 +63,7 @@ def build_settings(window):
         frame,inside=card();frame.setMinimumHeight(120);head=QHBoxLayout();badge=text('');badge.setPixmap(service_icon(provider));badge.setFixedSize(48,48);head.addWidget(badge)
         words=QVBoxLayout();words.addWidget(text(provider,'cardTitle'));configured=window.integration_status(provider).startswith('Credencial salva');state=QHBoxLayout();dot=text('●');dot.setObjectName('connectionStateDot');dot.setFixedWidth(12);dot.setProperty('configured',configured)
         from .theme import get_theme
-        dot.setStyleSheet('color: '+(get_theme('green').colors['accent'] if configured else window.theme.colors['muted']));state.addWidget(dot);state.addWidget(text('Configurado' if configured else 'Não configurado','muted'));state.addStretch();words.addLayout(state);head.addLayout(words,1);head.setSpacing(18);head.addWidget(action('Gerenciar' if configured else 'Conectar',callback,not configured));inside.addLayout(head);inside.setContentsMargins(18,16,18,16);grid.add_card(frame)
+        dot.setStyleSheet('color: '+(get_theme('green').colors['accent'] if configured else window.theme.colors['muted']));state.addWidget(dot);state.addWidget(text('Configurado' if configured else 'Não configurado','muted'));state.addStretch();words.addLayout(state);head.addLayout(words,1);head.setSpacing(18);button=action('Gerenciar' if configured else 'Conectar',callback,True);button.setMinimumSize(120,36);head.addWidget(button);inside.addLayout(head);inside.setContentsMargins(18,16,18,16);grid.add_card(frame)
     connections.addWidget(grid)
     from .ggdeals_connection import GgDealsConnection
     connections.addWidget(GgDealsConnection(window))
