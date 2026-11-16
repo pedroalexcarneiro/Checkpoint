@@ -14,6 +14,7 @@ def test_loading_preview_text_fits_without_cutting(library,app,title):
     try:
         for _ in range(6):app.processEvents()
         metrics=QFontMetrics(quick.art.font())
+        assert quick.art.text()=='Carregando'
         required=metrics.boundingRect(QRect(0,0,quick.art.width(),1000),Qt.TextWordWrap,quick.art.text())
         assert quick.art.wordWrap()
         assert required.width()<=quick.art.width() and required.height()<=quick.art.height()
