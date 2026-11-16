@@ -29,6 +29,14 @@ def recent_games(library, limit=2, now=None):
     return selected
 
 
+def recent_sessions(library, limit=None, now=None):
+    """Uma entrada por sessão persistida; não cria nem deduplica histórico."""
+    totals=collection_times(library)
+    records=execution_history(library,limit=limit,now=now)
+    return [{**record['game'],'session_id':record['id'],'last_played':record['started_at'],
+             'seconds':totals.get(record['game_id'],0)} for record in records]
+
+
 def week_summary(library, now=None, zone='local'):
     result=period_stats(library,'weekly',now,zone)
     start,end=result['bounds'];owned={g['id'] for g in library.owned_games()};started=set()

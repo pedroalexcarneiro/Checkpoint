@@ -12,6 +12,7 @@ NAMES={'home':'house','library':'layout-grid','stats':'chart-no-axes-column',
        'trash':'trash-2','play':'play','list':'list','filter':'sliders-horizontal','plus':'plus',
        'close':'x','chevron':'chevron-down','chevron-right':'chevron-right','back':'arrow-left','more':'ellipsis',
        'check':'check','warning':'circle-alert','busy':'loader-circle'}
+NAMES['chevron-left']='chevron-right'
 
 @lru_cache(maxsize=512)
 def lucide_icon(name,color,size=24,filled=False):
@@ -20,5 +21,7 @@ def lucide_icon(name,color,size=24,filled=False):
     if filled:data=data.replace('fill="none"','fill="'+QColor(color).name()+'"')
     renderer=QSvgRenderer(QByteArray(data.encode()))
     if not renderer.isValid():raise ValueError('Ícone Lucide inválido: '+name)
-    pix=QPixmap(size,size);pix.fill(Qt.transparent);p=QPainter(pix);renderer.render(p);p.end()
+    pix=QPixmap(size,size);pix.fill(Qt.transparent);p=QPainter(pix)
+    if name=='chevron-left':p.translate(size,0);p.scale(-1,1)
+    renderer.render(p);p.end()
     return QIcon(pix)

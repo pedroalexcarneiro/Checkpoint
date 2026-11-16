@@ -99,6 +99,13 @@ Referências anteriores no chat continuam disponíveis, sujeitas ao pedido novo.
 
 ## Contratos preservados
 
+Complemento visual do dono durante execução: Início aproveita a largura útil
+após a lateral com margens 24–32 px, sem teto central de 1440 nem ampliação
+de cards/imagens para ocupar sobra. Mais sessões visíveis conforme largura;
+artes e cards menores. Ofertas em linhas compactas com miniatura, imagem com
+os quatro cantos arredondados como a Biblioteca, conteúdo/proporção preservados.
+Capturas normal e ampliada exigidas antes de aprovação visual.
+
 A4 ROM → candidatos → escolha → confirmação; tests/test_save_lifecycle.py,
 checkpoint/worker.py, enrichment.py, game_import.py, completion_queue.py e
 dialogs.py; quick_add.py somente exceções históricas explicitamente concedidas.
