@@ -248,3 +248,31 @@ antes. Envio/testes Windows/publicação passam a ser autorizados após os gates
 sem declarar a expansão multiplataforma como entregue. Relatório específico:
 RELATORIO_LANCAMENTO_0139.md. As proibições no registro inicial descrevem
 somente a primeira fase e não apagam essa autorização posterior.
+
+## Regressões encontradas na primeira suíte integral atual
+
+A execução full-linux sobre 64d64de não concluiu: quatro falhas observadas e
+interrupção controlada (-15, 385,59 s) no teste de fechamento com job ativo,
+cujo stub ainda substituía QMessageBox Qt em vez da fábrica própria. O próprio
+teste voltou a interceptar AppMessages, mantendo a exigência de aviso/janela
+aberta/espera do job. O guard do renderizador contra warning modal também foi
+apontado para AppMessages, preservando suas asserções e timeout.
+
+Duas falhas eram requisitos de apresentação substituídos: test_card_layout
+exigia largura mínima 280; agora exige faixa 220–280 mantendo fonte/itens/link/
+proporção/colunas. test_complete_layout agora inclui texto de QTextEdit somente
+leitura junto de QLabel para conferir nota visível e exclusão de nota de jogo
+removido; asserções de conteúdo intactas. Ajustes derivados dos itens 4/6 e do
+complemento visual expresso do dono, sem relaxar dados ou contratos.
+
+As outras falhas revelaram recriação desnecessária dos cards ainda visíveis
+no redimensionamento: referência da arte podia ser invalidada e uma composição
+antiga aparecer em consultas de filhos. GameStrip agora reutiliza tiles das
+sessões que continuam visíveis, preservando foco; remove corretamente só os
+que saem. Arte ausente tem altura conhecida antes do layout. MemoryCarousel
+retira da árvore os cartões descartados antes de liberar. Sem alterar sessões.
+
+full-regressions-fixed: 30 passed in 18.95s, exit 0, incluindo quatro falhas
+originais, foco/arte após redimensionar, job ativo e ciclo de vida do renderizador.
+Uma nova suíte integral será executada no commit corrigido; a tentativa parcial
+não é tratada como validação aprovada. Arquivos/saídas originais preservados.

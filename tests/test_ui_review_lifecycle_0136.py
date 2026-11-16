@@ -9,7 +9,7 @@ def test_review_releases_global_shortcut_between_windows(folder):
     code = r'''
 import runpy
 import sys
-from PySide6.QtWidgets import QMessageBox
+from checkpoint.dialog_style import AppMessages as QMessageBox
 import checkpoint.global_hotkey as hotkey
 from checkpoint.credentials import CredentialVault
 

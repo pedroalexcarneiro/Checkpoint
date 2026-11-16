@@ -26,10 +26,11 @@ def test_memories_excludes_removed_games_and_filters_diary(library,app,tmp_path)
     visible=library.save_game({'title':'Visible'});removed=library.save_game({'title':'Removed'})
     library.add_diary(visible,'Visible memory');library.add_diary(removed,'Private removed memory');library.delete(removed)
     window=MainWindow(library);window.navigate(3);window.show();app.processEvents()
-    from PySide6.QtWidgets import QTabWidget
+    from PySide6.QtWidgets import QTabWidget,QTextEdit
     tabs=window.pages[3].findChild(QTabWidget,'memoryTabs')
     assert tabs.count()==3
     labels=[label.text() for label in tabs.currentWidget().findChildren(QLabel)]
+    labels.extend(edit.toPlainText() for edit in tabs.currentWidget().findChildren(QTextEdit))
     assert 'Visible memory' in labels and 'Private removed memory' not in labels
     tabs.setCurrentIndex(2);app.processEvents()
     assert not tabs.currentWidget().findChildren(CardGrid);window.close()

@@ -48,10 +48,10 @@ def test_grids_keep_their_proportions_and_size_control_keeps_font_and_items(libr
             assert link.width()>=link.fontMetrics().horizontalAdvance(link.text())
             window.navigate(1)
             for _ in range(4):app.processEvents()
-            # E3 da 0.1.34: Desejos tem cards maiores, com arte 1:1;
+            # Item 4 da 0.1.39: Desejos tem cards compactos, com arte 1:1;
             # quantidade de colunas não precisa coincidir com capas verticais.
             from checkpoint.collection_views import WishLogo
-            assert wishes.columns==wish_columns and wishes.cards[0].width()>=280
+            assert wishes.columns==wish_columns and 220<=wishes.cards[0].width()<=280
             logo=wishes.cards[0].findChild(WishLogo)
             assert logo.width()==logo.height()
             window.navigate(2)

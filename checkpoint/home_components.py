@@ -37,6 +37,7 @@ class RecentArtwork(QPushButton):
         self.setObjectName('recentGameArtwork');self.setFocusPolicy(Qt.StrongFocus);self.setCursor(Qt.PointingHandCursor)
         self.setAccessibleName('Abrir ficha de '+game['title']);self.setMinimumWidth(0)
         self.setSizePolicy(QSizePolicy.Ignored,QSizePolicy.Fixed)
+        if self.pixmap.isNull():self.setFixedHeight(180)
         self.clicked.connect(lambda:window.detail(game['id']))
     def image_target(self):
         if self.pixmap.isNull():return QRectF()
@@ -166,10 +167,16 @@ class GameStrip(QWidget):
         self.body=QWidget();self.row=QHBoxLayout(self.body);self.row.setContentsMargins(0,0,0,0);self.row.setSpacing(12);layout.addWidget(self.body)
         self.render()
     def render(self):
+        previous={(tile.session_id,tile.game_id):tile for tile in getattr(self,'tiles',[])}
         while self.row.count():
-            item=self.row.takeAt(0)
-            if item.widget():item.widget().hide();item.widget().deleteLater()
-        self.tiles=[RecentGameCard(self.host_window,game) for game in self.games[self.offset:self.offset+self.visible_count]]
+            self.row.takeAt(0)
+        self.tiles=[]
+        for game in self.games[self.offset:self.offset+self.visible_count]:
+            tile=previous.pop((game.get('session_id'),game['id']),None)
+            if tile is None:tile=RecentGameCard(self.host_window,game)
+            self.tiles.append(tile)
+        for tile in previous.values():
+            tile.hide();tile.setParent(None);tile.deleteLater()
         for tile in self.tiles:
             tile.setMaximumWidth(self.minimum_tile_width+64);self.row.addWidget(tile,1,Qt.AlignTop)
         if len(self.tiles)<self.visible_count:self.row.addStretch(self.visible_count-len(self.tiles))
@@ -213,7 +220,8 @@ class MemoryCarousel(CardSurface):
     def render(self):
         while self.row.count():
             item=self.row.takeAt(0)
-            if item.widget():item.widget().hide();item.widget().deleteLater()
+            if item.widget():
+                widget=item.widget();widget.hide();widget.setParent(None);widget.deleteLater()
         if not self.records:
             self.row.addWidget(action('Adicionar memória',self.host_window.first_memory,True))
         for record in self.records[self.offset:self.offset+self.visible_count]:

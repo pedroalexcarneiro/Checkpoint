@@ -160,3 +160,18 @@ def test_restricted_cover_has_no_dark_letterbox(ui, app, folder):
         assert max(abs(x-y) for x,y in zip(a.getRgb()[:3], b.getRgb()[:3])) <= 2
     finally:
         tile.close()
+
+
+def test_resizing_preserves_visible_session_focus_and_card(ui,app):
+    w,identity=ui
+    sessions(w,identity);w.resize(1280,800);w.navigate(0);settle(app)
+    strip=w.pages[0].findChild(GameStrip)
+    first=strip.tiles[0]
+    play=next(b for b in first.findChildren(QPushButton) if b.property('homeContinue'))
+    play.setFocus(Qt.TabFocusReason)
+    for size in ((1920,1080),(1280,800)):
+        w.resize(*size);settle(app)
+        assert strip.tiles[0] is first and first.isVisibleTo(w)
+        assert app.focusWidget() is play
+        art=first.findChild(RecentArtwork)
+        assert play.y()>art.geometry().bottom()

@@ -160,7 +160,7 @@ def test_transfer_child_exit_preserves_partial_without_publishing_corrupt_rom(li
 
 def test_main_window_close_waits_for_child_operation(library,app,monkeypatch):
     from threading import Event
-    from PySide6.QtWidgets import QMessageBox
+    from checkpoint.dialog_style import AppMessages as QMessageBox
     from checkpoint.jobs import Job
     from checkpoint.window import MainWindow
     window=MainWindow(library);window.show()
