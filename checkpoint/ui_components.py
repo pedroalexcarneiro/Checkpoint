@@ -43,8 +43,11 @@ def action(title, callback, primary=False):
     if symbol or title.startswith('+ '):
         from .theme import get_theme
         from PySide6.QtWidgets import QApplication
-        color=get_theme(QApplication.instance().property('checkpointTheme')).colors['text']
-        button.setIcon(nav_icon(symbol[0] if symbol else 'plus',color,20));button.setIconSize(QSize(20,20))
+        palette=get_theme(QApplication.instance().property('checkpointTheme')).colors
+        color=palette['on_accent' if primary else 'text'];name=symbol[0] if symbol else 'plus'
+        icon=QIcon(nav_icon(name,color,20))
+        icon.addPixmap(nav_icon(name,palette['disabled'],20).pixmap(20,20),QIcon.Disabled)
+        button.setIcon(icon);button.setIconSize(QSize(20,20))
         if symbol:button.setAccessibleName(symbol[1])
     button.setProperty('variant','primary' if primary else 'secondary')
     button.setSizePolicy(QSizePolicy.Maximum,QSizePolicy.Fixed);button.setMinimumHeight(40)
@@ -60,6 +63,17 @@ class ElidedAction(QPushButton):
     def resizeEvent(self,event):
         super().resizeEvent(event)
         self.setText(self.fontMetrics().elidedText(self.full_title,Qt.ElideRight,max(0,self.width()-8)))
+
+
+class ElidedLabel(QLabel):
+    def __init__(self,value,kind=None):
+        super().__init__(value);self.full_text=value;self.setTextFormat(Qt.PlainText)
+        self.setWordWrap(False);self.setMinimumWidth(0);self.setToolTip(value);self.setAccessibleName(value)
+        self.setSizePolicy(QSizePolicy.Ignored,QSizePolicy.Fixed)
+        if kind:self.setObjectName(kind)
+    def resizeEvent(self,event):
+        super().resizeEvent(event)
+        self.setText(self.fontMetrics().elidedText(self.full_text,Qt.ElideRight,max(0,self.width())))
 
 
 def card():

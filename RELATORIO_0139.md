@@ -179,3 +179,7 @@ LibraryList reserva viewport de 16 px e barra constante, com handle desabilitado
 ## Item 14 — Preto neutro
 
 Paleta Preto passa a superfícies/contornos cinza-neutros e preview usa a mesma paleta aplicada. Oito outras paletas e nove opções preservadas; sem assets alterados. black-after: 23 passed in 17.54s, contraste de texto e persistência/navegação em todos os temas aprovados.
+
+## Item 13 — ícones primários e rótulos
+
+action usa on_accent no ícone primário e disabled no estado desabilitado, copiando o QIcon antes de acrescentar modo para preservar o cache. ElidedLabel centraliza texto de linha única com dica completa. icon-and-trash-final: 19 passed in 1.86s, incluindo os dois jogos e os pixels dos estados normal/desabilitado. Calibração do próprio teste corrigiu import de QIcon e tolerância de 1 nível RGB no antialias; branco continua reprovado.
