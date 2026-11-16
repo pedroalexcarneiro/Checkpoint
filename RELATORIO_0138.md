@@ -1,0 +1,11 @@
+# Correção da abertura — 0.1.38 em validação
+
+Relato recebido após publicação da 0.1.37. Vídeo analisado diretamente: Explorer com pacote extraído, prompt de UAC aproximadamente no primeiro segundo e depois ausência da janela durante o restante da gravação. Não se presume, só pelo vídeo, crash exato, consentimento concedido ou perda de dados. Frames e vídeo privados mantidos fora do repositório.
+
+Achado concreto em windows_frame.py: handle consultava self.window.winId durante callbacks de criação, incluindo WM_NCCALCSIZE. Esse getter pode solicitar criação quando o HWND ainda não foi associado pelo Qt, reentrando na criação. As validações antigas usavam Qt offscreen; no Windows elas não cobriam essa sequência de mensagens nativas. Corrigido para usar MSG.hWnd fornecido pelo Windows e rejeitar HWND zero. Não alterados elevação, banco, cofre, migração ou dados pessoais.
+
+Antes: três falhas no teste de mensagens, exigindo que nenhuma mensagem de criação provoque nova criação de HWND. Depois: 14 regressões de moldura/abertura/elevação aprovadas em 1,96 s. Dois HWNDs incluindo valor acima de 32 bits, mensagem sem destinatário e dois jogos em subprocesso com abertura/captura/fechamento. Linux executa backend offscreen e não é declarado validação nativa Windows. Windows executará explicitamente plugin windows, sem skip novo.
+
+scripts/native_startup_check.py acrescenta verificação externa de abertura normal em Windows real já elevado: lança somente um processo próprio com --data-dir novo, procura seu HWND visível por PID/título, exige resposta, captura PNG, fecha com WM_CLOSE e verifica SQLite/exit. Não chama --smoke-test e não automatiza UAC. scripts/package_windows_release.py executará essa verificação no fonte e no executável realmente extraído, preservando os smokes anteriores. Screenshot/registro da abertura nativa serão arquivos da entrega de validação. Aplicativo não detecta testes nem ganha atalho de inicialização que esconda o defeito.
+
+Versão local 0.1.38, schema 4; 0.1.37/tag/releases/artefatos preservados. Ainda pendentes nesta etapa: suíte integral e validação Windows/pacote nativo. Não declarar abertura no PC do dono corrigida só pelos testes controlados. Plano: PLANO_0138.md.

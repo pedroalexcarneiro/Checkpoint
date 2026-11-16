@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import shutil
 import sqlite3
 import subprocess
 import sys
@@ -92,6 +93,11 @@ def main():
         save_smoke([str(extracted / 'Checkpoint.exe')], temporary / 'portable-save-smoke')
         subprocess.run([str(extracted / 'CheckpointUpdater' / 'CheckpointUpdater.exe'), '--check'],
                        check=True, timeout=30)
+        from native_startup_check import native_startup
+        native_startup([sys.executable,'-m','checkpoint.app'],temporary/'source-native-startup')
+        native_startup([str(extracted/'Checkpoint.exe')],temporary/'portable-native-startup')
+        shutil.copyfile(temporary/'portable-native-startup'/'native-startup.png',output/f'Checkpoint-{__version__}-native-startup.png')
+        shutil.copyfile(temporary/'portable-native-startup'/'native-startup.json',output/f'Checkpoint-{__version__}-native-startup.json')
     with archive_path.open('rb') as source:
         digest = hashlib.file_digest(source, 'sha256').hexdigest()
     (output / (archive_path.name + '.sha256')).write_text(f'{digest}  {archive_path.name}\n', encoding='utf-8')
@@ -105,6 +111,7 @@ def main():
         'Auxiliar isolado do fonte e do ZIP extraído: resposta e schema verificados.',
         'Cadastro completo do fonte e do ZIP: salvar, auxiliar, imagem e SQLite verificados (fixture isolada).',
         'CheckpointUpdater.exe --check: saída 0.',
+        'Inicialização normal nativa Windows do fonte e do executável extraído: HWND visível, resposta, captura, fechamento e SQLite verificados; executor já elevado, sem automatizar consentimento UAC.',
         f'ZIP SHA-256: {digest}',
         'Steam autenticada e homologação Windows 10/11 pessoal não estão cobertas.',
     ]

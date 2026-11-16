@@ -63,7 +63,8 @@ class IntegratedFrame:
         if self.api is None or self.failed:return False,0
         c=self.api.c;w=self.api.w
         try:
-            msg=c.cast(int(message),c.POINTER(w.MSG)).contents;handle=int(self.window.winId())
+            msg=c.cast(int(message),c.POINTER(w.MSG)).contents;handle=int(msg.hWnd or 0)
+            if not handle:return False,0
             if msg.message==0x83:
                 if self.window.isMaximized():
                     work=self.api.monitor(handle).work;rect=c.cast(msg.lParam,c.POINTER(w.RECT)).contents
