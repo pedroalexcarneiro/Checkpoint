@@ -55,15 +55,23 @@ class WishGrid(CardGrid):
         spacing=metrics.gap;self.grid.setSpacing(spacing)
         self.columns=max(1,(self.width()+spacing)//(300+spacing))
         width=min(360,max(1,(self.width()-spacing*(self.columns-1))//self.columns))
-        art_width=max(1,width-2*SPACE['md']);art_height=art_width;compact=width<200;height=art_height+(304 if compact else 272)
+        art_width=max(1,width-2*SPACE['md']);art_height=art_width;compact=width<200
         while self.grid.count():self.grid.takeAt(0)
         self.grid.setAlignment(Qt.AlignTop|Qt.AlignLeft)
         for column in range(self.grid.columnCount()):self.grid.setColumnStretch(column,0)
-        for index,card in enumerate(self.cards):
-            card.setFixedSize(width,height)
+        heights=[]
+        for card in self.cards:
             if hasattr(card,'footer'):card.footer.setDirection(QBoxLayout.TopToBottom if compact else QBoxLayout.LeftToRight)
             logo=card.findChild(WishLogo)
             if logo:logo.setFixedSize(art_width,art_height)
+            if hasattr(card,'price_block'):
+                block=card.price_block;block.ensurePolished();amount=block.layout().totalHeightForWidth(art_width)
+                block.setFixedHeight(max(32,amount if amount>=0 else block.layout().sizeHint().height()))
+            card.layout().invalidate();needed=card.layout().totalHeightForWidth(width)
+            heights.append(needed if needed>=0 else card.layout().sizeHint().height())
+        height=max(heights,default=0)
+        for index,card in enumerate(self.cards):
+            card.setFixedSize(width,height)
             self.grid.addWidget(card,index//self.columns,index%self.columns)
         rows=(len(self.cards)+self.columns-1)//self.columns
         self.setFixedHeight(rows*height+max(0,rows-1)*spacing)
@@ -87,20 +95,34 @@ def build_wishlist(window):
         inside.addWidget(empty_state('wish','Nenhum desejo','Adicione um jogo aos desejos.',window.add_game,'Adicionar desejo'));inside.addStretch();return
     from .locale import count_text
     top=QHBoxLayout();top.addWidget(text(count_text(len(rows),'jogo'),'muted'));top.addStretch();top.addWidget(action('+ Adicionar desejo',window.add_game,True));inside.addLayout(top)
+    from .wish_platforms import options,selected
+    filters=QHBoxLayout();filters.setSpacing(12);platform=QComboBox();platform.setObjectName('wishlistPlatform');platform.setAccessibleName('Plataforma dos desejos')
+    choices=options(rows)
+    for caption,key in choices:platform.addItem(caption,key)
+    saved=window.library.setting('wishlist.platform_filter','all')
+    platform.setCurrentIndex(max(0,platform.findData(saved)));filters.addWidget(platform)
+    def change_platform(index):
+        window.library.set_setting('wishlist.platform_filter',platform.itemData(index));window.wishlist()
+    platform.currentIndexChanged.connect(change_platform)
+    rows=selected(rows,platform.currentData());top.itemAt(0).widget().setText(count_text(len(rows),'jogo'))
+    inside.addLayout(filters)
     from .card_layout import cover_size
     from .prices import wishlist_order
     selected_order=window.library.setting('wishlist.order','name')
     if selected_order not in ('name','price','discount'):selected_order='name';window.library.set_setting('wishlist.order',selected_order)
     order=QComboBox();order.setObjectName('wishlistOrder');order.addItem('Alfabeticamente','name');order.addItem('Menor preço','price');order.addItem('Maior desconto','discount');order.setCurrentIndex(max(0,order.findData(selected_order)))
     from .price_view import attribution_link
-    top.insertWidget(1,attribution_link())
+    filters.addWidget(attribution_link())
     def change_order(index):
         window.library.set_setting('wishlist.order',order.itemData(index));window.wishlist()
-    order.currentIndexChanged.connect(change_order);top.insertWidget(1,order)
+    order.currentIndexChanged.connect(change_order);filters.insertWidget(1,order)
     keyshops=QCheckBox('Incluir keyshops');keyshops.setObjectName('includeKeyshops');keyshops.setChecked(window.library.setting('prices.include_keyshops',False))
     def include_keyshops(value):
         window.library.set_setting('prices.include_keyshops',value);window.wishlist()
-    keyshops.toggled.connect(include_keyshops);top.insertWidget(1,keyshops)
+    keyshops.toggled.connect(include_keyshops);filters.insertWidget(2,keyshops);filters.addStretch()
+    if not rows:
+        def clear_platform():window.library.set_setting('wishlist.platform_filter','all');window.wishlist()
+        inside.addWidget(empty_state('wish','Nenhum desejo nesta plataforma','Escolha outra plataforma ou limpe o filtro.',clear_platform,'Todas'));inside.addStretch();return
     rows=wishlist_order(window.library,rows,order.currentData())
     grid=WishGrid(260);grid.cover_percent=cover_size(window.library);grid.setObjectName('wishlistGrid');grid.setProperty('cardComponent','coverCard')
     from .price_view import price_summary,source_link
@@ -108,9 +130,9 @@ def build_wishlist(window):
         panel=WishCard(game);body=QVBoxLayout(panel);body.setContentsMargins(*([SPACE['md']]*4));body.setSpacing(SPACE['sm'])
         logo=WishLogo(game);logo.clicked.connect(lambda checked=False,g=game['id']:window.detail(g));body.addWidget(logo,0,Qt.AlignHCenter)
         body.addWidget(WishTitle(game['title']))
-        body.addWidget(price_summary(window.library,game))
+        panel.price_block=price_summary(window.library,game);body.addWidget(panel.price_block)
         line=QBoxLayout(QBoxLayout.LeftToRight);line.setSpacing(4)
-        offers=source_link(window.library,game);line.addWidget(offers,1)
+        offers=source_link(window.library,game);offers.setFixedHeight(28);line.addWidget(offers,1)
         controls=QWidget();controls.setFixedSize(60,28);buttons=QHBoxLayout(controls);buttons.setContentsMargins(0,0,0,0);buttons.setSpacing(4)
         buttons.addWidget(IconButton('plus','Adicionar à biblioteca',lambda checked=False,g=game['id']:window.acquire_wish(g)))
         buttons.addWidget(IconButton('trash','Retirar dos desejos',lambda checked=False,g=game['id']:window.remove_wish(g)))
