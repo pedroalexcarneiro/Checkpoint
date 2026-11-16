@@ -1,10 +1,22 @@
-# Estado atual — correção de abertura 0.1.38 validada
+# Estado atual — Checkpoint 0.1.38 publicada
+
+## 0.1.38 publicada — correção de abertura
+
+Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.38
+
+Tag/código: c4a7e1d221ba52a8580dd73ab884b1964e6ffd32. Windows release 43857996709 concluído com build e publicação aprovados. Windows/Python 3.12.10: 700 passed in 633.27s (0:10:33), zero falhas/erros/skips. Linux/Python 3.12.14: 700 passed in 483.81s (0:08:03), código funcional idêntico. Fonte e executável extraído passaram também por abertura normal com Qt windows, HWND visível/responsivo, captura, fechamento e SQLite, em Windows já elevado.
+
+Dez arquivos publicados baixados e conferidos por tamanho/SHA-256 contra os digests do GitHub. CRC dos dois ZIPs válido. ZIP Windows: 84314842 bytes, SHA-256 15fef170b44dcf6073d50fed3f601f8b1cb265540c5e456113fe2befad0e3702. A 0.1.37/tag/arquivos foram preservados. Fonte do fix usa MSG.hWnd durante criação nativa, evitando chamar winId recursivamente; não muda dados, schema 4, cofre ou A4.
+
+Upload local inicial recusado por autenticação em uploads.github.com; publicação concluída pelo workflow existente com identidade do próprio GitHub, sem alterar o workflow de release. A execução read-only anterior foi preservada como validação, e o publisher repetiu todos os gates. Documentação posterior não move a tag.
+
+Consentimento UAC interativo e uso no PC do dono continuam sujeitos à confirmação; não confundir execução nativa já elevada no runner com consentimento automatizado. As demais limitações anteriores de fontes de preço, A4 e fechamento somente da ROM permanecem. Registros seguintes descrevem a preparação e as falhas de infraestrutura.
 
 ## Correção de abertura 0.1.38 — validada, sem publicação
 
 Após relato e vídeo do dono de que a 0.1.37 não abre, foi identificado uso de QWidget.winId em callback de criação nativa, capaz de reentrar na criação. Branch fix/0.1.38-abertura, commit 5e77741: handler passa a usar MSG.hWnd. Nenhuma alteração em dados/cofre/A4/arquivos protegidos. A validação anterior offscreen não cobria essa sequência; a nova cobertura usa Qt windows no Windows e abertura normal do fonte/executável extraído com executor já elevado, HWND visível/responsivo/captura/fechamento.
 
-700 testes Linux e 700 Windows aprovados. Windows UI validation 43799707113 concluiu build e abertura normal do fonte/executável extraído: HWND visível/responsivo, captura e fechamento, exit 0 e SQLite íntegro. Candidato ff13658; ZIP SHA-256 9f2238c621d0fb5fc9ed22106bee34b938283ef3f8b0cd7e96770a757496cfce. Sem release/tag 0.1.38; aguardando decisão de publicação. Não declarar abertura/consentimento UAC no PC do dono homologados. A 0.1.37/tag/arquivos permanecem preservados. Detalhes em PLANO_0138.md e RELATORIO_0138.md.
+700 testes Linux e 700 Windows aprovados. Windows UI validation 43799707113 concluiu build e abertura normal do fonte/executável extraído: HWND visível/responsivo, captura e fechamento, exit 0 e SQLite íntegro. Candidato ff13658; ZIP SHA-256 9f2238c621d0fb5fc9ed22106bee34b938283ef3f8b0cd7e96770a757496cfce. Publicação da 0.1.38 autorizada pelo dono; execução 43857996709 em andamento, sem mover a tag/arquivos 0.1.37. Não declarar abertura/consentimento UAC no PC do dono homologados. A 0.1.37/tag/arquivos permanecem preservados. Detalhes em PLANO_0138.md e RELATORIO_0138.md.
 
 ## Pré-release 0.1.37 publicada
 

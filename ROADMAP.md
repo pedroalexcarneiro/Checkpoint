@@ -1,5 +1,9 @@
 # Próximos passos
 
+## Após a correção 0.1.38
+
+Hotfix de abertura publicado em c4a7e1d após 700 testes Windows, abertura nativa do executável extraído e conferência dos dez arquivos. Próximo retorno esperado: confirmar abertura no PC do dono. Homologação de UAC interativo/moldura/captura/contas/emuladores e capacidade de preços console continuam separados. A4 e fechar só ROM mantêm seus limites. Autorizações anteriores não substituem decisão sobre novas versões.
+
 ## Após a pré-release 0.1.37
 
 Publicado v0.1.37 no commit c526cb4 após 695 testes Windows e validação do pacote extraído. Prioridades: uso real no PC do dono, UAC/moldura/captura/launchers/emuladores/contas/DPI/monitores; capacidade autenticada de preços console e original individual. A4 e fechar só ROM continuam separados; troca automática descartada. Não presumir autorização de uma próxima versão a partir deste lançamento.

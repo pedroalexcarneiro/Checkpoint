@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.38 — correção de abertura publicada em 16/11/2026
+
+- Mensagens nativas usam o HWND fornecido pelo Windows, evitando recriação recursiva da janela.
+- Verificação de abertura normal do fonte e executável extraído acrescentada ao empacotamento; janela visível/responsiva, captura, fechamento e SQLite.
+- 700 testes Windows e 700 Linux aprovados; dez arquivos publicados baixados e hashes/ZIPs conferidos.
+- Schema 4, dados/cofre/contratos e 0.1.37 preservados. Consentimento UAC real/PC do dono permanece separado da validação já elevada no runner.
+
 Registros anteriores descrevem o estado de cada versão; não são instruções atuais.
 
 ## 0.1.37 — pré-release publicada em 16/11/2026 (UTC)

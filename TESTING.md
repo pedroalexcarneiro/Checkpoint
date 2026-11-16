@@ -1,5 +1,9 @@
 # Validação do Checkpoint
 
+## Publicação 0.1.38
+
+Tag c4a7e1d; Windows release 43857996709: 700 testes em 633,27 s, zero falhas/erros/skips, build/smokes/abertura normal do fonte e executável extraído aprovados. Linux: 700 testes em 483,81 s. Dez arquivos baixados e digests GitHub/CRC verificados. Logs integrais e resultados em RELATORIO_LANCAMENTO_0138.md. O teste usa HWND nativo e executor já elevado; consentimento UAC no PC do dono não é automatizado. Registros anteriores abaixo são históricos.
+
 ## Correção de abertura 0.1.38
 
 Candidato ff13658 validado em Windows UI validation 43799707113: 700 passed in 673.05s (0:11:13), zero falhas/erros/skips. Linux: 700 passed in 483.81s (0:08:03). Nova cobertura exige MSG.hWnd sem recriar HWND no callback e duas janelas reais com plugin Qt windows nos testes Windows. Linux usa offscreen e é identificado como tal.
