@@ -1,4 +1,16 @@
-# Estado atual — Checkpoint 0.1.37 local
+# Estado atual — Checkpoint 0.1.37 publicada
+
+## Pré-release 0.1.37 publicada
+
+Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.37
+
+Tag/código: c526cb4bc5e8721dfdfdf20222c8c1c41562ce52. Workflow https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/43793047592: testes/build/publicação concluídos com sucesso. Windows/Python 3.12.10: **695 passed in 638.21s (0:10:38)**, zero falhas/erros/skips. Linux/Python 3.12.14: **695 passed in 478.98s (0:07:58)**. Fonte, ZIP extraído, cadastro, auxiliar, atualizador e revisão visual aprovados. Oito arquivos publicados baixados e conferidos por tamanho/SHA-256; CRC dos dois ZIPs válido. ZIP Windows: 54a99c68269935918bdac58a810de611569b600a031c953b63c1287e55880e6a.
+
+Primeira execução foi interrompida após reproduzir vazamento do hotkey no próprio teste de fechamento. Correção só no teste, sem alterar aplicativo/asserções existentes/contratos. Nova execução aprovada. Histórico integral: RELATORIO_LANCAMENTO_0137.md. Esta atualização documental é posterior ao build e não move a tag.
+
+Persistem preços console/original individual sem prova autenticada, homologação interativa de moldura/UAC/captura/launchers/contas/emuladores no PC do dono, A4 e fechar apenas a ROM. Elevação para outra conta é recusada para preservar dados/cofre. Runner Windows não homologa uso pessoal. A rodada não é declarada inteiramente concluída com essas pendências.
+
+Registros seguintes descrevem a preparação e versões anteriores.
 
 ## Rodada 0.1.37 — lançamento autorizado, em validação
 

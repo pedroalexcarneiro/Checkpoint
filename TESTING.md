@@ -1,5 +1,13 @@
 # Validação do Checkpoint
 
+## Resultado publicado 0.1.37
+
+Commit/tag c526cb4bc5e8721dfdfdf20222c8c1c41562ce52: Windows/Python 3.12.10, 695 passed in 638.21s (0:10:38), zero falhas/erros/skips; Linux/Python 3.12.14, 695 passed in 478.98s (0:07:58). Testes/smokes do pacote extraído, auxiliar/cadastro/atualizador e revisão visual passaram no workflow 43793047592. Oito arquivos baixados/conferidos com digests GitHub; CRC dos dois ZIPs válido. Logs completos em RELATORIO_LANCAMENTO_0137.md e RELATORIO_0137_TESTES.md.
+
+Primeiro run 43790327035 foi interrompido por limpeza incorreta no teste dos controles; spy de close corrigido e verificações de liberação acrescentadas. Não usar o run interrompido como aprovação. A repetição aprovada usa o commit novo sem reescrever o histórico. Protegidos e aplicativo não mudaram nessa correção.
+
+Windows runner/pacote aprovados não equivalem a homologar UAC/DWM/Snap/captura/contas/emuladores reais no PC do dono. Esses limites permanecem explícitos. Registros seguintes incluem fases anteriores.
+
 ## Rodada local 0.1.37
 
 Suíte integral final: 695 passed in 479.02s (0:07:59), exit 0, código f543166037e545aad99c6aef21bf6ed95fe4bb10. Comando: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp /workspace/work/venv/bin/python -m pytest tests -q -p no:cacheprovider. Resultados integrais, comandos, ambiente e códigos de saída em RELATORIO_0137_TESTES.md; contagens abaixo são históricas. Código permaneceu congelado durante a suíte; só documentação/notas foram alteradas em paralelo.

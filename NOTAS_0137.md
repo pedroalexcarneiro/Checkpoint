@@ -1,6 +1,6 @@
-# Checkpoint 0.1.37 — notas locais
+# Checkpoint 0.1.37 — notas da publicação
 
-Versão preparada para lançamento após autorização posterior do dono. A publicação depende das verificações finais e do workflow Windows; estas notas não afirmam que o lançamento já ocorreu.
+Pré-release publicada após autorização posterior do dono: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.37. Testes e pacote Windows aprovados; 695 testes Windows e 695 Linux. As limitações abaixo permanecem explícitas.
 
 - Início reúne últimos jogos executados, resumo semanal, Ofertas e memórias recentes. Três capas inteiras em carrossel; ações de ficha e execução separadas.
 - Biblioteca em lista usa cards com logo, nome, tempo e favorito. Grade preserva capas inteiras e margens equilibradas; cache e carregamento em segundo plano reduzem trabalho durante a rolagem.
@@ -8,7 +8,7 @@ Versão preparada para lançamento após autorização posterior do dono. A publ
 - Foto de perfil permite recorte, reposicionamento e zoom, com prévia e cancelamento.
 - Ficha da Biblioteca permite escolher ROM local, validar plataforma/perfil, confirmar vínculo e executar pelo fluxo acompanhado, sem Drive ou upload. Os arquivos originais e o histórico são preservados.
 - Desejos inclui filtro de plataforma e cards compactos. Ordenação usa Alfabeticamente; ausência de preço mantém hífen e motivo real.
-- Controles de janela integrados e pedido UAC foram implementados; validação real do pacote Windows permanece pendente.
+- Controles de janela integrados e pedido UAC foram implementados; homologação interativa da moldura e do UAC no PC do dono permanece pendente.
 
 Limitações importantes:
 

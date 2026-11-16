@@ -1,5 +1,11 @@
 # Próximos passos
 
+## Após a pré-release 0.1.37
+
+Publicado v0.1.37 no commit c526cb4 após 695 testes Windows e validação do pacote extraído. Prioridades: uso real no PC do dono, UAC/moldura/captura/launchers/emuladores/contas/DPI/monitores; capacidade autenticada de preços console e original individual. A4 e fechar só ROM continuam separados; troca automática descartada. Não presumir autorização de uma próxima versão a partir deste lançamento.
+
+Preparação e versões anteriores abaixo são históricas.
+
 ## Rodada atual 0.1.37 — lançamento autorizado após verificações
 
 Concluir suíte integral e smokes/capturas e reunir relatórios. Revisão visual com o dono não é presumida por gerar capturas. Durante a validação final, o dono autorizou lançar a versão depois das verificações; próximos passos são envio da branch e workflow Windows existente, sem alterar workflows ou tags anteriores.

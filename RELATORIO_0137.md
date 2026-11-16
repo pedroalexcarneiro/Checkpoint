@@ -1,5 +1,23 @@
 # Relatório 0.1.37 — implementação e validação
 
+## Resultado final da publicação
+
+Pré-release publicada: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.37
+
+- Tag/código: c526cb4bc5e8721dfdfdf20222c8c1c41562ce52, conferido por ls-remote.
+- Workflow 43793047592: build e publish success, nenhuma falha/skip/erro na suíte final Windows.
+- Windows/Python 3.12.10: 695 passed in 638.21s (0:10:38).
+- Linux/Python 3.12.14: 695 passed in 478.98s (0:07:58), após a correção de limpeza do teste.
+- Fonte e executável realmente extraído: smokes de seis páginas, cadastro, auxiliar, SQLite e atualizador aprovados.
+- Oito arquivos publicados baixados e conferidos por tamanho e digest GitHub SHA-256; CRC dos dois ZIPs válido.
+- ZIP Windows: 84312887 bytes; SHA-256 54a99c68269935918bdac58a810de611569b600a031c953b63c1287e55880e6a.
+
+Primeiro candidato a33f48a foi substituído antes da publicação por correção restrita ao teste; o run interrompido não é apresentado como aprovado. A tag 0.1.36 continua em 4e54fc0b91ca7a4180307874f72f3b32eb3dca87. Não houve force, alteração de workflow/asset/protegido, PR ou movimento de tag anterior. Atualizações documentais posteriores não mudam a tag lançada.
+
+Permanecem as limitações de capacidade da fonte console/original individual, uso real com UAC/moldura/captura/launchers/contas/emuladores/DPI/monitores no PC do dono, A4 e fechar só a ROM. Runner Windows/pacote aprovados não homologam esses cenários pessoais. Elevação para outra conta é recusada para preservar dados/cofre. Isso está nas notas públicas; a rodada inteira não é chamada de concluída com pendências importantes.
+
+Detalhamento e etapas anteriores abaixo; saídas Windows completas em RELATORIO_LANCAMENTO_0137.md.
+
 Base: 58b0c118c534dbdbc3bc080db4a95e7ecd1554d1 de fix/0.1.36-ajustes; remoto reconfirmado e checkout inicial limpo. Branch: fix/0.1.37-ajustes. Fase inicial sem autorização de publicação; o dono autorizou posteriormente lançar a versão depois das verificações. Essa autorização nova será executada após o fechamento local e validação Windows, com resultado em RELATORIO_LANCAMENTO_0137.md. Código, tag e assets publicados da 0.1.36 permanecem preservados.
 
 Pedido: documento enviado em 15/11/2026, com imagens A (Início integrado) e B (lista horizontal). Vídeos p1–p4 ausentes neste chat: horários e problemas citados são relatos, não testes diretos. Capturas futuras do app usarão dados sintéticos isolados e serão identificadas. Não confundir Linux/Qt offscreen com Windows real do dono.
@@ -204,8 +222,8 @@ Feito significa implementação/regressão Linux, não homologação Windows pes
 | 16 Limites | bloqueado/descartado conforme pedido | A4 intacto; fechar só ROM permanece limitação; troca automática descartada, não implementada | plano e relatório; sem alteração do fluxo protegido |
 | 17 Marca/temas/textos | feito em Linux | Assets/nove temas preservados; Steam real/raster original; ordenação e prévia conforme decisões posteriores | 7dcd020, 63c7de2, 2565e57 e regressões |
 | 18 Dados/contratos | feito em Linux | Schema 4, game_files/rom_versions existentes, originais/histórico mantidos; contrato AST e protegidos intactos | a1505a1, 2565e57 e auditoria final |
-| 19 Validação | parcial | Linux, capturas e escalas Qt disponíveis; Windows real/contas/emuladores não homologados; runner será registrado separadamente | RELATORIO_0137_TESTES e relatório de lançamento |
-| 20 Entrega | feito na preparação local; publicação em relatório separado | Documentos/notas/relatórios/índice/patches locais e hashes; publicação só após autorização posterior e gates | f543166 e commit documental final |
+| 19 Validação | parcial | Linux e Windows runner/pacote aprovados, capturas e escalas Qt disponíveis; Windows real/contas/emuladores não homologados; execução registrada no relatório de lançamento | RELATORIO_0137_TESTES e relatório de lançamento |
+| 20 Entrega | feito na entrega local e publicação autorizada; limitações mantidas | Documentos/notas/relatórios/índice/patches locais e hashes; publicação só após autorização posterior e gates | f543166 e commit documental final |
 | ROM local adicional | feito em Linux; emuladores reais não homologados | local_rom validate_path/compatible_profiles/identity_problem/bind_local; local_rom_dialog; window.start_game/launch_rom e rom_link; dois programas próprios | a1505a1 |
 | Prévia vazia adicional | feito em Linux | Somente QuickAdd.show_result; teste com dois jogos e chegada efetiva da capa pelo sinal Qt | d6a373b e c4b0e99 (etapas substituídas), 2565e57 (estado final) |
 
@@ -287,3 +305,7 @@ As capturas gerais da aba começam no topo dos nove temas; na janela menor, o co
 ## Correção da validação Windows — limpeza do teste dos controles
 
 Primeiro candidato enviado a33f48a não foi publicado: execução 43790327035 encerrada após bloqueio reproduzido no próprio teste. O spy de close permanecia ativo na limpeza da fixture, deixando o atalho nativo registrado; a próxima janela bloqueava em conflito. Reprodução controlada teve dois erros antes e três aprovações depois. tests/test_window_controls_0137.py usa agora monkeypatch.context apenas na verificação do encaminhamento e depois fecha a janela pelo botão real, exigindo invisibilidade e liberação do atalho. Sem mudança em código do aplicativo ou qualquer asserção anterior. Suíte Linux e execução Windows serão repetidas no novo commit; histórico não reescrito. Logs e contagem/ordem da interrupção no relatório de lançamento.
+
+## Patch adicional da correção de validação
+
+c526cb4bc5e8721dfdfdf20222c8c1c41562ce52 — SHA-256 323f54bdc0dd70000d4b16c2bc6491bcb2b28d9a8f95b17e24a7758654d1d1b2; git format-patch -1 SHA --stdout, exit 0, stderr vazio. Os hashes anteriores cobrem os commits até a33f48a; esse patch completa os 24 commits até a tag c526cb4. O commit documental posterior e o hash final deste relatório ficam no manifesto externo da entrega para evitar referência circular.

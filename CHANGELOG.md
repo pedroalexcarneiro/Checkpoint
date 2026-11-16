@@ -2,7 +2,7 @@
 
 Registros anteriores descrevem o estado de cada versão; não são instruções atuais.
 
-## 0.1.37 — implementação local, não publicada
+## 0.1.37 — pré-release publicada em 16/11/2026 (UTC)
 
 - Início integrado com três capas inteiras em carrossel, histórico acompanhado, resumo semanal, banners de Ofertas e memórias navegáveis.
 - Biblioteca em cards horizontais logo/nome/tempo/favorito; grade com margens equilibradas, consultas limitadas, cache controlado e carregamento de arte em segundo plano.
@@ -11,7 +11,7 @@ Registros anteriores descrevem o estado de cada versão; não são instruções 
 - Vínculo de ROM local pela ficha, offline, com plataforma/perfil/identidade explícitos, execução acompanhada e original preservado. Proteção de edição no vínculo Drive pela ficha; A4 inalterado.
 - Desejos com filtro de plataforma, rodapé compacto; Alfabeticamente/Todas/Não iniciado e prévia vazia até a capa chegar.
 - Moldura integrada e bootstrap UAC implementados, parciais até homologação do pacote Windows.
-- Preços console e original individual da API não comprovados; captura real/contas/emuladores e fechar só ROM continuam limitações. Schema 4, assets e contratos protegidos preservados; lançamento autorizado após os testes, ainda em preparação.
+- Preços console e original individual da API não comprovados; captura real/contas/emuladores e fechar só ROM continuam limitações. Schema 4, assets e contratos protegidos preservados; pré-release publicada após 695 testes Windows, build, smokes do pacote e revisão visual aprovados. Oito arquivos e hashes conferidos; corrigida a limpeza de hotkey no teste de fechamento, sem alterar o aplicativo.
 
 ## 0.1.36 — pré-release publicada em 15/11/2026
 
