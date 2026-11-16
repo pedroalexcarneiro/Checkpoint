@@ -43,11 +43,13 @@ class CoverGrid(SmoothScrollMixin,QListWidget):
         super().__init__(parent);self.enable_smooth_scroll();self.setVerticalScrollMode(QListWidget.ScrollPerPixel);self.theme=theme;self.cover_percent=100;self.last_grid=None;self.art_ratio=1.5;self.card_gap=SPACE['lg']
         self.setProperty('cardComponent','coverCard')
         from .artwork_cache import ArtworkCache
-        self.art_cache=ArtworkCache();self.setUniformItemSizes(True)
+        self.art_cache=ArtworkCache(asynchronous=True,parent=self);self.setUniformItemSizes(True)
         self.setItemDelegate(CoverDelegate(self));self.setMouseTracking(True)
         self.setViewMode(QListWidget.IconMode);self.setResizeMode(QListWidget.Adjust)
         self.setMovement(QListWidget.Static);self.setSpacing(0);self.setWordWrap(False)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff);self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        from .artwork_prefetch import ArtworkPrefetch
+        self.art_prefetch=ArtworkPrefetch(self,covers=True)
 
     def set_cover_size(self,percent):
         if self.cover_percent==percent and self.last_grid is not None:return

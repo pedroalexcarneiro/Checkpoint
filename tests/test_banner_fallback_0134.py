@@ -1,5 +1,6 @@
 from PySide6.QtGui import QImage,QColor
 from test_bugs_0134 import ui,sample
+from artwork_wait import wait_for_artwork
 
 def test_banner_fills_grid_and_home_without_cover(ui,folder,app):
     from checkpoint.ui_components import GameTile
@@ -13,7 +14,8 @@ def test_banner_fills_grid_and_home_without_cover(ui,folder,app):
     try:
         result=tile.grab().toImage();assert result.width()>=200 and result.height()>=300
         assert result.pixelColor(20,20)==color and result.pixelColor(180,280)==color
-        w.navigate(1);app.processEvents();cell=w.gallery.visualItemRect(w.gallery.item(0));view=w.gallery.viewport().grab().toImage()
+        w.navigate(1);app.processEvents();wait_for_artwork(w.gallery)
+        cell=w.gallery.visualItemRect(w.gallery.item(0));view=w.gallery.viewport().grab().toImage()
         assert view.pixelColor(cell.left()+20,cell.top()+20)==color
         cover=folder/'cover.png';image.fill(QColor('#389a62'));assert image.save(str(cover));game['cover']=str(cover)
         assert cover_pixmap(game).toImage().pixelColor(20,20)==QColor('#389a62')

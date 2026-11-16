@@ -2376,3 +2376,719 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## desejos-filtro-antes
+
+UTC: 2026-11-16T01:09:38.942955+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_wish_platform_filter_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+FFFF                                                                     [100%]
+=================================== FAILURES ===================================
+_ test_wish_platform_dropdown_filters_families_without_changing_games[sample0] _
+
+ui = (<checkpoint.window.MainWindow(0xccb4930) at 0x7f2d9548fb00>, 1)
+app = <PySide6.QtWidgets.QApplication(0xc8e6090) at 0x7f2d95432c80>
+
+    def test_wish_platform_dropdown_filters_families_without_changing_games(ui,app):
+        w,_=ui;ids={}
+        for platform in ('PC','Nintendo Switch','PlayStation 5','PlayStation 2','Xbox Series X/S','Game Boy Advance'):
+            i=w.library.save_game({'title':'Desejo '+platform,'platform':platform});ids[platform]=i
+            with w.library.sql:w.library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)',(i,))
+        before=[tuple(r) for r in w.library.sql.execute('SELECT * FROM games')]
+        w.navigate(2);app.processEvents()
+        for key,expected in [('pc',{'PC'}),('switch',{'Nintendo Switch'}),('playstation',{'PlayStation 5','PlayStation 2'}),('xbox',{'Xbox Series X/S'})]:
+>           combo=w.pages[2].findChild(QComboBox,'wishlistPlatform');assert combo is not None
+                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^
+E           assert None is not None
+
+tests/test_wish_platform_filter_0137.py:14: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+_ test_wish_platform_dropdown_filters_families_without_changing_games[sample1] _
+
+ui = (<checkpoint.window.MainWindow(0xce2ba70) at 0x7f2d9548f980>, 1)
+app = <PySide6.QtWidgets.QApplication(0xc8e6090) at 0x7f2d95432c80>
+
+    def test_wish_platform_dropdown_filters_families_without_changing_games(ui,app):
+        w,_=ui;ids={}
+        for platform in ('PC','Nintendo Switch','PlayStation 5','PlayStation 2','Xbox Series X/S','Game Boy Advance'):
+            i=w.library.save_game({'title':'Desejo '+platform,'platform':platform});ids[platform]=i
+            with w.library.sql:w.library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)',(i,))
+        before=[tuple(r) for r in w.library.sql.execute('SELECT * FROM games')]
+        w.navigate(2);app.processEvents()
+        for key,expected in [('pc',{'PC'}),('switch',{'Nintendo Switch'}),('playstation',{'PlayStation 5','PlayStation 2'}),('xbox',{'Xbox Series X/S'})]:
+>           combo=w.pages[2].findChild(QComboBox,'wishlistPlatform');assert combo is not None
+                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^
+E           assert None is not None
+
+tests/test_wish_platform_filter_0137.py:14: AssertionError
+_____ test_empty_platform_filter_keeps_controls_and_clear_action[sample0] ______
+
+ui = (<checkpoint.window.MainWindow(0xd46c3a0) at 0x7f2d95011d40>, 1)
+app = <PySide6.QtWidgets.QApplication(0xc8e6090) at 0x7f2d95432c80>
+
+    def test_empty_platform_filter_keeps_controls_and_clear_action(ui,app):
+        w,i=ui
+        with w.library.sql:w.library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)',(i,))
+        w.navigate(2);app.processEvents();combo=w.pages[2].findChild(QComboBox,'wishlistPlatform')
+>       assert combo is not None
+E       assert None is not None
+
+tests/test_wish_platform_filter_0137.py:32: AssertionError
+_____ test_empty_platform_filter_keeps_controls_and_clear_action[sample1] ______
+
+ui = (<checkpoint.window.MainWindow(0xcf0b780) at 0x7f2d933bfe40>, 1)
+app = <PySide6.QtWidgets.QApplication(0xc8e6090) at 0x7f2d95432c80>
+
+    def test_empty_platform_filter_keeps_controls_and_clear_action(ui,app):
+        w,i=ui
+        with w.library.sql:w.library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)',(i,))
+        w.navigate(2);app.processEvents();combo=w.pages[2].findChild(QComboBox,'wishlistPlatform')
+>       assert combo is not None
+E       assert None is not None
+
+tests/test_wish_platform_filter_0137.py:32: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_wish_platform_filter_0137.py::test_wish_platform_dropdown_filters_families_without_changing_games[sample0]
+FAILED tests/test_wish_platform_filter_0137.py::test_wish_platform_dropdown_filters_families_without_changing_games[sample1]
+FAILED tests/test_wish_platform_filter_0137.py::test_empty_platform_filter_keeps_controls_and_clear_action[sample0]
+FAILED tests/test_wish_platform_filter_0137.py::test_empty_platform_filter_keeps_controls_and_clear_action[sample1]
+4 failed in 0.65s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## desejos-filtro-depois
+
+UTC: 2026-11-16T01:10:31.321553+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_wish_platform_filter_0137.py", "tests/test_prices_0129.py", "tests/test_layout_0134.py", "tests/test_wish_navigation_0136.py", "tests/test_price_integrity_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+................................                                         [100%]
+32 passed in 5.61s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## desejos-filtro-captura
+
+UTC: 2026-11-16T01:11:20.771430+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/desejos-filtro-v1"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/desejos-filtro-v1
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support raise()
+This plugin does not support grabbing the keyboard
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
+
+## desejos-espaco-antes
+
+UTC: 2026-11-16T01:16:39.920397+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_wish_spacing_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+______ test_offer_link_follows_discount_without_large_fixed_gap[sample0] _______
+
+ui = (<checkpoint.window.MainWindow(0x37b2be20) at 0x7f5fe24f84c0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x37735b30) at 0x7f5fe27dcbc0>
+
+    def test_offer_link_follows_discount_without_large_fixed_gap(ui,app):
+        w,i=ui
+        with w.library.sql:
+            w.library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)',(i,))
+            w.library.sql.execute("INSERT INTO external_identifiers VALUES(?,'steam',?)",(i,str(i)))
+        w.library.set_setting(f'prices.ggdeals.{i}',{'state':'ready','currency':'BRL','retail':3000,'offer_context':{'platform':'PC','steam':str(i)},'offers':[{'cents':3000,'original':6000,'kind':'retail','shop':'Loja teste','url':'https://gg.deals/br/redirect/test/'}]})
+        for size in ((1280,800),(1920,1080)):
+            w.resize(*size);w.navigate(2)
+            for _ in range(7):app.processEvents()
+            card=w.pages[2].findChild(WishCard)
+            discount=card.findChild(QLabel,'priceDiscount')
+            link=next(b for b in card.findChildren(QPushButton) if b.text().startswith('Ver ofertas'))
+            bottom=discount.mapTo(card,discount.rect().bottomLeft()).y();top=link.mapTo(card,QPoint()).y()
+>           assert 0<=top-bottom<=28
+E           assert (507 - 456) <= 28
+
+tests/test_wish_spacing_0137.py:20: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+______ test_offer_link_follows_discount_without_large_fixed_gap[sample1] _______
+
+ui = (<checkpoint.window.MainWindow(0x3781e9b0) at 0x7f5fe2660100>, 1)
+app = <PySide6.QtWidgets.QApplication(0x37735b30) at 0x7f5fe27dcbc0>
+
+    def test_offer_link_follows_discount_without_large_fixed_gap(ui,app):
+        w,i=ui
+        with w.library.sql:
+            w.library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)',(i,))
+            w.library.sql.execute("INSERT INTO external_identifiers VALUES(?,'steam',?)",(i,str(i)))
+        w.library.set_setting(f'prices.ggdeals.{i}',{'state':'ready','currency':'BRL','retail':3000,'offer_context':{'platform':'PC','steam':str(i)},'offers':[{'cents':3000,'original':6000,'kind':'retail','shop':'Loja teste','url':'https://gg.deals/br/redirect/test/'}]})
+        for size in ((1280,800),(1920,1080)):
+            w.resize(*size);w.navigate(2)
+            for _ in range(7):app.processEvents()
+            card=w.pages[2].findChild(WishCard)
+            discount=card.findChild(QLabel,'priceDiscount')
+            link=next(b for b in card.findChildren(QPushButton) if b.text().startswith('Ver ofertas'))
+            bottom=discount.mapTo(card,discount.rect().bottomLeft()).y();top=link.mapTo(card,QPoint()).y()
+>           assert 0<=top-bottom<=28
+E           assert (507 - 456) <= 28
+
+tests/test_wish_spacing_0137.py:20: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_wish_spacing_0137.py::test_offer_link_follows_discount_without_large_fixed_gap[sample0]
+FAILED tests/test_wish_spacing_0137.py::test_offer_link_follows_discount_without_large_fixed_gap[sample1]
+2 failed in 0.42s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## desejos-espaco-depois
+
+UTC: 2026-11-16T01:17:16.614140+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_wish_spacing_0137.py", "tests/test_wish_platform_filter_0137.py", "tests/test_prices_0129.py", "tests/test_wishlist_prices.py", "tests/test_wishes_0135.py", "tests/test_visual_0132.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+..........................................................               [100%]
+58 passed in 21.19s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## elevacao-depois
+
+UTC: 2026-11-16T01:17:41.185057+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_elevation_0137.py", "tests/test_migration.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+
+no tests ran in 0.00s
+
+```
+
+stderr integral:
+```text
+ERROR: file or directory not found: tests/test_migration.py
+
+
+```
+
+Código de saída: 4
+
+## elevacao-contrato
+
+UTC: 2026-11-16T01:17:50.883312+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_elevation_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+...                                                                      [100%]
+3 passed in 0.02s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## desejos-compactos-capturas
+
+UTC: 2026-11-16T01:17:55.372780+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/desejos-compactos-v1"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/desejos-compactos-v1
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support raise()
+This plugin does not support grabbing the keyboard
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
+
+## elevacao-migracao-ordem
+
+UTC: 2026-11-16T01:19:37.710326+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_elevation_0137.py", "tests/test_data_migration.py", "tests/test_migrations.py", "tests/test_updates.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+......................................                                   [100%]
+38 passed in 1.22s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## desejos-previa-regressoes
+
+UTC: 2026-11-16T01:20:59.625823+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_wish_spacing_0137.py", "tests/test_wish_platform_filter_0137.py", "tests/test_loading_preview_0137.py", "tests/test_price_integrity_0136.py", "tests/test_visual_0132.py::test_protected_drive_and_registration_logic_is_unchanged", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+....................                                                     [100%]
+20 passed in 1.55s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## janela-controles-antes
+
+UTC: 2026-11-16T01:24:16.288171+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_window_controls_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+______ test_window_controls_use_regular_window_close_and_restore[sample0] ______
+
+ui = (<checkpoint.window.MainWindow(0x3e68fc80) at 0x7f1ed7ab8d00>, 1)
+app = <PySide6.QtWidgets.QApplication(0x3e5f4780) at 0x7f1ed7c713c0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1ed7c7dc40>
+
+    def test_window_controls_use_regular_window_close_and_restore(ui,app,monkeypatch):
+        w,_=ui
+        bar=w.findChild(type(w.menuWidget()),'windowControls')
+>       assert bar is not None
+E       assert None is not None
+
+tests/test_window_controls_0137.py:9: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+______ test_window_controls_use_regular_window_close_and_restore[sample1] ______
+
+ui = (<checkpoint.window.MainWindow(0x3ed23d30) at 0x7f1ed7ab8bc0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x3e5f4780) at 0x7f1ed7c713c0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1ed7609eb0>
+
+    def test_window_controls_use_regular_window_close_and_restore(ui,app,monkeypatch):
+        w,_=ui
+        bar=w.findChild(type(w.menuWidget()),'windowControls')
+>       assert bar is not None
+E       assert None is not None
+
+tests/test_window_controls_0137.py:9: AssertionError
+_________ test_native_hit_regions_preserve_resize_and_caption_controls _________
+
+    def test_native_hit_regions_preserve_resize_and_caption_controls():
+>       from checkpoint.window_controls import border_hit
+E       ModuleNotFoundError: No module named 'checkpoint.window_controls'
+
+tests/test_window_controls_0137.py:21: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_window_controls_0137.py::test_window_controls_use_regular_window_close_and_restore[sample0]
+FAILED tests/test_window_controls_0137.py::test_window_controls_use_regular_window_close_and_restore[sample1]
+FAILED tests/test_window_controls_0137.py::test_native_hit_regions_preserve_resize_and_caption_controls
+3 failed in 0.36s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## janela-controles-depois
+
+UTC: 2026-11-16T01:26:49.180507+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_window_controls_0137.py", "tests/test_banner_resize_0136.py", "tests/test_home_layout_0137.py", "tests/test_capture_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+...............................                                          [100%]
+31 passed in 3.55s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## janela-integrada-capturas
+
+UTC: 2026-11-16T01:27:46.503786+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/janela-v1"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/janela-v1
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support raise()
+This plugin does not support grabbing the keyboard
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
+
+## scroll-async-antes
+
+UTC: 2026-11-16T01:36:34.235183+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_artwork_async_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_________ test_cold_images_decode_outside_gui_and_do_not_block_events __________
+
+app = <PySide6.QtWidgets.QApplication(0x92adfe0) at 0x7f99eb2215c0>
+folder = PosixPath('/tmp/62ecaf8f24124413bc71af4935a8eea1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f99e651d490>
+
+    def test_cold_images_decode_outside_gui_and_do_not_block_events(app, folder, monkeypatch):
+        from checkpoint import artwork_cache
+    
+>       original = artwork_cache._read_image
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'checkpoint.artwork_cache' has no attribute '_read_image'
+
+tests/test_artwork_async_0137.py:20: AttributeError
+__________ test_async_cache_bounds_queue_and_preserves_changed_image ___________
+
+app = <PySide6.QtWidgets.QApplication(0x92adfe0) at 0x7f99eb2215c0>
+folder = PosixPath('/tmp/68f21cd9aa4947e5af1fa97e3ac59658')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f99e5421d30>
+
+    def test_async_cache_bounds_queue_and_preserves_changed_image(app, folder, monkeypatch):
+        from checkpoint import artwork_cache
+    
+>       original = artwork_cache._read_image
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'checkpoint.artwork_cache' has no attribute '_read_image'
+
+tests/test_artwork_async_0137.py:60: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_artwork_async_0137.py::test_cold_images_decode_outside_gui_and_do_not_block_events
+FAILED tests/test_artwork_async_0137.py::test_async_cache_bounds_queue_and_preserves_changed_image
+2 failed in 0.25s
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 1
+
+## scroll-async-depois
+
+UTC: 2026-11-16T01:37:29.877326+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_artwork_async_0137.py", "tests/test_grid_performance_0137.py", "tests/test_library_list_0137.py", "tests/test_banner_fallback_0134.py", "tests/test_layout_0134.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+..........FFFF........                                                   [100%]
+=================================== FAILURES ===================================
+____________ test_banner_fills_grid_and_home_without_cover[sample0] ____________
+
+ui = (<checkpoint.window.MainWindow(0x1d1e2ed0) at 0x7f3a45552dc0>, 1)
+folder = PosixPath('/tmp/fdda67cbb21345fe83bf49b5f73fdc93')
+app = <PySide6.QtWidgets.QApplication(0x1cda6c30) at 0x7f3a3f62b940>
+
+    def test_banner_fills_grid_and_home_without_cover(ui,folder,app):
+        from checkpoint.ui_components import GameTile
+        from checkpoint.cover_art import cover_pixmap
+        w,i=ui;image=QImage(400,600,QImage.Format_RGB32);color=QColor('#a63772');image.fill(color)
+        path=folder/'banner.png';assert image.save(str(path))
+        w.library.save_game({'title':w.library.get(i)['title'],'banner':str(path)},i)
+        game=w.library.get(i);pix=cover_pixmap(game)
+        assert pix.width()==400 and pix.height()==600
+        tile=GameTile(game,lambda:None,width=200);tile.show();app.processEvents()
+        try:
+            result=tile.grab().toImage();assert result.width()>=200 and result.height()>=300
+            assert result.pixelColor(20,20)==color and result.pixelColor(180,280)==color
+            w.navigate(1);app.processEvents();cell=w.gallery.visualItemRect(w.gallery.item(0));view=w.gallery.viewport().grab().toImage()
+>           assert view.pixelColor(cell.left()+20,cell.top()+20)==color
+E           assert PySide6.QtGui.QColor.fromRgbF(0.125490, 0.172549, 0.227451, 1.000000) == PySide6.QtGui.QColor.fromRgbF(0.650980, 0.215686, 0.447059, 1.000000)
+E            +  where PySide6.QtGui.QColor.fromRgbF(0.125490, 0.172549, 0.227451, 1.000000) = <built-in method pixelColor of PySide6.QtGui.QImage object at 0x7f3a45550640>((0 + 20), (0 + 20))
+E            +    where <built-in method pixelColor of PySide6.QtGui.QImage object at 0x7f3a45550640> = <PySide6.QtGui.QImage(QSize(748, 544),format=QImage::Format_ARGB32_Premultiplied,depth=32,devicePixelRatio=1,bytesPerLine=2992,sizeInBytes=1627648) at 0x7f3a45550640>.pixelColor
+E            +    and   0 = <built-in method left of PySide6.QtCore.QRect object at 0x7f3a3c5f4bc0>()
+E            +      where <built-in method left of PySide6.QtCore.QRect object at 0x7f3a3c5f4bc0> = PySide6.QtCore.QRect(0, 0, 249, 410).left
+E            +    and   0 = <built-in method top of PySide6.QtCore.QRect object at 0x7f3a3c5f4bc0>()
+E            +      where <built-in method top of PySide6.QtCore.QRect object at 0x7f3a3c5f4bc0> = PySide6.QtCore.QRect(0, 0, 249, 410).top
+
+tests/test_banner_fallback_0134.py:17: AssertionError
+____________ test_banner_fills_grid_and_home_without_cover[sample1] ____________
+
+ui = (<checkpoint.window.MainWindow(0x1d6cc360) at 0x7f3a45576180>, 1)
+folder = PosixPath('/tmp/2cc80aa2fd674d56a8fc7ca80455a173')
+app = <PySide6.QtWidgets.QApplication(0x1cda6c30) at 0x7f3a3f62b940>
+
+    def test_banner_fills_grid_and_home_without_cover(ui,folder,app):
+        from checkpoint.ui_components import GameTile
+        from checkpoint.cover_art import cover_pixmap
+        w,i=ui;image=QImage(400,600,QImage.Format_RGB32);color=QColor('#a63772');image.fill(color)
+        path=folder/'banner.png';assert image.save(str(path))
+        w.library.save_game({'title':w.library.get(i)['title'],'banner':str(path)},i)
+        game=w.library.get(i);pix=cover_pixmap(game)
+        assert pix.width()==400 and pix.height()==600
+        tile=GameTile(game,lambda:None,width=200);tile.show();app.processEvents()
+        try:
+            result=tile.grab().toImage();assert result.width()>=200 and result.height()>=300
+            assert result.pixelColor(20,20)==color and result.pixelColor(180,280)==color
+            w.navigate(1);app.processEvents();cell=w.gallery.visualItemRect(w.gallery.item(0));view=w.gallery.viewport().grab().toImage()
+>           assert view.pixelColor(cell.left()+20,cell.top()+20)==color
+E           assert PySide6.QtGui.QColor.fromRgbF(0.125490, 0.172549, 0.227451, 1.000000) == PySide6.QtGui.QColor.fromRgbF(0.650980, 0.215686, 0.447059, 1.000000)
+E            +  where PySide6.QtGui.QColor.fromRgbF(0.125490, 0.172549, 0.227451, 1.000000) = <built-in method pixelColor of PySide6.QtGui.QImage object at 0x7f3a3c4fc300>((0 + 20), (0 + 20))
+E            +    where <built-in method pixelColor of PySide6.QtGui.QImage object at 0x7f3a3c4fc300> = <PySide6.QtGui.QImage(QSize(1148, 582),format=QImage::Format_ARGB32_Premultiplied,depth=32,devicePixelRatio=1,bytesPerLine=4592,sizeInBytes=2672544) at 0x7f3a3c4fc300>.pixelColor
+E            +    and   0 = <built-in method left of PySide6.QtCore.QRect object at 0x7f3a3f4c2180>()
+E            +      where <built-in method left of PySide6.QtCore.QRect object at 0x7f3a3f4c2180> = PySide6.QtCore.QRect(0, 0, 229, 380).left
+E            +    and   0 = <built-in method top of PySide6.QtCore.QRect object at 0x7f3a3f4c2180>()
+E            +      where <built-in method top of PySide6.QtCore.QRect object at 0x7f3a3f4c2180> = PySide6.QtCore.QRect(0, 0, 229, 380).top
+
+tests/test_banner_fallback_0134.py:17: AssertionError
+_______________ test_list_uses_fixed_logo_area_or_title[sample0] _______________
+
+ui = (<checkpoint.window.MainWindow(0x1dbfc470) at 0x7f3a45481200>, 1)
+app = <PySide6.QtWidgets.QApplication(0x1cda6c30) at 0x7f3a3f62b940>
+folder = PosixPath('/tmp/1cf5ba2dec5a4cd19090cfd6ee58d852')
+
+    def test_list_uses_fixed_logo_area_or_title(ui,app,folder):
+        w,i=ui;image=QImage(240,80,QImage.Format_RGB32);image.fill(QColor('#18aa60'));logo=folder/'logo.png';assert image.save(str(logo))
+        image.fill(QColor('#ff0000'));cover=folder/'cover.png';assert image.save(str(cover))
+        w.library.save_game({'title':w.library.get(i)['title'],'logo':str(logo),'cover':str(cover)},i)
+        w.view.setCurrentIndex(1);w.refresh_library();app.processEvents()
+        assert w.game_list.item(0).text()==w.library.get(i)['title']
+        rect=w.game_list.visualItemRect(w.game_list.item(0))
+        frame=w.game_list.viewport().grab(rect).toImage()
+>       assert frame.pixelColor(62,36)==QColor('#18aa60')
+E       AssertionError: assert PySide6.QtGui.QColor.fromRgbF(0.219608, 0.266667, 0.321569, 1.000000) == PySide6.QtGui.QColor.fromRgbF(0.094118, 0.666667, 0.376471, 1.000000)
+E        +  where PySide6.QtGui.QColor.fromRgbF(0.219608, 0.266667, 0.321569, 1.000000) = <built-in method pixelColor of PySide6.QtGui.QImage object at 0x7f3a3c399e80>(62, 36)
+E        +    where <built-in method pixelColor of PySide6.QtGui.QImage object at 0x7f3a3c399e80> = <PySide6.QtGui.QImage(QSize(620, 84),format=QImage::Format_ARGB32_Premultiplied,depth=32,devicePixelRatio=1,bytesPerLine=2480,sizeInBytes=208320) at 0x7f3a3c399e80>.pixelColor
+E        +  and   PySide6.QtGui.QColor.fromRgbF(0.094118, 0.666667, 0.376471, 1.000000) = QColor('#18aa60')
+
+tests/test_layout_0134.py:16: AssertionError
+_______________ test_list_uses_fixed_logo_area_or_title[sample1] _______________
+
+ui = (<checkpoint.window.MainWindow(0x1d55c4d0) at 0x7f3a3c378680>, 1)
+app = <PySide6.QtWidgets.QApplication(0x1cda6c30) at 0x7f3a3f62b940>
+folder = PosixPath('/tmp/e6e12e2befc54cc8b9e5d64809dd4ee8')
+
+    def test_list_uses_fixed_logo_area_or_title(ui,app,folder):
+        w,i=ui;image=QImage(240,80,QImage.Format_RGB32);image.fill(QColor('#18aa60'));logo=folder/'logo.png';assert image.save(str(logo))
+        image.fill(QColor('#ff0000'));cover=folder/'cover.png';assert image.save(str(cover))
+        w.library.save_game({'title':w.library.get(i)['title'],'logo':str(logo),'cover':str(cover)},i)
+        w.view.setCurrentIndex(1);w.refresh_library();app.processEvents()
+        assert w.game_list.item(0).text()==w.library.get(i)['title']
+        rect=w.game_list.visualItemRect(w.game_list.item(0))
+        frame=w.game_list.viewport().grab(rect).toImage()
+>       assert frame.pixelColor(62,36)==QColor('#18aa60')
+E       AssertionError: assert PySide6.QtGui.QColor.fromRgbF(0.219608, 0.266667, 0.321569, 1.000000) == PySide6.QtGui.QColor.fromRgbF(0.094118, 0.666667, 0.376471, 1.000000)
+E        +  where PySide6.QtGui.QColor.fromRgbF(0.219608, 0.266667, 0.321569, 1.000000) = <built-in method pixelColor of PySide6.QtGui.QImage object at 0x7f3a45587f40>(62, 36)
+E        +    where <built-in method pixelColor of PySide6.QtGui.QImage object at 0x7f3a45587f40> = <PySide6.QtGui.QImage(QSize(620, 84),format=QImage::Format_ARGB32_Premultiplied,depth=32,devicePixelRatio=1,bytesPerLine=2480,sizeInBytes=208320) at 0x7f3a45587f40>.pixelColor
+E        +  and   PySide6.QtGui.QColor.fromRgbF(0.094118, 0.666667, 0.376471, 1.000000) = QColor('#18aa60')
+
+tests/test_layout_0134.py:16: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_banner_fallback_0134.py::test_banner_fills_grid_and_home_without_cover[sample0]
+FAILED tests/test_banner_fallback_0134.py::test_banner_fills_grid_and_home_without_cover[sample1]
+FAILED tests/test_layout_0134.py::test_list_uses_fixed_logo_area_or_title[sample0]
+FAILED tests/test_layout_0134.py::test_list_uses_fixed_logo_area_or_title[sample1]
+4 failed, 18 passed in 2.36s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## scroll-async-regressao
+
+UTC: 2026-11-16T01:38:31.157078+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_artwork_async_0137.py", "tests/test_grid_performance_0137.py", "tests/test_library_list_0137.py", "tests/test_banner_fallback_0134.py", "tests/test_layout_0134.py", "tests/test_visual_0132.py", "tests/test_cover_preview_0135.py", "tests/test_cover_sizes_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+
+no tests ran in 0.00s
+
+```
+
+stderr integral:
+```text
+ERROR: file or directory not found: tests/test_cover_sizes_0136.py
+
+
+```
+
+Código de saída: 4
+
+## scroll-async-regressao-final
+
+UTC: 2026-11-16T01:38:55.862970+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_artwork_async_0137.py", "tests/test_grid_performance_0137.py", "tests/test_library_list_0137.py", "tests/test_banner_fallback_0134.py", "tests/test_layout_0134.py", "tests/test_visual_0132.py", "tests/test_cover_preview_0135.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+........................................................................ [ 93%]
+.....                                                                    [100%]
+77 passed in 8.08s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## scroll-async-extra
+
+UTC: 2026-11-16T01:40:25.485054+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_artwork_async_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+...                                                                      [100%]
+3 passed in 0.50s
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 0

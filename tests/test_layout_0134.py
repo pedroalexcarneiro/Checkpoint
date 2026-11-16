@@ -4,12 +4,14 @@ from PySide6.QtCore import Qt,QRect
 from PySide6.QtGui import QImage,QColor,QFontMetrics,QRegion
 from PySide6.QtWidgets import QLabel,QPushButton
 from test_bugs_0134 import ui,sample
+from artwork_wait import wait_for_artwork
 
 def test_list_uses_fixed_logo_area_or_title(ui,app,folder):
     w,i=ui;image=QImage(240,80,QImage.Format_RGB32);image.fill(QColor('#18aa60'));logo=folder/'logo.png';assert image.save(str(logo))
     image.fill(QColor('#ff0000'));cover=folder/'cover.png';assert image.save(str(cover))
     w.library.save_game({'title':w.library.get(i)['title'],'logo':str(logo),'cover':str(cover)},i)
     w.view.setCurrentIndex(1);w.refresh_library();app.processEvents()
+    wait_for_artwork(w.game_list)
     assert w.game_list.item(0).text()==w.library.get(i)['title']
     rect=w.game_list.visualItemRect(w.game_list.item(0))
     frame=w.game_list.viewport().grab(rect).toImage()

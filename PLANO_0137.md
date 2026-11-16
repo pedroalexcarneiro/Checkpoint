@@ -65,3 +65,5 @@ Revisão posterior de Estatísticas: grade de meses em linhas e dias 1–31 foi 
 Complemento do Perfil: indicador do slider de Zoom circular, substituindo o quadrado; manter faixa, valores, teclado e funcionamento do recorte. Captura perfil-v2 enviada ao dono.
 
 Complemento posterior: texto Carregando prévia no cadastro de ROM deve caber sem corte. Ajustar somente QuickAdd.show_result (exceção já autorizada), sem mudar seleção, fonte, jobs, confirmação A4 ou métodos protegidos. Reproduzir com Pokémon FireRed and LeafGreen+ e outro título; medir espaço e compartilhar captura.
+
+Complemento do item 6: diante do relato de pequenas pausas na rolagem, retirar a primeira decodificação/escala da thread da interface e antecipar apenas arte próxima da área visível. Pool/fila/cache limitados, QImage nos workers e QPixmap na GUI; preservar proporção, pixels, atualização por arquivo e posição. Testar responsividade com leitura controladamente lenta, dois jogos e regressões visuais, sem declarar homologação Windows a partir de Linux.

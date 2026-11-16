@@ -36,12 +36,14 @@ class LibraryList(SmoothScrollMixin,QListWidget):
     def __init__(self,parent=None):
         super().__init__(parent);self.enable_smooth_scroll();self.setObjectName('libraryList')
         from .artwork_cache import ArtworkCache
-        self.art_cache=ArtworkCache(max_bytes=8*1024*1024)
+        self.art_cache=ArtworkCache(max_bytes=8*1024*1024,asynchronous=True,parent=self)
         self.setUniformItemSizes(True);self.setVerticalScrollMode(QListWidget.ScrollPerPixel)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff);self.setFrameShape(self.Shape.NoFrame)
         self.setStyleSheet('QListWidget#libraryList { background: transparent; border: none; }')
         self.setMouseTracking(True);self.setItemDelegate(ListDelegate(self));self.setSpacing(0)
         self.setAccessibleName('Jogos da biblioteca');self.setAccessibleDescription('Enter abre a ficha; Espaço marca ou retira dos favoritos.')
+        from .artwork_prefetch import ArtworkPrefetch
+        self.art_prefetch=ArtworkPrefetch(self,covers=False)
     @staticmethod
     def heart_rect(rect):
         return QRect(rect.right()-46,rect.top()+(rect.height()-10-28)//2,28,28)
