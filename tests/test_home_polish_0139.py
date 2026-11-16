@@ -132,3 +132,31 @@ def test_offer_thumbnail_rounds_four_corners_and_never_overlaps_text(ui, app, fo
             assert pixels.pixelColor(round(x), round(y)).name() == '#f0a030'
     finally:
         row.close()
+
+
+def test_restricted_cover_has_no_dark_letterbox(ui, app, folder):
+    from PySide6.QtGui import QImage, QColor
+    from checkpoint.design_system import CardSurface
+    from checkpoint.home_components import RecentGameCard
+    w, identity = ui
+    path = folder / 'letterbox-cover.png'
+    image = QImage(200, 300, QImage.Format_RGB32)
+    image.fill(QColor('#f0a030'))
+    assert image.save(str(path))
+    game = {**w.library.get(identity), 'cover': str(path), 'last_played': datetime.now(timezone.utc).isoformat(), 'seconds': 0}
+    tile = RecentGameCard(w, game)
+    tile.resize(240, tile.sizeHint().height())
+    tile.show()
+    settle(app)
+    try:
+        art = tile.findChild(RecentArtwork)
+        target = art.image_target()
+        assert target.width() < art.width()
+        pixels = tile.grab().toImage()
+        from PySide6.QtCore import QPoint
+        at = art.mapTo(tile, QPoint(1, art.height()//2))
+        beside = QPoint(at.x()-3, at.y())
+        a, b = pixels.pixelColor(at), pixels.pixelColor(beside)
+        assert max(abs(x-y) for x,y in zip(a.getRgb()[:3], b.getRgb()[:3])) <= 2
+    finally:
+        tile.close()

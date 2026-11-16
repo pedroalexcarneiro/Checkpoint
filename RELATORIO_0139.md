@@ -116,6 +116,24 @@ regressão de não sobreposição acrescentada antes da captura posterior.
 Essas imagens são redimensionamentos; maximização/restauração Qt serão
 registradas separadamente. Não declarar homologação Windows ou aprovação visual.
 
+Complemento posterior do dono: retirada a faixa escura lateral das capas,
+causada por preencher de input a área maior que a imagem. Agora essa sobra
+usa o fundo do card; imagem inteira continua limitada e arredondada.
+home-letterbox-after: **26 passed in 3.85s**, exit 0, incluindo comparação
+de pixels entre a sobra da arte e o card, com dois jogos.
+scripts/render_0139_review.py acrescenta reprodução autônoma com tela virtual
+1920×1080, showMaximized/showNormal e manifesto de dimensões/estado/DPR.
+
+### Item 4 — Desejos compactos
+
+WishGrid.reflow usa alvo de 240 px e teto de 280 px, abaixo do teto anterior
+360; não amplia poucos cards para completar janela. Proporção 1:1, mais
+colunas, textos/preços/fontes/favoritos e ficha exclusiva preservados.
+wishes-after: **20 passed in 4.02s**, exit 0, cobrindo dois jogos, proporção,
+colunas, filtros, ordenação/posição, ficha exclusiva, ausência de tempo e
+rodapé sem vão excessivo. Screenshots normal/maximizada gerados com dois
+e vários desejos pelo renderizador novo; revisão visual ainda pendente.
+
 ## Limitações preservadas
 
 Sem reconhecimento automático de troca de ROM. Fechar só ROM mantendo o

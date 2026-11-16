@@ -52,7 +52,8 @@ class RecentArtwork(QPushButton):
         p=QPainter(self);p.setRenderHint(QPainter.Antialiasing);p.setRenderHint(QPainter.SmoothPixmapTransform)
         from .visual_tokens import RADIUS
         bounds=QRectF(self.rect());clip=QPainterPath();clip.addRoundedRect(bounds,RADIUS['card'],RADIUS['card'])
-        p.setClipPath(clip);p.fillRect(self.rect(),QColor(colors()['input']))
+        p.setClipPath(clip)
+        if self.pixmap.isNull():p.fillRect(self.rect(),QColor(colors()['input']))
         if not self.pixmap.isNull():
             target=self.image_target();art_clip=QPainterPath();art_clip.addRoundedRect(target,RADIUS['card'],RADIUS['card'])
             p.setClipPath(art_clip,Qt.IntersectClip)
