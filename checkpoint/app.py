@@ -19,6 +19,8 @@ def main():
     parser.add_argument('--worker-request',type=Path,help=argparse.SUPPRESS)
     parser.add_argument('--rom-link-request',type=Path,help=argparse.SUPPRESS)
     parser.add_argument('--save-smoke-test',action='store_true',help=argparse.SUPPRESS)
+    parser.add_argument('--elevated-owner-sid',help=argparse.SUPPRESS)
+    parser.add_argument('--elevated-data-root',type=Path,help=argparse.SUPPRESS)
     args = parser.parse_args()
     if args.rom_link_request:
         from .rom_link_worker import execute
@@ -33,7 +35,20 @@ def main():
     app=QApplication(sys.argv[:1]);app.setApplicationName('Checkpoint');app.setStyle('Fusion');app.setStyleSheet(DARK)
     from .fonts import install_fonts
     install_fonts(app)
-    try:session=prepare_data_directory(args.data_dir,migrate_credentials=not (args.smoke_test or args.save_smoke_test or args.network_test))
+    elevated_context=False
+    if sys.platform=='win32' and getattr(sys,'frozen',False) and not (args.smoke_test or args.save_smoke_test or args.network_test):
+        from .elevation import elevate_startup,ElevationCancelled
+        original_root=args.elevated_data_root or Path(os.environ.get('LOCALAPPDATA',str(Path.home()/'.local/share')))
+        try:
+            result=elevate_startup(sys.argv[1:],executable=sys.executable,cwd=os.getcwd(),local_root=original_root,owner_sid=args.elevated_owner_sid)
+        except ElevationCancelled:
+            QMessageBox.information(None,'Elevação cancelada','O Checkpoint não foi iniciado. Nenhuma sessão foi registrada.');return 0
+        except (OSError,ValueError) as error:
+            message=str(error) if isinstance(error,ValueError) else 'Não foi possível solicitar elevação ao Windows. Os dados não foram abertos.'
+            QMessageBox.critical(None,'Elevação não concluída',message);return 2
+        if result is not None:return result
+        elevated_context=bool(args.elevated_owner_sid)
+    try:session=prepare_data_directory(args.data_dir,local_root=args.elevated_data_root if elevated_context else None,migrate_credentials=not (args.smoke_test or args.save_smoke_test or args.network_test))
     except MigrationError as error:
         QMessageBox.critical(None,'Dados preservados',error.user_message());return 2
     directory=session.directory
