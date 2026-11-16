@@ -18,14 +18,16 @@ from render_ui_review import artwork
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('output', type=Path)
-    parser.add_argument('--only', default='home,wishes,memories,appearance,files,settings,dialogs')
+    parser.add_argument('--only', default='home,wishes,memories,appearance,files,settings,dialogs,statistics,library')
+    parser.add_argument('--screen-width',type=int,default=1920)
+    parser.add_argument('--screen-height',type=int,default=1080)
     args = parser.parse_args()
     root = args.output.resolve()
     root.mkdir(parents=True, exist_ok=True)
     if (root/'review.sqlite').exists():
         raise SystemExit('Use uma pasta nova; evidência anterior preservada.')
     config = root/'screen.json'
-    config.write_text(json.dumps({'screens': [{'name': 'review', 'width': 1920, 'height': 1080,
+    config.write_text(json.dumps({'screens': [{'name': 'review', 'width': args.screen_width, 'height': args.screen_height,
         'logicalDpi': 96, 'logicalBaseDpi': 96, 'dpr': 1}]}), encoding='utf-8')
     app = QApplication(['review', '-platform', 'offscreen:configfile='+str(config)])
     app.setStyle('Fusion')
@@ -151,6 +153,7 @@ def main():
         window.resize(1280, 800)
         window.detail(ids[0])
         window.detail_tabs.setCurrentIndex(3)
+        settle();window.detail_page.ensureWidgetVisible(window.detail_tabs.currentWidget().findChild(QWidget,'traditionalSaves'),16,16)
         capture('arquivos-saves-vazio')
         from checkpoint.save_profiles import SaveProfiles
         source = root/'saves-fixture'
@@ -159,6 +162,7 @@ def main():
         SaveProfiles(lib).configure(ids[0], source, ['*.sav'])
         window.detail(ids[0])
         window.detail_tabs.setCurrentIndex(3)
+        settle();window.detail_page.ensureWidgetVisible(window.detail_tabs.currentWidget().findChild(QWidget,'traditionalSaves'),16,16)
         capture('arquivos-saves-configurado')
     if 'settings' in selected:
         window.showNormal()
@@ -169,6 +173,18 @@ def main():
             if title in ('Emuladores', 'Lixeira'):
                 window.settings_tabs.setCurrentIndex(index)
                 capture('config-'+('emuladores' if title == 'Emuladores' else 'lixeira'))
+    if 'statistics' in selected:
+        lib.save_game({'title':lib.get(ids[2])['title'],'status':'Concluído'},ids[2])
+        window.showNormal();window.resize(1280,800);window.navigate(4)
+        period=window.pages[4].findChild(QComboBox,'statisticsPeriod');period.setCurrentIndex(period.findData('weekly'))
+        capture('estatisticas')
+        scroll=window.pages[4].findChildren(QWidget,'completionMetrics')[0]
+        window.pages[4].layout().itemAt(0).widget().ensureWidgetVisible(scroll)
+        capture('estatisticas-conclusoes')
+    if 'library' in selected:
+        for n in range(24):lib.save_game({'title':f'Jogo extra de teste {n}'})
+        window.showNormal();window.resize(1280,800);window.navigate(1);window.view.setCurrentIndex(1)
+        capture('biblioteca-lista-rolagem')
     if 'dialogs' in selected:
         from checkpoint.local_rom_dialog import RomSourceDialog, LocalRomDialog
         from checkpoint.emulator_dialog import EmulatorDialog
@@ -188,6 +204,14 @@ def main():
                     widget.reject()
         QTimer.singleShot(20, history)
         show_execution_history(window)
+        from checkpoint.dialog_style import AppMessages
+        def confirmation():
+            modal=QApplication.activeModalWidget()
+            if modal is not None:
+                capture('dialog-confirmar-sessao',modal)
+                modal.reject()
+        QTimer.singleShot(20,confirmation)
+        AppMessages.start_session(window)
     (root/'manifest.json').write_text(json.dumps({'platform': 'Linux Qt offscreen; não homologa Windows',
         'fixtures': True, 'screenshots': manifest}, indent=2), encoding='utf-8')
     window.close()

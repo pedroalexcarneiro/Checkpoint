@@ -52,7 +52,7 @@ from pathlib import Path
 import checkpoint.app as entry
 import checkpoint.elevation as elevation
 import checkpoint.data_migration as migration
-from PySide6.QtWidgets import QMessageBox
+from checkpoint.dialog_style import AppMessages as QMessageBox
 root=Path(sys.argv[1]);outcome=sys.argv[2];calls=[]
 def forbidden(*args,**kwargs):raise AssertionError('Dados ou cofre abertos antes da decisão UAC')
 migration.prepare_data_directory=forbidden

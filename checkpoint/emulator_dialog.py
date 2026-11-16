@@ -8,16 +8,17 @@ class EmulatorProfiles(QWidget):
         super().__init__(parent); self.library=library; self.rows=[]; self.selected_id=None
         self.setObjectName('emulatorProfiles')
         layout=QVBoxLayout(self);layout.setContentsMargins(0,0,0,0);layout.setSpacing(12)
+        toolbar=QHBoxLayout();toolbar.addStretch();toolbar.addWidget(action('Novo perfil',self.reset));layout.addLayout(toolbar)
         self.list=QListWidget();self.list.setAccessibleName('Perfis de emuladores');self.list.setMinimumHeight(120);self.list.setMaximumHeight(220)
         layout.addWidget(self.list); self.list.currentRowChanged.connect(self.select)
         self.state=text('','muted');layout.addWidget(self.state)
         form=QFormLayout(); self.name=QLineEdit(); self.platform=QLineEdit(); self.executable=QLineEdit(); self.arguments=QLineEdit('["{rom}"]'); self.extensions=QLineEdit()
-        for title,widget in [('Nome',self.name),('Plataforma',self.platform),('Executável',self.executable),('Argumentos (lista JSON)',self.arguments),('Extensões separadas por vírgula',self.extensions)]: form.addRow(title,widget)
+        executable_row=QHBoxLayout();executable_row.setSpacing(10);executable_row.addWidget(self.executable,1);executable_row.addWidget(action('Escolher executável',self.choose))
+        for title,widget in [('Nome',self.name),('Plataforma',self.platform),('Executável',executable_row),('Argumentos (lista JSON)',self.arguments),('Extensões separadas por vírgula',self.extensions)]: form.addRow(title,widget)
         layout.addLayout(form)
-        actions=QHBoxLayout()
-        for title,callback in [('Escolher executável',self.choose),('Novo perfil',self.reset),('Salvar perfil',self.save)]:
-            item=action(title,callback,title=='Salvar perfil');actions.addWidget(item)
+        actions=QHBoxLayout();actions.setSpacing(12);actions.addStretch()
         self.remove_button=action('Remover perfil',self.remove);self.remove_button.setEnabled(False);actions.addWidget(self.remove_button)
+        actions.addWidget(action('Salvar perfil',self.save,True))
         layout.addLayout(actions); self.refresh()
 
     def refresh(self):

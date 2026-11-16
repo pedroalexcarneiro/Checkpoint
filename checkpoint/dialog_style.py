@@ -16,6 +16,8 @@ class DialogPresentation(QObject):
     def eventFilter(self, obj, event):
         if event.type() == QEvent.Show and isinstance(obj, QDialog):
             self.present(obj)
+        elif event.type()==QEvent.Resize and isinstance(obj,QDialog) and obj.isVisible():
+            self.fit_and_center(obj)
         return False
 
     def present(self, dialog):
@@ -23,6 +25,8 @@ class DialogPresentation(QObject):
             dialog.setOption(QMessageBox.DontUseNativeDialog, True)
             name = 'warning' if dialog.icon() in (QMessageBox.Warning, QMessageBox.Critical) else 'help'
             dialog.setIconPixmap(lucide_icon(name, colors()['accent'], 32).pixmap(32, 32))
+            dialog.layout().setContentsMargins(24,20,24,20)
+            dialog.layout().setVerticalSpacing(18)
         for box in dialog.findChildren(QDialogButtonBox):
             for button in box.buttons():
                 raw = button.text().replace('&', '')
@@ -32,6 +36,19 @@ class DialogPresentation(QObject):
             for standard,label in getattr(dialog,'_checkpoint_button_labels',{}).items():
                 button=dialog.button(standard)
                 if button:button.setText(label)
+        if dialog.layout():dialog.layout().activate()
+        self.fit_and_center(dialog)
+        if dialog.windowHandle():
+            from .window_style import titlebar_theme
+            titlebar_theme(dialog, True)
+
+    def fit_and_center(self,dialog):
+        if getattr(self,'positioning',False):return
+        self.positioning=True
+        try:self._fit_and_center(dialog)
+        finally:self.positioning=False
+
+    def _fit_and_center(self,dialog):
         parent = dialog.parentWidget()
         if parent:
             host = parent.window()
@@ -50,9 +67,6 @@ class DialogPresentation(QObject):
         x = max(area.left(), min(area.right()-dialog.width()+1, center.x()-dialog.width()//2))
         y = max(area.top(), min(area.bottom()-dialog.height()+1, center.y()-dialog.height()//2))
         dialog.move(x, y)
-        if dialog.windowHandle():
-            from .window_style import titlebar_theme
-            titlebar_theme(dialog, True)
 
 
 def prepare_dialog(dialog):

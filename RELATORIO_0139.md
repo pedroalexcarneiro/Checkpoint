@@ -1,6 +1,6 @@
 # Checkpoint 0.1.39 — relatório da rodada local
 
-**Em andamento, sem publicação autorizada.** Branch fix/0.1.39-polimento.
+**Em validação; lançamento autorizado posteriormente pelo dono.** Branch fix/0.1.39-polimento.
 Plano: PLANO_0139.md. Este relatório distingue reprodução local, relato,
 documentação do provedor e homologação Windows. Não é declaração de conclusão.
 
@@ -203,3 +203,48 @@ Somente ImageDialog.__init__ mudou em dialogs.py: usa FittedImage e apresentaç�
 ## Item 12 — demais diálogos próprios
 
 Apresentação opt-in estendida após validação básica a artes/progresso/catálogo/Drive/pastas/metadados/Steam/perfil/atualizações. Mudanças restritas a imports e preparação visual; funções de negócio preservadas. game_editor/trash_import adotam somente as fábricas próprias nos popups já existentes. Erros de bootstrap usam a mesma fábrica, sem alterar decisões de UAC/cancelamento/retornos ou diretório de dados. dialog-additional-after: 73 passed in 8.63s, incluindo Steam, perfil/avatar, atualizações, catálogo, pastas, artes, lixeira e regressão do fluxo Drive protegido. Windows DWM/DPI/monitores reais continuam não homologados.
+
+## Complementos finais de revisão visual
+
+O dono pediu agrupamento dos botões de Emuladores: Novo perfil junto da lista,
+Escolher executável ao lado do campo, Remover/Salvar juntos no rodapé com Salvar
+em destaque. Aplicado em EmulatorProfiles; emulator-actions-after: 38 passed
+in 3.39s, dois jogos. Pediu também mais espaço entre mensagem e botões no aviso
+de sessão; margens de 24/20 e gap vertical de 18 no layout do QMessageBox.
+Após ver as duas novas capturas, respondeu “ok, gostei”. Essa resposta aprova
+essas composições apresentadas, não constitui autorização de publicação.
+
+A validação adicional de posicionamento detectou crescimento do QMessageBox
+após Show com texto traduzido/margens: numa tela virtual menor que a janela
+principal, a borda direita podia passar. DialogPresentation passa a ajustar
+limites/centro também em Resize, com proteção de reentrância, sem temporizador.
+A asserção de contenção da janela foi mantida. O aviso mantém padrão Cancelar.
+
+A fábrica nova de erros de bootstrap exigiu atualizar somente o alvo do stub
+QMessageBox no subprocesso de test_elevation_0137 (para AppMessages). Primeiro
+run teve dois timeouts dos próprios stubs; startup-final: 20 passed in 3.37s,
+com as mesmas asserções de uma única elevação/nenhum dado ou cofre preparado.
+Nenhuma decisão de UAC foi alterada e o código de elevação está intacto.
+
+Reprodução final independente na base normal 9dd9c93, usando worktree somente
+para teste e os testes já corrigidos: regressions-base-final teve 33 falhas
+em 4.12s antes das correções. Isso substitui os falsos negativos das primeiras
+versões dos novos testes de coordenadas/imports. A base recebeu somente cópias
+de testes, nunca mudanças do produto ou dados pessoais.
+
+## Validação dos últimos complementos e nova autorização
+
+Dialog-layout-final: 62 passed in 7.41s, exit 0: aviso com gap mínimo 16,
+contenção/centragem mantidas após layout, UAC sem preparação de dados antes
+da decisão, perfis/ROMs e todas as regressões visuais novas. Capturas de
+100%, 150% e 200% concluídas em Qt offscreen; escalas sintéticas e manifesto
+não homologam DPI/monitores nativos do Windows. Versão declarada 0.1.39,
+schema permanece 4. Novos arquivos e linhas modificadas usam UTF-8/LF;
+exceção do prefixo protegido CRLF de dialogs.py documentada acima.
+
+O dono autorizou lançamento posterior: “ok, quando finalizar, pode já dar
+release no github”. A pendência console havia sido comunicada imediatamente
+antes. Envio/testes Windows/publicação passam a ser autorizados após os gates,
+sem declarar a expansão multiplataforma como entregue. Relatório específico:
+RELATORIO_LANCAMENTO_0139.md. As proibições no registro inicial descrevem
+somente a primeira fase e não apagam essa autorização posterior.

@@ -1,7 +1,7 @@
 from pathlib import Path
 import subprocess
 from PySide6.QtCore import Qt,QTimer
-from PySide6.QtWidgets import QApplication,QMessageBox,QInputDialog,QDialogButtonBox
+from PySide6.QtWidgets import QApplication,QMessageBox,QInputDialog,QDialogButtonBox,QLabel
 from checkpoint.dialog_style import AppMessages,AppInputs,FittedImage
 from test_bugs_0134 import ui,sample
 
@@ -19,6 +19,8 @@ def observe_modal(window, callback):
         captured['geometry']=modal.frameGeometry()
         captured['screen']=modal.screen().availableGeometry()
         if isinstance(modal,QMessageBox):
+            label=modal.findChild(QLabel,'qt_msgbox_label');buttons=modal.findChild(QDialogButtonBox)
+            captured['message_button_gap']=buttons.y()-label.geometry().bottom()
             captured['default']=modal.defaultButton().text().replace('&','') if modal.defaultButton() else None
             modal.button(QMessageBox.No).click()
         else:modal.reject()
@@ -45,6 +47,7 @@ def test_session_prompt_has_explicit_actions_and_safe_default(ui):
     assert captured['title']=='Iniciar sessão?'
     assert set(captured['buttons'])=={'Cancelar','Iniciar sessão'}
     assert captured['default']=='Cancelar'
+    assert captured['message_button_gap']>=16
 
 
 def test_standard_input_translates_cancel_without_changing_selection(ui):
