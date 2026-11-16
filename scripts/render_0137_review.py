@@ -32,22 +32,40 @@ def main():
             with lib.sql:
                 lib.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)',(identity,))
                 lib.sql.execute("INSERT INTO external_identifiers VALUES(?,'steam',?)",(identity,str(1000+index)))
-            lib.set_setting(f'prices.ggdeals.{identity}',{'state':'ready','currency':'BRL','retail':2490+index*100,'offer_context':{'steam':str(1000+index),'platform':'PC'},'offers':[{'kind':'retail','shop':'Loja de teste','cents':2490+index*100,'original':5990,'url':'https://gg.deals/br/redirect/fixture/'}]})
+            lib.set_setting(f'prices.ggdeals.{identity}',{'state':'ready','currency':'BRL','checked_at':now.isoformat(),'retail':2490+index*100,'offer_context':{'steam':str(1000+index),'platform':'PC'},'offers':[{'kind':'retail','shop':'Loja de teste','cents':2490+index*100,'original':5990,'url':'https://gg.deals/br/redirect/fixture/'}]})
     window=MainWindow(lib);window.show()
     def capture(name,widget=window):
         for _ in range(6):app.processEvents()
+        from PySide6.QtCore import QElapsedTimer
+        from PySide6.QtTest import QTest
+        clock=QElapsedTimer();clock.start()
+        while (window.gallery.art_cache.pending or window.game_list.art_cache.pending) and clock.elapsed()<3000:
+            QTest.qWait(5);app.processEvents()
+        assert not window.gallery.art_cache.pending and not window.game_list.art_cache.pending
         assert widget.grab().save(str(root/(name+'.png')))
     for width,height in ((1280,800),(1920,1080),(1000,700)):
         window.resize(width,height);prefix=f'{width}x{height}-'
-        for page,name in ((0,'home'),(1,'grid'),(4,'statistics'),(5,'appearance')):
+        for page,name in ((0,'home'),(1,'grid'),(2,'wishes'),(4,'statistics'),(5,'appearance')):
             window.navigate(page)
             if page==5:window.settings_tabs.setCurrentIndex(0)
             capture(prefix+name)
+        from checkpoint.settings_previews import CoverSizeChoices
+        choices=window.pages[5].findChild(CoverSizeChoices)
+        for percent in (70,150):
+            choices.group.button(percent).click();capture(prefix+'appearance-'+str(percent))
+        choices.group.button(100).click()
+        window.settings_tabs.setCurrentIndex(1);capture(prefix+'connections')
         window.navigate(1);window.view.setCurrentIndex(1);capture(prefix+'list');window.view.setCurrentIndex(0)
         window.navigate(4);period=window.pages[4].findChild(QComboBox,'statisticsPeriod')
         for key in ('daily','weekly','monthly','12m','all'):
             period.setCurrentIndex(period.findData(key));capture(prefix+'statistics-'+key)
     from checkpoint.profile_dialog import ProfileDialog
+    window.resize(1280,800);window.navigate(2)
+    combo=window.pages[2].findChild(QComboBox,'wishlistPlatform');combo.showPopup()
+    for _ in range(5):app.processEvents()
+    from PySide6.QtGui import QPainter
+    popup=combo.view().window();shot=window.grab();painter=QPainter(shot);painter.drawPixmap(window.mapFromGlobal(popup.mapToGlobal(popup.rect().topLeft())),popup.grab());painter.end()
+    assert shot.save(str(root/'wishes-platform-menu.png'));combo.hidePopup()
     dialog=ProfileDialog(lib,window);dialog.select_photo(lib.get(ids[0])['cover']);dialog.zoom.setValue(150);dialog.show();capture('profile',dialog);dialog.reject()
     from checkpoint.local_rom_dialog import RomSourceDialog,LocalRomDialog
     import sys
@@ -59,6 +77,10 @@ def main():
     source=RomSourceDialog(lib,local,window);source.show();capture('rom-origem',source);source.reject()
     link=LocalRomDialog(lib,local,window);link.select_path(path);link.show();capture('rom-local',link);link.save()
     window.detail(local);window.detail_tabs.setCurrentIndex(3);capture('rom-local-vinculada')
+    from checkpoint.dialogs import GameDialog
+    from checkpoint.integrations import MetadataResult
+    loading=GameDialog(window,library=lib);quick=loading.quick_add;quick.suspend=True;quick.query.setText('Pokémon FireRed and LeafGreen+');quick.suspend=False
+    quick.art.setText('Carregando prévia…');quick.show_result(MetadataResult('rawg','1','Pokémon FireRed and LeafGreen+',platforms=('Game Boy Advance',)));quick.state.setText('Carregando ficha…');loading.resize(760,700);loading.show();quick.query.deselect();capture('loading-preview',loading);loading.reject()
     (root/'manifest.json').write_text(json.dumps({'platform':'Linux Qt offscreen','fixtures':True,'window_sizes':['1280x800','1920x1080','1000x700'],'device_pixel_ratio':window.devicePixelRatioF(),'screenshots':sorted(p.name for p in root.glob('*.png') if not p.stem[0].isdigit() or 'x' in p.stem)},indent=2),encoding='utf-8')
     window.close();db.close();print(root)
 
