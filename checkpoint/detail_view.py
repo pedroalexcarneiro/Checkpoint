@@ -5,7 +5,7 @@ from pathlib import Path
 from PySide6.QtCore import Qt,QSize
 from PySide6.QtGui import QPixmap,QIcon,QFont
 from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QGridLayout,QScrollArea,QTabWidget,QToolButton,QMenu,QTextEdit,QCheckBox,QSizePolicy,QComboBox
-from .ui_components import Hero,text,action,card,CurrentPageTabs,nav_icon
+from .ui_components import Hero,text,action,card,CurrentPageTabs,nav_icon,ElidedLabel
 from .design_system import ArtworkButton,AdaptiveColumns,CardGrid,IconButton,Badge,empty_state,CardSurface,ActionCard,StatusChip
 from .visual_tokens import SPACE,HEIGHT
 
@@ -40,7 +40,7 @@ def build_detail(window,game):
     available=[f for f in files if f['available']]
     if owned:
         if game['executable'] or available:bar.addWidget(action('Jogar',lambda:window.start_game(game),True))
-        else:bar.addWidget(action('Configurar execução',lambda:window.edit_game(game_id)))
+        else:bar.addWidget(action('Configurar execução',lambda:window.configure_execution(game_id)))
     seconds=window.library.sql.execute("SELECT COALESCE(SUM(duration_seconds),0) FROM play_sessions WHERE game_id=? AND state='finished'",(game_id,)).fetchone()[0]
     if owned:
         from .status_control import StatusControl
@@ -67,7 +67,7 @@ def build_detail(window,game):
     from .window_menu import WindowMenu
     menu=WindowMenu(more)
     menu_actions=[('Editar ficha',lambda:window.edit_game(game_id)),('Trocar imagens',lambda:window.artworks(game_id)),('Obter ficha e imagens faltantes',lambda:window.completion_queue.submit([game_id],force=True))]
-    if owned:menu_actions.extend([('Adicionar aos desejos',lambda:window.add_wish(game_id)),('Remover da biblioteca',lambda:window.remove_game(game_id))])
+    if owned:menu_actions.extend([('Configurar execução',lambda:window.configure_execution(game_id)),('Adicionar aos desejos',lambda:window.add_wish(game_id)),('Remover da biblioteca',lambda:window.remove_game(game_id))])
     elif is_wish:menu_actions.append(('Retirar dos desejos',lambda:window.remove_wish(game_id)))
     else:menu_actions.append(('Adicionar aos desejos',lambda:window.add_wish(game_id)))
     for title,callback in menu_actions:
@@ -193,20 +193,35 @@ def build_detail(window,game):
         choices.addWidget(action('Escolher ROM local',lambda:window.choose_local_rom(game_id),True));choices.addWidget(action('Vincular ROM do Drive',lambda:window.link_drive_rom(game_id)));choices.addStretch();source_layout.addLayout(choices);technical.addWidget(source)
     for file in files:
         present=bool((file['available'] or not file['drive_id']) and Path(file['local_path'] or '').is_file())
-        frame,inside=card();row=QHBoxLayout();row.addWidget(Badge('folder'));words=QVBoxLayout();words.addWidget(text(file['original_name'],'cardTitle'));words.addWidget(StatusChip('Disponível neste computador' if present else 'Somente no Drive' if file['drive_id'] else 'Arquivo não encontrado'));row.addLayout(words,1)
+        frame,inside=card();row=QHBoxLayout();row.setSpacing(16);row.addWidget(Badge('folder'))
+        words_widget=QWidget();words_widget.setMinimumWidth(0);words_widget.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Preferred)
+        words=QVBoxLayout(words_widget);words.setContentsMargins(0,0,0,0);words.setSpacing(6)
+        filename=ElidedLabel(file['original_name'],'cardTitle');filename.setObjectName('romFileName');filename.setStyleSheet('font-size: 16px; font-weight: 600;')
+        words.addWidget(filename)
+        state=StatusChip('Disponível neste computador' if present else 'Somente no Drive' if file['drive_id'] else 'Arquivo não encontrado')
+        words.addWidget(state,0,Qt.AlignLeft);row.addWidget(words_widget,1)
         row.addWidget(action('Executar versão',lambda checked=False,f=file:window.launch_rom(game_id,f),True) if present else action('Baixar ROM',lambda:window.link_drive_rom(game_id),True) if file['drive_id'] else action('Localizar ROM',lambda:window.choose_local_rom(game_id),True));inside.addLayout(row);technical.addWidget(frame)
     if files:technical.addWidget(action('Substituir ROM vinculada',lambda:window.link_rom(game_id)),0,Qt.AlignLeft)
-    heading=QHBoxLayout();heading.addWidget(text('Saves tradicionais','sectionTitle'));heading.addStretch();heading.addWidget(action('Configurar saves',lambda:window.configure_saves(game_id)));technical.addLayout(heading)
+    technical.addWidget(text('Saves tradicionais','sectionTitle'))
     from .save_profiles import SaveProfiles
     from .game_saves import GameSaveBackups
     profile=SaveProfiles(window.library).latest(game_id)
     if profile:
-        frame,inside=card();inside.addWidget(text(Path(profile['directory']).name,'cardTitle'));inside.addWidget(text(', '.join(json.loads(profile['patterns_json'])),'muted'))
+        frame,inside=card();frame.setObjectName('traditionalSaves')
+        head=QHBoxLayout();directory=ElidedLabel(profile['directory'],'cardTitle');directory.setObjectName('saveDirectory')
+        head.addWidget(directory,1);head.addWidget(action('Configurar saves',lambda:window.configure_saves(game_id)));inside.addLayout(head)
+        inside.addWidget(text(', '.join(json.loads(profile['patterns_json'])),'muted'))
+        history=GameSaveBackups(window.library).history(game_id)
+        inside.addWidget(text('Último backup: '+datetime_display(history[0]['created_at']) if history else 'Nenhum backup registrado.','caption'))
         automatic=QCheckBox('Backup ao encerrar a sessão');automatic.setChecked(window.library.setting('auto_save_'+str(game_id),False));automatic.toggled.connect(lambda value:window.library.set_setting('auto_save_'+str(game_id),value));inside.addWidget(automatic)
         inside.addWidget(action('Fazer backup agora',lambda:window.game_backup(game_id)),0,Qt.AlignLeft);technical.addWidget(frame)
-        for backup in GameSaveBackups(window.library).history(game_id):
+        for backup in history:
             frame,inside=card();row=QHBoxLayout();row.addWidget(text(datetime_display(backup['created_at'])),1);row.addWidget(action('Restaurar',lambda checked=False,b=backup:window.restore_game_backup(game_id,b)));inside.addLayout(row);technical.addWidget(frame)
-    else:technical.addWidget(ActionCard('folder','Saves não configurados','Selecione a pasta de saves.',lambda:window.configure_saves(game_id),'Configurar saves'))
+    else:
+        frame,inside=card();frame.setObjectName('traditionalSaves');row=QHBoxLayout();row.setSpacing(16)
+        row.addWidget(Badge('folder'));words=QVBoxLayout();words.setSpacing(4)
+        words.addWidget(text('Saves não configurados','cardTitle'));words.addWidget(text('Selecione a pasta de saves.','caption'))
+        row.addLayout(words,1);row.addWidget(action('Configurar saves',lambda:window.configure_saves(game_id)));inside.addLayout(row);technical.addWidget(frame)
     for inside in layouts:inside.addStretch()
     if not owned:
         del window.detail_diary

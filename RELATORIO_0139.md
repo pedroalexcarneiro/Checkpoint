@@ -191,3 +191,7 @@ EmulatorProfiles reutiliza IDs/SQL/argumentos existentes na página e no modal; 
 ## Itens 9/10 — abas Emuladores e Lixeira
 
 Aparência/Conexões/Downloads/Dados e backup preservam índices; Emuladores e Lixeira acrescentadas, seção ativa sobrevive à restauração. Gestão sai do Avançado; restauração sai do disclosure. trash_view usa card horizontal com logo contida da Biblioteca, nome, data/hora real e Restaurar à direita. Homônimos distinguem plataforma/registro. Data vazia/inválida mostra Data não registrada; data sem hora explicita horário ausente. Não classifica registros ativos sem deleted_at como lixeira, não inventa informação e não oferece exclusão/limpeza nova. icon-and-trash-final: 19 passed in 1.86s; all-new-before-final: 50 passed in 6.05s; restauração individual, integridade, estado anterior e originais preservados.
+
+## Itens 15/16 — Arquivos e saves tradicionais
+
+Nome da ROM ocupa centro expansível com elipse e tooltip integral; situação abaixo e ação à direita, sem modificar original_name. Saves vazio usa linha compacta e única ação; configurado mostra caminho completo acessível, padrões, último backup real e ações existentes. Campo e histórico/serviços de backup não mudam. settings-tabs-after: 32 passed in 19.28s, incluindo nome longo em 1000/1280/1920, dois jogos, saves e registros íntegros. Primeira checagem de nome encontrou erro do próprio teste ao buscar botão dentro do widget de texto; corrigido o ancestral, sem mudar geometria exigida.
