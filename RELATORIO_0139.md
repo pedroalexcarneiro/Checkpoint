@@ -163,3 +163,7 @@ Sem reconhecimento automático de troca de ROM. Fechar só ROM mantendo o
 emulador aberto continua limitação conhecida. UAC, contas, cofre real, hotkey
 Windows, emuladores reais, DPI/monitores nativos e executável desta rodada
 não homologados no PC do dono. Sem novo schema nem alteração de dados pessoais.
+
+## Complemento item 6 — mesma área de prévia
+
+MemoryGrid alinha cards pelo topo. Na visualização mista, QTextEdit somente leitura ocupa os mesmos 160 px de ArtworkButton, sem mudar o texto; aba Diário permanece compacta. mixed-preview-after: 4 passed in 0.59s; memories-alignment-after: 28 passed in 3.17s. Capturas memorias-preview substituem a proposta anterior.

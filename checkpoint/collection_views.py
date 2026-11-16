@@ -154,15 +154,28 @@ def memory_card(window,record,diary_only=False):
     head=QHBoxLayout();head.setSpacing(10);head.addWidget(Badge('memories' if record['kind']=='diary' else 'play' if record['kind']=='video' else 'memories',32))
     title=ElidedAction(record['title'],lambda checked=False,g=record['game_id']:window.detail(g));title.setObjectName('activityLink');head.addWidget(title,1);head.addWidget(IconButton('trash','Apagar memória',lambda checked=False,r=record:window.delete_memory(r)));inside.addLayout(head)
     if record['kind']=='diary':
-        content=text(record['text'],'bodyText');content.setAlignment(Qt.AlignLeft|Qt.AlignTop)
-        content.setToolTip(record['text']);inside.addWidget(content,0,Qt.AlignTop)
-        if not diary_only:inside.addStretch()
+        if diary_only:
+            content=text(record['text'],'bodyText');content.setAlignment(Qt.AlignLeft|Qt.AlignTop)
+            content.setToolTip(record['text']);inside.addWidget(content,0,Qt.AlignTop)
+        else:
+            from PySide6.QtWidgets import QTextEdit
+            from .design_system import colors
+            content=QTextEdit();content.setObjectName('memoryTextArea');content.setReadOnly(True)
+            content.setPlainText(record['text']);content.setFixedHeight(160)
+            content.setStyleSheet('QTextEdit#memoryTextArea { background: '+colors()['input']+'; border: none; border-radius: 12px; padding: 10px; font-size: 14px; }')
+            content.setAccessibleName('Anotação de '+record['title']);inside.addWidget(content);inside.addStretch()
     else:
         inside.addWidget(ArtworkButton(record['path'],record['caption'] or Path(record['path']).name,lambda checked=False,m=record:window.show_media(m),height=160))
         if record['caption']:inside.addWidget(text(record['caption'],'muted'))
         inside.addStretch()
     bottom=QHBoxLayout();bottom.addWidget(text('Diário' if record['kind']=='diary' else 'Vídeo' if record['kind']=='video' else 'Captura','caption'));bottom.addStretch();bottom.addWidget(text(relative_date(record['created_at']),'caption'));inside.addLayout(bottom)
     return panel
+
+
+class MemoryGrid(CardGrid):
+    def reflow(self):
+        super().reflow()
+        for panel in self.cards:self.grid.setAlignment(panel,Qt.AlignTop)
 
 
 def build_memories(window):
@@ -175,7 +188,7 @@ def build_memories(window):
         page=QWidget();layout=QVBoxLayout(page);layout.setContentsMargins(0,16,0,0);inside=page_scroll(layout)
         selected=[row for row in records if kind is None or (row['kind']=='diary')==(kind=='diary')]
         if selected:
-            grid=CardGrid(320);grid.setObjectName('memoriesGrid')
+            grid=MemoryGrid(320);grid.setObjectName('memoriesGrid')
             for record in selected:grid.add_card(memory_card(window,record,diary_only=kind=='diary'))
             inside.addWidget(grid)
         else:inside.addWidget(empty_state('memories','Nenhuma memória','Abra um jogo, entre na aba Memórias e adicione uma captura ou anotação.',window.first_memory,'Biblioteca'))
