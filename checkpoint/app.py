@@ -11,7 +11,7 @@ from .library import Library
 from .theme import DARK
 from .window import MainWindow
 
-def main():
+def main(*,request_elevation=True):
     parser = argparse.ArgumentParser(description='Checkpoint desktop')
     parser.add_argument('--data-dir',type=Path,help='Diretório de dados isolado')
     parser.add_argument('--smoke-test',action='store_true',help='Abre todas as páginas e encerra em ambiente isolado')
@@ -36,7 +36,7 @@ def main():
     from .fonts import install_fonts
     install_fonts(app)
     elevated_context=False
-    if sys.platform=='win32' and getattr(sys,'frozen',False) and not (args.smoke_test or args.save_smoke_test or args.network_test):
+    if request_elevation and sys.platform=='win32' and getattr(sys,'frozen',False) and not (args.smoke_test or args.save_smoke_test or args.network_test):
         from .elevation import elevate_startup,ElevationCancelled
         original_root=args.elevated_data_root or Path(os.environ.get('LOCALAPPDATA',str(Path.home()/'.local/share')))
         try:

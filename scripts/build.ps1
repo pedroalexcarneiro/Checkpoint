@@ -1,6 +1,7 @@
 param(
     [string]$Python = 'python',
-    [string]$BuildDirectory = (Join-Path $PSScriptRoot '..\work\pyinstaller')
+    [string]$BuildDirectory = (Join-Path $PSScriptRoot '..\work\pyinstaller'),
+    [switch]$NoElevation
 )
 $ErrorActionPreference = 'Stop'
 $projectDirectory = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
@@ -19,7 +20,8 @@ try {
     $iconPath = Join-Path $buildPath 'checkpoint.ico'
     & $Python scripts/create_icon.py $iconPath
     if ($LASTEXITCODE -ne 0) { throw 'Falha ao gerar ícone.' }
-    & $Python -m PyInstaller @runtimeTlsArgs --noconfirm --windowed --onedir --name Checkpoint --icon $iconPath --distpath $distributionDirectory --workpath $buildPath --specpath $buildPath --collect-data checkpoint --hidden-import keyring.backends.Windows --copy-metadata keyring run_checkpoint.py
+    $entryPoint = if ($NoElevation) { 'run_checkpoint_user.py' } else { 'run_checkpoint.py' }
+    & $Python -m PyInstaller @runtimeTlsArgs --noconfirm --windowed --onedir --name Checkpoint --icon $iconPath --distpath $distributionDirectory --workpath $buildPath --specpath $buildPath --collect-data checkpoint --hidden-import keyring.backends.Windows --copy-metadata keyring $entryPoint
     if ($LASTEXITCODE -ne 0) { throw 'Falha no empacotamento.' }
     $portable = Join-Path $distributionDirectory 'Checkpoint'
     & $Python -m PyInstaller --noconfirm --onedir --console --name CheckpointUpdater --distpath (Join-Path $buildPath 'helper-dist') --workpath (Join-Path $buildPath 'helper-build') --specpath $buildPath run_updater.py
