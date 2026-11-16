@@ -134,6 +134,17 @@ colunas, filtros, ordenação/posição, ficha exclusiva, ausência de tempo e
 rodapé sem vão excessivo. Screenshots normal/maximizada gerados com dois
 e vários desejos pelo renderizador novo; revisão visual ainda pendente.
 
+### Item 6 — Diário
+
+collection_views.memory_card aceita composição de Diário sem altura mínima
+de mídia; build_memories aplica somente na aba Diário. Conteúdo alinhado à
+esquerda/topo, margens 16 e gaps 12, sem alterar texto. Visualização mista
+mantém a altura/grade equivalente de capturas; exclusão exige confirmação e
+preserva originais. memories-after: **18 passed in 2.53s**, exit 0, dois jogos,
+texto intacto, layout compacto e regressões de exclusão/cancelamento/arquivos.
+Screenshots memorias/memorias-diario.png e memorias-mista.png compartilhados
+(1280×800, Linux Qt, fixtures). Aprovação visual do dono não presumida.
+
 ## Limitações preservadas
 
 Sem reconhecimento automático de troca de ROM. Fechar só ROM mantendo o

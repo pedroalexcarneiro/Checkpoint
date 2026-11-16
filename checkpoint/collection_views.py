@@ -148,11 +148,15 @@ def build_wishlist(window):
     if window.isVisible() and window.library.setting('prices.auto',True):window.price_queue.submit([game['id'] for game in rows])
 
 
-def memory_card(window,record):
-    panel,inside=card();panel.setMinimumHeight(320);head=QHBoxLayout();head.addWidget(Badge('memories' if record['kind']=='diary' else 'play' if record['kind']=='video' else 'memories',32))
+def memory_card(window,record,diary_only=False):
+    panel,inside=card();panel.setMinimumHeight(0 if diary_only else 320)
+    panel.setProperty('diaryOnly',diary_only);inside.setContentsMargins(16,16,16,16);inside.setSpacing(12)
+    head=QHBoxLayout();head.setSpacing(10);head.addWidget(Badge('memories' if record['kind']=='diary' else 'play' if record['kind']=='video' else 'memories',32))
     title=ElidedAction(record['title'],lambda checked=False,g=record['game_id']:window.detail(g));title.setObjectName('activityLink');head.addWidget(title,1);head.addWidget(IconButton('trash','Apagar memória',lambda checked=False,r=record:window.delete_memory(r)));inside.addLayout(head)
     if record['kind']=='diary':
-        content=text(record['text'],'bodyText');content.setToolTip(record['text']);inside.addWidget(content);inside.addStretch()
+        content=text(record['text'],'bodyText');content.setAlignment(Qt.AlignLeft|Qt.AlignTop)
+        content.setToolTip(record['text']);inside.addWidget(content,0,Qt.AlignTop)
+        if not diary_only:inside.addStretch()
     else:
         inside.addWidget(ArtworkButton(record['path'],record['caption'] or Path(record['path']).name,lambda checked=False,m=record:window.show_media(m),height=160))
         if record['caption']:inside.addWidget(text(record['caption'],'muted'))
@@ -172,7 +176,7 @@ def build_memories(window):
         selected=[row for row in records if kind is None or (row['kind']=='diary')==(kind=='diary')]
         if selected:
             grid=CardGrid(320);grid.setObjectName('memoriesGrid')
-            for record in selected:grid.add_card(memory_card(window,record))
+            for record in selected:grid.add_card(memory_card(window,record,diary_only=kind=='diary'))
             inside.addWidget(grid)
         else:inside.addWidget(empty_state('memories','Nenhuma memória','Abra um jogo, entre na aba Memórias e adicione uma captura ou anotação.',window.first_memory,'Biblioteca'))
         inside.addStretch();tabs.addTab(page,name)
