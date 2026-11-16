@@ -63,3 +63,5 @@ Complemento de rótulo: filtro de plataforma mostra somente Todas no estado sem 
 Revisão posterior de Estatísticas: grade de meses em linhas e dias 1–31 foi rejeitada pelo dono. Não manter esse desenho nos períodos longos. Usar mapa de calor compacto (semanas em colunas), barras em Hoje/Esta semana e calendário mensal próprio; parear gráficos menores com Mais jogados para evitar painel largo vazio.
 
 Complemento do Perfil: indicador do slider de Zoom circular, substituindo o quadrado; manter faixa, valores, teclado e funcionamento do recorte. Captura perfil-v2 enviada ao dono.
+
+Complemento posterior: texto Carregando prévia no cadastro de ROM deve caber sem corte. Ajustar somente QuickAdd.show_result (exceção já autorizada), sem mudar seleção, fonte, jobs, confirmação A4 ou métodos protegidos. Reproduzir com Pokémon FireRed and LeafGreen+ e outro título; medir espaço e compartilhar captura.

@@ -2226,3 +2226,153 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## elevacao-antes
+
+UTC: 2026-11-15T22:30:44.368184+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_elevation_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+_______ test_uac_handoff_preserves_arguments_paths_and_original_identity _______
+
+folder = PosixPath('/tmp/0c2ff207976a47239b494128dbd20342')
+
+    def test_uac_handoff_preserves_arguments_paths_and_original_identity(folder):
+>       from checkpoint.elevation import elevate_startup
+E       ModuleNotFoundError: No module named 'checkpoint.elevation'
+
+tests/test_elevation_0137.py:17: ModuleNotFoundError
+________ test_uac_cancel_and_other_account_never_retry_or_prepare_data _________
+
+folder = PosixPath('/tmp/4388d7a7863e483aaf3ed0ea8e25446b')
+
+    def test_uac_cancel_and_other_account_never_retry_or_prepare_data(folder):
+>       from checkpoint.elevation import elevate_startup,ElevationCancelled
+E       ModuleNotFoundError: No module named 'checkpoint.elevation'
+
+tests/test_elevation_0137.py:30: ModuleNotFoundError
+_______ test_already_elevated_same_account_continues_without_new_prompt ________
+
+folder = PosixPath('/tmp/978517783cf2447a9467c2a3d7d16db5')
+
+    def test_already_elevated_same_account_continues_without_new_prompt(folder):
+>       from checkpoint.elevation import elevate_startup
+E       ModuleNotFoundError: No module named 'checkpoint.elevation'
+
+tests/test_elevation_0137.py:40: ModuleNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_elevation_0137.py::test_uac_handoff_preserves_arguments_paths_and_original_identity
+FAILED tests/test_elevation_0137.py::test_uac_cancel_and_other_account_never_retry_or_prepare_data
+FAILED tests/test_elevation_0137.py::test_already_elevated_same_account_continues_without_new_prompt
+3 failed in 0.04s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## previa-carregando-antes
+
+UTC: 2026-11-16T01:02:54.228848+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_loading_preview_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_loading_preview_text_fits_without_cutting[Pok\xe9mon FireRed and LeafGreen+] _
+
+library = <checkpoint.library.Library object at 0x7f85bcad7ef0>
+app = <PySide6.QtWidgets.QApplication(0x1ee11a60) at 0x7f85bcaa7140>
+title = 'Pokémon FireRed and LeafGreen+'
+
+    @pytest.mark.parametrize('title',['Pokémon FireRed and LeafGreen+','The Legend of Zelda: Ocarina of Time 3D'])
+    def test_loading_preview_text_fits_without_cutting(library,app,title):
+        dialog=GameDialog(library=library);quick=dialog.quick_add
+        quick.timer.stop();quick.art.setText('Carregando prévia…')
+        quick.show_result(MetadataResult('rawg','1',title,platforms=('Game Boy Advance',)))
+        dialog.show()
+        try:
+            for _ in range(6):app.processEvents()
+            metrics=QFontMetrics(quick.art.font())
+            required=metrics.boundingRect(QRect(0,0,quick.art.width(),1000),Qt.TextWordWrap,quick.art.text())
+>           assert quick.art.wordWrap()
+E           assert False
+E            +  where False = <built-in method wordWrap of PySide6.QtWidgets.QLabel object at 0x7f85bbc40c80>()
+E            +    where <built-in method wordWrap of PySide6.QtWidgets.QLabel object at 0x7f85bbc40c80> = <PySide6.QtWidgets.QLabel(0x1f3d61c0, name="addPreviewArt") at 0x7f85bbc40c80>.wordWrap
+E            +      where <PySide6.QtWidgets.QLabel(0x1f3d61c0, name="addPreviewArt") at 0x7f85bbc40c80> = <checkpoint.quick_add.QuickAdd(0x1f36b2e0) at 0x7f85bc828bc0>.art
+
+tests/test_loading_preview_0137.py:18: AssertionError
+----------------------------- Captured stderr call -----------------------------
+Fontconfig error: No writable cache directories
+_ test_loading_preview_text_fits_without_cutting[The Legend of Zelda: Ocarina of Time 3D] _
+
+library = <checkpoint.library.Library object at 0x7f85bbadc200>
+app = <PySide6.QtWidgets.QApplication(0x1ee11a60) at 0x7f85bcaa7140>
+title = 'The Legend of Zelda: Ocarina of Time 3D'
+
+    @pytest.mark.parametrize('title',['Pokémon FireRed and LeafGreen+','The Legend of Zelda: Ocarina of Time 3D'])
+    def test_loading_preview_text_fits_without_cutting(library,app,title):
+        dialog=GameDialog(library=library);quick=dialog.quick_add
+        quick.timer.stop();quick.art.setText('Carregando prévia…')
+        quick.show_result(MetadataResult('rawg','1',title,platforms=('Game Boy Advance',)))
+        dialog.show()
+        try:
+            for _ in range(6):app.processEvents()
+            metrics=QFontMetrics(quick.art.font())
+            required=metrics.boundingRect(QRect(0,0,quick.art.width(),1000),Qt.TextWordWrap,quick.art.text())
+>           assert quick.art.wordWrap()
+E           assert False
+E            +  where False = <built-in method wordWrap of PySide6.QtWidgets.QLabel object at 0x7f85bbad9100>()
+E            +    where <built-in method wordWrap of PySide6.QtWidgets.QLabel object at 0x7f85bbad9100> = <PySide6.QtWidgets.QLabel(0x1f706120, name="addPreviewArt") at 0x7f85bbad9100>.wordWrap
+E            +      where <PySide6.QtWidgets.QLabel(0x1f706120, name="addPreviewArt") at 0x7f85bbad9100> = <checkpoint.quick_add.QuickAdd(0x1f6cc8b0) at 0x7f85bbad8dc0>.art
+
+tests/test_loading_preview_0137.py:18: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_loading_preview_0137.py::test_loading_preview_text_fits_without_cutting[Pok\xe9mon FireRed and LeafGreen+]
+FAILED tests/test_loading_preview_0137.py::test_loading_preview_text_fits_without_cutting[The Legend of Zelda: Ocarina of Time 3D]
+2 failed in 0.44s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## previa-carregando-depois
+
+UTC: 2026-11-16T01:03:22.647098+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_loading_preview_0137.py", "tests/test_reference_layout_0128.py", "tests/test_quick_add.py", "tests/test_visual_0132.py::test_protected_drive_and_registration_logic_is_unchanged", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+..................                                                       [100%]
+18 passed in 1.79s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0

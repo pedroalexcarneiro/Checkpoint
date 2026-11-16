@@ -111,3 +111,9 @@ Reprodução controlada confirmou risco no worker antigo: Ocarina of Time/3D che
 Capturas Qt reais enviadas: rom-local-v1/rom-origem.png, rom-local.png; rom-local-vinculada.png também gerada após gravação real na base isolada. Seletor nativo Windows, jogos/emuladores reais e uso elevado não homologados neste Linux. Fechar apenas a ROM com emulador vivo continua limitação; troca automática descartada, não implementada. Arquivos: local_rom.py/local_rom_dialog.py, window.py (start_game/launch_rom/link_rom/choose_local_rom/link_drive_rom), detail_view.py (Arquivos), rom_link.py/rom_link_dialog.py, script de revisão e testes pertinentes.
 
 Complemento de rótulo aplicado junto à ficha: filtro de plataforma mostra Todas, com chave vazia e filtragem inalteradas, conforme pedido posterior.
+
+## Complemento — texto Carregando prévia sem corte (feito em Linux)
+
+Reproduzido com Pokémon FireRed and LeafGreen+ e Ocarina of Time 3D: QLabel de 70×94 sem quebra cortava a mensagem. Somente QuickAdd.show_result foi alterado, dentro da exceção autorizada: aplica estilo antes de medir a fonte, largura suficiente para Carregando e quebra do placeholder em linhas que cabem na altura. Pixmap continua contido ao chegar. Título, fonte, seleção de ROM, jobs e contratos de persistência/lifecycle intactos; não editados construtor/choose/received ou dialogs.py.
+
+Antes: 2 testes falharam; depois: 18 testes passaram em 1,79 s, incluindo QuickAdd e contrato AST protegido. Captura real Qt do estado de carregamento reproduzido com dados controlados enviada: evidence-0137/previa-carregando/preview.png, diálogo 760×700. Não é consulta autenticada ou homologação da gravação no PC do dono. Sem fonte fictícia publicada nem alteração de dado pessoal.

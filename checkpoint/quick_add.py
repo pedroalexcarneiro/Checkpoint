@@ -239,6 +239,9 @@ class QuickAdd(QObject):
     def show_result(self,result):
         from .ui_components import nav_icon
         from .design_system import colors
+        self.art.ensurePolished()
+        self.art.setWordWrap(True)
+        self.art.setFixedWidth(max(70,self.art.fontMetrics().horizontalAdvance('Carregando')+8))
         self.confirmed.setPixmap(nav_icon('check',colors()['accent'],24).pixmap(24,24))
         self.metadata_unavailable=False;self.manual.hide()
         self.save.setEnabled(not self.finishing);self.preview.show();self.results.hide();self.other.setVisible(bool(self.candidates));self.confirmed.show()
