@@ -27,7 +27,7 @@ class ThemePreview(ThemeSwatch):
 
 class CoverChoice(QAbstractButton):
     def __init__(self,value,index,owner):
-        super().__init__(owner);self.value=value;self.index=index;self.owner=owner
+        super().__init__(owner);self.value=value;self.index=index;self.owner=owner;self.keyboard_focus=False
         self.setObjectName('coverChoice');self.setCheckable(True);self.setFocusPolicy(Qt.StrongFocus)
         self.setAccessibleName(str(value)+'%');self.setToolTip(str(value)+'%');self.setMinimumWidth(44)
         self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed);self.setFixedHeight(228)
@@ -41,13 +41,21 @@ class CoverChoice(QAbstractButton):
         p.setBrush(QColor(c['panel']));p.setPen(QPen(QColor(green if self.isChecked() else c['border']),2 if self.isChecked() else 1))
         p.drawRoundedRect(self.artwork_rect(),6,6)
         p.setPen(QColor(green if self.isChecked() else c['text']));p.drawText(QRectF(0,198,self.width(),24),Qt.AlignCenter,str(self.value)+'%')
-        if self.hasFocus():
-            p.setBrush(Qt.NoBrush);p.setPen(QPen(QColor(c['text']),1,Qt.DashLine));p.drawRoundedRect(QRectF(self.rect().adjusted(3,3,-3,-3)),6,6)
+        if self.hasFocus() and self.keyboard_focus:
+            p.setBrush(Qt.NoBrush);p.setPen(QPen(QColor(c['secondary']),1,Qt.DashLine))
+            p.drawRoundedRect(self.artwork_rect().adjusted(4,4,-4,-4),4,4)
         p.end()
+    def focusInEvent(self,event):
+        self.keyboard_focus=event.reason() in (Qt.TabFocusReason,Qt.BacktabFocusReason,Qt.ShortcutFocusReason)
+        super().focusInEvent(event);self.update()
+    def focusOutEvent(self,event):
+        self.keyboard_focus=False;super().focusOutEvent(event);self.update()
+    def mousePressEvent(self,event):
+        self.keyboard_focus=False;self.update();super().mousePressEvent(event)
     def keyPressEvent(self,event):
         if event.key() in (Qt.Key_Left,Qt.Key_Right,Qt.Key_Up,Qt.Key_Down):
             offset=-1 if event.key() in (Qt.Key_Left,Qt.Key_Up) else 1
-            target=self.owner.buttons[(self.index+offset)%5];target.setFocus();target.click();event.accept();return
+            target=self.owner.buttons[(self.index+offset)%5];target.setFocus(Qt.TabFocusReason);target.click();event.accept();return
         if event.key() in (Qt.Key_Return,Qt.Key_Enter):self.click();event.accept();return
         super().keyPressEvent(event)
 

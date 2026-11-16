@@ -167,3 +167,7 @@ não homologados no PC do dono. Sem novo schema nem alteração de dados pessoai
 ## Complemento item 6 — mesma área de prévia
 
 MemoryGrid alinha cards pelo topo. Na visualização mista, QTextEdit somente leitura ocupa os mesmos 160 px de ArtworkButton, sem mudar o texto; aba Diário permanece compacta. mixed-preview-after: 4 passed in 0.59s; memories-alignment-after: 28 passed in 3.17s. Capturas memorias-preview substituem a proposta anterior.
+
+## Item 8 — foco de capas
+
+CoverChoice distingue foco por teclado de clique; retira contorno externo e desenha foco dentro da capa somente por teclado. Seleção, cinco tamanhos, bases, percentual e persistência preservados. cover-focus-after: 24 passed in 3.34s, exit 0, dois jogos.
