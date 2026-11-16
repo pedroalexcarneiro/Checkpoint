@@ -171,3 +171,7 @@ MemoryGrid alinha cards pelo topo. Na visualização mista, QTextEdit somente le
 ## Item 8 — foco de capas
 
 CoverChoice distingue foco por teclado de clique; retira contorno externo e desenha foco dentro da capa somente por teclado. Seleção, cinco tamanhos, bases, percentual e persistência preservados. cover-focus-after: 24 passed in 3.34s, exit 0, dois jogos.
+
+## Item 11 — espaço da rolagem
+
+LibraryList reserva viewport de 16 px e barra constante, com handle desabilitado quando não há rolagem. Sem salto horizontal ou sobreposição de favorito. Verificação local corrigiu o próprio teste: QScrollBar.x é relativo ao container; usa-se mapTo(view). local-components-after: 43 passed in 4.41s, incluindo lista, favoritos, pixels e memórias; primeira rodada gutter teve dois falsos negativos do teste, preservados nos logs.

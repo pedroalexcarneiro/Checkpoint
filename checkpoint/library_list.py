@@ -38,6 +38,9 @@ class LibraryList(SmoothScrollMixin,QListWidget):
         from .artwork_cache import ArtworkCache
         self.art_cache=ArtworkCache(max_bytes=8*1024*1024,asynchronous=True,parent=self)
         self.setUniformItemSizes(True);self.setVerticalScrollMode(QListWidget.ScrollPerPixel)
+        self.setViewportMargins(0,0,16,0);self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        bar=self.verticalScrollBar();bar.setEnabled(bar.maximum()>0)
+        bar.rangeChanged.connect(lambda minimum,maximum:bar.setEnabled(maximum>minimum))
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff);self.setFrameShape(self.Shape.NoFrame)
         self.setStyleSheet('QListWidget#libraryList { background: transparent; border: none; }')
         self.setMouseTracking(True);self.setItemDelegate(ListDelegate(self));self.setSpacing(0)
