@@ -1,4 +1,16 @@
-# Correção da abertura — 0.1.38 em validação
+# Correção da abertura — 0.1.38 validada, sem publicação
+
+## Resultado final
+
+Candidato validado: ff136584974b55989c10598612235717508ec25a. Windows UI validation 43799707113 concluída com sucesso, sem publicação de release/tag. Windows/Python 3.12.10: **700 passed in 673.05s (0:11:13)**, zero falhas/erros/skips. Linux/Python 3.12.14: **700 passed in 483.81s (0:08:03)**. Código/testes idênticos entre a execução Linux 5e77741 e esse candidato; diferenças posteriores foram documentação e checkout do CI.
+
+A abertura normal foi verificada no fonte e no executável realmente extraído: sem --smoke-test, plugin Qt windows, HWND visível, resposta às mensagens, captura, WM_CLOSE, exit 0 e SQLite íntegro. Executor Windows já elevado; não foi automatizado consentimento UAC. Registro do executável: janela 1100×740, ordinary_startup=true, responsive=true, exit_code=0, stdout/stderr vazios. Imagem real Checkpoint-0.1.38-native-startup.png, base de teste vazia. A captura vem do desktop virtual do runner e inclui faixa sem conteúdo à direita; não é homologação visual de outras resoluções nem acesso ao PC do dono.
+
+ZIP Windows: 84316195 bytes, SHA-256 **9f2238c621d0fb5fc9ed22106bee34b938283ef3f8b0cd7e96770a757496cfce**, igual ao checksum gerado pelo build. CRC do pacote e do ZIP de revisão aprovados. Arquivo externo de artefatos do GitHub (14196740155): 88049666 bytes, SHA-256 9f82a60919ca6a8c5b4faa09cae3397f301ddd002bddef64e42ea8f98d465c64, conferido após download. Dez arquivos resultantes com hashes em verified-package.json fora do repositório, sem URL assinada ou vídeo privado.
+
+O download inicial pelo gh recebeu 403 no armazenamento de artefatos. Download pelo conector GitHub concluído e transferido para o workspace; link temporário não persistido no repositório/relatórios. A verificação local confirmou o digest do artefato original, os checksums internos e o registro da inicialização. As saídas Windows completas estão em RELATORIO_0138_TESTES.md.
+
+Tag/arquivos/release 0.1.37 preservados; 0.1.38 ainda não publicada. Patch não muda dados/cofre/migração/A4/assets. Permanece a confirmação do uso no PC do dono, incluindo consentimento UAC real; a aprovação automática do runner não substitui esse teste. Etapas anteriores e falhas de infraestrutura abaixo mantidas como histórico.
 
 Relato recebido após publicação da 0.1.37. Vídeo analisado diretamente: Explorer com pacote extraído, prompt de UAC aproximadamente no primeiro segundo e depois ausência da janela durante o restante da gravação. Não se presume, só pelo vídeo, crash exato, consentimento concedido ou perda de dados. Frames e vídeo privados mantidos fora do repositório.
 

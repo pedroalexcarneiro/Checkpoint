@@ -1,5 +1,13 @@
 # Validação do Checkpoint
 
+## Correção de abertura 0.1.38
+
+Candidato ff13658 validado em Windows UI validation 43799707113: 700 passed in 673.05s (0:11:13), zero falhas/erros/skips. Linux: 700 passed in 483.81s (0:08:03). Nova cobertura exige MSG.hWnd sem recriar HWND no callback e duas janelas reais com plugin Qt windows nos testes Windows. Linux usa offscreen e é identificado como tal.
+
+package_windows_release.py preserva os smokes anteriores e acrescenta abertura normal via native_startup_check.py, no fonte e no .exe extraído: executor já elevado, plugin windows, diretório novo, PID/HWND próprios, visibilidade/resposta, captura, WM_CLOSE, exit e SQLite. Não usa --smoke-test nessa cobertura e não automatiza consentimento UAC. Screenshot e JSON nativos acompanham os artefatos. Não equivale à homologação no PC do dono.
+
+Checkout Windows UI validation usa fetch-depth: 0 para disponibilizar c51c245 ao contrato protegido. Primeiro run falhou por histórico raso; ajuste YAML intermediário recusado por chave duplicada foi corrigido antes do run final. Nenhuma asserção protegida modificada. Relatórios 0138 preservam falhas e resultados integrais. Versão ainda sem publicação.
+
 ## Resultado publicado 0.1.37
 
 Commit/tag c526cb4bc5e8721dfdfdf20222c8c1c41562ce52: Windows/Python 3.12.10, 695 passed in 638.21s (0:10:38), zero falhas/erros/skips; Linux/Python 3.12.14, 695 passed in 478.98s (0:07:58). Testes/smokes do pacote extraído, auxiliar/cadastro/atualizador e revisão visual passaram no workflow 43793047592. Oito arquivos baixados/conferidos com digests GitHub; CRC dos dois ZIPs válido. Logs completos em RELATORIO_LANCAMENTO_0137.md e RELATORIO_0137_TESTES.md.

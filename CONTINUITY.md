@@ -1,10 +1,10 @@
 # Continuidade do Checkpoint
 
-## Correção de abertura 0.1.38 — em validação
+## Correção de abertura 0.1.38 — validada, sem publicação
 
 Após relato e vídeo do dono de que a 0.1.37 não abre, foi identificado uso de QWidget.winId em callback de criação nativa, capaz de reentrar na criação. Branch fix/0.1.38-abertura, commit 5e77741: handler passa a usar MSG.hWnd. Nenhuma alteração em dados/cofre/A4/arquivos protegidos. A validação anterior offscreen não cobria essa sequência; a nova cobertura usa Qt windows no Windows e abertura normal do fonte/executável extraído com executor já elevado, HWND visível/responsivo/captura/fechamento.
 
-55 regressões direcionadas passaram em Linux; suíte completa e Windows UI validation 43797801516 em andamento. Não declarar ainda abertura no PC do dono homologada. A 0.1.37/tag/arquivos permanecem preservados. Detalhes em PLANO_0138.md e RELATORIO_0138.md.
+700 testes Linux e 700 Windows aprovados. Windows UI validation 43799707113 concluiu build e abertura normal do fonte/executável extraído: HWND visível/responsivo, captura e fechamento, exit 0 e SQLite íntegro. Candidato ff13658; ZIP SHA-256 9f2238c621d0fb5fc9ed22106bee34b938283ef3f8b0cd7e96770a757496cfce. Sem release/tag 0.1.38; aguardando decisão de publicação. Não declarar abertura/consentimento UAC no PC do dono homologados. A 0.1.37/tag/arquivos permanecem preservados. Detalhes em PLANO_0138.md e RELATORIO_0138.md.
 
 ## Pré-release 0.1.37 publicada
 
