@@ -65,8 +65,11 @@ def main():
         lib.sql.execute('INSERT INTO emulator_profiles(emulator_id,platform,arguments_json,extensions) VALUES(?,?,?,?)',
             (emulator, 'GBA', '["{rom}"]', '.gba'))
     for platform in ('PC', 'Switch'):
-        game_id = lib.save_game({'title': 'Registro homônimo de teste', 'platform': platform})
+        logo = artwork(root, 100, 'Registro homônimo de teste', '#366077', 'logo', 620, 150)
+        game_id = lib.save_game({'title': 'Registro homônimo de teste', 'platform': platform, 'logo': logo})
         lib.delete(game_id)
+    undated=lib.save_game({'title': 'Registro sem data'})
+    with lib.sql:lib.sql.execute("UPDATE games SET deleted_at='' WHERE id=?",(undated,))
     window = MainWindow(lib)
     window.resize(1280, 800)
     window.show()

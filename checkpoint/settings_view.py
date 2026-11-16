@@ -36,9 +36,9 @@ def folder_row(window,key,title):
 
 def build_settings(window):
     layout=window.clear_page(5);tabs=QTabWidget();tabs.setObjectName('settingsTabs');tabs.setDocumentMode(True);tabs.tabBar().setExpanding(False);tabs.tabBar().setDrawBase(False);tabs.tabBar().setMaximumHeight(48);window.settings_tabs=tabs;pages=[]
-    for name in ('Aparência','Conexões','Downloads','Dados e backup'):
+    for name in ('Aparência','Conexões','Downloads','Dados e backup','Emuladores','Lixeira'):
         page=QWidget();outer=QVBoxLayout(page);outer.setContentsMargins(0,18,0,0);pages.append(page_scroll(outer));tabs.addTab(page,name)
-    appearance,connections,downloads,data=pages
+    appearance,connections,downloads,data,emulator_page,trash_page=pages
     frame,inside=card();head=QHBoxLayout();head.addWidget(text('Tema de cores','sectionTitle'));head.addStretch();window.theme_selector=QComboBox(frame);window.theme_selector.setObjectName('themeSelector')
     for key,theme in THEMES.items():window.theme_selector.addItem(theme.name,key)
     window.theme_selector.setCurrentIndex(window.theme_selector.findData(window.theme.key));window.theme_selector.currentIndexChanged.connect(window.theme_changed);window.theme_selector.hide();inside.addLayout(head)
@@ -93,14 +93,11 @@ def build_settings(window):
     data.addWidget(grid)
     frame,inside=card();inside.addWidget(text('Atualizações do Checkpoint','cardTitle'))
     update=action('Verificar atualizações',window.updates,True);update.setObjectName('checkUpdates');inside.addWidget(update,0,Qt.AlignLeft);data.addWidget(frame)
-    extra=QWidget();inside=QVBoxLayout(extra);inside.addWidget(action('Perfis de emuladores',window.emulators));inside.addWidget(action('Revisar sessões interrompidas',window.recover_sessions));disclosure('Avançado',extra,data)
-    removed=window.library.sql.execute('SELECT id,title FROM games WHERE deleted_at IS NOT NULL ORDER BY title').fetchall();trash=QWidget();inside=QVBoxLayout(trash)
-    if not removed:
-        inside.addWidget(text('A lixeira está vazia.','cardTitle'))
-        inside.addWidget(action('Abrir biblioteca',lambda:window.navigate(1)),0,Qt.AlignLeft)
-    for game in removed:
-        line=QHBoxLayout();line.addWidget(text(game['title']),1);line.addWidget(action('Restaurar',lambda checked=False,g=game['id']:window.restore_game(g)));inside.addLayout(line)
-    disclosure('Lixeira · '+count_text(len(removed),'jogo'),trash,data)
+    extra=QWidget();inside=QVBoxLayout(extra);inside.addWidget(action('Revisar sessões interrompidas',window.recover_sessions));disclosure('Avançado',extra,data)
+    from .emulator_dialog import EmulatorProfiles
+    emulator_page.addWidget(text('Perfis de emuladores','sectionTitle'));emulator_page.addWidget(EmulatorProfiles(window.library));emulator_page.addStretch()
+    from .trash_view import build_trash
+    build_trash(window,trash_page)
     archived=[game for game in window.library.games() if not window.library.is_owned(game['id']) and not window.library.sql.execute('SELECT 1 FROM wishlist WHERE game_id=?',(game['id'],)).fetchone()]
     if archived:
         archive=QWidget();inside=QVBoxLayout(archive)
@@ -108,4 +105,6 @@ def build_settings(window):
             line=QHBoxLayout();line.addWidget(text(game['title']),1);line.addWidget(action('Adicionar à biblioteca',lambda checked=False,g=game['id']:window.acquire_wish(g)));inside.addLayout(line)
         disclosure('Desejos removidos · '+count_text(len(archived),'jogo'),archive,data)
     data.addStretch()
-    tabs.setCurrentIndex(min(getattr(window,'settings_section',0),3));tabs.currentChanged.connect(window.settings_section_changed);layout.addWidget(tabs)
+    tabs.setCurrentIndex(min(getattr(window,'settings_section',0),tabs.count()-1));tabs.currentChanged.connect(window.settings_section_changed);layout.addWidget(tabs)
+
+from .dialog_style import AppMessages as QMessageBox
