@@ -175,3 +175,7 @@ CoverChoice distingue foco por teclado de clique; retira contorno externo e dese
 ## Item 11 — espaço da rolagem
 
 LibraryList reserva viewport de 16 px e barra constante, com handle desabilitado quando não há rolagem. Sem salto horizontal ou sobreposição de favorito. Verificação local corrigiu o próprio teste: QScrollBar.x é relativo ao container; usa-se mapTo(view). local-components-after: 43 passed in 4.41s, incluindo lista, favoritos, pixels e memórias; primeira rodada gutter teve dois falsos negativos do teste, preservados nos logs.
+
+## Item 14 — Preto neutro
+
+Paleta Preto passa a superfícies/contornos cinza-neutros e preview usa a mesma paleta aplicada. Oito outras paletas e nove opções preservadas; sem assets alterados. black-after: 23 passed in 17.54s, contraste de texto e persistência/navegação em todos os temas aprovados.

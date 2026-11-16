@@ -37,6 +37,17 @@ THEMES={theme.key:theme for theme in [
 ]}
 DEFAULT_THEME='green'
 
+# Só Preto usa superfícies neutras; as oito paletas anteriores são preservadas.
+_black={**THEMES['black'].colors,
+    'background':'#111111','sidebar':'#141414','surface':'#191919',
+    'elevated':'#2b2b2b','card':'#202020','panel':'#202020','input':'#151515',
+    'button':'#2b2b2b','border':'#474747','border_subtle':'#363636',
+    'accent':'#b8b8b8','on_accent':'#171717','text':'#f2f2f2',
+    'secondary':'#cccccc','muted':'#adadad','disabled':'#999999'}
+_black['hover']=blend(_black['elevated'],_black['accent'],.10)
+_black['selected']=blend(_black['surface'],_black['accent'],.18)
+THEMES['black']=Theme('black','Preto',_black)
+
 def get_theme(key): return THEMES.get(key,THEMES[DEFAULT_THEME]) if isinstance(key,str) else THEMES[DEFAULT_THEME]
 
 def stylesheet(key):
