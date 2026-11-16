@@ -1,5 +1,11 @@
 # Continuidade do Checkpoint
 
+## Correção de abertura 0.1.38 — em validação
+
+Após relato e vídeo do dono de que a 0.1.37 não abre, foi identificado uso de QWidget.winId em callback de criação nativa, capaz de reentrar na criação. Branch fix/0.1.38-abertura, commit 5e77741: handler passa a usar MSG.hWnd. Nenhuma alteração em dados/cofre/A4/arquivos protegidos. A validação anterior offscreen não cobria essa sequência; a nova cobertura usa Qt windows no Windows e abertura normal do fonte/executável extraído com executor já elevado, HWND visível/responsivo/captura/fechamento.
+
+55 regressões direcionadas passaram em Linux; suíte completa e Windows UI validation 43797801516 em andamento. Não declarar ainda abertura no PC do dono homologada. A 0.1.37/tag/arquivos permanecem preservados. Detalhes em PLANO_0138.md e RELATORIO_0138.md.
+
 ## Pré-release 0.1.37 publicada
 
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.37

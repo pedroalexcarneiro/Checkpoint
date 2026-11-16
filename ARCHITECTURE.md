@@ -1,5 +1,9 @@
 # Arquitetura
 
+## Correção de criação da janela 0.1.38
+
+O handler Windows usa MSG.hWnd do callback e não invoca QWidget.winId durante criação/destruição nativa. Esse getter pode recriar a janela quando o Qt ainda não associou o handle. native_startup_check.py valida externamente a abertura normal em Windows já elevado do fonte e do executável extraído, com plugin Qt windows; não acrescenta modo especial ao produto nem automatiza consentimento UAC.
+
 ## Serviços locais 0.1.37
 
 home_data.py lê execuções com PID, resumo semanal e memórias existentes; home_components.py compõe carrosséis, ações separadas e metadados de uma linha. library_list.py substitui a tabela por delegate horizontal. playtime.collection_times agrega sessões e snapshots separadamente em consultas limitadas, sem duplicação por join.
