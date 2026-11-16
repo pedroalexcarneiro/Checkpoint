@@ -1,5 +1,17 @@
 # Próximos passos
 
+## Após as correções 0.1.39
+
+Concluir gates Linux/Windows/pacote e publicar somente após aprovação dos gates,
+conforme autorização posterior expressa do dono. Não declarar o projeto inteiro
+concluído: console depende de cobertura/identidade/plano comprovados; saves/Drive
+precisam de escopo e autorização separados para upload. A4 e fechar somente ROM
+com emulador vivo seguem separados, sem troca automática de ROM.
+
+Homologação no PC do dono: UAC/conta/cofre, captura real, emuladores/launchers,
+DPI/monitores nativos e uso do pacote atual. Capturas de fixture e runner não
+substituem essa homologação. Diagnóstico/propostas em DIAGNOSTICO_INTEGRACOES_0139.md.
+
 ## Após a correção 0.1.38
 
 Hotfix de abertura publicado em c4a7e1d após 700 testes Windows, abertura nativa do executável extraído e conferência dos dez arquivos. Próximo retorno esperado: confirmar abertura no PC do dono. Homologação de UAC interativo/moldura/captura/contas/emuladores e capacidade de preços console continuam separados. A4 e fechar só ROM mantêm seus limites. Autorizações anteriores não substituem decisão sobre novas versões.

@@ -1,10 +1,35 @@
-# Checkpoint 0.1.38 — correção de abertura
+# Checkpoint 0.1.39 — correções e polimento
 
-- Corrige uma falha na criação da janela do Windows: o tratamento de mensagens podia pedir ao Qt que criasse novamente a janela antes de terminar a criação original.
-- Usa o identificador da janela entregue pelo Windows e mantém os controles integrados.
-- Acrescenta validação da abertura normal do fonte e do executável extraído, com janela nativa visível/responsiva, captura, fechamento e integridade do banco.
-- Mantém schema 4, biblioteca, sessões, arquivos, perfis e cofre; a correção funcional não altera os serviços de dados.
+Correções da 0.1.38 e polimento da interface.
 
-Validação: 700 testes Windows e 700 Linux aprovados; build, smokes, abertura normal do fonte/executável extraído, captura, fechamento e SQLite aprovados. ZIP conferido por checksum e CRC. Os testes de abertura normal são executados em Windows já elevado; não automatizam consentimento UAC nem homologam contas/emuladores/jogos no PC do dono. As limitações anteriores de fontes de preço, A4 e fechar somente a ROM permanecem.
+- Início usa a largura disponível com margens curtas, Últimas sessões reais
+  (incluindo sessões distintas do mesmo jogo), cards menores, capas inteiras
+  arredondadas, navegação responsiva e setas equivalentes.
+- Resumo semanal adaptável e Ofertas em linhas com miniaturas arredondadas,
+  identificação, origem e preço conforme a política de lojas.
+- Desejos mais compactos e com mais colunas; ficha exclusiva e favoritos preservados.
+- Diário compacto na aba própria; na visualização mista, nota e captura têm
+  áreas de prévia equivalentes, texto íntegro e leitura acessível.
+- Jogos concluídos integrado ao filtro de Estatísticas, usando a última data
+  de marcação já gravada, sem inventar histórico ou criar datas pelo status.
+- Foco do teclado dentro das capas de Aparência; tema Preto com superfícies neutras.
+- Abas Emuladores e Lixeira: perfis existentes reutilizados e restauração
+  individual em cards com logo, nome e data real ou Data não registrada.
+- Seleção de perfil pela ficha, gerenciamento com botões agrupados e aviso
+  explícito para perfil em uso; remover configuração preserva arquivos.
+- Diálogos próprios com tema, botões em português, espaçamento e limites da tela;
+  seletores nativos e UAC mantêm o comportamento do sistema.
+- Lista da Biblioteca com espaço estável para rolagem; ícones primários na cor
+  do texto; nomes longos de ROM e saves tradicionais com composição compacta.
 
-A versão 0.1.37 e seus arquivos publicados são preservados. Resultados e evidências em RELATORIO_0138.md.
+## Pendências e limites
+
+- Consulta real de preços de Switch/PlayStation/Xbox não foi comprovada na API
+  atual. Filtro de plataforma não significa suporte console pronto.
+- Backups de saves são locais; não existe upload/sincronização implementado
+  para o Drive. A integração de ROMs usa acesso de leitura.
+- Fechar apenas a ROM com o emulador aberto continua exigindo encerramento
+  manual do registro quando necessário; não há reconhecimento de troca de ROM.
+- A4, dados, schema 4, identidades, cofre, originais e histórico preservados.
+- Testes em runner não homologam contas, emuladores, captura, consentimento UAC
+  ou uso no PC do dono. Resultados efetivos acompanham o relatório de lançamento.

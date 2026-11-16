@@ -1,5 +1,23 @@
 # Estado atual — Checkpoint 0.1.38 publicada
 
+## 0.1.39 — rodada de correções
+
+Implementação local na branch fix/0.1.39-polimento, da base normal 0.1.38;
+lançamento autorizado depois das verificações. Interface revisada por capturas
+reais/fixtures e testes direcionados; suíte integral Linux final aprovada: 752 testes em 577,63 s, exit 0.
+Pacote Windows ainda será validado pelo workflow; sem homologação do PC do dono.
+
+Entregas: Últimas sessões reais e compactas, Ofertas em linhas, Desejos menores,
+Diário consistente, métrica de conclusão com significado explícito, foco de capas,
+Preto neutro, abas Emuladores/Lixeira, perfis compatíveis na ficha, restauração
+individual e datas ausentes sem invenção, nomes de ROM/saves/rolagem/diálogos.
+
+Pendências importantes: preços console sem oferta autenticada comprovada;
+saves têm backup local e não upload Drive. Não declarar projeto inteiro pronto.
+A4 e fechar apenas ROM mantêm seus limites; dados/schema 4/cofre/assets
+preservados. Somente ImageDialog.__init__ teve exceção protegida autorizada.
+Detalhes e validações: RELATORIO_0139.md e DIAGNOSTICO_INTEGRACOES_0139.md.
+
 ## 0.1.38 publicada — correção de abertura
 
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.38

@@ -1,5 +1,28 @@
 # Arquitetura
 
+## Correções de apresentação 0.1.39
+
+home_data.recent_sessions projeta play_sessions existentes sem deduplicar jogo;
+serviço legado recent_games preservado. Início libera largura com margens 24 px,
+GameStrip usa a medida mínima do botão para escolher quantidade e limita artes
+inteiras a 210 px; HomeOfferRow usa miniatura contida com quatro cantos arredondados.
+
+EmulatorProfiles reutiliza SQL/IDs/argumentos na aba e em EmulatorDialog;
+ExecutionProfileDialog salva apenas perfil compatível em rom_versions, sem
+iniciar/baixar ROM ou alterar identidade. trash_view só lê/restaura registros,
+com data real/fallback; não há exclusão definitiva nova.
+
+dialog_style contém fábricas explícitas AppMessages/AppInputs e apresentação
+opt-in por modal. Sem filtro global, interceptação de construtores, temporizador
+ou alteração de seletores nativos. Limites/centro são recalculados em Show/Resize.
+ImageDialog.__init__ é a única exceção protegida autorizada; demais bytes do
+prefixo de dialogs.py preservados, sem normalização incidental de CRLF legado.
+
+Métricas/saves/tempo/identidade mantêm serviços e schema 4. completed_at é última
+marcação de conclusão, não histórico de todas as conclusões. Drive permanece
+read-only, sem upload de saves; provedores de preços não foram ampliados por
+inferência. Ver DIAGNOSTICO_INTEGRACOES_0139.md.
+
 ## Correção de criação da janela 0.1.38
 
 O handler Windows usa MSG.hWnd do callback e não invoca QWidget.winId durante criação/destruição nativa. Esse getter pode recriar a janela quando o Qt ainda não associou o handle. native_startup_check.py valida externamente a abertura normal em Windows já elevado do fonte e do executável extraído, com plugin Qt windows; não acrescenta modo especial ao produto nem automatiza consentimento UAC.

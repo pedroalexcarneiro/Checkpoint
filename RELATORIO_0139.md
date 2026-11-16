@@ -4,6 +4,23 @@
 Plano: PLANO_0139.md. Este relatório distingue reprodução local, relato,
 documentação do provedor e homologação Windows. Não é declaração de conclusão.
 
+## Gates finais Linux
+
+- **752 passed in 577.63s (0:09:37), exit 0**, Python 3.12.14, Qt 6.8.3
+  offscreen, CHECKPOINT_TEST_ROOT=/tmp. Código/testes congelados em
+  8dd4c24a9aa73d716dc5c2bd7fc9f805e2a44767; depois só documentação/capturas.
+- Smokes do fonte: seis páginas/worker/SQLite e cadastro completos, exit 0.
+- Verificação: schema 4, main AST de bootstrap igual, oito paletas intactas,
+  assets/workflows/protegidos iguais, exceto método autorizado. Novos/modificados
+  textuais UTF-8/LF; prefixo CRLF protegido preservado na exceção declarada.
+- 27 screenshots reais com manifesto/hashes em evidence/ui-0.1.39; DPR 1,5/2
+  adicionais guardados externamente. Sem dados pessoais.
+- 20 patches integrais/hashes registrados abaixo; documentação final posterior
+  não muda o código testado. Logs completos de 68 comandos nesta etapa em
+  RELATORIO_0139_TESTES.md, incluindo falhas e protótipos descartados.
+- Windows/build/executável extraído/publicação: próximos gates, sem alegação
+  antecipada de sucesso. A expansão de preços console continua bloqueada.
+
 ## Estado inicial e evidências
 
 Base normal 0.1.38: 9dd9c93ce7baf0051bbc783323b401d4ba8c7059, checkout limpo.
@@ -291,3 +308,58 @@ em cada lado enquanto demais páginas mantêm limite anterior; título Últimas
 sessões preservando Resumo/Memórias e ação correta de Continuar. Não há alteração
 no produto neste ajuste, nem relaxamento de asserções de dados ou contratos.
 Nova suíte integral será executada com essas expectativas aprovadas pelo escopo.
+
+## Quadro de entrega e rastreabilidade
+
+
+| Item | Status | Commit(s) | Arquivos e funções | Evidência e limite |
+|---|---|---|---|---|
+| 3 / 3.1–3.5 | feito em código; revisão específica registrada | c08f268, e60def3, 9856afc | home_view.build_home; home_data.recent_sessions; RecentGameCard/RecentArtwork/GameStrip/HomeOfferRow/HomeSectionHeader; MainWindow.navigate | Capturas antes e depois; sessões repetidas, foco, quatro bordas/cantos, CTA, limites e semana; 40/26/30 testes direcionados nos logs |
+| 4 | feito | e8d1675; 8dd4c24 | collection_views.WishGrid.reflow | Alvo 240/teto 280, 1:1, mais colunas; 20 testes direcionados, dois/vários desejos normal/maximizada |
+| 5 | bloqueado | 64d64de | DIAGNOSTICO_INTEGRACOES_0139.md; provedores não alterados | HTTP 200/doc hash registrado; sem oferta console autenticada ou contrato de plataforma/edição comprovado |
+| 6 | feito; complemento visual aplicado | a367b4d, 192ed37 | collection_views.memory_card/MemoryGrid/build_memories; MemoryCarousel | Diário compacto e grade mista com prévia 160; texto/cancelamento/arquivos preservados; capturas e 18/28/4 testes |
+| 7 | feito com significado explícito | ddac441 | statistics_view.render_statistics | Última marcação completed_at existente, não histórico inventado; 15 testes e captura estatisticas-conclusoes |
+| 8 | feito | 0aa66ed | settings_previews.CoverChoice | Mouse sem contorno externo, foco do teclado dentro da capa; 24 testes, cinco opções e valores preservados |
+| 9 | feito | 1a9630d, da0e847, 92ae641 | EmulatorProfiles/EmulatorDialog; ExecutionProfileDialog; MainWindow.configure_execution | IDs/argumentos/plataformas/vínculos; edição, remoção confirmada/in-use bloqueado, seleção compatível, cancelamento/reabertura; botões aprovados pelo dono |
+| 10 | feito | da0e847 | settings_view.build_settings; trash_view.build_trash/deletion_label | Cards com logo/nome/data/Restaurar, homônimos distintos, Data não registrada; restauração individual e integridade |
+| 11 | feito | ff00484 | library_list.LibraryList.__init__ | Gutter 16 lógico/barra estável; lista/favorito/teclado/rolagem preservados |
+| 12 | feito em ambiente controlado; homologação nativa parcial | 1a9630d, 45a49d8, a563c5e, 92ae641 | dialog_style; construtores opt-in; ImageDialog.__init__ autorizado | Português, padrão/cancelamento/Escape, limites/Resize, FittedImage e abertura; seletores nativos/UAC preservados; 57/73/62 testes nos lotes |
+| 13 | feito | 4544f16 | ui_components.action | Ícone primário on_accent e disabled; pixels comparados; logos de serviço intactas |
+| 14 | feito | 3fcbfda | theme.THEMES[black]; ThemePreview | Superfícies neutras; oito outras paletas exatamente iguais; 23 testes de tema/contraste, capturas |
+| 15 | feito | a187482 | detail_view.build_detail; ui_components.ElidedLabel | Nome ocupa centro, elipse/dica integral, status abaixo e ação à direita; 1000/1280/1920, dois jogos |
+| 16 | feito na composição existente | a187482 | detail_view.build_detail | Uma ação no vazio e no configurado, pasta integral/último backup real; sem alterar serviços |
+| 16.1 | diagnóstico feito; sincronização remota não implementada | 64d64de | DIAGNOSTICO_INTEGRACOES_0139.md | ZIP local, caminho e restauração documentados; Drive read-only; proposta separada de upload |
+| 17–19 | preservados nos testes disponíveis | 9856afc; verification-result.json | Dados, A4, tempo, UAC, favoritos, ROM local, captura, saves/schema/cofre/assets | Bytes/AST verificados; único método protegido excepcional documentado; sem dados pessoais ou nova migração |
+| 20 | Linux aprovado; Windows a validar | 8dd4c24 | Suíte integral e smokes | Resultados atuais em RELATORIO_0139_TESTES.md; não reaproveitar falhas/interrupções como aprovação |
+| 21 | capturas feitas; limites explícitos | 9856afc | scripts/render_0139_review.py; evidence/ui-0.1.39 | 27 PNGs + manifesto no Git; 20 capturas adicionais em cada DPR 1,5/2 fora do Git. Fixtures Qt/Linux, não Windows do dono |
+| 22 | relatórios e notas preparados; lançamento autorizado depois | 64d64de e documentação final | PLANO/RELATORIO/TESTES/NOTAS/DIAGNOSTICO/LANCAMENTO e docs atuais | Revisão por commits/capturas; sem publicar suporte console não comprovado |
+
+## Patches dos commits de implementação e testes
+
+Intervalo fechado: 9dd9c93ce7baf0051bbc783323b401d4ba8c7059..8dd4c24a9aa73d716dc5c2bd7fc9f805e2a44767.
+Cada arquivo foi gerado por git format-patch -1 <sha> --stdout. Patches integrais
+em /workspace/work/evidence-0139/patches; documentação final e pós-publicação
+posteriores ao intervalo continuam no histórico Git, sem reescrever os commits.
+
+| SHA completo | Assunto | SHA-256 do patch |
+|---|---|---|
+| ffbc816980845456f0b56395c4b0a04af2334431 | docs: registrar escopo local e validacao da 0.1.39 | 922c581e74af031166f3f184bbb0b47362eeaff139f09998fe5e25f6c5f41bfd |
+| c08f268761c090ce41bb52ca34839aed46cdf6d2 | fix: compactar Inicio e navegar por sessoes reais | 427cbde3bedd11b845cc2a2459cfc51a44184bfea38cd6cc7a902ae5494bc5dd |
+| e60def39bae0fb8df39f771a93f046f33960f5a5 | fix: retirar fundo escuro ao redor das capas recentes | 573560aad319c73e2f6265e31786355ccf973fa2069a0dc20975c3da1def4f51 |
+| e8d167543b1fe80009a872e109205ab7f160a59e | fix: reduzir cards de Desejos e ampliar quantidade de colunas | c0413f5cd185ab020b94b6da054df91dd4bb6362a01fbcc22800701762e0ac18 |
+| a367b4de3ff8a24aea363f198e1b465f48508ae0 | fix: compactar Diario preservando grade mista de memorias | c6072378492088f15e7232e654a3f49bb8747253ac2a15458774817eaf6f33be |
+| ddac44190d1ed6fd0c7f037417df9da3047c4250 | fix: integrar conclusoes registradas ao periodo de estatisticas | 79a985ff70d015910af16581d2d4f4e615bbaac3b41aa7e4cbca7d5b89717ddd |
+| 192ed37fc5359989574af3a0257bad41db9abb01 | fix: alinhar previas de Diario e capturas na grade mista | bf32d9d25e04c39e16eb75c2062b2ffe067cb99e43d3521b1e4ff82717216cbc |
+| 0aa66ede160c2dc764d238e17db551c7f5a1a37e | fix: manter foco das opcoes dentro da propria capa | e201b97e78477195514ed7c3a0a8c435334f32fb2e934770b861f83b426ce9ab |
+| ff004842ce1b5dfead822111c8e4d43035a2d196 | fix: reservar espaco estavel entre lista e barra de rolagem | f857124056d7381013bdecbce51accd5405dc68736e8a96ae40b7532b2857bf6 |
+| 3fcbfdae53f2d1a1433efadb21ba0b01cefb5586 | fix: usar superficies neutras no tema Preto | c35e5cf45ccb0e2b240b36731d095afcedda002ab27a1cafd15c5b4764dc0bd6 |
+| 4544f16d3818e3bc8e3ed2ee96e2eefbd8dd4ec3 | fix: harmonizar icones primarios e rotulos de linha unica | c2e2c3284359f33ac3adbde9ae9362ac1ac659327cbe4a245e6e36d4451dfe0a |
+| 1a9630df8d7d34e29529aabd4a0475d8c010a714 | fix: padronizar dialogos de execucao e preservar perfis vinculados | cdf6d14dcaa206bbd8ddf20f34a5ef2ef667fb9d53701b024261ebc097e6e214 |
+| da0e847c3352c803b0b7ede42fc3380f7c1218c9 | fix: expor Emuladores e Lixeira com cards e restauracao individual | 19f8f89f6d93d0a2aec33a515c6b041ce5266fe2271b5e1531cd9869b7eff5b4 |
+| a187482d232a628a42badc824fe9cb3fdf5ed442 | fix: organizar nomes de ROM e compactar saves na ficha | a5e6da85fa5312f857477bdecea68a0ffeb5f84a2cc32a41a902c26ad2934789 |
+| 45a49d8e510a1586c641ade4327b7ced2abe5b77 | fix: adaptar visualizador de capturas na excecao autorizada | 789ce47e0f01183707b72526294d417f8144f844bdc1aedc23e6aaad950eef9d |
+| a563c5ef88ba0591587e4c6f3558777553f2dadc | fix: aplicar apresentacao comum aos demais dialogos do app | 51865a004247bb50d3ff6197ca7a5444300cf2cd4adbf2145c3f191c32e26fc1 |
+| 92ae641f775d35954648fda2a62a6823872a43e5 | fix: fechar revisao de botoes e espacamento dos avisos | 4636faa095eb26127146fa4c77803d038acb6bfe5e08ea6f259544b7a09c35bb |
+| 64d64de0801aadfddf2f90610a304b4b82921003 | docs: preparar 0.1.39 e registrar limites das integracoes | 3473f653140574de9f76bcc19d51114dc7cce7a229d101008395e64a2adab90a |
+| 9856afcfbde9d2b98130d127eb25fd9fb8072540 | fix: preservar cards e foco ao redimensionar carrosseis | d29bfc2e430572f75707c3e9f69837f4ac42f82003008bae1cf52e66b926a318 |
+| 8dd4c24a9aa73d716dc5c2bd7fc9f805e2a44767 | test: alinhar contratos visuais aos requisitos aprovados da 0.1.39 | c51d1dc08fee1f7fc361633bbd92cb709db96456fd3d53b82a39fd878a9ff154 |

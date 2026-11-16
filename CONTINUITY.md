@@ -1,5 +1,32 @@
 # Continuidade do Checkpoint
 
+## 0.1.39 — correções em validação e lançamento autorizado
+
+Branch fix/0.1.39-polimento, base normal 0.1.38 em 9dd9c93. Variante sem
+administrador preservada. Pedido inicial local; após revisar botões/aviso e ser
+informado da pendência console, o dono autorizou: “quando finalizar, pode já dar
+release no github”. Não mover tags/releases anteriores nem usar force push.
+
+Início em largura útil, Últimas sessões sem deduplicar jogos, cards/arte compactos
+inteiros/arredondados e ofertas com miniaturas; Desejos compactos; Diário com prévia
+proporcional na grade mista e altura compacta em Diário; conclusões pela última
+marcação já persistida; foco na capa e Preto neutro. Emuladores/Lixeira em abas,
+perfis/vínculos preservados, restauração individual com data real/fallback,
+nomes longos e saves compactos, ícones e diálogos em português/tema.
+
+Única exceção nova protegida: ImageDialog.__init__, autorizada expressamente;
+GameDialog/QuickAdd/A4 e demais protegidos intactos. Schema 4, UAC e dados
+preservados. Suíte integral Linux final: **752 passed in 577.63s**, exit 0, sobre
+8dd4c24; código preservado após a execução. Smokes de seis páginas/cadastro/SQLite
+e verificação de contratos aprovados. Validação/publicação Windows a seguir. Capturas
+Qt reais em 100/150/200%, bancos isolados; não homologam Windows do dono.
+
+Consulta console continua bloqueada por capacidade/identificação/autenticação;
+backup de saves é local, sem upload Drive; fechar só ROM continua limitação.
+DIAGNOSTICO_INTEGRACOES_0139.md detalha provas e propostas. PLANO_0139.md,
+RELATORIO_0139.md, RELATORIO_0139_TESTES.md e RELATORIO_LANCAMENTO_0139.md
+registram andamento/gates/SHAs/resultados, inclusive tentativas descartadas.
+
 ## 0.1.38 publicada — correção de abertura
 
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.38

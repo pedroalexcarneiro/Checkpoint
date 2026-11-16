@@ -22,3 +22,13 @@ saves sem upload Drive e limitação de fechar apenas ROM com emulador vivo.
 Runner Windows não equivale a homologar uso/contas/captura/UAC no PC do dono.
 
 Resultados, SHAs, run, assets e SHA-256 serão registrados após as verificações.
+
+## Gate Linux aprovado
+
+752 passed in 577.63s (0:09:37), exit 0, Linux/Python 3.12.14/Qt offscreen,
+CHECKPOINT_TEST_ROOT=/tmp; código/testes em 8dd4c24a9aa73d716dc5c2bd7fc9f805e2a44767.
+Primeiras tentativas/falhas integralmente preservadas em RELATORIO_0139_TESTES.md.
+Smokes de seis páginas/worker/SQLite/cadastro aprovados. Verificação de bytes,
+AST de bootstrap, schema 4, assets, workflows e oito paletas aprovada.
+Após esse código só documentação/capturas/notas públicas; o envio levará essa
+mesma árvore de aplicação/testes ao workflow Windows release, sem mudar o YAML.

@@ -1,5 +1,20 @@
 # Integrações
 
+## Diagnóstico atual 0.1.39
+
+DIAGNOSTICO_INTEGRACOES_0139.md registra nova consulta HTTP 200 à documentação
+oficial GG.deals em 16/11/2026 (hash 922fb4560bb1cccc7be1e55b1cb905e823b21f73d0db8a8f05a1069cce1964c1),
+endpoint by-slug, ausência de prova de plataforma/edição/plano e ambiente sem
+cofre Windows. Consulta real console continua bloqueada; não foi implementada
+nova fonte/scraping nem relaxada a política de preço/identidade. Filtro não é consulta.
+
+Backup de saves funciona localmente em save_backups/<game_id>, com ZIP/manifesto/
+SHA-256 e restauração preservando versão anterior. Drive usa drive.readonly;
+não há upload de saves apesar dos campos legados drive_id/drive_folder_id.
+Proposta separada de credencial drive.file/serviço independente não foi executada.
+ROM local, perfis e fluxo Drive preservados; nenhuma integração autenticada do
+dono é presumida a partir das fixtures ou do runner.
+
 ## Capacidade e limites da rodada local 0.1.37
 
 Documentação oficial https://gg.deals/api/prices/ inspecionada nesta rodada, cópia SHA-256 1c46c85b1f61b6e52cc055d342f539d2a4d4c21bb110c5117c320465a5a1f544. Endpoint by-slug documentado com key/region, mas resposta não comprova plataforma/edição/loja individual/original. Não há conta/chave autenticada do dono neste ambiente. Consulta console e original individual da API continuam bloqueados, sem novo scraper/fonte. Dropdown PC/Switch/PlayStation/Xbox em Desejos filtra dados existentes e não amplia cobertura de preço. PC não é identidade universal.

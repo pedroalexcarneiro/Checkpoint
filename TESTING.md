@@ -1,5 +1,25 @@
 # Validação do Checkpoint
 
+## Rodada atual 0.1.39
+
+Base normal 9dd9c93: 700 testes Linux passaram em 557,77 s antes das mudanças.
+Reprodução final dos novos contratos na base isolada: 33 falhas em 4,12 s.
+Suíte integral final Linux: **752 passed in 577.63s (0:09:37)**, exit 0,
+código/testes congelados em 8dd4c24. Os quatro últimos ajustes foram somente
+expectativas de layout expressamente substituídas. Resultado integral registrado
+em RELATORIO_0139_TESTES.md com stdout/stderr/exit/comando/ambiente integrais.
+
+Novo renderizador scripts/render_0139_review.py cria banco/arte/tempos/preços
+sintéticos isolados e captura app Qt real, incluindo showMaximized/showNormal,
+1280×800/1920×1080/1000×700 e DPR 1/1,5/2 em tela virtual apropriada. Manifesto
+registra dimensões/estado/escala; não é mockup nem homologação Windows.
+
+Fábricas próprias de diálogos têm testes reais de modais, português, Escape/
+cancelamento/padrão, espaçamento e limites. Testes antigos que substituíam Qt
+passam a substituir a nova fábrica correspondente, sem alterar asserções de dados.
+Única exceção protegida é ImageDialog.__init__, com prefixo byte a byte verificado.
+Nenhum skip/xfail novo. Ver relatório para falhas intermediárias e protótipo descartado.
+
 ## Publicação 0.1.38
 
 Tag c4a7e1d; Windows release 43857996709: 700 testes em 633,27 s, zero falhas/erros/skips, build/smokes/abertura normal do fonte e executável extraído aprovados. Linux: 700 testes em 483,81 s. Dez arquivos baixados e digests GitHub/CRC verificados. Logs integrais e resultados em RELATORIO_LANCAMENTO_0138.md. O teste usa HWND nativo e executor já elevado; consentimento UAC no PC do dono não é automatizado. Registros anteriores abaixo são históricos.

@@ -1,6 +1,6 @@
 # Checkpoint 0.1.39 — preços por plataforma e saves no Drive
 
-Rodada local, sem publicação. Diagnóstico por inspeção do código e documentação
+Diagnóstico iniciado na etapa local, antes da autorização posterior de lançamento. Inspeção do código e documentação
 oficial obtida em 16/11/2026. Não houve consulta autenticada com a conta do dono.
 Nenhum token, banco pessoal, save ou ROM real foi acessado.
 

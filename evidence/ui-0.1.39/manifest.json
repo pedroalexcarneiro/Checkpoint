@@ -1,0 +1,455 @@
+{
+  "platform": "Linux Qt offscreen; não homologa Windows",
+  "fixtures": true,
+  "screenshots": [
+    {
+      "file": "home-normal-1280x800.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "9c03852286b54da30b4fc51f4bf5febe5dd8d3300e3261a1a502bb82f4d08128"
+    },
+    {
+      "file": "home-maximizada.png",
+      "window_size": [
+        1920,
+        1080
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": true,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "2b105e98c99bb57fe994534d938f6637d4eeacb4083da21c240033699d24592c"
+    },
+    {
+      "file": "home-restaurada.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "9c03852286b54da30b4fc51f4bf5febe5dd8d3300e3261a1a502bb82f4d08128"
+    },
+    {
+      "file": "home-1920x1080.png",
+      "window_size": [
+        1920,
+        1080
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "fa0cbf31b4e9713e90ecdb1f1e932b433cbaab6973640f813d8b6c6e400f10f6"
+    },
+    {
+      "file": "home-menor-1000x700.png",
+      "window_size": [
+        1000,
+        700
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "e236a457c80acdb62f3539acd4d734a01e4a3dfb245ae786e7850ac8b09ec8f6"
+    },
+    {
+      "file": "desejos-dois-normal.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "861330cce43ec1cc51e53c1a46076522c05b0831b09202f4a5681234d327d293"
+    },
+    {
+      "file": "desejos-dois-maximizada.png",
+      "window_size": [
+        1920,
+        1080
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": true,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "8cf9c13df852afcf503e543448b73bc2cd0e9dad5cfe741421560baa8d70e93c"
+    },
+    {
+      "file": "desejos-varios-normal.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "91994a5138e12f583e1a5c56545cb988c0ebcc6323a125a115b78c4ad399d40e"
+    },
+    {
+      "file": "desejos-varios-maximizada.png",
+      "window_size": [
+        1920,
+        1080
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": true,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "4f8e86c888bb5ba6b186b420920cbce900f4de75085beb55e7bf43993a23ac56"
+    },
+    {
+      "file": "memorias-mista.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "d1b2a0b3ea67a376124afab3a159b1daf8bb4613c6c2b49d65969e100e779f90"
+    },
+    {
+      "file": "memorias-diario.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "ec58842e210d6b31774b3ad639d4b19554bd058ed823a62c8e4aff5360f729d1"
+    },
+    {
+      "file": "capas-70.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "0950ccca4e6ecf8ae3fecccd1025149aec34ff42dd03626b75e50c79610c97c7"
+    },
+    {
+      "file": "capas-150.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "0950ccca4e6ecf8ae3fecccd1025149aec34ff42dd03626b75e50c79610c97c7"
+    },
+    {
+      "file": "tema-preto.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "e66f6dc1d087f436080dc06a89ddc96e61ea602727729976927cecaa18b1c73f"
+    },
+    {
+      "file": "tema-preto-biblioteca.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "63840a8b7bb5ae8166e0d535a4d726de4b039cc5dbc9b8c781875940e9d3cb7c"
+    },
+    {
+      "file": "arquivos-saves-vazio.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "e33a3b724c9904ddcc00627276b7bb20bdaa2cdcb777f542de77ad62b41c21d9"
+    },
+    {
+      "file": "arquivos-saves-configurado.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "fa603c1c24f98f6b74905b4caf0ed391c81a4f6d94f2d8952be1932c914b9ff9"
+    },
+    {
+      "file": "config-emuladores.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "d34f6f8f303950ec9c2874982da1b0485cf430b540ff14314dd88bca357b7074"
+    },
+    {
+      "file": "config-lixeira.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "07065f7ce858d52caf3f4009e5ae68a0b072ae5164ea4d3f502e914eb55bffd2"
+    },
+    {
+      "file": "estatisticas.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "be8bc28aa253c959c16f4c407dcec7dd00292fb831d7990a28a1102444a34a3c"
+    },
+    {
+      "file": "estatisticas-conclusoes.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "9f285c6d678c9161cc10c8ed7bd12684ba67592fd25bd9dbe0bf68a5d218e619"
+    },
+    {
+      "file": "biblioteca-lista-rolagem.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "fa2540cfc818188df31621d383fdefe5ad742c5da4fd36d700f6f66e6a40f403"
+    },
+    {
+      "file": "dialog-origem-rom.png",
+      "window_size": [
+        460,
+        228
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "5b3f53fba846f684d0a6e80d4d2ab81fcfd99be7dde10bf425bb5cdec5b7321e"
+    },
+    {
+      "file": "dialog-rom-local.png",
+      "window_size": [
+        680,
+        480
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "c11851dd11f1a5c4bdeee443b1e95b8a8a84a03367754cb6820203882e1a61ab"
+    },
+    {
+      "file": "dialog-emuladores.png",
+      "window_size": [
+        720,
+        655
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "a993506004dc3a34c51abd32bd3d83019487357912a86c82ca8175f7ca80c097"
+    },
+    {
+      "file": "dialog-historico.png",
+      "window_size": [
+        650,
+        500
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "85d69f8798801db9414c66102075a3f2dddf1ad8418f748684290549e01d0200"
+    },
+    {
+      "file": "dialog-confirmar-sessao.png",
+      "window_size": [
+        497,
+        145
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "sha256": "b44fba856c22c1e8105ce0eef2062c56ab46d224eb6584312ae766e64c39483f"
+    }
+  ],
+  "application_code_commit": "9856afcfbde9d2b98130d127eb25fd9fb8072540",
+  "updated_expectations_commit": "8dd4c24a9aa73d716dc5c2bd7fc9f805e2a44767",
+  "data_notice": "Fixtures próprias em banco isolado; nenhuma conta, ROM, save ou biblioteca pessoal. Screenshots Qt reais, não mockups ou homologação Windows.",
+  "dpi_runs": [
+    {
+      "directory": "dpi-150",
+      "count": 20,
+      "dpr": 1.5,
+      "location": "Evidência externa /workspace/work/evidence-0139; não copiada integralmente ao Git"
+    },
+    {
+      "directory": "dpi-200",
+      "count": 20,
+      "dpr": 2,
+      "location": "Evidência externa /workspace/work/evidence-0139; não copiada integralmente ao Git"
+    }
+  ]
+}

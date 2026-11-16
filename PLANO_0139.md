@@ -1,5 +1,15 @@
 # Checkpoint 0.1.39 — plano local de correções
 
+## Autorização posterior de lançamento
+
+Após revisar botões/aviso e ser informado da pendência console, o dono instruiu:
+“ok, quando finalizar, pode já dar release no github”. Isso autoriza enviar o
+código validado, executar o workflow Windows release existente e publicar a
+0.1.39 se os gates passarem. Não autoriza force push nem reescrever tags/releases
+anteriores ou alegar suporte console não comprovado. A restrição abaixo descreve
+a fase inicial; os demais contratos permanecem.
+
+
 ## Autorização e base
 
 Pedido integral recebido em 16/11/2026: correções da 0.1.38 e polimento,

@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.39 — correções em validação
+
+- Início amplo com Últimas sessões reais/compactas, navegação responsiva, capas
+  inteiras/arredondadas e ofertas em linhas com miniaturas.
+- Desejos compactos, Diário consistente, Jogos concluídos por registro já existente,
+  foco na capa, Preto neutro e espaço de rolagem na lista.
+- Emuladores/Lixeira em abas, perfis compatíveis pela ficha, restauração individual
+  com identificação e data real/fallback; nomes de ROM e saves reorganizados.
+- Diálogos próprios no tema/em português, ações explícitas e espaçamento revisto.
+- Schema 4, dados/A4/assets/UAC preservados; exceção ImageDialog autorizada.
+- Consulta console não comprovada e saves sem upload Drive continuam pendentes.
+  Lançamento autorizado após os gates, ainda sem confirmação de publicação.
+
 ## 0.1.38 — correção de abertura publicada em 16/11/2026
 
 - Mensagens nativas usam o HWND fornecido pelo Windows, evitando recriação recursiva da janela.

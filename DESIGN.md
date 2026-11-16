@@ -1,5 +1,31 @@
 # Referência visual do Checkpoint
 
+## Decisões atuais 0.1.39
+
+Início usa largura útil após lateral e margens 24 px, painéis alinhados pelo topo
+com alturas independentes. Últimas sessões corresponde a sessões persistidas,
+repetindo jogos quando o histórico repete. Cards pequenos, arte inteira limitada,
+sem faixa escura artificial; quantidade visível responsiva. Ofertas em linhas
+compactas com miniatura, não banners enormes; arte com quatro cantos arredondados.
+Setas são o mesmo chevron espelhado, com estados equivalentes e limites reais.
+
+Desejos tem alvo 240 e teto 280 px, arte 1:1 e mais colunas. Diário é compacto
+na própria aba; na grade mista a área da nota corresponde à da captura (160 px),
+texto à esquerda/topo. Conclusões é card Jogos concluídos no período, com última
+marcação por jogo explícita. Foco de teclado fica na capa, sem tracejado externo.
+Preto tem superfícies neutras e preview fiel; outros oito temas preservados.
+
+Emuladores e Lixeira são abas. Novo perfil fica junto da lista; escolher executável
+junto do campo; Remover/Salvar agrupados à direita, Salvar em destaque. Lixeira
+usa logo/nome/data/Restaurar, homônimos identificados e Data não registrada quando
+não há data válida. Diálogos próprios usam português, tema, margens e separação
+entre mensagem e botões; confirmação de sessão inicia com Cancelar como padrão.
+O dono aprovou a disposição dos botões e o respiro do aviso nas capturas posteriores.
+
+Sem copiar marca/ícones/datas de mockup nem textos decorativos. Capas, logos de
+serviço, wordmark e assets originais preservados. Capturas atuais são Qt real em
+Linux com fixtures; aprovação parcial de composições não é homologação Windows.
+
 ## Decisões atuais 0.1.37
 
 Referências principais: imagem A do Início e imagem B da Biblioteca em lista, com instruções posteriores do dono prevalecendo. Início: três capas inteiras em carrossel horizontal, status/última vez/tempo em uma linha cada, sem plataforma nesses cards; bases do bloco esquerdo e de Ofertas alinhadas. Ofertas é lista consecutiva no topo, com um banner inteiro por linha e nome/original/desconto/atual abaixo. Original e percentual ausentes quando não comprovados. Sem datas de consulta/histórico no rodapé.
