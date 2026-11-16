@@ -3092,3 +3092,25 @@ Fontconfig error: No writable cache directories
 ```
 
 Código de saída: 0
+
+## controles-uac-filtro-final
+
+UTC: 2026-11-16T01:42:46.323390+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_window_controls_0137.py", "tests/test_elevation_0137.py", "tests/test_wish_platform_filter_0137.py", "tests/test_wish_spacing_0137.py", "tests/test_loading_preview_0137.py", "tests/test_banner_resize_0136.py", "tests/test_visual_0132.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+..................................................................       [100%]
+66 passed in 7.14s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0

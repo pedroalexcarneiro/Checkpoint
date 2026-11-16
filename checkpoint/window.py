@@ -105,6 +105,10 @@ class MainWindow(QMainWindow):
         self.guard(lambda:self.capture_shortcut.setKey(configured))
         self.timer = QTimer(self); self.timer.timeout.connect(self.poll_sessions); self.timer.start(1000)
         self.statusBar().setSizeGripEnabled(False);self.statusBar().showMessage('');self.statusBar().hide()
+        from .window_controls import WindowControls
+        from .windows_frame import IntegratedFrame
+        self.window_controls=WindowControls(self);self.setMenuWidget(self.window_controls)
+        self.integrated_frame=IntegratedFrame(self,self.window_controls)
 
     def update_view_buttons(self,index):
         for i,control in enumerate(self.view_buttons):control.setChecked(i==index)
@@ -127,6 +131,14 @@ class MainWindow(QMainWindow):
         super().showEvent(event)
         from .window_style import titlebar_theme
         titlebar_theme(self,True)
+        if hasattr(self,'integrated_frame'):self.integrated_frame.apply()
+
+    def nativeEvent(self,event_type,message):
+        frame=getattr(self,'integrated_frame',None)
+        if frame is not None:
+            handled,result=frame.handle(message)
+            if handled:return True,result
+        return super().nativeEvent(event_type,message)
 
     def search_library(self):self.navigate(1)
 
