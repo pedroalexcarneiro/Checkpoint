@@ -249,3 +249,41 @@ Auditoria por git diff confirmou workflows, assets e arquivos protegidos idênti
 Entrega local preparada com documentos, relatórios, capturas e patches completos gerados por git format-patch -1 SHA --stdout e SHA-256 em manifesto externo. Hash do próprio relatório e do commit documental constam no manifesto externo após o commit, evitando referência circular. O lançamento autorizado, seu SHA, execução Windows, testes/build/smokes/arquivos e resultado são registrados em RELATORIO_LANCAMENTO_0137.md; preparar documentação não é afirmar que publicou.
 
 Continuam parciais/bloqueados: preços console/original da API sem prova autenticada; moldura/UAC/captura elevada/launchers/contas/emuladores e uso real no Windows do dono; A4 e fechamento apenas da ROM. Não declarar a rodada inteira concluída com essas pendências. Esta entrega conclui a implementação/verificação local possível e explicita o que não foi homologado.
+
+## SHA-256 dos patches integrais do candidato enviado
+
+Gerados por git format-patch -1 SHA --stdout; cada comando terminou com exit 0 e stderr vazio. Até o SHA enviado a33f48afbb8502a2f128de453451f326e8c988c2. Registros documentais posteriores têm patches e hashes adicionais no manifesto externo final.
+
+```text
+bf80f14b70206f2b9dcef119926fc360ee8277454be000fed27380123fb4b27b  01-05f3aaf0487601a3e4b51b69cab47e7b847b6d72.patch
+aa2cd1074f827a862ffd32500ca33417ab26463334a2d35ac4b7c18a00c48e50  02-7dcd020dd06f05e8722ad7b654a0ab2837be9531.patch
+3118b3525dbbdf0e85556a6c516204cb324e1b7525c57176e607f2ae46199522  03-4d38531ec8cc4ed9c9516768a4ea172f6ce274f0.patch
+9a2e99d084c641dd43c87c213015938470898d4cae76a8186274e39e7a60bf34  04-8a66e32eeb97501dc427c7e3d2819a3eb564bbfb.patch
+0524b945e0600cd3622cbe58d63dcf68e4d94f1c3529d4408e46797ee4e1b1eb  05-dbbea93600d9528d48e0cddc8b36df93ae9ecba1.patch
+c00263504fdaf448a3f61ab01b4b098bfbde1fb2b42348442d78e63092b104bc  06-c2b1773583f98a8c2d909955dc2f82c503391359.patch
+c0e513bf00f82f66897b37625a917d22f810c1c9e8a75d9b3645f7f59a927654  07-f356e59cf16cdf046a919520cde14aa4ab7e1d14.patch
+c1f2e7a385da85e37222cfa84fff7af4ecf7fbf9a7cdac953b19bc4b0bd51628  08-2450275407d336258a368787fc0a1e13e1ce0715.patch
+d538013a763e7d383c115d12c8e713f35a39b1e77537b305151c4828e6b89ec6  09-63c7de2d8953e24e4f6ce7831cce1439375e0207.patch
+9f0aed79d0a79b35f0cdcd3a8a3a7b7162084d4a4defe5203ef9ea04a263e9ec  10-3d7c132b41ed05e05a53e605d0c2ea1cef0ac085.patch
+fdd30c01984525f27ac321fd51220791c655b513721d67dfc99d4386b796985d  11-fc19ac9e5cd620ed908221d0994e61094e66fbfa.patch
+fa735d5774bcc49f5b09d5a7e0f530feaa2d9b419189ed27d9095b90f3af8c34  12-058fa536a90c75dde1bdf0e7dac49bedb12947a8.patch
+a7366e1ac2e00106ed99ccfbc124724ce2e1f8254001c71f56f40cf4fa4e60cc  13-a1505a175224d1bbe2b02a91adfe732d0e2a8bbe.patch
+24416152f390e88c45d0e90b8efa6ba0a9b0f04dce0de6ff98c3b5ea7bf4e47e  14-d6a373b6cdc7e737d693bfd9299242ce83ff8560.patch
+af875536d5d600f4eed55dd05156e14d1664d6831b493a0547be1ba64f3f972f  15-36a314687a1ca5542688dcefc06685cca4420c1f.patch
+dae41bfdf77d9333e9597d7b84b02dfe4e8ce959790c3fb1fcd047afe5dce7bc  16-29f5db5d16467468542d76ed18050cba3af0cb76.patch
+f2ba883ac3101d454a021661736a7955a4b24c14b74193dcf62ce40c01fd43a4  17-c4b0e99e1de11e392c073077cf9b431c4c7f4e08.patch
+efa5a7f7add200ee8065b8a51e6444b0979c1b6fd8e58abc242e1fe3b1f0869e  18-e06e4f1adf2b523f66486d8e4a9e592d19441f6b.patch
+0d12ea98494dd1934899b3aa271069cf9ff89449a3b535801b5a2bbb38469776  19-27e304df2380098847a4b8472e0ffd8e431ece85.patch
+242edd3a44fe82fbca87442d33604e58adc276939f27ff5424cbe2e03b290d2e  20-2565e579cd530847a859dcf226a52ade6482abc3.patch
+84d42d2195b96067e995cfe76009ffd4d235639289d8ed216068ad932c9a8304  21-41f382687c0a566313bf9f923a40c36ae9f8c280.patch
+d66501b92ab6f31562e6fbd25981001fb7692036627ef83af0ff0cc7d81fca01  22-f543166037e545aad99c6aef21bf6ed95fe4bb10.patch
+8c668e9ff29e3910ec09bbebc354e0e6fbd31acec663424b3e69613c4cc6b925  23-a33f48afbb8502a2f128de453451f326e8c988c2.patch
+```
+
+## Complemento de evidência de Aparência
+
+As capturas gerais da aba começam no topo dos nove temas; na janela menor, o controle de tamanho fica abaixo e exige rolagem vertical, conforme permitido. Conjuntos adicionais capas-controle-final, capas-controle-dpi150 e capas-controle-dpi200 mostram o próprio controle visível após ensureWidgetVisible, nas opções 70/150 em 1280×800/1920×1080, com dois jogos isolados. São grabs reais do mesmo aplicativo; nenhum código de produção foi alterado para essas imagens. A evidência adicional evita usar uma captura do topo como prova visual de um controle fora da área visível.
+
+## Correção da validação Windows — limpeza do teste dos controles
+
+Primeiro candidato enviado a33f48a não foi publicado: execução 43790327035 encerrada após bloqueio reproduzido no próprio teste. O spy de close permanecia ativo na limpeza da fixture, deixando o atalho nativo registrado; a próxima janela bloqueava em conflito. Reprodução controlada teve dois erros antes e três aprovações depois. tests/test_window_controls_0137.py usa agora monkeypatch.context apenas na verificação do encaminhamento e depois fecha a janela pelo botão real, exigindo invisibilidade e liberação do atalho. Sem mudança em código do aplicativo ou qualquer asserção anterior. Suíte Linux e execução Windows serão repetidas no novo commit; histórico não reescrito. Logs e contagem/ordem da interrupção no relatório de lançamento.

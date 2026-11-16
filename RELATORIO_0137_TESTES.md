@@ -3634,3 +3634,165 @@ This plugin does not support propagateSizeHints()
 ```
 
 Código de saída: 0
+
+## capas-controle-visivel
+
+UTC: 2026-11-16T02:13:04.036048+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "/workspace/work/evidence-0137/capture_cover_choices.py", "/workspace/work/evidence-0137/capas-controle-final"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/capas-controle-final
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 0
+
+## capas-visiveis-dpi150
+
+UTC: 2026-11-16T02:14:46.583134+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "/workspace/work/evidence-0137/capture_cover_choices.py", "/workspace/work/evidence-0137/capas-controle-dpi150"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/capas-controle-dpi150
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 0
+
+## capas-visiveis-dpi200
+
+UTC: 2026-11-16T02:15:13.818398+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "/workspace/work/evidence-0137/capture_cover_choices.py", "/workspace/work/evidence-0137/capas-controle-dpi200"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/capas-controle-dpi200
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+
+```
+
+Código de saída: 0
+
+## janela-lifecycle-atalho-antes
+
+UTC: 2026-11-16T02:23:47.025814+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_window_controls_0137.py", "-p", "hotkey_cleanup_plugin", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+.E.E.                                                                    [100%]
+==================================== ERRORS ====================================
+_ ERROR at teardown of test_window_controls_use_regular_window_close_and_restore[sample0] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f74fa395130>
+app = <PySide6.QtWidgets.QApplication(0x262cab10) at 0x7f74fa37f300>
+
+    @pytest.fixture(autouse=True)
+    def verify_native_hotkey_cleanup(monkeypatch,app):
+        active=set()
+        class Exclusive:
+            def register(self,identity,modifiers,key):
+                if active:return False
+                active.add(identity);return True
+            def unregister(self,identity):active.discard(identity);return True
+        original=GlobalCaptureHotkey.__init__
+        def init(self,window,callback,sequence,api=None):
+            original(self,window,callback,sequence,api=Exclusive())
+        monkeypatch.setattr(GlobalCaptureHotkey,'__init__',init)
+        yield
+>       assert not active,'O teste deixou o atalho global registrado ao destruir a janela'
+E       AssertionError: O teste deixou o atalho global registrado ao destruir a janela
+E       assert not {19456}
+
+../evidence-0137/hotkey_cleanup_plugin.py:18: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+_ ERROR at teardown of test_window_controls_use_regular_window_close_and_restore[sample1] _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f74f9dc2e70>
+app = <PySide6.QtWidgets.QApplication(0x262cab10) at 0x7f74fa37f300>
+
+    @pytest.fixture(autouse=True)
+    def verify_native_hotkey_cleanup(monkeypatch,app):
+        active=set()
+        class Exclusive:
+            def register(self,identity,modifiers,key):
+                if active:return False
+                active.add(identity);return True
+            def unregister(self,identity):active.discard(identity);return True
+        original=GlobalCaptureHotkey.__init__
+        def init(self,window,callback,sequence,api=None):
+            original(self,window,callback,sequence,api=Exclusive())
+        monkeypatch.setattr(GlobalCaptureHotkey,'__init__',init)
+        yield
+>       assert not active,'O teste deixou o atalho global registrado ao destruir a janela'
+E       AssertionError: O teste deixou o atalho global registrado ao destruir a janela
+E       assert not {19456}
+
+../evidence-0137/hotkey_cleanup_plugin.py:18: AssertionError
+=========================== short test summary info ============================
+ERROR tests/test_window_controls_0137.py::test_window_controls_use_regular_window_close_and_restore[sample0]
+ERROR tests/test_window_controls_0137.py::test_window_controls_use_regular_window_close_and_restore[sample1]
+3 passed, 2 errors in 0.40s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## janela-lifecycle-atalho-depois
+
+UTC: 2026-11-16T02:24:59.362578+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_window_controls_0137.py", "-p", "hotkey_cleanup_plugin", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+...                                                                      [100%]
+3 passed in 0.35s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
