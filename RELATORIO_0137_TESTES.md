@@ -3266,3 +3266,215 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## capturas-previa-vazia
+
+UTC: 2026-11-16T01:54:01.471976+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/revisao-previa-vazia"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/revisao-previa-vazia
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support raise()
+This plugin does not support grabbing the keyboard
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
+
+## ofertas-cache-temporal-antes
+
+UTC: 2026-11-16T01:55:32.416432+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_home_data_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+....FFFFF                                                                [100%]
+=================================== FAILURES ===================================
+_ test_home_does_not_present_unknown_expired_or_future_cache_as_current[None] __
+
+library = <checkpoint.library.Library object at 0x7fdfa0fd2ba0>
+checked_at = None
+
+    @pytest.mark.parametrize('checked_at',[None,'inválida','2026-11-16T12:00:00','2026-11-16T11:00:00+00:00','2026-11-16T12:00:01+00:00'])
+    def test_home_does_not_present_unknown_expired_or_future_cache_as_current(library,checked_at):
+        from checkpoint.home_data import wish_offers
+        end=datetime(2026,11,16,12,tzinfo=timezone.utc)
+        identities=[]
+        for title in ('Portal 2','Hades'):
+            identity=library.save_game({'title':title,'platform':'PC'});identities.append(identity)
+            with library.sql:
+                library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)',(identity,))
+                library.sql.execute("INSERT INTO external_identifiers VALUES(?,'steam',?)",(identity,str(identity)))
+            library.set_setting(f'prices.ggdeals.{identity}',{'state':'ready','retail':3000,'currency':'BRL','checked_at':checked_at,'offer_context':{'steam':str(identity),'platform':'PC'}})
+        before=[library.setting(f'prices.ggdeals.{identity}') for identity in identities]
+>       assert wish_offers(library,now=end)==[]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: wish_offers() got an unexpected keyword argument 'now'
+
+tests/test_home_data_0137.py:77: TypeError
+_ test_home_does_not_present_unknown_expired_or_future_cache_as_current[inv\xe1lida] _
+
+library = <checkpoint.library.Library object at 0x7fdfa0fd7f80>
+checked_at = 'inválida'
+
+    @pytest.mark.parametrize('checked_at',[None,'inválida','2026-11-16T12:00:00','2026-11-16T11:00:00+00:00','2026-11-16T12:00:01+00:00'])
+    def test_home_does_not_present_unknown_expired_or_future_cache_as_current(library,checked_at):
+        from checkpoint.home_data import wish_offers
+        end=datetime(2026,11,16,12,tzinfo=timezone.utc)
+        identities=[]
+        for title in ('Portal 2','Hades'):
+            identity=library.save_game({'title':title,'platform':'PC'});identities.append(identity)
+            with library.sql:
+                library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)',(identity,))
+                library.sql.execute("INSERT INTO external_identifiers VALUES(?,'steam',?)",(identity,str(identity)))
+            library.set_setting(f'prices.ggdeals.{identity}',{'state':'ready','retail':3000,'currency':'BRL','checked_at':checked_at,'offer_context':{'steam':str(identity),'platform':'PC'}})
+        before=[library.setting(f'prices.ggdeals.{identity}') for identity in identities]
+>       assert wish_offers(library,now=end)==[]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: wish_offers() got an unexpected keyword argument 'now'
+
+tests/test_home_data_0137.py:77: TypeError
+_ test_home_does_not_present_unknown_expired_or_future_cache_as_current[2026-11-16T12:00:00] _
+
+library = <checkpoint.library.Library object at 0x7fdfa0fd78f0>
+checked_at = '2026-11-16T12:00:00'
+
+    @pytest.mark.parametrize('checked_at',[None,'inválida','2026-11-16T12:00:00','2026-11-16T11:00:00+00:00','2026-11-16T12:00:01+00:00'])
+    def test_home_does_not_present_unknown_expired_or_future_cache_as_current(library,checked_at):
+        from checkpoint.home_data import wish_offers
+        end=datetime(2026,11,16,12,tzinfo=timezone.utc)
+        identities=[]
+        for title in ('Portal 2','Hades'):
+            identity=library.save_game({'title':title,'platform':'PC'});identities.append(identity)
+            with library.sql:
+                library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)',(identity,))
+                library.sql.execute("INSERT INTO external_identifiers VALUES(?,'steam',?)",(identity,str(identity)))
+            library.set_setting(f'prices.ggdeals.{identity}',{'state':'ready','retail':3000,'currency':'BRL','checked_at':checked_at,'offer_context':{'steam':str(identity),'platform':'PC'}})
+        before=[library.setting(f'prices.ggdeals.{identity}') for identity in identities]
+>       assert wish_offers(library,now=end)==[]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: wish_offers() got an unexpected keyword argument 'now'
+
+tests/test_home_data_0137.py:77: TypeError
+_ test_home_does_not_present_unknown_expired_or_future_cache_as_current[2026-11-16T11:00:00+00:00] _
+
+library = <checkpoint.library.Library object at 0x7fdfa10604a0>
+checked_at = '2026-11-16T11:00:00+00:00'
+
+    @pytest.mark.parametrize('checked_at',[None,'inválida','2026-11-16T12:00:00','2026-11-16T11:00:00+00:00','2026-11-16T12:00:01+00:00'])
+    def test_home_does_not_present_unknown_expired_or_future_cache_as_current(library,checked_at):
+        from checkpoint.home_data import wish_offers
+        end=datetime(2026,11,16,12,tzinfo=timezone.utc)
+        identities=[]
+        for title in ('Portal 2','Hades'):
+            identity=library.save_game({'title':title,'platform':'PC'});identities.append(identity)
+            with library.sql:
+                library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)',(identity,))
+                library.sql.execute("INSERT INTO external_identifiers VALUES(?,'steam',?)",(identity,str(identity)))
+            library.set_setting(f'prices.ggdeals.{identity}',{'state':'ready','retail':3000,'currency':'BRL','checked_at':checked_at,'offer_context':{'steam':str(identity),'platform':'PC'}})
+        before=[library.setting(f'prices.ggdeals.{identity}') for identity in identities]
+>       assert wish_offers(library,now=end)==[]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: wish_offers() got an unexpected keyword argument 'now'
+
+tests/test_home_data_0137.py:77: TypeError
+_ test_home_does_not_present_unknown_expired_or_future_cache_as_current[2026-11-16T12:00:01+00:00] _
+
+library = <checkpoint.library.Library object at 0x7fdfa10603e0>
+checked_at = '2026-11-16T12:00:01+00:00'
+
+    @pytest.mark.parametrize('checked_at',[None,'inválida','2026-11-16T12:00:00','2026-11-16T11:00:00+00:00','2026-11-16T12:00:01+00:00'])
+    def test_home_does_not_present_unknown_expired_or_future_cache_as_current(library,checked_at):
+        from checkpoint.home_data import wish_offers
+        end=datetime(2026,11,16,12,tzinfo=timezone.utc)
+        identities=[]
+        for title in ('Portal 2','Hades'):
+            identity=library.save_game({'title':title,'platform':'PC'});identities.append(identity)
+            with library.sql:
+                library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)',(identity,))
+                library.sql.execute("INSERT INTO external_identifiers VALUES(?,'steam',?)",(identity,str(identity)))
+            library.set_setting(f'prices.ggdeals.{identity}',{'state':'ready','retail':3000,'currency':'BRL','checked_at':checked_at,'offer_context':{'steam':str(identity),'platform':'PC'}})
+        before=[library.setting(f'prices.ggdeals.{identity}') for identity in identities]
+>       assert wish_offers(library,now=end)==[]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: wish_offers() got an unexpected keyword argument 'now'
+
+tests/test_home_data_0137.py:77: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_home_data_0137.py::test_home_does_not_present_unknown_expired_or_future_cache_as_current[None]
+FAILED tests/test_home_data_0137.py::test_home_does_not_present_unknown_expired_or_future_cache_as_current[inv\xe1lida]
+FAILED tests/test_home_data_0137.py::test_home_does_not_present_unknown_expired_or_future_cache_as_current[2026-11-16T12:00:00]
+FAILED tests/test_home_data_0137.py::test_home_does_not_present_unknown_expired_or_future_cache_as_current[2026-11-16T11:00:00+00:00]
+FAILED tests/test_home_data_0137.py::test_home_does_not_present_unknown_expired_or_future_cache_as_current[2026-11-16T12:00:01+00:00]
+5 failed, 4 passed in 0.13s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## ofertas-cache-temporal-depois
+
+UTC: 2026-11-16T01:56:05.034149+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_home_data_0137.py", "tests/test_home_layout_0137.py", "tests/test_price_display_official.py", "tests/test_discount_0136.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+
+no tests ran in 0.00s
+
+```
+
+stderr integral:
+```text
+ERROR: file or directory not found: tests/test_discount_0136.py
+
+
+```
+
+Código de saída: 4
+
+## ofertas-cache-temporal-final
+
+UTC: 2026-11-16T01:56:15.378298+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_home_data_0137.py", "tests/test_home_layout_0137.py", "tests/test_price_display_official.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+...........................                                              [100%]
+27 passed in 2.08s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0

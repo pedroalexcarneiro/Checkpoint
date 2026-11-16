@@ -51,7 +51,7 @@ def test_home_offers_follow_same_discount_policy_and_do_not_promote_stale_cache(
         with library.sql:
             library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)',(i,))
             library.sql.execute("INSERT INTO external_identifiers VALUES(?,'steam',?)",(i,str(i)))
-        value={'retail':4990,'currency':'BRL','state':'ready','offer_context':{'steam':str(i),'platform':'PC'}}
+        value={'retail':4990,'currency':'BRL','state':'ready','checked_at':datetime.now(timezone.utc).isoformat(),'offer_context':{'steam':str(i),'platform':'PC'}}
         if title=='B desconto':value['offers']=[{'cents':4990,'original':9980,'kind':'retail','shop':'Loja teste','url':'https://gg.deals/br/redirect/test/'}]
         if title=='D falha':value['state']='unavailable'
         if title=='E sem origem':value={'lowest':100,'currency':'BRL','state':'ready'}
@@ -60,3 +60,22 @@ def test_home_offers_follow_same_discount_policy_and_do_not_promote_stale_cache(
     assert [g['id'] for g in offers]==[ids[1],ids[0]]
     assert offers[0]['quote']['discount']==50
     assert library.get(ids[2])['platform']=='Switch'
+
+
+@pytest.mark.parametrize('checked_at',[None,'inválida','2026-11-16T12:00:00','2026-11-16T11:00:00+00:00','2026-11-16T12:00:01+00:00'])
+def test_home_does_not_present_unknown_expired_or_future_cache_as_current(library,checked_at):
+    from checkpoint.home_data import wish_offers
+    end=datetime(2026,11,16,12,tzinfo=timezone.utc)
+    identities=[]
+    for title in ('Portal 2','Hades'):
+        identity=library.save_game({'title':title,'platform':'PC'});identities.append(identity)
+        with library.sql:
+            library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)',(identity,))
+            library.sql.execute("INSERT INTO external_identifiers VALUES(?,'steam',?)",(identity,str(identity)))
+        library.set_setting(f'prices.ggdeals.{identity}',{'state':'ready','retail':3000,'currency':'BRL','checked_at':checked_at,'offer_context':{'steam':str(identity),'platform':'PC'}})
+    before=[library.setting(f'prices.ggdeals.{identity}') for identity in identities]
+    assert wish_offers(library,now=end)==[]
+    assert [library.setting(f'prices.ggdeals.{identity}') for identity in identities]==before
+    for identity in identities:
+        value=library.setting(f'prices.ggdeals.{identity}');value['checked_at']=(end-timedelta(seconds=3599)).isoformat();library.set_setting(f'prices.ggdeals.{identity}',value)
+    assert {game['id'] for game in wish_offers(library,now=end)}==set(identities)

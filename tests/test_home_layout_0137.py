@@ -112,7 +112,7 @@ def test_offers_show_only_same_offer_original_discount_and_current(ui,app):
     with w.library.sql:
         w.library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)',(i,))
         w.library.sql.execute("INSERT INTO external_identifiers VALUES(?,'steam','620')",(i,))
-    w.library.set_setting(f'prices.ggdeals.{i}',{'state':'ready','retail':3000,'currency':'BRL',
+    w.library.set_setting(f'prices.ggdeals.{i}',{'state':'ready','retail':3000,'currency':'BRL','checked_at':datetime.now(timezone.utc).isoformat(),
         'offer_context':{'steam':'620','platform':'PC'},'offers':[{'cents':3000,'original':6000,'kind':'retail','shop':'Loja teste','url':'https://gg.deals/br/redirect/test/'}]})
     w.navigate(0);app.processEvents();frame=w.pages[0].findChild(QWidget,'homeWishOffers')
     assert frame.findChild(QLabel,'homeOfferOriginal').text()=='R$ 60,00'

@@ -40,13 +40,17 @@ def week_summary(library, now=None, zone='local'):
     return {**result,'started_games':len(started)}
 
 
-def wish_offers(library, limit=3):
+def wish_offers(library, limit=3, now=None):
     from .prices import selected_quote
     games=[dict(r) for r in library.sql.execute('SELECT g.* FROM wishlist w JOIN games g ON g.id=w.game_id WHERE g.deleted_at IS NULL')]
-    result=[]
+    result=[];end=now or datetime.now(timezone.utc)
     for game in games:
         value=selected_quote(library,game['id'])
-        if value.get('state')!='ready' or value.get('currency','BRL')!='BRL':continue
+        if value.get('state')!='ready' or value.get('currency')!='BRL' or not value.get('offer_context'):continue
+        try:
+            checked=datetime.fromisoformat(value['checked_at'])
+            if checked.tzinfo is None or not 0<=(end-checked).total_seconds()<3600:continue
+        except (KeyError,TypeError,ValueError):continue
         if type(value.get('lowest')) is not int or value['lowest']<=0:continue
         if value.get('current_kind') not in ('retail','keyshop'):continue
         result.append({**game,'quote':value})
