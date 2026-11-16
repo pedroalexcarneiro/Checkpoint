@@ -1,5 +1,9 @@
 # Estado atual — Checkpoint 0.1.38 publicada
 
+## Variante 0.1.38 sem elevação — somente ZIP
+
+Pedido do dono para usar privilégios atuais no PC da empresa, sem publicar versão. Branch build/0.1.38-sem-admin: entrada run_checkpoint_user.py chama main(request_elevation=False); padrão normal continua True. Build seleciona a entrada sem elevação; PE asInvoker e entrada congelada conferidos, 13 testes direcionados em Linux/Windows e smokes/abertura nativa do ZIP extraído aprovados em 43865947628. Hash ZIP 3eb96f30341f07cd126c05a7d367172a81372ea54065c7dd6b3089ed0247625a. Runner elevado, sem homologação interativa de conta padrão ou PC empresarial. Nenhuma tag/release criada; versão normal preservada. Detalhes em VARIANTE_0138_SEM_ADMIN.md.
+
 ## 0.1.38 publicada — correção de abertura
 
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.38
