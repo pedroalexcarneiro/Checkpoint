@@ -60,7 +60,7 @@ def build_editor(dialog,outer):
 def add_steam_detection(dialog,game_id):
     identity=dialog.library.sql.execute("SELECT external_id FROM external_identifiers WHERE game_id=? AND provider='steam'",(game_id,)).fetchone()
     if not identity:return
-    from PySide6.QtWidgets import QInputDialog,QMessageBox
+    from .dialog_style import AppInputs as QInputDialog,AppMessages as QMessageBox
     def detect():
         from .steam_installations import find_executables
         try:candidates=find_executables(identity[0])

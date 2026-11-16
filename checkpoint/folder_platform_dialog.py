@@ -6,6 +6,8 @@ from .integrations.drive import DriveScanner,PLATFORMS
 class FolderPlatformDialog(QDialog):
     def __init__(self,library,parent=None):
         super().__init__(parent)
+        from .dialog_style import prepare_dialog
+        prepare_dialog(self)
         self.library=library
         self.setWindowTitle('Pastas e plataformas'); self.resize(640,300)
         layout=QVBoxLayout(self)
@@ -36,3 +38,5 @@ class FolderPlatformDialog(QDialog):
         except ValueError as error: QMessageBox.warning(self,'Plataforma',str(error))
     def apply(self): self.save(self.platform.currentText())
     def remove(self): self.save(None)
+
+from .dialog_style import AppMessages as QMessageBox

@@ -199,3 +199,7 @@ Nome da ROM ocupa centro expansível com elipse e tooltip integral; situação a
 ## Item 12 — exceção ImageDialog autorizada
 
 Somente ImageDialog.__init__ mudou em dialogs.py: usa FittedImage e apresentação opt-in. Prefixo protegido anterior à classe é byte a byte idêntico. O método novo usa LF; prefixo legado CRLF foi preservado para respeitar a exceção restrita e evitar normalização incidental de protegidos. Nenhuma alteração em GameDialog/QuickAdd/A4/lifecycle. Testes reais do modal verificam redimensionamento, proporção, arquivo original e prefixo protegido; contrato AST segue intacto. Testes novos completos: 50 passed in 6.05s.
+
+## Item 12 — demais diálogos próprios
+
+Apresentação opt-in estendida após validação básica a artes/progresso/catálogo/Drive/pastas/metadados/Steam/perfil/atualizações. Mudanças restritas a imports e preparação visual; funções de negócio preservadas. game_editor/trash_import adotam somente as fábricas próprias nos popups já existentes. Erros de bootstrap usam a mesma fábrica, sem alterar decisões de UAC/cancelamento/retornos ou diretório de dados. dialog-additional-after: 73 passed in 8.63s, incluindo Steam, perfil/avatar, atualizações, catálogo, pastas, artes, lixeira e regressão do fluxo Drive protegido. Windows DWM/DPI/monitores reais continuam não homologados.

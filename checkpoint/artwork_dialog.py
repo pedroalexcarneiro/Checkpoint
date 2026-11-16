@@ -9,6 +9,8 @@ from .jobs import Job
 class ArtworkDialog(QDialog):
     def __init__(self,library,game,parent=None):
         super().__init__(parent); self.library=library; self.game=game; self.jobs=[]; self.results=[]; self.urls=[]
+        from .dialog_style import prepare_dialog
+        prepare_dialog(self)
         self.setWindowTitle('Imagens do jogo');self.resize(960,720)
         from PySide6.QtCore import Qt
         from PySide6.QtGui import QPixmap
@@ -122,3 +124,6 @@ class ArtworkDialog(QDialog):
     def reject(self):
         if self.jobs: self.state.setText('Aguarde a consulta terminar.'); return
         super().reject()
+
+from .dialog_style import AppMessages as QMessageBox
+from .dialog_style import AppInputs as QInputDialog

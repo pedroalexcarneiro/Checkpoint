@@ -17,6 +17,8 @@ class SteamDialog(QDialog):
     enrichment_progress = Signal(str)
     def __init__(self, library, parent=None):
         super().__init__(parent)
+        from .dialog_style import prepare_dialog
+        prepare_dialog(self)
         self.library = library
         self.games, self.links = [], {}
         self.result_account = None
@@ -298,3 +300,4 @@ class SteamDialog(QDialog):
             event.ignore()
             return
         super().closeEvent(event)
+from .dialog_style import AppInputs as QInputDialog

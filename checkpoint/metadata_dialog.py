@@ -11,6 +11,8 @@ from .integrations.images import ImageCache
 class MetadataDialog(QDialog):
     def __init__(self,library,parent=None):
         super().__init__(parent); self.library = library; self.jobs = []; self.results = []; self.imported_id = None
+        from .dialog_style import prepare_dialog
+        prepare_dialog(self)
         self.setWindowTitle('Pesquisar metadados · RAWG'); self.resize(680,560)
         layout = QVBoxLayout(self)
         layout.addWidget(QLabel('RAWG · selecione explicitamente o resultado correto.'))
@@ -77,3 +79,5 @@ class MetadataDialog(QDialog):
         if self.jobs:
             self.state.setText('Aguarde a consulta terminar antes de fechar.'); return
         super().reject()
+
+from .dialog_style import AppMessages as QMessageBox

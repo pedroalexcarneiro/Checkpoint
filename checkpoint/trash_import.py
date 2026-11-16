@@ -63,7 +63,7 @@ def save_decision(library,data,file_id=None,result=None,*,removed_id=None,decisi
 
 
 def ask_removed(parent,title):
-    from PySide6.QtWidgets import QMessageBox
+    from .dialog_style import AppMessages as QMessageBox
     box=QMessageBox(parent);box.setWindowTitle('Jogo na lixeira');box.setText(f'“{title}” já esteve na sua biblioteca.')
     box.setInformativeText('Restaurar recupera suas notas, imagens e histórico. Adicionar como novo mantém o cadastro anterior na lixeira.')
     restore=box.addButton('Restaurar jogo',QMessageBox.AcceptRole)

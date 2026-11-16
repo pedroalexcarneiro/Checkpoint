@@ -10,6 +10,8 @@ from .integrations.steam_store import SteamStoreProvider
 class CatalogPicker(QDialog):
     def __init__(self,title,parent=None):
         super().__init__(parent);self.selected_result=None;self.results=[];self.jobs=[]
+        from .dialog_style import prepare_dialog
+        prepare_dialog(self)
         self.setWindowTitle('Confirmar título no catálogo');self.resize(650,500)
         layout=QVBoxLayout(self)
         help=QLabel('Escolha a edição correta. O título exibido virá do catálogo; o nome original da ROM será preservado. Steam fornece ficha e imagens sem chave. RAWG cobre outros jogos com chave própria; SteamGridDB complementa artes.')

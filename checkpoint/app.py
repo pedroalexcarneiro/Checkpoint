@@ -4,7 +4,8 @@ from logging.handlers import RotatingFileHandler
 import os
 from pathlib import Path
 import sys
-from PySide6.QtWidgets import QApplication,QMessageBox
+from PySide6.QtWidgets import QApplication
+from .dialog_style import AppMessages as QMessageBox
 from PySide6.QtCore import QLockFile
 from .database import Database
 from .library import Library

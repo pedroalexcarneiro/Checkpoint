@@ -13,6 +13,8 @@ from .integrations.drive import DriveScanner,GoogleDriveClient
 class DriveDialog(QDialog):
     def __init__(self,library,parent=None):
         super().__init__(parent); self.library=library; self.jobs=[]; self.files=[]; self.pending_artwork=None
+        from .dialog_style import prepare_dialog
+        prepare_dialog(self)
         self.setWindowTitle('Google Drive · ROMs');self.resize(1000,720);self.setMinimumSize(820,600)
         from .design_system import dialog_heading
         from .settings_view import disclosure
@@ -193,3 +195,6 @@ class DriveDialog(QDialog):
         if self.jobs:
             self.state.setText('Aguarde a operação terminar antes de fechar.');return
         super().accept()
+
+from .dialog_style import AppMessages as QMessageBox
+from .dialog_style import AppInputs as QInputDialog

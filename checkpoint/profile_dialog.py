@@ -21,6 +21,8 @@ def avatar_icon(path,size=64):
 class ProfileDialog(QDialog):
     def __init__(self,library,parent=None):
         super().__init__(parent);self.library=library;self.selected=None;self.remove_photo=False;self.crop_dirty=False
+        from .dialog_style import prepare_dialog
+        prepare_dialog(self)
         self.original_source=library.setting('profile.avatar_original','') or library.setting('profile.avatar','')
         self.setWindowTitle('Perfil');self.resize(500,540)
         from .window_style import titlebar_theme

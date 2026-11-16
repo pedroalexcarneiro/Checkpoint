@@ -14,6 +14,8 @@ from .updates import GitHubUpdates,UpdateError
 class UpdatesDialog(QDialog):
     def __init__(self,data_directory,parent=None):
         super().__init__(parent); self.data_directory=Path(data_directory).resolve(); self.jobs=[]; self.update=None; self.staged=None; self.approved=False
+        from .dialog_style import prepare_dialog
+        prepare_dialog(self)
         self.setWindowTitle('Atualizações'); self.resize(620,410)
         layout=QVBoxLayout(self); layout.addWidget(QLabel('Checkpoint '+__version__+' · pedroalexcarneiro/Checkpoint'))
         self.preview=QCheckBox('Incluir versões de desenvolvimento'); self.preview.setChecked(True); layout.addWidget(self.preview)
@@ -74,3 +76,5 @@ class UpdatesDialog(QDialog):
     def reject(self):
         if self.jobs: self.state.setText('Aguarde a operação terminar antes de fechar.'); return
         super().reject()
+
+from .dialog_style import AppMessages as QMessageBox

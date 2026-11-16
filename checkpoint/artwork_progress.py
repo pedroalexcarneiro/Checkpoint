@@ -8,6 +8,8 @@ class ArtworkProgress(QDialog):
     progress=Signal(str)
     def __init__(self,library,game_id,parent=None,force=False):
         super().__init__(parent);self.setWindowTitle('Completando ficha e imagens');self.resize(560,200);self.setAttribute(Qt.WA_QuitOnClose,False)
+        from .dialog_style import prepare_dialog
+        prepare_dialog(self)
         self.force=force;self.message='';self.job=None;self.path=library.db.path;self.game_id=game_id;self.game_ids=list(game_id) if isinstance(game_id,(list,tuple)) else [game_id]
         layout=QVBoxLayout(self)
         from .design_system import dialog_heading
