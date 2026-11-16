@@ -11,6 +11,8 @@ from .rom_link_worker import run_link
 class RomLinkDialog(QDialog):
     def __init__(self,library,game_id,parent=None):
         super().__init__(parent);self.library=library;self.game_id=game_id;self.job=None;self.file_id=None;self.outcome=None
+        from .dialog_style import prepare_dialog
+        prepare_dialog(self)
         self.setWindowTitle('Vincular ROM do Drive');self.resize(720,500)
         game=library.get(game_id);self.platform=game['platform'];layout=QVBoxLayout(self)
         self.game_title=text('Vincular ROM a '+game['title'],'sectionTitle');layout.addWidget(self.game_title)
@@ -84,3 +86,6 @@ class RomLinkDialog(QDialog):
     def closeEvent(self,event):
         if self.job:event.ignore();return
         super().closeEvent(event)
+
+from .dialog_style import AppMessages as QMessageBox
+from .dialog_style import AppInputs as QInputDialog

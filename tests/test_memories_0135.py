@@ -5,7 +5,7 @@ import pytest
 @pytest.mark.parametrize('title',['Zelda: A Link to the Past','Metroid Fusion'])
 def test_empty_memory_goes_to_game_tab(ui,app,monkeypatch,title):
  w,i=ui;w.library.save_game({'title':title},i)
- monkeypatch.setattr(QInputDialog,'getItem',lambda *a:(title,True))
+ monkeypatch.setattr('checkpoint.dialog_style.AppInputs.getItem',lambda *a:(title,True))
  w.memories();app.processEvents()
  assert any('anotação' in t.text() and 'Memórias' in t.text() for t in w.pages[3].findChildren(QLabel))
  next(b for b in w.pages[3].findChildren(QPushButton) if b.text()=='Biblioteca').click()
@@ -33,10 +33,10 @@ def test_delete_memory_requires_confirmation(ui,folder,monkeypatch,title):
  w.library.add_diary(i,'Guardar isto')
  row=dict(w.library.sql.execute('SELECT * FROM diary_entries WHERE game_id=?',(i,)).fetchone())
  row.update(kind='diary',title=title)
- monkeypatch.setattr(QMessageBox,'question',lambda *a:QMessageBox.No)
+ monkeypatch.setattr('checkpoint.dialog_style.AppMessages.question',lambda *a:QMessageBox.No)
  w.delete_memory(row)
  assert len(w.library.diary(i))==1
- monkeypatch.setattr(QMessageBox,'question',lambda *a:QMessageBox.Yes)
+ monkeypatch.setattr('checkpoint.dialog_style.AppMessages.question',lambda *a:QMessageBox.Yes)
  w.delete_memory(row)
  assert not w.library.diary(i)
  p=folder/'external.png';p.write_bytes(b'fixture');w.library.add_media(i,p)

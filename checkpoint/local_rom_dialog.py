@@ -8,6 +8,8 @@ from .local_rom import validate_path,canonical_platform,compatible_profiles,iden
 class LocalRomDialog(QDialog):
     def __init__(self,library,game_id,parent=None):
         super().__init__(parent);self.library=library;self.game_id=game_id;self.file=None;self.file_id=None
+        from .dialog_style import prepare_dialog
+        prepare_dialog(self)
         self.setWindowTitle('Vincular ROM local');self.resize(680,480)
         layout=QVBoxLayout(self);layout.setContentsMargins(24,24,24,24);layout.setSpacing(16)
         self.game_title=text('','sectionTitle');layout.addWidget(self.game_title)
@@ -90,6 +92,8 @@ class LocalRomDialog(QDialog):
 class RomSourceDialog(QDialog):
     def __init__(self,library,game_id,parent=None):
         super().__init__(parent);self.library=library;self.game_id=game_id;self.outcome=None
+        from .dialog_style import prepare_dialog
+        prepare_dialog(self)
         self.setWindowTitle('Vincular ROM');self.resize(460,210)
         layout=QVBoxLayout(self);layout.setContentsMargins(24,24,24,24);layout.setSpacing(12)
         layout.addWidget(text(library.get(game_id)['title'],'sectionTitle'))
@@ -103,3 +107,4 @@ class RomSourceDialog(QDialog):
         dialog=RomLinkDialog(self.library,self.game_id,self)
         if dialog.exec()==QDialog.Accepted:
             self.outcome=dialog.outcome;self.game_id=dialog.game_id;self.accept()
+from .dialog_style import AppInputs as QInputDialog

@@ -190,7 +190,8 @@ class GameStrip(QWidget):
 def open_memory(window,record):
     if record['kind']!='diary':window.show_media(record);return
     from PySide6.QtWidgets import QTextEdit
-    dialog=QDialog(window);dialog.setWindowTitle('Memória de '+record['title']);dialog.resize(520,400)
+    from .dialog_style import prepare_dialog
+    dialog=prepare_dialog(QDialog(window));dialog.setWindowTitle('Memória de '+record['title']);dialog.resize(520,400)
     layout=QVBoxLayout(dialog);layout.addWidget(text(record['title'],'sectionTitle'))
     content=QTextEdit();content.setReadOnly(True);content.setPlainText(record['text']);layout.addWidget(content)
     layout.addWidget(text(datetime_display(record['created_at']),'caption'))
@@ -245,7 +246,8 @@ class MemoryCarousel(CardSurface):
 
 def show_execution_history(window):
     from .home_data import execution_history
-    dialog=QDialog(window);dialog.setWindowTitle('Histórico de execuções');dialog.resize(650,500)
+    from .dialog_style import prepare_dialog
+    dialog=prepare_dialog(QDialog(window));dialog.setWindowTitle('Histórico de execuções');dialog.resize(650,500)
     layout=QVBoxLayout(dialog);scroll=QScrollArea();scroll.setWidgetResizable(True);scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
     body=QWidget();inside=QVBoxLayout(body)
     for record in execution_history(window.library):

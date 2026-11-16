@@ -33,6 +33,7 @@ class IconButton(QPushButton):
         super().__init__(parent);self.name=name;self.setObjectName('iconButton');self.setFixedSize(34,34);self.setToolTip(tooltip);self.setAccessibleName(tooltip);self.clicked.connect(callback)
     def paintEvent(self,event):
         super().paintEvent(event);p=QPainter(self)
+        if not self.isEnabled():p.setOpacity(.35)
         if self.name=='heart' and self.isChecked():
             from .icons import lucide_icon
             pix=lucide_icon('heart',colors()['accent'],20,filled=True).pixmap(20,20)

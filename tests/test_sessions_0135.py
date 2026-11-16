@@ -12,8 +12,8 @@ def test_rom_session_finishes_after_real_process_exit(app,library,folder,monkeyp
   library.sql.execute('INSERT INTO emulator_profiles(emulator_id,platform,arguments_json,extensions) VALUES(?,?,?,?)',(e,platform,'["-c","pass", "{rom}"]',extension))
   f=library.sql.execute('INSERT INTO game_files(game_id,original_name,platform,extension,local_path,available) VALUES(?,?,?,?,?,1)',(game,rom.name,platform,extension,str(rom))).lastrowid
   library.sql.execute('INSERT INTO rom_versions(file_id) VALUES(?)',(f,))
- monkeypatch.setattr(QInputDialog,'getItem',lambda *a:('Python teste',True))
- monkeypatch.setattr(QMessageBox,'question',lambda *a:QMessageBox.Yes)
+ monkeypatch.setattr('checkpoint.dialog_style.AppInputs.getItem',lambda *a:('Python teste',True))
+ monkeypatch.setattr('checkpoint.dialog_style.AppMessages.question',lambda *a:QMessageBox.Yes)
  w=MainWindow(library)
  try:
   w.launch_rom(game,dict(library.sql.execute('SELECT * FROM game_files WHERE id=?',(f,)).fetchone()))

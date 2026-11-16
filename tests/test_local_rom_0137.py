@@ -96,7 +96,7 @@ def test_play_missing_local_file_offers_relocation_without_session(library,local
     game,path,profile,_=local_rom;bind_local(library,game,path,'CHIP-8',profile)
     library.set_setting('artwork.auto',False);library.set_setting('prices.auto',False)
     w=MainWindow(library);before=library.get(game);path.unlink();calls=[]
-    monkeypatch.setattr(QMessageBox,'question',lambda *a:QMessageBox.Yes)
+    monkeypatch.setattr('checkpoint.dialog_style.AppMessages.question',lambda *a:QMessageBox.Yes)
     monkeypatch.setattr(w,'choose_local_rom',lambda identity:calls.append(identity))
     try:
         w.start_game(library.get(game));assert calls==[game] and not w.launcher.active

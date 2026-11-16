@@ -590,6 +590,12 @@ class MainWindow(QMainWindow):
         from .emulator_dialog import EmulatorDialog
         EmulatorDialog(self.library,self).exec()
 
+    def configure_execution(self,game_id):
+        if not self.library.sql.execute('SELECT 1 FROM game_files WHERE game_id=?',(game_id,)).fetchone():
+            return self.edit_game(game_id)
+        from .execution_dialog import ExecutionProfileDialog
+        ExecutionProfileDialog(self.library,game_id,self).exec()
+
     def artworks(self,game_id):
         from .artwork_dialog import ArtworkDialog
         ArtworkDialog(self.library,self.library.get(game_id),self).exec(); self.refresh_library(); self.detail(game_id)
@@ -635,7 +641,7 @@ class MainWindow(QMainWindow):
             choice,ok=QInputDialog.getItem(self,'Executar versão','Escolha o perfil:',names,0,False)
             if not ok:return
             profile=profiles[names.index(choice)]
-        if QMessageBox.question(self,'Registro da sessão','Este emulador não possui detecção validada de encerramento da ROM. Você deverá encerrar o registro manualmente ao terminar de jogar. Iniciar?')!=QMessageBox.Yes: return
+        if QMessageBox.start_session(self)!=QMessageBox.Yes: return
         def launch():
             command = EmulatorCommand.build(profile['executable'],profile['arguments_json'],file['local_path'])
             self.launcher.start_command(game_id,command,True)
@@ -804,3 +810,5 @@ class MainWindow(QMainWindow):
             if QMessageBox.question(self,'Sessões ativas','Fechar o Checkpoint? O jogo continuará aberto e a sessão precisará de revisão manual.')!=QMessageBox.Yes:
                 event.ignore(); return
         self.capture_shortcut.close();self.price_queue.stop();self.timer.stop();self.status_timer.stop();self.launcher.interrupt();event.accept()
+
+from .dialog_style import AppMessages as QMessageBox, AppInputs as QInputDialog
