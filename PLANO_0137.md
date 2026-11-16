@@ -67,3 +67,5 @@ Complemento do Perfil: indicador do slider de Zoom circular, substituindo o quad
 Complemento posterior: texto Carregando prévia no cadastro de ROM deve caber sem corte. Ajustar somente QuickAdd.show_result (exceção já autorizada), sem mudar seleção, fonte, jobs, confirmação A4 ou métodos protegidos. Reproduzir com Pokémon FireRed and LeafGreen+ e outro título; medir espaço e compartilhar captura.
 
 Complemento do item 6: diante do relato de pequenas pausas na rolagem, retirar a primeira decodificação/escala da thread da interface e antecipar apenas arte próxima da área visível. Pool/fila/cache limitados, QImage nos workers e QPixmap na GUI; preservar proporção, pixels, atualização por arquivo e posição. Testar responsividade com leitura controladamente lenta, dois jogos e regressões visuais, sem declarar homologação Windows a partir de Linux.
+
+Última decisão de prévia: remover também Carregando do espaço reservado à capa e deixá-lo vazio até a imagem chegar. Isso substitui o texto anterior, não o fluxo de consulta. Alteração continua limitada a show_result; testar espaço vazio e chegada efetiva da capa em dois jogos, preservando o A4.

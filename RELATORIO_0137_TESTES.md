@@ -3114,3 +3114,155 @@ stderr integral:
 ```
 
 Código de saída: 0
+
+## capturas-revisao-final
+
+UTC: 2026-11-16T01:43:43.428818+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "scripts/render_0137_review.py", "/workspace/work/evidence-0137/revisao-final"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+/workspace/work/evidence-0137/revisao-final
+
+```
+
+stderr integral:
+```text
+Fontconfig error: No writable cache directories
+This plugin does not support raise()
+This plugin does not support grabbing the keyboard
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+
+```
+
+Código de saída: 0
+
+## suite-completa-0137
+
+UTC: 2026-11-16T01:51:54.909000+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+........................................................................ [ 10%]
+........................................................................ [ 20%]
+........................................................................ [ 31%]
+........................................................................ [ 41%]
+........................................................................ [ 52%]
+........................................................................ [ 62%]
+........................................................................ [ 73%]
+........................................................................ [ 83%]
+........................................................................ [ 93%]
+..........................................                               [100%]
+690 passed in 476.40s (0:07:56)
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
+
+## previa-vazia-antes
+
+UTC: 2026-11-16T01:52:49.294795+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_loading_preview_0137.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_loading_preview_is_blank_until_cover_arrives[Pok\xe9mon FireRed and LeafGreen+] _
+
+library = <checkpoint.library.Library object at 0x7f2f2d8a3e90>
+app = <PySide6.QtWidgets.QApplication(0x11d400d0) at 0x7f2f2d89d4c0>
+folder = PosixPath('/tmp/4d6a92d4684843c69b637eba2465ebaa')
+title = 'Pokémon FireRed and LeafGreen+'
+
+    @pytest.mark.parametrize('title',['Pokémon FireRed and LeafGreen+','The Legend of Zelda: Ocarina of Time 3D'])
+    def test_loading_preview_is_blank_until_cover_arrives(library,app,folder,title):
+        dialog=GameDialog(library=library);quick=dialog.quick_add
+        quick.timer.stop();quick.art.setText('Carregando prévia…')
+        result=MetadataResult('rawg','1',title,platforms=('Game Boy Advance',))
+        quick.show_result(result)
+        dialog.show()
+        try:
+            for _ in range(6):app.processEvents()
+>           assert quick.art.text()=='' and quick.art.pixmap().isNull()
+E           AssertionError: assert ('Carregando' == ''
+E             
+E             + Carregando)
+
+tests/test_loading_preview_0137.py:18: AssertionError
+----------------------------- Captured stderr call -----------------------------
+Fontconfig error: No writable cache directories
+_ test_loading_preview_is_blank_until_cover_arrives[The Legend of Zelda: Ocarina of Time 3D] _
+
+library = <checkpoint.library.Library object at 0x7f2f2c8fd310>
+app = <PySide6.QtWidgets.QApplication(0x11d400d0) at 0x7f2f2d89d4c0>
+folder = PosixPath('/tmp/a5fe29a07024436b8877ace3d00ea6e8')
+title = 'The Legend of Zelda: Ocarina of Time 3D'
+
+    @pytest.mark.parametrize('title',['Pokémon FireRed and LeafGreen+','The Legend of Zelda: Ocarina of Time 3D'])
+    def test_loading_preview_is_blank_until_cover_arrives(library,app,folder,title):
+        dialog=GameDialog(library=library);quick=dialog.quick_add
+        quick.timer.stop();quick.art.setText('Carregando prévia…')
+        result=MetadataResult('rawg','1',title,platforms=('Game Boy Advance',))
+        quick.show_result(result)
+        dialog.show()
+        try:
+            for _ in range(6):app.processEvents()
+>           assert quick.art.text()=='' and quick.art.pixmap().isNull()
+E           AssertionError: assert ('Carregando' == ''
+E             
+E             + Carregando)
+
+tests/test_loading_preview_0137.py:18: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_loading_preview_0137.py::test_loading_preview_is_blank_until_cover_arrives[Pok\xe9mon FireRed and LeafGreen+]
+FAILED tests/test_loading_preview_0137.py::test_loading_preview_is_blank_until_cover_arrives[The Legend of Zelda: Ocarina of Time 3D]
+2 failed in 0.34s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 1
+
+## previa-vazia-depois
+
+UTC: 2026-11-16T01:53:28.033512+00:00
+
+Comando: `["/workspace/work/venv/bin/python", "-m", "pytest", "tests/test_loading_preview_0137.py", "tests/test_quick_add.py", "tests/test_visual_0132.py", "-q", "-p", "no:cacheprovider"]`
+
+Ambiente: QT_QPA_PLATFORM=offscreen; CHECKPOINT_TEST_ROOT=/tmp
+
+stdout integral:
+```text
+......................................................                   [100%]
+54 passed in 14.07s
+
+```
+
+stderr integral:
+```text
+
+```
+
+Código de saída: 0
