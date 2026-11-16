@@ -29,8 +29,8 @@ def test_wishes_fill_columns_with_square_art(ui,app,width):
     w.resize(width,800);w.navigate(2)
     for _ in range(4):app.processEvents()
     grid=w.pages[2].findChild(WishGrid);card=grid.findChild(WishCard);art=card.findChild(WishLogo)
-    assert art.width()==art.height() and 280<=card.width()<=360
-    assert grid.columns>=max(1,(grid.width()+grid.grid.spacing())//(300+grid.grid.spacing()))
+    assert art.width()==art.height() and 220<=card.width()<=280
+    assert grid.columns>=max(1,(grid.width()+grid.grid.spacing())//(240+grid.grid.spacing()))
 
 def test_settings_paths_labels_grid_and_update_action(ui,app,folder,monkeypatch):
     from checkpoint.design_system import ThemeSwatch,CardGrid

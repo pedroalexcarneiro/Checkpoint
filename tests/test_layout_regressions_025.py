@@ -31,7 +31,10 @@ def test_sidebar_and_page_bounds_at_full_hd(library,app):
         assert window.add_button.isVisible()==(page in (0,1))
         sidebar=window.centralWidget().findChild(__import__('PySide6.QtWidgets',fromlist=['QWidget']).QWidget,'sidebar')
         assert sidebar.x()==0
-        assert window.header_widget.width()<=1392
+        if page==0:
+            useful=window.width()-sidebar.width()
+            assert useful-64<=window.header_widget.width()<=useful-48
+        else:assert window.header_widget.width()<=1392
         assert window.header_widget.width()>=700
     window.close()
 

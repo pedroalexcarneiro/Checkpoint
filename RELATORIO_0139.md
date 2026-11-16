@@ -276,3 +276,18 @@ full-regressions-fixed: 30 passed in 18.95s, exit 0, incluindo quatro falhas
 originais, foco/arte após redimensionar, job ativo e ciclo de vida do renderizador.
 Uma nova suíte integral será executada no commit corrigido; a tentativa parcial
 não é tratada como validação aprovada. Arquivos/saídas originais preservados.
+
+## Compatibilidade final das expectativas visuais aprovadas
+
+A suíte completa sobre 9856afc concluiu: 4 failed, 748 passed in 577.49s,
+exit 1. Sem falhas novas de dados/execução; restaram quatro expectativas antigas:
+Layout_0134 exigia faixa 280–360 em Desejos (dois jogos em janela larga),
+Layout_regressions_025 limitava o cabeçalho do Início a 1392 mesmo após o pedido
+expresso de largura útil, e Reference_layout_0128 ainda exigia o título antigo.
+
+Atualizações restritas aos requisitos substituídos: faixa 220–280 e mais colunas
+pelo alvo 240 mantendo proporção quadrada; Início exige margem lógica 24–32
+em cada lado enquanto demais páginas mantêm limite anterior; título Últimas
+sessões preservando Resumo/Memórias e ação correta de Continuar. Não há alteração
+no produto neste ajuste, nem relaxamento de asserções de dados ou contratos.
+Nova suíte integral será executada com essas expectativas aprovadas pelo escopo.

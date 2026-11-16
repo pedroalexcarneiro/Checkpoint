@@ -25,7 +25,7 @@ def test_home_has_reference_hero_cta_and_personal_sections(library,app):
     assert len(window.pages[0].findChildren(RecentArtwork))==1
     cta=next(button for button in window.pages[0].findChildren(QPushButton) if button.text()=='Continuar jogando')
     labels=[label.text() for label in window.pages[0].findChildren(QLabel)]
-    assert 'Últimos jogos abertos' in labels and 'Resumo da semana' in labels and 'Memórias recentes' in labels
+    assert 'Últimas sessões' in labels and 'Resumo da semana' in labels and 'Memórias recentes' in labels
     from unittest.mock import patch
     with patch.object(window,'edit_game') as setup:
         cta.click();setup.assert_called_once_with(identity)
