@@ -147,6 +147,18 @@ Screenshots memorias/memorias-diario.png e memorias-mista.png compartilhados
 
 ## Limitações preservadas
 
+### Item 7 — Jogos concluídos
+
+Auditoria descrita em Reprodução inicial: completed_at é última marcação
+de conclusão por jogo, não histórico de todas as conclusões. Serviço e
+persistência intactos. statistics_view.render_statistics apresenta card
+coeso Jogos concluídos com total, filtro atual e rótulo objetivo de significado;
+distribuição mensal preservada na dica acessível. Sem data gravada não conta,
+mesmo com status Concluído. Nenhum registro apagado/criado/modificado.
+completions-after: **15 passed in 3.00s**, exit 0, dois jogos, ausência de
+timestamp, limites/DST/períodos, preservação dos campos. Teste antigo foi
+atualizado somente no título substituído expressamente pelo pedido.
+
 Sem reconhecimento automático de troca de ROM. Fechar só ROM mantendo o
 emulador aberto continua limitação conhecida. UAC, contas, cofre real, hotkey
 Windows, emuladores reais, DPI/monitores nativos e executável desta rodada

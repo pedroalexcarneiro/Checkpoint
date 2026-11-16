@@ -9,5 +9,6 @@ def test_genres_are_removed_from_statistics_and_completions_remain(ui,app):
     genres=[l for l in w.pages[4].findChildren(QLabel) if l.text()=='Aventura · 1']
     assert not genres
     assert not any(l.text()=='Gêneros da coleção' for l in w.pages[4].findChildren(QLabel))
-    assert any(l.text()=='Conclusões no período' for l in w.pages[4].findChildren(QLabel))
+    assert any(l.text()=='Jogos concluídos' for l in w.pages[4].findChildren(QLabel))
+    assert w.pages[4].findChild(QLabel,'metricValue') is not None
     assert w.library.get(i)['genre']=='Aventura' and w.library.get(i)['status']=='Concluído'

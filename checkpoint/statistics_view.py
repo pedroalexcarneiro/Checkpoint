@@ -100,6 +100,16 @@ def render_statistics(window,layout,selected):
     inside.addStretch()
     if paired:layout.addWidget(AdaptiveColumns(chart_frame,frame,(1,1),breakpoint=780))
     else:layout.addWidget(frame)
+    from .statistics_periods import PERIODS
+    frame,inside=card();frame.setObjectName('completionMetrics')
+    line=QHBoxLayout();words=QVBoxLayout();words.setSpacing(4)
+    words.addWidget(text('Jogos concluídos','cardTitle'))
+    words.addWidget(text(dict((key,name) for name,key in PERIODS)[selected]+' · Última marcação por jogo','caption'))
+    line.addLayout(words,1)
+    value=text(str(sum(temporal['completions'].values())),'metricValue');value.setWordWrap(False)
+    breakdown='; '.join(name[5:7]+'/'+name[:4]+': '+str(count) for name,count in temporal['completions'].items())
+    value.setToolTip(breakdown or 'Sem marcações de conclusão neste período.')
+    value.setAccessibleDescription(value.toolTip());line.addWidget(value);inside.addLayout(line);layout.addWidget(frame)
     layout.addWidget(text('Coleção atual','sectionTitle'))
     row=CardGrid(220,max_columns=3);row.setObjectName('collectionMetrics')
     for title,value in [('Jogos da coleção',str(stats['total'])),('Concluídos da coleção',str(stats['statuses']['Concluído'])),('Tempo total · app + Steam',format_time(sum(times.values())))]:row.add_card(metric(title,value))
@@ -111,14 +121,6 @@ def render_statistics(window,layout,selected):
         line=QHBoxLayout();line.addWidget(text(platform or 'Não definida'));line.addStretch();line.addWidget(text(count_text(count,'jogo'),'muted'));inside.addLayout(line)
         bar=QProgressBar();bar.setRange(0,max(stats['total'],1));bar.setValue(count);bar.setTextVisible(False);bar.setFixedHeight(4);inside.addWidget(bar)
     layout.addWidget(frame)
-    extra=QWidget();inside=QVBoxLayout(extra)
-    for title,values in [('Conclusões no período',temporal['completions'])]:
-        inside.addWidget(text(title,'cardTitle'))
-        if not values:inside.addWidget(text('Sem registros neste período.' if title=='Conclusões no período' else 'Sem gêneros registrados.','muted'))
-        for name,value in values.items():
-            if title=='Conclusões no período' and len(name)==7:name=name[5:7]+'/'+name[:4]
-            inside.addWidget(text(f'{name} · {value}','muted'))
-    layout.addWidget(extra)
     layout.addStretch()
 
 
