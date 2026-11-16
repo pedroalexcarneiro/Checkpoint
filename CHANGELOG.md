@@ -2,6 +2,17 @@
 
 Registros anteriores descrevem o estado de cada versão; não são instruções atuais.
 
+## 0.1.37 — implementação local, não publicada
+
+- Início integrado com três capas inteiras em carrossel, histórico acompanhado, resumo semanal, banners de Ofertas e memórias navegáveis.
+- Biblioteca em cards horizontais logo/nome/tempo/favorito; grade com margens equilibradas, consultas limitadas, cache controlado e carregamento de arte em segundo plano.
+- Estatísticas por período com barras/calendário/mapa compacto; seção Gêneros da coleção removida sem apagar metadados.
+- Editor de foto com recorte, movimento, zoom circular, orientação, prévia e confirmação/cancelamento.
+- Vínculo de ROM local pela ficha, offline, com plataforma/perfil/identidade explícitos, execução acompanhada e original preservado. Proteção de edição no vínculo Drive pela ficha; A4 inalterado.
+- Desejos com filtro de plataforma, rodapé compacto; Alfabeticamente/Todas/Não iniciado e prévia vazia até a capa chegar.
+- Moldura integrada e bootstrap UAC implementados, parciais até homologação do pacote Windows.
+- Preços console e original individual da API não comprovados; captura real/contas/emuladores e fechar só ROM continuam limitações. Schema 4, assets e contratos protegidos preservados; lançamento autorizado após os testes, ainda em preparação.
+
 ## 0.1.36 — pré-release publicada em 15/11/2026
 
 - Revisão com o dono: ficha permanece em Desejos sem aquisição, favorito com coração preenchido e estado salvo; status único no destaque do tema, sem anotação do molde.

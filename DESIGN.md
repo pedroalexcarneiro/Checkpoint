@@ -1,4 +1,14 @@
-# Referência visual do Checkpoint 0.1.29
+# Referência visual do Checkpoint
+
+## Decisões atuais 0.1.37
+
+Referências principais: imagem A do Início e imagem B da Biblioteca em lista, com instruções posteriores do dono prevalecendo. Início: três capas inteiras em carrossel horizontal, status/última vez/tempo em uma linha cada, sem plataforma nesses cards; bases do bloco esquerdo e de Ofertas alinhadas. Ofertas é lista consecutiva no topo, com um banner inteiro por linha e nome/original/desconto/atual abaixo. Original e percentual ausentes quando não comprovados. Sem datas de consulta/histórico no rodapé.
+
+Biblioteca em lista: logo inteira à esquerda, nome próximo, tempo destacado à direita e favorito no extremo; sem tabela/cabeçalhos/status/plataforma/gênero nas linhas. Grade preserva proporção inteira e margens equilibradas. Alfabeticamente substitui Nome A–Z; Todas é o rótulo sem filtro; Não iniciado substitui Backlog apenas na apresentação compatível.
+
+Estatísticas usa barras no dia/semana, calendário mensal e mapa de calor compacto em períodos longos. Desenho de meses em linhas/colunas 1–31 foi rejeitado e não é referência atual. Gêneros da coleção removido; metadados preservados. Cinco capas de Aparência mantidas; Zoom do avatar usa indicador circular. Desejos tem filtro de plataforma em combo e rodapé sem vão excessivo, mantendo arte 1:1/teto de 360 px. Moldura integrada tem controles no tema, sem marca duplicada; validação Windows pendente.
+
+As seções seguintes registram decisões anteriores, válidas somente onde não contradizem esta rodada e as instruções posteriores.
 
 Status usa controle único com ponto interno, fundo suave, borda/texto/seta no destaque do tema e menu nativo com cinco estados; sem anotação 2 da referência. Favorito marcado usa coração preenchido na cor do tema, com estado persistido.
 

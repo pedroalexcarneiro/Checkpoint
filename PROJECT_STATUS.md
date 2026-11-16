@@ -1,4 +1,10 @@
-# Estado atual — Checkpoint 0.1.36 publicada
+# Estado atual — Checkpoint 0.1.37 local
+
+## Rodada 0.1.37 — lançamento autorizado, em validação
+
+Branch fix/0.1.37-ajustes, base 58b0c118. Início integrado, lista da Biblioteca, cache/rolagem assíncrona, gráficos por período, avatar editável e ROM local pela ficha implementados. Complementos posteriores de layout, rótulos, filtro de plataforma em Desejos e rodapé compacto incorporados sem reescrever commits. Versão declarada 0.1.37; schema 4.
+
+Suíte integral final Linux: 695 passed in 479.02s (0:07:59), exit 0, código f543166; rodada anterior de 690 também aprovada. Smokes de seis páginas/cadastro/SQLite aprovados. Moldura e UAC são parciais até teste real do pacote Windows. Preços console e original individual da API oficial permanecem sem cobertura/identidade da fonte comprovadas; filtro visual não resolve essa consulta. A4 protegido, fechamento interno da ROM e captura real/emuladores do dono continuam pendentes. O dono autorizou posteriormente o lançamento após as verificações; publicação depende do workflow Windows e será registrada em RELATORIO_LANCAMENTO_0137.md. Detalhes nos relatórios 0137; registros abaixo são históricos.
 
 ## Pré-release 0.1.36 publicada
 

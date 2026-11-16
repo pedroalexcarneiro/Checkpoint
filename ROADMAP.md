@@ -1,5 +1,13 @@
 # Próximos passos
 
+## Rodada atual 0.1.37 — lançamento autorizado após verificações
+
+Concluir suíte integral e smokes/capturas e reunir relatórios. Revisão visual com o dono não é presumida por gerar capturas. Durante a validação final, o dono autorizou lançar a versão depois das verificações; próximos passos são envio da branch e workflow Windows existente, sem alterar workflows ou tags anteriores.
+
+Pendências importantes: homologar pacote Windows com moldura integrada/Snap/DPI/monitores/área útil/fechamento; UAC com dados/cofre/launchers/Steam/emuladores/captura/atualizador; demonstrar fonte autenticada console com identidade/plataforma/edição/região e original individual. Filtro de plataforma não é consulta console pronta. Se nova fonte for necessária, apresentar capacidade/manutenção/dependências antes de adotá-la. Não pedir tokens no chat.
+
+A4 permanece protegido e separado; troca automática de ROM descartada. Fechar somente ROM mantendo processo aberto continua limitação conhecida. Autorização da 0.1.37 não resolve esses limites nem valida o PC do dono.
+
 ## Após a pré-release 0.1.36
 
 Publicado v0.1.36 em 15/11/2026 após 613 testes Windows e validação do pacote extraído. Próximas validações: uso real no PC do dono, captura de jogos/emuladores e DPI; cobertura autenticada de preços por plataforma/edição e original individual da fonte oficial. A4 e encerrar somente a ROM seguem pendências separadas. O lançamento autorizado foi concluído; planos anteriores abaixo descrevem o estado histórico.

@@ -1,5 +1,13 @@
 # Integrações
 
+## Capacidade e limites da rodada local 0.1.37
+
+Documentação oficial https://gg.deals/api/prices/ inspecionada nesta rodada, cópia SHA-256 1c46c85b1f61b6e52cc055d342f539d2a4d4c21bb110c5117c320465a5a1f544. Endpoint by-slug documentado com key/region, mas resposta não comprova plataforma/edição/loja individual/original. Não há conta/chave autenticada do dono neste ambiente. Consulta console e original individual da API continuam bloqueados, sem novo scraper/fonte. Dropdown PC/Switch/PlayStation/Xbox em Desejos filtra dados existentes e não amplia cobertura de preço. PC não é identidade universal.
+
+ROM local pela ficha funciona offline e usa o arquivo escolhido, sem passar por Drive/cofre/download. Perfis exigem plataforma e extensão explicitamente compatíveis e argumento {rom}; execução reutiliza Launcher/sessões. Drive pela ficha preserva sua origem e rejeita edição/plataforma divergentes antes de vincular/baixar. Cadastro protegido Adicionar jogo > ROM do Drive continua inalterado (A4).
+
+UAC do executável Windows interativo é preparado antes de dados/cofre, com SID original e tratamento de cancelamento. Mudança para outra conta é recusada antes de abrir dados. Captura elevada, launchers, atualizador e cofre reais não foram homologados em Windows nesta rodada.
+
 Decisão posterior do dono na revisão 0.1.36: ausência de preço usa `-` no valor principal, mantendo o motivo curto logo abaixo. Substitui somente o texto Sem preço salvo.
 
 ## Revisão de capacidade da fonte — 0.1.36 local

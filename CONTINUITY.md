@@ -1,5 +1,19 @@
 # Continuidade do Checkpoint
 
+## Lançamento 0.1.37 autorizado — em preparação
+
+Durante a validação final, o dono instruiu: “dps de acabar tu lanca a versao ta”. Essa autorização posterior permite enviar a branch 0.1.37 e acionar o workflow existente para testar/buildar/publicar a pré-release, depois de fechar as verificações. Não permite reescrever histórico/tags existentes nem remover contratos. Publicação ainda não realizada; resultados serão registrados em RELATORIO_LANCAMENTO_0137.md. Preços console, original da API e homologação real no PC continuam limitações explícitas.
+
+## Rodada local 0.1.37 — implementação e validação
+
+Branch fix/0.1.37-ajustes, base remota 0.1.36 reconfirmada em 58b0c118c534dbdbc3bc080db4a95e7ecd1554d1. A fase inicial autorizou somente implementação/commits/validações locais; a autorização nova acima substitui a restrição de publicação. Versão declarada 0.1.37, schema 4. Workflows, assets e contratos protegidos preservados; notas públicas preparadas para esta versão após a autorização.
+
+Implementados Início integrado com três capas inteiras em carrossel, resumo semanal real, lista de Ofertas com banners e memórias; Biblioteca em cards horizontais e grade com cache limitado, totais em consultas limitadas e arte carregada em segundo plano; períodos estatísticos próprios, sem Gêneros da coleção; editor de avatar; vínculo/execução de ROM local pela ficha; filtros de plataforma em Desejos, cards compactos e prévia vazia até chegar a capa. Alfabeticamente, Todas e Não iniciado são os rótulos atuais; Backlog salvo continua compatível.
+
+Moldura integrada e bootstrap UAC implementados, com testes controlados Linux; Windows real/pacote não homologados. Preços console e original individual da API oficial continuam sem capacidade autenticada comprovada: filtro de plataforma não significa consulta multiplataforma pronta. A4 e fechar somente a ROM com emulador aberto permanecem separados e inalterados. Suíte integral final desta versão: 695 passed in 479.02s (0:07:59), exit 0, Linux/Python 3.12.14/Qt offscreen, código congelado em f543166; smokes de seis páginas/cadastro/SQLite aprovados. Plano/relatório/evidências: PLANO_0137.md, RELATORIO_0137.md e RELATORIO_0137_TESTES.md.
+
+As seções seguintes são históricas, inclusive autorizações antigas de lançamento.
+
 ## Pré-release 0.1.36 publicada
 
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.36

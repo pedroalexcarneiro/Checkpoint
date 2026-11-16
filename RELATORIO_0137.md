@@ -1,6 +1,6 @@
-# Relatório 0.1.37 — em implementação local
+# Relatório 0.1.37 — implementação e validação
 
-Base: 58b0c118c534dbdbc3bc080db4a95e7ecd1554d1 de fix/0.1.36-ajustes; remoto reconfirmado e checkout inicial limpo. Branch: fix/0.1.37-ajustes. Sem autorização para publicação, push, PR, tag, release ou workflow de lançamento. Código, tag e assets publicados da 0.1.36 permanecem preservados.
+Base: 58b0c118c534dbdbc3bc080db4a95e7ecd1554d1 de fix/0.1.36-ajustes; remoto reconfirmado e checkout inicial limpo. Branch: fix/0.1.37-ajustes. Fase inicial sem autorização de publicação; o dono autorizou posteriormente lançar a versão depois das verificações. Essa autorização nova será executada após o fechamento local e validação Windows, com resultado em RELATORIO_LANCAMENTO_0137.md. Código, tag e assets publicados da 0.1.36 permanecem preservados.
 
 Pedido: documento enviado em 15/11/2026, com imagens A (Início integrado) e B (lista horizontal). Vídeos p1–p4 ausentes neste chat: horários e problemas citados são relatos, não testes diretos. Capturas futuras do app usarão dados sintéticos isolados e serão identificadas. Não confundir Linux/Qt offscreen com Windows real do dono.
 
@@ -166,7 +166,7 @@ Parte preservada/funcional: oficial por padrão, keyshops opcionais, atual e ori
 
 Schema continua 4, sem migração ou recriação de banco. Preferências novas/alteradas pertencem aos controles escolhidos pelo usuário: wishlist.platform_filter, profile.avatar_original/profile.avatar_crop e as opções de visualização existentes. Backlog legado não é regravado ao abrir. ROM local usa campos existentes game_files/rom_versions; confirmar muda somente vínculo/perfil e não remove original anterior, sessões, memórias ou metadados. Sem base pessoal, credenciais, ROMs, saves ou mídia pessoal nas evidências versionadas.
 
-Protegidos e fluxo A4 intactos. Exceção QuickAdd restrita a show_result, com verificação AST preservada. Não houve push, PR, tag, release, disparo manual de workflow ou alteração de workflows/notas públicas de release. As autorizações de lançamento 0.1.36 são históricas e não foram reutilizadas.
+Protegidos e fluxo A4 intactos. Exceção QuickAdd restrita a show_result, com verificação AST preservada. Até o encerramento da fase inicialmente local não houve push, PR, tag, release, workflow ou alteração de notas públicas. Depois o dono autorizou especificamente lançar a 0.1.37; notas públicas foram então preparadas e o envio/workflow serão registrados no relatório de lançamento. Workflows e autorizações históricas da 0.1.36 não foram alterados ou reutilizados.
 
 ## Último complemento — prévia vazia até chegar a capa (feito em Linux)
 
@@ -179,3 +179,73 @@ Teste anterior atualizado especificamente para a nova decisão: duas falhas ante
 A revisão final identificou que state=ready sozinho ainda permitia promover cache antigo como oferta atual no Início. home_data.wish_offers agora exige checked_at com fuso, idade de zero até menos de uma hora, BRL explícito e contexto de identidade confirmado pelo selected_quote. Data ausente/inválida/ambígua/futura e cache vencido ficam fora do Início; os valores armazenados e a apresentação de cache na ficha/Desejos não são apagados nem regravados. Usa a janela de cache existente da consulta, sem inventar histórico ou nova fonte.
 
 Cinco casos novos, com Portal 2 e Hades, cobrem ausência, erro, data sem fuso, limite de uma hora e futuro; preço salvo preservado exatamente, consulta com 3.599 segundos aceita. Antes faltava a API de relógio para essa verificação; depois 27 testes de dados/layout/preços passaram em 2,08 s. Fixtures desta rodada agora informam data de consulta recente explicitamente, sem alterar expectativas de valores/ordenação/desconto. Invocação intermediária citou teste inexistente e saiu com código 4; nova execução com nomes existentes passou, saída integral mantida. A suíte integral será repetida porque houve essa mudança funcional posterior aos 690 testes.
+
+## Índice por item na revisão final
+
+Feito significa implementação/regressão Linux, não homologação Windows pessoal. Linhas parciais/bloqueadas não são apresentadas como conclusão integral da rodada.
+
+| Item | Status | Arquivos/funções principais e evidência | Commits da unidade |
+| --- | --- | --- | --- |
+| 1 Base/diagnóstico | feito | AGENTS/documentos, branch e base 58b0c118 reconfirmadas; plano inicial | 05f3aaf |
+| 2 Referências | feito na implementação; revisão estética não presumida | Imagens A/B e correções posteriores; render_0137_review, 3 resoluções | 8a66e32, f543166 |
+| 3 Vídeos | parcial | p1–p4 não anexados nesta rodada; achados tratados como relato, sem fingir observação direta | 05f3aaf e este relatório |
+| 4 Início | feito em Linux | home_data execution_history/recent_games/week_summary/wish_offers/recent_memories; home_components e home_view; carrosséis/ações e datas reais | 4d38531, 8a66e32, dbbea93, f356e59, 41f3826 |
+| 5 Lista | feito em Linux | library_list ListDelegate/LibraryList; window refresh_library/toggle_favorite; logo/nome/tempo/coração e filtros | c2b1773 |
+| 6 Grade/rolagem | feito em Linux; PC Windows não homologado | artwork_cache load/_read_image; artwork_prefetch; cover_grid; playtime.collection_times; benchmark 500 jogos e leitura lenta | 2450275, 36a3146 |
+| 7 Capas 70–150 | feito por preservação/regressão | settings_previews CoverSizeChoices já existente, testes de base/verde/teclado/persistência e capturas 70/150 | 36a3146, f543166 (validação/capturas) |
+| 8 Rótulos/status | feito em Linux | library.display_status/STATUSES, filtros e detalhe; Alfabeticamente/Todas/Não iniciado sem regravar Backlog legado | 7dcd020, 63c7de2, a1505a1 |
+| 9 Estatísticas | feito em Linux | period_chart.PeriodChart; statistics_periods.day_hours; statistics_view sem Gêneros da coleção; metadados preservados | 3d7c132 |
+| 10 Moldura | parcial | window_controls e windows_frame; MainWindow.nativeEvent/showEvent; Windows real/Snap/monitores/área útil pendentes | e06e4f1 |
+| 11 Elevação | parcial | elevation.elevate_startup/WindowsElevationApi e app.main; controles de SID/argumentos/cancelamento; UAC real pendente | 27e304d |
+| 12 Preços | parcial; expansão console bloqueada | Fonte oficial inspecionada; sem confirmação autenticada de plataforma/edição/original; integridade atual preservada, sem nova fonte | relatório de capacidade; 41f3826 para validade temporal no Início |
+| 13 Desejos | feito em Linux | collection_views.build_wishlist/WishGrid.reflow; wish_platforms; filtro em combo, rodapé compacto, regressões de ficha/favorito/preços | 29f5db5 |
+| 14 Avatar | feito em Linux | avatar_crop e profile_dialog select_photo/recorte/zoom/save; original/EXIF/cancelamento/persistência | fc19ac9, 058fa53 |
+| 15 Banner/captura | parcial | Banners inteiros e regressões preservados; captura global/elevada com jogos reais não homologada | f356e59, e06e4f1 e regressões da suíte |
+| 16 Limites | bloqueado/descartado conforme pedido | A4 intacto; fechar só ROM permanece limitação; troca automática descartada, não implementada | plano e relatório; sem alteração do fluxo protegido |
+| 17 Marca/temas/textos | feito em Linux | Assets/nove temas preservados; Steam real/raster original; ordenação e prévia conforme decisões posteriores | 7dcd020, 63c7de2, 2565e57 e regressões |
+| 18 Dados/contratos | feito em Linux | Schema 4, game_files/rom_versions existentes, originais/histórico mantidos; contrato AST e protegidos intactos | a1505a1, 2565e57 e auditoria final |
+| 19 Validação | parcial | Linux, capturas e escalas Qt disponíveis; Windows real/contas/emuladores não homologados; runner será registrado separadamente | RELATORIO_0137_TESTES e relatório de lançamento |
+| 20 Entrega | feito na preparação local; publicação em relatório separado | Documentos/notas/relatórios/índice/patches locais e hashes; publicação só após autorização posterior e gates | f543166 e commit documental final |
+| ROM local adicional | feito em Linux; emuladores reais não homologados | local_rom validate_path/compatible_profiles/identity_problem/bind_local; local_rom_dialog; window.start_game/launch_rom e rom_link; dois programas próprios | a1505a1 |
+| Prévia vazia adicional | feito em Linux | Somente QuickAdd.show_result; teste com dois jogos e chegada efetiva da capa pelo sinal Qt | d6a373b e c4b0e99 (etapas substituídas), 2565e57 (estado final) |
+
+## Commits completos até o código congelado para a suíte final
+
+Saída de git log --reverse --format='%H %s' 58b0c118c534dbdbc3bc080db4a95e7ecd1554d1..HEAD; o commit documental posterior será incluído no manifesto externo da entrega, evitando referência circular ao próprio relatório.
+
+```text
+05f3aaf0487601a3e4b51b69cab47e7b847b6d72 docs: planejar implementação local da 0.1.37
+7dcd020dd06f05e8722ad7b654a0ab2837be9531 fix: aplicar rótulos aprovados da 0.1.37
+4d38531ec8cc4ed9c9516768a4ea172f6ce274f0 feat: obter dados locais verificáveis para o novo Início
+8a66e32eeb97501dc427c7e3d2819a3eb564bbfb feat: integrar Início com carrosséis e Ofertas conforme revisão
+dbbea93600d9528d48e0cddc8b36df93ae9ecba1 fix: simplificar Ofertas aos quatro campos pedidos
+c2b1773583f98a8c2d909955dc2f82c503391359 feat: substituir tabela da Biblioteca por lista de cards
+f356e59cf16cdf046a919520cde14aa4ab7e1d14 feat: apresentar prévia de banners nas linhas de Ofertas
+2450275407d336258a368787fc0a1e13e1ce0715 perf: limitar rasters e evitar reconstrução da Biblioteca
+63c7de2d8953e24e4f6ce7831cce1439375e0207 fix: nomear ordenação como Alfabeticamente
+3d7c132b41ed05e05a53e605d0c2ea1cef0ac085 feat: adaptar gráficos ao período e remover Gêneros da tela
+fc19ac9e5cd620ed908221d0994e61094e66fbfa feat: editar recorte posição e zoom da foto de perfil
+058fa536a90c75dde1bdf0e7dac49bedb12947a8 style: usar indicador circular no zoom da foto
+a1505a175224d1bbe2b02a91adfe732d0e2a8bbe feat: vincular ROM local pela ficha e validar edição antes de executar
+d6a373b6cdc7e737d693bfd9299242ce83ff8560 fix: mostrar texto de carregamento da prévia sem corte
+36a314687a1ca5542688dcefc06685cca4420c1f perf: carregar arte da biblioteca fora da interface
+29f5db5d16467468542d76ed18050cba3af0cb76 fix: filtrar desejos por plataforma e compactar rodape
+c4b0e99e1de11e392c073077cf9b431c4c7f4e08 fix: simplificar placeholder para Carregando
+e06e4f1adf2b523f66486d8e4a9e592d19441f6b feat: integrar controles e moldura da janela
+27e304df2380098847a4b8472e0ffd8e431ece85 feat: preparar elevacao UAC preservando conta e dados
+2565e579cd530847a859dcf226a52ade6482abc3 fix: manter previa vazia ate a capa chegar
+41f382687c0a566313bf9f923a40c36ae9f8c280 fix: exibir no Inicio somente ofertas com consulta recente
+f543166037e545aad99c6aef21bf6ed95fe4bb10 chore: preparar versao local 0.1.37 e revisao visual
+```
+
+## Resultado local final
+
+Código congelado f543166037e545aad99c6aef21bf6ed95fe4bb10; versão 0.1.37; schema 4. Linux/Python 3.12.14/PySide6 6.8.3, QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp. Suíte exigida integral: **695 passed in 479.02s (0:07:59)**, código de saída 0, sem skips/xfails introduzidos. A execução anterior teve 690 aprovações antes dos últimos ajustes; não é usada como resultado final. Comando, stdout completo, stderr e exit de ambas estão em RELATORIO_0137_TESTES.md. Não houve mudança de código/testes/scripts durante a suíte final; somente documentação/notas.
+
+Smokes novos/isolados aprovados: seis páginas e SQLite integrity=ok; cadastro, auxiliar, renderização e persistência. Capturas finais reais Qt com arte/valores sintéticos identificados: revisao-codigo-final (DPR 1), final-dpi150 (1,5) e final-dpi200 (2), cada conjunto com 48 screenshots listados no manifesto, em janelas lógicas 1280×800/1920×1080/1000×700. Essas escalas Qt não homologam Windows/DPI/monitores reais. Capas 70/150, controles, Perfil, origem/ROM local e prévia vazia incluídos. As imagens de revisão anteriores permanecem históricas; loading-preview final substitui a palavra Carregando. Não presumida aprovação estética por gerar capturas.
+
+Auditoria por git diff confirmou workflows, assets e arquivos protegidos idênticos à base 58b0c118; o teste AST protegido passou na suíte. Arquivos de texto novos/alterados verificados como UTF-8/LF; nenhuma normalização de protegido. O único arquivo de .github preparado após a autorização de lançamento é release-notes.md, com as notas da 0.1.37. Não houve force ou reescrita de histórico.
+
+Entrega local preparada com documentos, relatórios, capturas e patches completos gerados por git format-patch -1 SHA --stdout e SHA-256 em manifesto externo. Hash do próprio relatório e do commit documental constam no manifesto externo após o commit, evitando referência circular. O lançamento autorizado, seu SHA, execução Windows, testes/build/smokes/arquivos e resultado são registrados em RELATORIO_LANCAMENTO_0137.md; preparar documentação não é afirmar que publicou.
+
+Continuam parciais/bloqueados: preços console/original da API sem prova autenticada; moldura/UAC/captura elevada/launchers/contas/emuladores e uso real no Windows do dono; A4 e fechamento apenas da ROM. Não declarar a rodada inteira concluída com essas pendências. Esta entrega conclui a implementação/verificação local possível e explicita o que não foi homologado.

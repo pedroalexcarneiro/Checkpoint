@@ -1,5 +1,17 @@
 # Arquitetura
 
+## Serviços locais 0.1.37
+
+home_data.py lê execuções com PID, resumo semanal e memórias existentes; home_components.py compõe carrosséis, ações separadas e metadados de uma linha. library_list.py substitui a tabela por delegate horizontal. playtime.collection_times agrega sessões e snapshots separadamente em consultas limitadas, sem duplicação por join.
+
+artwork_cache.py usa LRU limitada em bytes/entradas e invalidação por arquivo. Biblioteca solicita modo assíncrono: QImageReader e escala em QThreadPool de dois workers; QPixmap/pintura somente na GUI. Até 24 pedidos por cache; artwork_prefetch.py antecipa região visível e linhas vizinhas. Outros consumidores podem usar modo síncrono. Nenhum asset original é regravado.
+
+period_chart.py seleciona barras horárias/semanais, calendário mensal ou mapa compacto; statistics_periods.day_hours reparte instantes reais entre limites locais inclusive DST. avatar_crop.py preserva original e calcula recorte/zoom; profile_dialog.py grava preferências atomicamente.
+
+local_rom.py/local_rom_dialog.py validam arquivo, identidade/plataforma/perfil e confirmação, reutilizando game_files/rom_versions/EmulatorCommand/Launcher. Nenhuma cópia/upload/download para a origem local. rom_link.py endurece somente o vínculo pela ficha; A4 permanece protegido.
+
+window_controls.py/windows_frame.py integram controles e adaptação nativa Windows; elevation.py prepara runas antes dos dados e exige SID original. Esses dois caminhos permanecem parciais sem homologação do pacote Windows. Schema 4, serviços protegidos e cofre preservados.
+
 ## Serviços acrescentados na rodada local 0.1.36
 
 `global_hotkey.py` concentra RegisterHotKey/WM_HOTKEY Windows e ciclo de vida; sem dependência adicional. `game_capture.py` valida janela em primeiro plano/PID de sessão vivo e associação única antes/depois da imagem; não altera sessões por foco. Sem associação comprovada de processos-filhos: recusa com motivo.

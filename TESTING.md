@@ -1,5 +1,13 @@
 # Validação do Checkpoint
 
+## Rodada local 0.1.37
+
+Suíte integral final: 695 passed in 479.02s (0:07:59), exit 0, código f543166037e545aad99c6aef21bf6ed95fe4bb10. Comando: QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp /workspace/work/venv/bin/python -m pytest tests -q -p no:cacheprovider. Resultados integrais, comandos, ambiente e códigos de saída em RELATORIO_0137_TESTES.md; contagens abaixo são históricas. Código permaneceu congelado durante a suíte; só documentação/notas foram alteradas em paralelo.
+
+Cobertura nova: execuções reais versus alterações de status/falhas, resumo semanal e limites locais, carrosséis/ações, lista e favorito, consultas em volume/cache/arte assíncrona com leitura lenta sem bloquear eventos, gráficos por período e DST, avatar/orientação/cancelamento, dois programas CHIP-8 próprios com executor controlado e fechamento de processo, filtro de plataformas e rodapé, carregamento sem corte, moldura/UAC controlados. Nenhum teste desses equivale a homologação de contas ou emuladores reais.
+
+scripts/render_0137_review.py gera capturas Qt reais com fixtures identificadas em 1280×800/1920×1080/1000×700: Início, lista, grade, Desejos, períodos, Aparência 70/150, Conexões, Perfil, origem/ROM vinculada e carregamento. Espera conclusão da arte antes da captura. Linux offscreen/DPR 1; revisões em outras escalas serão registradas separadamente. Windows, DWM/Snap/UAC reais, captura elevada e pacote não validados. Schema 4 e arquivos protegidos preservados.
+
 ## Validação final local 0.1.36
 
 Código `da12842e6de663ee4791a6a4010bc622cfed8222`: **612 passed in 428.94s (0:07:08)**, exit 0, Linux/Python 3.12.14, Qt offscreen e dados em /tmp. Sem alterações no código durante a execução. Planos/relatórios/capturas e patches completos na entrega local; nenhum push/PR/tag/release/workflow. Windows real e console na API não comprovados; itens 02, 03 e 06 parciais. A4/ROM descarregada com emulador vivo continuam separados. Últimos ajustes: ficha em Desejos sem aquisição, favorito persistido e visível, status único conforme molde sem anotação.
