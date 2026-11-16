@@ -241,7 +241,7 @@ class GameDialog(QDialog):
 class ImageDialog(QDialog):
     def __init__(self,path,parent=None):
         super().__init__(parent); self.setWindowTitle(Path(path).name); self.resize(1000,750)
-        layout = QVBoxLayout(self); image = QLabel(); image.setAlignment(Qt.AlignCenter)
-        pixmap = QPixmap(path)
-        image.setPixmap(pixmap.scaled(950,680,Qt.KeepAspectRatio,Qt.SmoothTransformation))
-        layout.addWidget(image)
+        from .dialog_style import FittedImage,prepare_dialog
+        layout = QVBoxLayout(self); layout.setContentsMargins(16,16,16,16)
+        layout.addWidget(FittedImage(path))
+        prepare_dialog(self)

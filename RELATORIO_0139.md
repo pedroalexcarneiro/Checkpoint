@@ -195,3 +195,7 @@ Aparência/Conexões/Downloads/Dados e backup preservam índices; Emuladores e L
 ## Itens 15/16 — Arquivos e saves tradicionais
 
 Nome da ROM ocupa centro expansível com elipse e tooltip integral; situação abaixo e ação à direita, sem modificar original_name. Saves vazio usa linha compacta e única ação; configurado mostra caminho completo acessível, padrões, último backup real e ações existentes. Campo e histórico/serviços de backup não mudam. settings-tabs-after: 32 passed in 19.28s, incluindo nome longo em 1000/1280/1920, dois jogos, saves e registros íntegros. Primeira checagem de nome encontrou erro do próprio teste ao buscar botão dentro do widget de texto; corrigido o ancestral, sem mudar geometria exigida.
+
+## Item 12 — exceção ImageDialog autorizada
+
+Somente ImageDialog.__init__ mudou em dialogs.py: usa FittedImage e apresentação opt-in. Prefixo protegido anterior à classe é byte a byte idêntico. O método novo usa LF; prefixo legado CRLF foi preservado para respeitar a exceção restrita e evitar normalização incidental de protegidos. Nenhuma alteração em GameDialog/QuickAdd/A4/lifecycle. Testes reais do modal verificam redimensionamento, proporção, arquivo original e prefixo protegido; contrato AST segue intacto. Testes novos completos: 50 passed in 6.05s.
