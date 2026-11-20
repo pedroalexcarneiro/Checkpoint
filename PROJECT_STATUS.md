@@ -3,7 +3,8 @@
 Revisão local em fix/pos-0139-layout, sem nova publicação: Início sem jogos
 repetidos, memórias com largura padrão/fundo transparente, nove destaques mais
 vivos e modos claro/escuro independentes, topo adaptado. Validação em execução;
-percentual ausente na API exige complemento opcional ainda não autorizado/ativado.
+complemento opcional de descontos aprovado e implementado, desligado por padrão,
+conferindo identidade/preço por oferta sem alterar API/valores brutos em falhas.
 Estado do release publicado abaixo; detalhes da revisão em RELATORIO_POS_0139.md.
 
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.39

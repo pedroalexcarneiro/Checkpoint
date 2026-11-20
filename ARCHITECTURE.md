@@ -10,6 +10,12 @@ não informado, permitindo que consumidores existentes acompanhem a aparência s
 alterar métodos protegidos. apply_theme mantém paleta/QSS/propriedades coerentes.
 Superfícies e barra superior usam a cor escolhida, sem base azul-petróleo constante.
 
+OfferDetailsProvider compõe API e coletor público existente só com consentimento
+na opção de Conexões. O parser reconhece base-price e data-game-name, rejeitando
+variantes ao confirmar mínimos. Cache bruto da API preservado; selected_quote
+oculta grupos sem confirmação de edição e mantém distinção oficial/keyshop.
+Configuração da consulta é capturada no início, para invalidação concorrente.
+
 ## Correções de apresentação 0.1.39
 
 Complemento de captura: WindowsCapture verifica primeiro plano/PID e limites

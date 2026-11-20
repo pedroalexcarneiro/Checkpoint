@@ -67,3 +67,43 @@ preço PC não é transferido para Switch/PlayStation/Xbox.
   a capa no aplicativo; alternativa de banner existe só no renderizador descartável.
 - Capturas são Qt real/Linux com dados próprios, não a biblioteca do dono nem
   homologação Windows. Nenhum push/workflow/tag/release desta revisão.
+
+## Fechamento da etapa visual e complemento aprovado
+
+Suíte integral da etapa visual em f4a7139: **789 passed in 556.71s (0:09:16)**,
+exit 0, Linux/Python 3.12.14, QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp.
+Esse resultado antecede o novo serviço de preços aprovado posteriormente.
+
+O dono escolheu “Adicionar complemento opcional do GG.deals”. Implementado em
+price_enrichment.OfferDetailsProvider, selecionado por prices.default_provider
+somente com a opção prices.offer_details ativa e API configurada. Controle
+ggdealsOfferDetails em Conexões, desativado por padrão; altera versão do cache
+sem descartar valores. refresh_prices registra a configuração do início da
+consulta para não marcar como fresca uma resposta iniciada antes da mudança.
+
+O teste real da página pública de Cyberpunk mostrou regular em base-price,
+enquanto o coletor anterior lia somente price-old. Mostrou também ofertas com
+data-game-name de Xbox & PC/Ultimate dentro da página canônica de PC. O parser
+agora lê os dois formatos, filtra produtos com identificação diferente e calcula
+mínimos apenas com as ofertas correspondentes quando a página traz esses IDs;
+agregados/cabeçalhos não sobrepõem essa confirmação.
+
+O complemento exige canônico, BRL, produto da oferta e valor coincidentes com
+a API. Não traz o preço de outra oferta para a API. Se um mínimo da API só
+coincidir com produto excluído, o cache bruto é mantido, mas esse grupo não é
+apresentado como preço confirmado da edição. Divergência simples mantém o preço
+atribuído à API e não inventa percentual; Ofertas do Início não promove esse caso.
+Keyshops continuam dependentes de sua opção própria, sem entrar no padrão oficial.
+
+Reprodução sem a opção/serviço: 11 failed, 1 passed. Após implementação: conjuntos
+direcionados de 69, 28, 77, 75, 82 e finalmente **83 passed in 17.99s**, exit 0,
+incluindo ficha, opção/cache, dois jogos, edições divergentes, preço divergente,
+falha pública, API falhando, configuração mudando durante consulta e loja de chaves.
+Nenhuma asserção antiga de preços foi modificada. Nova suíte integral necessária
+para o conjunto com o serviço; será registrada após concluir.
+
+Consultas públicas reais a Cyberpunk e Hades executadas sem chave/conta. A versão
+filtrada retornou apenas produtos canônicos; nessas consultas as ofertas PC não
+informaram original maior que o atual, portanto nenhum percentual foi inventado.
+O teste não homologa a API autenticada do dono, rede/cofre/Windows ou disponibilidade
+permanente da página. Metadados em /workspace/work/evidence-pos-0139/public-live-final.json.

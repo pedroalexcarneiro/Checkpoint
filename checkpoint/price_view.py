@@ -51,7 +51,7 @@ def price_summary(library,game):
     value=display_snapshot(library,game);frame=QWidget();frame.setFixedHeight(132);row=QVBoxLayout(frame);row.setContentsMargins(0,0,0,0);row.setSpacing(SPACE['xxs'])
     current=value.get('lowest');usable=type(current) is int and current>0 and value.get('currency','BRL')=='BRL'
     stale=value.get('state') in ('unavailable','missing_steam_id') and usable
-    label=text('Último preço salvo' if stale else 'Menor preço atual','caption');label.setWordWrap(False);row.addWidget(label)
+    label=text('Último preço salvo' if stale else 'Preço da API' if value.get('details_state') in ('price_mismatch','identity_mismatch','identity_unconfirmed') else 'Menor preço atual','caption');label.setWordWrap(False);row.addWidget(label)
     amount=PriceAmount(money(current) if usable else '-');row.addWidget(amount)
     if not usable:row.addWidget(text(value.get('message') or ('Preços ainda não consultados.' if has_steam_id(library,game) else 'Sem ID da Steam para consultar ofertas.'),'caption'))
     kind={'retail':'Loja oficial','keyshop':'Keyshop'}.get(value.get('current_kind'))
@@ -60,8 +60,14 @@ def price_summary(library,game):
         label=text(kind+(' · '+shop if shop else ''),'secondary');label.setToolTip(label.text());row.addWidget(label)
     if usable and value.get('original') and value.get('discount'):
         discount=QHBoxLayout();original=text(money(value['original']),'caption');font=original.font();font.setStrikeOut(True);original.setFont(font);discount.addWidget(original);discount.addWidget(text('-'+str(value['discount'])+'%','priceDiscount'));discount.addStretch();row.addLayout(discount)
+    elif usable and value.get('details_enabled') and library.setting('prices.offer_details',False):
+        reason={'unavailable':'Página pública indisponível. Preço da API preservado.',
+            'price_mismatch':'Os preços da API e da página divergem; desconto não confirmado.',
+            'identity_mismatch':'A página pública não confirmou a mesma edição ou moeda.',
+            'identity_unconfirmed':'A API não informou a página canônica desta edição.'}.get(value.get('details_state'),'Sem preço original confirmado para esta oferta.')
+        label=text('Desconto: -','caption');label.setToolTip(reason);label.setAccessibleDescription(reason);row.addWidget(label)
     historical=value.get('historical')
-    if type(historical) is int and historical>0:row.addWidget(text('Menor histórico: '+money(historical),'caption'))
+    if type(historical) is int and historical>0:row.addWidget(text(('Histórico da API: ' if value.get('state')=='offer_unconfirmed' else 'Menor histórico: ')+money(historical),'caption'))
     if not has_steam_id(library,game) and usable:row.addWidget(text('Sem ID da Steam para consulta','caption'))
     row.addStretch()
     if value.get('checked_at'):

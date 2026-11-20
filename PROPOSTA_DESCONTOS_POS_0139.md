@@ -1,5 +1,11 @@
 # Percentual ausente na consulta por API — proposta revisável
 
+**Aprovada pelo dono e implementada localmente.** Resposta: “Adicionar complemento
+opcional do GG.deals”. Os parágrafos seguintes registram a proposta original.
+Na implementação, a identidade é conferida também por oferta (data-game-name),
+porque a página real mistura produtos/edições. Divergência confirmada não é
+promovida como preço desta edição; o valor bruto da API é preservado no cache.
+
 Situação: price_summary/comparison já exibem percentuais confirmados. A consulta
 oficial atual preenche preço atual/histórico e não original da oferta. Histórico
 não é preço de tabela: calcular um desconto a partir dele produziria dado errado.

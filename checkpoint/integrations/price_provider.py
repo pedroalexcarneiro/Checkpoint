@@ -10,6 +10,10 @@ class PriceQuote(TypedDict,total=False):
     discount: int|None
     currency: str
     stores: list[dict]
+    details_enabled: bool
+    details_state: str
+    detail_prices: dict
+    unconfirmed_kinds: list[str]
 
 class PriceProvider(Protocol):
     def prices(self,identity=None,url=None)->PriceQuote: ...

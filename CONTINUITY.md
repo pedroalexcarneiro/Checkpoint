@@ -7,7 +7,8 @@ Início, memórias sem expansão/faixas artificiais (Início e grade), cores mai
 vivas com fundos por destaque, claro/escuro e barra do topo adaptada. Implementado
 localmente, 92 testes direcionados finais aprovados; suíte completa a repetir.
 Sem push/workflow/release novo. Percentual depende de dado original da oferta;
-proposta opcional GG.deals público ainda depende de escolha. Capa mantida após
+complemento opcional GG.deals público aprovado e implementado, com validação
+por oferta/edição e opção desligada por padrão. Capa mantida após
 comparação com banner. PLANO_POS_0139.md e RELATORIO_POS_0139.md registram a revisão.
 
 ## 0.1.39 publicada — correções e degradê aprovado

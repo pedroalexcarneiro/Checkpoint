@@ -54,6 +54,7 @@ def wish_offers(library, limit=3, now=None):
     result=[];end=now or datetime.now(timezone.utc)
     for game in games:
         value=selected_quote(library,game['id'])
+        if value.get('details_state') in ('price_mismatch','identity_mismatch','identity_unconfirmed'):continue
         if value.get('state')!='ready' or value.get('currency')!='BRL' or not value.get('offer_context'):continue
         try:
             checked=datetime.fromisoformat(value['checked_at'])

@@ -1,5 +1,5 @@
 """Configuração GG.deals: entrada temporária e armazenamento exclusivo no cofre."""
-from PySide6.QtWidgets import QFrame,QVBoxLayout,QHBoxLayout,QLineEdit
+from PySide6.QtWidgets import QFrame,QVBoxLayout,QHBoxLayout,QLineEdit,QCheckBox
 from .ui_components import text,action
 from .theme import get_theme
 
@@ -14,11 +14,18 @@ class GgDealsConnection(QFrame):
         row.addWidget(self.entry,1);self.save_button=action('Salvar',self.save,True);self.remove_button=action('Remover',self.remove);row.addWidget(self.save_button);row.addWidget(self.remove_button);body.addLayout(row)
         for button in (self.save_button,self.remove_button):button.setMinimumSize(120,36)
         self.notice=text('','caption');body.addWidget(self.notice)
+        self.offer_details=QCheckBox('Completar descontos da API pela página pública')
+        self.offer_details.setObjectName('ggdealsOfferDetails');self.offer_details.setChecked(window.library.setting('prices.offer_details',False))
+        self.offer_details.toggled.connect(self.change_offer_details);body.addWidget(self.offer_details)
         self.entry.textChanged.connect(lambda value:self.save_button.setEnabled(bool(value.strip())))
         self.entry.returnPressed.connect(self.save);self.save_button.setEnabled(False);self.update_state()
     def vault(self):
         from .credentials import CredentialVault
         return getattr(self.window,'ggdeals_vault_factory',CredentialVault)()
+    def change_offer_details(self,enabled):
+        from .prices import invalidate_prices
+        self.window.library.set_setting('prices.offer_details',enabled)
+        invalidate_prices(self.window.library)
     def update_state(self):
         configured=self.window.integration_status('GG.deals').startswith('Credencial salva')
         self.state.setText('Configurado' if configured else 'Não configurado')

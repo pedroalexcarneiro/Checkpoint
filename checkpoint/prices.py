@@ -29,6 +29,10 @@ def selected_quote(library,game_id):
     if context and not confirmed:
         return {'lowest':None,'current':None,'original':None,'discount':None,'state':'identity_mismatch','message':'Identidade alterada. Consulte preços da edição atual.'}
     allowed=('retail','keyshop') if library.setting('prices.include_keyshops',False) else ('retail',)
+    unconfirmed=value.get('unconfirmed_kinds') or []
+    allowed=tuple(kind for kind in allowed if kind not in unconfirmed)
+    for kind in unconfirmed:
+        if kind in ('retail','keyshop'):value[kind]=None
     choices=[]
     def add(amount,kind):
         if kind in allowed and type(amount) is int and amount>0:choices.append((amount,kind))
@@ -37,6 +41,8 @@ def selected_quote(library,game_id):
     for offer in value.get('offers',[]):add(offer.get('cents'),offer.get('kind'))
     amount,kind=min(choices,default=(None,None))
     value.update(lowest=amount,current=amount,current_kind=kind,original=None,discount=None)
+    if kind and value.get('details_enabled') and 'detail_prices' in value and value['detail_prices'].get(kind)!=amount:
+        value['details_state']='price_mismatch'
     # Um original só acompanha exatamente a oferta escolhida, nunca o histórico/agregado.
     offers=[o for o in value.get('offers',[]) if o.get('cents')==amount and o.get('kind')==kind]
     from urllib.parse import urlsplit
@@ -48,6 +54,8 @@ def selected_quote(library,game_id):
             discount=((original-amount)*200+original)//(2*original)
             if discount>0:value.update(original=original,discount=discount,selected_offer=offer)
             break
+    if amount is None and value.get('unconfirmed_kinds'):
+        value.update(state='offer_unconfirmed',message='Preço da API sem confirmação para esta edição. Confira as ofertas.')
     if amount is None and (not value.get('message') or value.get('state')=='ready'):
         if allowed==('retail',) and ('retail' in value or value.get('state')=='ready'):
             value['message']='Consulta sem oferta em lojas oficiais.'
@@ -72,7 +80,11 @@ def default_provider(library):
     try:
         from .credentials import CredentialVault
         official=GgDealsApiProvider(CredentialVault())
-        if official.enabled:return official
+        if official.enabled:
+            if library.setting('prices.offer_details',False):
+                from .price_enrichment import OfferDetailsProvider
+                return OfferDetailsProvider(official,GgDealsProvider())
+            return official
     except Exception:pass
     if library.setting('prices.public_fallback',True):return GgDealsProvider()
     raise IntegrationError('Configure a API GG.deals ou ative a consulta pela página pública em Conexões.')
@@ -84,6 +96,7 @@ def refresh_prices(library,game_id,provider=None):
     if not game:return 'Jogo indisponível.'
     identity=library.sql.execute("SELECT external_id FROM external_identifiers WHERE game_id=? AND provider='steam'",(game_id,)).fetchone()
     previous=snapshot(library,game_id);url=previous.get('url')
+    config_version=library.setting('prices.config_version',0)
     problem=platform_problem(game)
     if problem:
         previous.update(state='unsupported_platform',message=problem,attempted_at=now())
@@ -92,7 +105,7 @@ def refresh_prices(library,game_id,provider=None):
     context=previous.get('offer_context',{})
     if not identity or context.get('steam')!=identity[0] or context.get('platform')!=game['platform']:url=None
     if not identity:
-        previous.update({'config_version':library.setting('prices.config_version',0),'attempted_at':now(),'state':'missing_steam_id','message':'Sem ID da Steam para consulta'})
+        previous.update({'config_version':config_version,'attempted_at':now(),'state':'missing_steam_id','message':'Sem ID da Steam para consulta'})
         library.set_setting(f'prices.ggdeals.{game_id}',previous)
         return 'Sem ID da Steam para consulta'
     try:
@@ -102,7 +115,7 @@ def refresh_prices(library,game_id,provider=None):
             raise IntegrationError('Nenhuma oferta em reais disponível. Último preço salvo preservado.')
         result['lowest']=result['current']=current
         result['offer_context']={'platform':game['platform'],'steam':identity[0]}
-        result.update({'config_version':library.setting('prices.config_version',0),'checked_at':now(),'attempted_at':now(),'state':'ready' if current is not None else 'unavailable'})
+        result.update({'config_version':config_version,'checked_at':now(),'attempted_at':now(),'state':'ready' if current is not None else 'unavailable'})
         library.set_setting(f'prices.ggdeals.{game_id}',result)
         return 'Preços GG.deals atualizados.'
     except IntegrationError as error:
