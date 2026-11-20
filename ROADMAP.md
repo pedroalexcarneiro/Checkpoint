@@ -1,5 +1,12 @@
 # Próximos passos
 
+## Revisão local pós-0.1.39
+
+Código d808f76 aprovado em 808 testes Linux e smoke isolado; relatório/capturas
+em RELATORIO_POS_0139.md e RELATORIO_POS_0139_TESTES.md. Próximos gates:
+revisão visual pelo dono, Windows/pacote e integrações autenticadas. Esta rodada
+não foi publicada e não move tags anteriores. Consulta console continua pendente.
+
 ## Após as correções 0.1.39
 
 0.1.39 publicada em 7703d80 após 764 testes em cada plataforma, pacote extraído

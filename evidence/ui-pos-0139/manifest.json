@@ -1,0 +1,97 @@
+{
+  "source_sha": "d808f76a36663bd031a230b0a0f3f08a2f3fb6cb",
+  "platform": "Linux Qt offscreen",
+  "fixtures": true,
+  "windows_validated": false,
+  "owner_data": false,
+  "screenshots": [
+    {
+      "file": "escuro-home-normal-1280x800.png",
+      "mode": "escuro",
+      "width": 1280,
+      "height": 800,
+      "bytes": 163408,
+      "sha256": "a5813bc1757ebdf2adfd8cad3d1f2929043f89571921a86b274b62dd65c2ae37"
+    },
+    {
+      "file": "escuro-home-maximizada.png",
+      "mode": "escuro",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 253435,
+      "sha256": "de61c266a888819871d1e240c8aa4a81b1c1ec1bf83bb21fc8222da7ea8fb56d"
+    },
+    {
+      "file": "escuro-home-menor-1000x700.png",
+      "mode": "escuro",
+      "width": 1000,
+      "height": 700,
+      "bytes": 104484,
+      "sha256": "5257850b0063a2f8a17d97d5aea5df8645a28b3ed49e0644a54ec47cede0f7c4"
+    },
+    {
+      "file": "escuro-memorias-mista.png",
+      "mode": "escuro",
+      "width": 1280,
+      "height": 800,
+      "bytes": 123460,
+      "sha256": "e3f15869cf5c88568db8b8e9cb634668fc22c9ff3864503a1511d48872402f52"
+    },
+    {
+      "file": "escuro-memorias-inicio-painel.png",
+      "mode": "escuro",
+      "width": 1020,
+      "height": 360,
+      "bytes": 58625,
+      "sha256": "b27ff7b1de04db5cb37cd26acf3dda0f301dbc3863eb1fc008338f08152daf7e"
+    },
+    {
+      "file": "escuro-ficha-preco-painel.png",
+      "mode": "escuro",
+      "width": 954,
+      "height": 426,
+      "bytes": 47606,
+      "sha256": "eec0beaf42081fef2d3b03978c76740c717ac67131bb58a6fd38eec18199e599"
+    },
+    {
+      "file": "escuro-conexao-descontos-painel.png",
+      "mode": "escuro",
+      "width": 1030,
+      "height": 160,
+      "bytes": 22227,
+      "sha256": "118cf4826d259fc26cc561b64abbff607a41dab978f95147896a8b071e776f6f"
+    },
+    {
+      "file": "escuro-ofertas-painel.png",
+      "mode": "escuro",
+      "width": 399,
+      "height": 252,
+      "bytes": 30976,
+      "sha256": "9875a57c46932fa8c294bec7c43f28a5d803fba4c852c0d30f7b0b419ffe9f94"
+    },
+    {
+      "file": "claro-home-normal-1280x800.png",
+      "mode": "claro",
+      "width": 1280,
+      "height": 800,
+      "bytes": 153221,
+      "sha256": "98b752dbfa6841194c3486ea1b7fc8fc35cdf76fd0db92a3354eb6fdaa5817de"
+    },
+    {
+      "file": "claro-home-maximizada.png",
+      "mode": "claro",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 236834,
+      "sha256": "0b3bef30eb411d565356a4672ff5677e0542b9db767fb79a7d250e5ce86af959"
+    },
+    {
+      "file": "claro-memorias-mista.png",
+      "mode": "claro",
+      "width": 1280,
+      "height": 800,
+      "bytes": 117629,
+      "sha256": "6781e293dfeaf07f899ebe8ce3b9452e5abeecd3297a406c1a29f773196e518b"
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+[
+  {
+    "game": "cyberpunk",
+    "public_only": true,
+    "authenticated_api_validated": false,
+    "state": "ok",
+    "currency": "BRL",
+    "retail": 19990,
+    "offers": [
+      {
+        "shop": "Gog.com",
+        "kind": "retail",
+        "cents": 19990,
+        "original": null,
+        "discount": null,
+        "game_slug": "cyberpunk-2077"
+      },
+      {
+        "shop": "Epic Games Store",
+        "kind": "retail",
+        "cents": 19990,
+        "original": null,
+        "discount": null,
+        "game_slug": "cyberpunk-2077"
+      }
+    ]
+  },
+  {
+    "game": "hades",
+    "public_only": true,
+    "authenticated_api_validated": false,
+    "state": "ok",
+    "currency": "BRL",
+    "retail": 7399,
+    "offers": [
+      {
+        "shop": "Epic Games Store",
+        "kind": "retail",
+        "cents": 7399,
+        "original": null,
+        "discount": null,
+        "game_slug": "hades"
+      },
+      {
+        "shop": "Steam",
+        "kind": "retail",
+        "cents": 7399,
+        "original": null,
+        "discount": null,
+        "game_slug": "hades"
+      },
+      {
+        "shop": "GAMIVO",
+        "kind": "keyshop",
+        "cents": 9501,
+        "original": null,
+        "discount": null,
+        "game_slug": "hades"
+      },
+      {
+        "shop": "G2A",
+        "kind": "keyshop",
+        "cents": 11909,
+        "original": null,
+        "discount": null,
+        "game_slug": "hades"
+      },
+      {
+        "shop": "Kinguin",
+        "kind": "keyshop",
+        "cents": 12098,
+        "original": null,
+        "discount": null,
+        "game_slug": "hades"
+      },
+      {
+        "shop": "G2Play",
+        "kind": "keyshop",
+        "cents": 12098,
+        "original": null,
+        "discount": null,
+        "game_slug": "hades"
+      }
+    ]
+  }
+]

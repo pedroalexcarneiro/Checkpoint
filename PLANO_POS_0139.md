@@ -22,3 +22,9 @@ Sem autorização de publicação desta revisão; sem push, workflow, tag ou rel
 
 Regressões antes/depois, com dois jogos, UTF-8/LF, dados isolados. Nenhum contrato
 A4/protegido é alterado. Atualizar documentação e suíte completa ao fechar o código.
+
+Fechamento local: itens implementados; capa mantida após comparação com banner.
+Complemento GG.deals aprovado, opcional e desligado por padrão. Gate do código
+d808f76: 808 testes Linux aprovados em 547,90 s; smoke seis páginas/SQLite ok.
+Capturas e relatórios registrados. Sem publicação; Windows/pacote, conta real,
+consulta console e aprovação visual final continuam separados desta validação.

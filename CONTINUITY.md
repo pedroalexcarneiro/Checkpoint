@@ -5,7 +5,9 @@
 Base d57dc56, sem alterar publicação/tag 7703d80. Pedido novo: jogos únicos no
 Início, memórias sem expansão/faixas artificiais (Início e grade), cores mais
 vivas com fundos por destaque, claro/escuro e barra do topo adaptada. Implementado
-localmente, 92 testes direcionados finais aprovados; suíte completa a repetir.
+localmente; gate final em d808f76: 808 testes Linux aprovados em 547,90 s,
+smoke de seis páginas/SQLite aprovado. Relatório e capturas registrados em
+RELATORIO_POS_0139_TESTES.md e evidence/ui-pos-0139/.
 Sem push/workflow/release novo. Percentual depende de dado original da oferta;
 complemento opcional GG.deals público aprovado e implementado, com validação
 por oferta/edição e opção desligada por padrão. Capa mantida após

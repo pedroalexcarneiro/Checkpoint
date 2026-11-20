@@ -1,4 +1,4 @@
-# Revisão local após a 0.1.39 — em execução
+# Revisão local após a 0.1.39 — implementação e gate Linux concluídos
 
 Requisitos/ordem: PLANO_POS_0139.md. A versão publicada não é alterada.
 
@@ -45,7 +45,7 @@ preço PC não é transferido para Switch/PlayStation/Xbox.
   nenhuma asserção do teste protegido tests/test_visual_0132.py foi alterada.
 - Após a correção: final-targeted, 92 passed in 24.75s, exit 0, incluindo as 18
   combinações claro/escuro e contraste de texto/secondary/muted em cinco superfícies.
-  Nova suíte integral será executada no código congelado.
+  A suíte integral final no código congelado está registrada no fechamento abaixo.
 
 ## Expectativas atualizadas por requisito posterior
 
@@ -58,10 +58,9 @@ preço PC não é transferido para Switch/PlayStation/Xbox.
 
 ## Limites e decisões abertas
 
-- Percentual: interface existente testada com original válido da mesma oferta;
-  a API atual não preenche esse dado. Não calcular a partir do histórico. Proposta
-  de complemento opcional em PROPOSTA_DESCONTOS_POS_0139.md, ainda não implementada
-  nem ativada; pergunta de preferência apresentada ao dono.
+- Percentual: a API atual não informa original individual. Complemento opcional
+  aprovado e implementado conforme seção seguinte e PROPOSTA_DESCONTOS_POS_0139.md;
+  desligado por padrão. Nunca calcular a partir do histórico.
 - Ofertas: comparação real com capa 52×70 e banner inteiro 120×40. O banner não
   deforma, mas fica baixo e reduz o espaço dos textos na coluna estreita. Mantida
   a capa no aplicativo; alternativa de banner existe só no renderizador descartável.
@@ -99,11 +98,31 @@ Reprodução sem a opção/serviço: 11 failed, 1 passed. Após implementação:
 direcionados de 69, 28, 77, 75, 82 e finalmente **83 passed in 17.99s**, exit 0,
 incluindo ficha, opção/cache, dois jogos, edições divergentes, preço divergente,
 falha pública, API falhando, configuração mudando durante consulta e loja de chaves.
-Nenhuma asserção antiga de preços foi modificada. Nova suíte integral necessária
-para o conjunto com o serviço; será registrada após concluir.
+Nenhuma asserção antiga de preços foi modificada. O gate integral do conjunto
+com o serviço está registrado no fechamento abaixo.
 
 Consultas públicas reais a Cyberpunk e Hades executadas sem chave/conta. A versão
 filtrada retornou apenas produtos canônicos; nessas consultas as ofertas PC não
 informaram original maior que o atual, portanto nenhum percentual foi inventado.
 O teste não homologa a API autenticada do dono, rede/cofre/Windows ou disponibilidade
 permanente da página. Metadados em /workspace/work/evidence-pos-0139/public-live-final.json.
+
+## Fechamento local
+
+Código funcional congelado em d808f76a36663bd031a230b0a0f3f08a2f3fb6cb.
+Suíte completa: **808 passed in 547.90s (0:09:07)**, exit 0, Linux/Python
+3.12.14, Qt offscreen. Smoke: seis páginas, integridade SQLite ok, exit 0.
+Comandos, stdout, stderr, códigos e hashes integrais em RELATORIO_POS_0139_TESTES.md.
+Falhas/tentativas anteriores preservadas e identificadas separadamente.
+
+Capturas finais Qt reais em evidence/ui-pos-0139/, com manifest de dimensões,
+SHA-256 e código de origem: Início normal/maximizado/estreito, modos claro/escuro,
+Memórias, ficha e opção de Conexões. Dados e ofertas dessas imagens são fixtures
+isoladas; não comprovam conta/API autenticada nem biblioteca pessoal. Resultados
+normalizados das consultas públicas também preservados, sem HTML/dados privados.
+
+Arquivos protegidos, A4, schema, bootstrap, assets e workflows preservados
+byte a byte contra d57dc56. Texto novo em UTF-8/LF. Sem push, novo workflow,
+tag, release ou pacote desta revisão; versão publicada permanece 0.1.39 anterior.
+Revisão visual final pelo dono não presumida. Consulta console, homologação
+Windows/HSR real/API autenticada e limites anteriores seguem pendentes.
