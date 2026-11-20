@@ -2,6 +2,11 @@
 
 ## Decisões atuais 0.1.39
 
+Complemento aprovado após a segunda prévia do Início: degradê azul-petróleo
+discreto com variação um pouco mais visível entre os extremos, em fundo/lateral/
+cards. Destaque do tema preservado; Preto permanece neutro. Referência usada
+somente para superfícies, sem copiar indicadores/marca/textos de outro sistema.
+
 Início usa largura útil após lateral e margens 24 px, painéis alinhados pelo topo
 com alturas independentes. Últimas sessões corresponde a sessões persistidas,
 repetindo jogos quando o histórico repete. Cards pequenos, arte inteira limitada,

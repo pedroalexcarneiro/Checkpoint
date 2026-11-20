@@ -50,15 +50,37 @@ THEMES['black']=Theme('black','Preto',_black)
 
 def get_theme(key): return THEMES.get(key,THEMES[DEFAULT_THEME]) if isinstance(key,str) else THEMES[DEFAULT_THEME]
 
+def surface_gradients(key):
+    """Superfícies aprovadas no Início, com Preto neutro e destaque por tema."""
+    theme=get_theme(key);c=theme.colors
+    stops={
+        'background':('#29464f','#1b2e38','#101722'),
+        'sidebar':('#2e4d58','#203440','#172130'),
+        'card':('#2b444f','#20313f','#182230'),
+        'nested':('#283f4c','#17212f'),
+    }
+    if theme.key=='black':
+        stops={name:tuple(blend(c['card'] if name in ('card','nested') else c['sidebar'] if name=='sidebar' else c['background'],c['text'],amount)
+            for amount in ((.08,.035,0) if len(values)==3 else (.06,0))) for name,values in stops.items()}
+    elif theme.key!='green':
+        stops={name:tuple(blend(value,c['accent'],.035) for value in values) for name,values in stops.items()}
+    def gradient(name,values):
+        positions=(0,.48,1) if len(values)==3 else (0,1)
+        if name=='background':positions=(0,.45,1)
+        coordinates='x1:0,y1:0,x2:0.4,y2:1' if name=='sidebar' else 'x1:0,y1:0,x2:1,y2:1'
+        return 'qlineargradient('+coordinates+','+','.join(f'stop:{position} {value}' for position,value in zip(positions,values))+')'
+    return {name:gradient(name,values) for name,values in stops.items()}
+
 def stylesheet(key):
     c=get_theme(key).colors
+    surfaces=surface_gradients(key)
     from .visual_tokens import TYPE,SPACE,RADIUS
     return f"""
 * {{ font-family: 'Segoe UI'; font-size: {TYPE['body']}px; }}
 QMainWindow, QDialog {{ background: {c['background']}; color: {c['text']}; }}
 QWidget {{ color: {c['text']}; }}
-QWidget#root {{ background: qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 {blend(c['background'],c['panel'],.35)},stop:.6 {c['background']},stop:1 {blend(c['background'],c['accent'],.025)}); }}
-QWidget#sidebar {{ background: qlineargradient(x1:0,y1:0,x2:1,y2:0,stop:0 {c['sidebar']},stop:1 {blend(c['sidebar'],c['background'],.45)}); border-right: 1px solid {blend(c['border'],c['background'],.42)}; }}
+QWidget#root {{ background: {surfaces['background']}; }}
+QWidget#sidebar {{ background: {surfaces['sidebar']}; border-right: 1px solid {blend(c['border'],c['background'],.42)}; }}
 QFrame#sidebarDivider {{ background: {c['border']}; border: none; max-height: 1px; }}
 QLabel#title, QLabel#pageTitle {{ font-size: {TYPE['title']}px; font-weight: 600; }}
 QLabel#sectionTitle {{ font-size: {TYPE['section']}px; font-weight: 600; }}
@@ -80,7 +102,7 @@ QPushButton#quiet, QPushButton#activityLink {{ background: transparent; border: 
 QPushButton#quiet:hover {{ color: {c['text']}; }}
 QPushButton#activityLink {{ color: {c['text']}; font-weight: 600; }}
 QPushButton#activityLink:hover {{ color: {c['accent']}; }}
-QPushButton#nav {{ background: transparent; border: none; padding: 8px 12px; color: {c['muted']}; text-align: left; border-radius: {RADIUS['button']}px; }}
+QPushButton#nav {{ background: transparent; border: none; padding: 8px 12px; color: {c['secondary']}; text-align: left; border-radius: {RADIUS['button']}px; }}
 QPushButton#nav:hover {{ background: {blend(c['sidebar'],c['accent'],.065)}; color: {c['text']}; }}
 QPushButton#nav:checked {{ background: qlineargradient(x1:0,y1:0,x2:1,y2:0,stop:0 {blend(c['sidebar'],c['accent'],.25)},stop:1 {blend(c['sidebar'],c['accent'],.14)}); color: {c['text']}; }}
 QPushButton#profileButton {{ background: transparent; border: none; padding: 12px 10px; text-align: left; }}
@@ -109,7 +131,7 @@ QListWidget#coverGrid::item {{ padding: 0; margin: 0; border: none; background: 
 QListWidget#gameSearchResults {{ background: transparent; border: none; padding: 0; }}
 QListWidget#gameSearchResults::item {{ background: {c['panel']}; border: 1px solid transparent; border-radius: 8px; padding: 9px 12px; }}
 QListWidget#gameSearchResults::item:selected {{ background: {c['selected']}; border-color: {c['accent']}; }}
-QFrame#panel, QFrame#ggdealsConnection, QFrame#activityCard, QFrame#addPreview, QFrame#emptyState {{ background: qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 {blend(c['panel'],c['text'],.016)},stop:1 {c['panel']}); border: 1px solid {blend(c['border'],c['panel'],.36)}; border-radius: {RADIUS['card']}px; }}
+QFrame#panel, QFrame#ggdealsConnection, QFrame#activityCard, QFrame#addPreview, QFrame#emptyState {{ background: {surfaces['card']}; border: 1px solid {blend(c['border'],c['panel'],.36)}; border-radius: {RADIUS['card']}px; }}
 QFrame#emptyState {{ border: 1px dashed {c['border']}; }}
 QToolButton#disclosure {{ background: transparent; border: none; border-top: 1px solid {c['border']}; border-bottom: 1px solid {c['border']}; border-radius: 0; padding: 10px 12px; text-align: left; }}
 QLabel#iconBadge, QLabel#activityBadge, QLabel#serviceBadge {{ background: {c['selected']}; border-radius: 12px; }}
@@ -165,7 +187,8 @@ QProgressBar::chunk {{ background: {c['accent']}; border-radius: 3px; }}
 QToolTip {{ background: {c['panel']}; color: {c['text']}; border: 1px solid {c['border']}; padding: 6px; }}
 QStatusBar {{ background: {c['background']}; color: {c['muted']}; font-size: 12px; }}
 QStatusBar::item {{ border: none; }}
-QFrame[component="card"] {{ background: {c['card']}; border: 1px solid {c['border_subtle']}; border-radius: {RADIUS['card']}px; }}
+QFrame[component="card"] {{ background: {surfaces['card']}; border: 1px solid {c['border_subtle']}; border-radius: {RADIUS['card']}px; }}
+QFrame#recentGameCard, QFrame#homeMemoryCard {{ background: {surfaces['nested']}; border: 1px solid {c['border']}; }}
 QFrame[component="card"]:hover {{ border-color: {c['border']}; }}
 QLabel#secondary {{ color: {c['secondary']}; }}
 QLabel#priceValue {{ font-size: 24px; font-weight: 600; color: {c['text']}; }}
@@ -174,8 +197,8 @@ QLabel#statusChip[active="true"] {{ color: {c['accent']}; }}
 QPushButton[variant="ghost"] {{ background: transparent; border-color: transparent; color: {c['secondary']}; }}
 QPushButton[variant="ghost"]:hover {{ background: {c['elevated']}; color: {c['text']}; }}
 QLabel#emptyDescription {{ color: {c['secondary']}; font-size: 14px; }}
-QFrame#emptyState {{ background: {c['surface']}; border: 1px solid {c['border_subtle']}; border-radius: {RADIUS['card']}px; }}
-QFrame#activityCard {{ background: {c['card']}; border: 1px solid {c['border_subtle']}; border-radius: {RADIUS['card']}px; }}
+QFrame#emptyState {{ background: {surfaces['card']}; border: 1px solid {c['border_subtle']}; border-radius: {RADIUS['card']}px; }}
+QFrame#activityCard {{ background: {surfaces['card']}; border: 1px solid {c['border_subtle']}; border-radius: {RADIUS['card']}px; }}
 QLabel#eyebrow {{ color: {c['accent']}; font-size: 12px; font-weight: 600; }}
 QWidget#gameActions {{ background: {c['elevated']}; border-color: {c['border_subtle']}; border-radius: {RADIUS['card']}px; }}
 QWidget#taskStatus QToolButton {{ padding: 0; border: none; background: transparent; }}

@@ -2,6 +2,11 @@
 
 ## 0.1.39 — rodada de correções
 
+Complementos novos em validação: captura de quadro atual e publicação imediata
+em Memórias, Estatísticas menor sem sobreposição e degradê aprovado no Início.
+A contagem de 752 abaixo corresponde ao fechamento anterior; repetir os gates
+complementares e a suíte completa antes do lançamento autorizado.
+
 Implementação local na branch fix/0.1.39-polimento, da base normal 0.1.38;
 lançamento autorizado depois das verificações. Interface revisada por capturas
 reais/fixtures e testes direcionados; suíte integral Linux final aprovada: 752 testes em 577,63 s, exit 0.

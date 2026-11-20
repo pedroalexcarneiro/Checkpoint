@@ -124,3 +124,24 @@ ROM. Fechar apenas ROM com emulador vivo permanece limitação conhecida.
 Novos/modificados UTF-8/LF; nenhuma normalização incidental de protegidos.
 
 Evidências integrais locais: /workspace/work/evidence-0139 (sem dados pessoais).
+
+## Complementos posteriores à revisão inicial
+
+- C1 — Captura: investigar quadros repetidos no HSR, obter novo quadro da área
+  cliente elegível e publicar imediatamente em Memórias/Início/ficha conforme
+  a tela visível. Preservar filtros, originais e associação à sessão; testar
+  duas janelas controladas e rejeitar mudança de alvo. Windows/DirectX real
+  do dono não é homologado por adaptador Linux ou janela Qt no runner.
+- C2 — Estatísticas em janela menor: distribuir painéis conforme espaço útil,
+  corrigir espaço de nomes e separar resumo/legenda do mapa sem sobreposição;
+  verificar 1000×700, 1280×800, 1920×1080 e retorno ao tamanho normal.
+- C3 — Conclusões: mostrar o card Jogos concluídos já implementado no item 7,
+  em vez do texto cru da versão antiga, preservando completed_at e os filtros.
+- C4 — Degradê aprovado: após duas prévias reais do Início, o dono respondeu
+  “legal, gostei. podemos seguir” à segunda. Aplicar essa intensidade às
+  superfícies, preservar destaque dos nove temas e Preto neutro. Não copiar
+  marca/textos/indicadores do sistema usado como referência.
+
+Acrescentar commits, sem alterar os já feitos. Repetir a suíte integral após
+os complementos; os 752 testes anteriores não validam o novo código. A
+autorização de release permanece condicionada aos gates finais.

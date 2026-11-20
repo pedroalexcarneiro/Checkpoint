@@ -4,7 +4,22 @@
 Plano: PLANO_0139.md. Este relatório distingue reprodução local, relato,
 documentação do provedor e homologação Windows. Não é declaração de conclusão.
 
-## Gates finais Linux
+## Complementos após o fechamento inicial — em validação
+
+O dono relatou captura repetida no HSR, Memórias desatualizada e nomes/legenda
+sobrepostos em Estatísticas menor. Também pediu degradê como referência e
+aprovou a segunda prévia com “legal, gostei. podemos seguir”. Foram incorporados
+C1–C4 ao plano sem reescrever commits anteriores. A suíte de 752 testes abaixo
+é histórica; será repetida após esses complementos antes de publicar.
+
+C4: theme.surface_gradients/stylesheet aplica a intensidade da segunda prévia
+às superfícies principais. Destaques/paletas persistidos preservados, Preto
+monocromático; navegação usa secondary para contraste no topo mais claro.
+As prévias são Qt real/Linux, fixtures Portal 2/Hades/Celeste, não dados pessoais.
+Validação direcionada: gradient-approved, 44 passed in 17.64s, exit 0.
+Capturas finais desse ajuste em /workspace/work/evidence-0139/degrade-aplicado.
+
+## Gates Linux do fechamento inicial
 
 - **752 passed in 577.63s (0:09:37), exit 0**, Python 3.12.14, Qt 6.8.3
   offscreen, CHECKPOINT_TEST_ROOT=/tmp. Código/testes congelados em
