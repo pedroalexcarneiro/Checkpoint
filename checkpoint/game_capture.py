@@ -28,16 +28,21 @@ class WindowsCapture:
         self.handle = hwnd
         return owner.value
 
+    def client_rect(self):
+        from .windows_capture import client_rect
+        return client_rect(self.user, self.handle)
+
+    def grab_client(self, rect):
+        from .windows_capture import grab_client
+        return grab_client(self.user, rect)
+
     def capture(self, pid):
-        from PySide6.QtWidgets import QApplication
         expected = self.handle
         if self.foreground_pid() != pid or self.handle != expected:
             raise ValueError('A janela em primeiro plano mudou. Tente capturar novamente.')
-        screen = QApplication.primaryScreen()
-        if screen is None:
-            raise ValueError('Tela indisponível para captura.')
-        pixmap = screen.grabWindow(int(expected))
-        if self.foreground_pid() != pid or self.handle != expected:
+        rect = self.client_rect()
+        pixmap = self.grab_client(rect)
+        if self.foreground_pid() != pid or self.handle != expected or self.client_rect() != rect:
             raise ValueError('A janela em primeiro plano mudou durante a captura. Nenhum arquivo foi salvo.')
         return pixmap
 

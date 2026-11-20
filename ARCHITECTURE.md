@@ -2,6 +2,13 @@
 
 ## Correções de apresentação 0.1.39
 
+Complemento de captura: WindowsCapture verifica primeiro plano/PID e limites
+antes/depois de uma cópia GDI nova da área cliente visível; windows_capture
+encapsula coordenadas físicas/bitmap/DC e libera recursos por chamada. Sem
+cache de HWND/PrintWindow e sem captura arbitrária de desktop como fallback.
+Após persistir mídia, a tela visível (Memórias/Início/ficha) se atualiza na GUI;
+filtro de Memórias preservado e empates por timestamp ordenados pelo ID.
+
 home_data.recent_sessions projeta play_sessions existentes sem deduplicar jogo;
 serviço legado recent_games preservado. Início libera largura com margens 24 px,
 GameStrip usa a medida mínima do botão para escolher quantidade e limita artes

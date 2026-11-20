@@ -19,6 +19,26 @@ As prévias são Qt real/Linux, fixtures Portal 2/Hades/Celeste, não dados pess
 Validação direcionada: gradient-approved, 44 passed in 17.64s, exit 0.
 Capturas finais desse ajuste em /workspace/work/evidence-0139/degrade-aplicado.
 
+C1: havia nomes UUID distintos por captura; não foi confirmado cache de arquivo
+reutilizado. O backend anterior usava QScreen.grabWindow(HWND), que pode devolver
+uma superfície antiga em jogos acelerados. Agora WindowsCapture valida PID/HWND/
+área cliente antes e depois de copiar um novo quadro visível por GDI/BitBlt,
+com bitmap/DC próprios por chamada e liberação em finally. Recusa janela fora
+da tela, alvo mudado e sessão inelegível; sem fallback de desktop inteiro.
+Não foi possível reproduzir/homologar HSR/DirectX do dono neste Linux.
+
+O defeito de atualização foi reproduzido: capture_game_window só reconstruía a
+ficha. Agora atualiza Memórias/Início quando visíveis, sem navegar, preservando
+o filtro. build_memories ordena empates pelo ID para que o quadro recém-gravado
+apareça primeiro mesmo no mesmo segundo. Nenhum original é sobrescrito.
+Arquivos/funções: game_capture.WindowsCapture, windows_capture.client_rect/
+grab_client, window.capture_game_window, collection_views.build_memories.
+capture-refresh-before: 5 failed, 2 passed (duas bibliotecas/jogos); depois,
+capture-refresh-after: 17 passed in 1.24s, incluindo regressões anteriores.
+capture-native-frames: 9 passed in 1.91s em Linux. O teste de subprocesso usa
+janela Qt própria: em Windows executará o backend nativo e exigirá quadros
+vermelho/azul distintos; aqui usou Qt offscreen e não validou GDI/HSR.
+
 ## Gates Linux do fechamento inicial
 
 - **752 passed in 577.63s (0:09:37), exit 0**, Python 3.12.14, Qt 6.8.3

@@ -436,6 +436,8 @@ class MainWindow(QMainWindow):
         if path:
             self.statusBar().showMessage('Captura salva em Memórias.',5000)
             if self.stack.currentWidget()==getattr(self,'detail_page',None):self.detail(self.current_game)
+            elif self.stack.currentWidget() is self.pages[3]:self.memories()
+            elif self.stack.currentWidget() is self.pages[0]:self.home()
 
     def delete_memory(self,record):
         if QMessageBox.question(self,'Apagar memória','Apagar esta memória de '+record['title']+'? O arquivo original será preservado.')!=QMessageBox.Yes:

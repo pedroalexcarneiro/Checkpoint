@@ -179,10 +179,12 @@ class MemoryGrid(CardGrid):
 
 
 def build_memories(window):
+    previous=window.pages[3].findChild(QTabWidget,'memoryTabs')
+    selected_tab=previous.currentIndex() if previous is not None else 0
     outer=window.clear_page(3)
     records=[{**dict(row),'kind':'diary'} for row in window.library.sql.execute('SELECT d.*,g.title FROM diary_entries d JOIN games g ON g.id=d.game_id WHERE g.deleted_at IS NULL')]
     records.extend(dict(row) for row in window.library.sql.execute('SELECT m.*,g.title FROM media_files m JOIN games g ON g.id=m.game_id WHERE g.deleted_at IS NULL'))
-    records.sort(key=lambda row:row['created_at'],reverse=True)
+    records.sort(key=lambda row:(row['created_at'],row['id']),reverse=True)
     tabs=QTabWidget();tabs.setObjectName('memoryTabs')
     for name,kind in [('Tudo',None),('Diário','diary'),('Capturas e vídeos','media')]:
         page=QWidget();layout=QVBoxLayout(page);layout.setContentsMargins(0,16,0,0);inside=page_scroll(layout)
@@ -193,4 +195,4 @@ def build_memories(window):
             inside.addWidget(grid)
         else:inside.addWidget(empty_state('memories','Nenhuma memória','Abra um jogo, entre na aba Memórias e adicione uma captura ou anotação.',window.first_memory,'Biblioteca'))
         inside.addStretch();tabs.addTab(page,name)
-    outer.addWidget(tabs)
+    tabs.setCurrentIndex(selected_tab);outer.addWidget(tabs)
