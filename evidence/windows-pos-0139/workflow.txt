@@ -1,0 +1,741 @@
+validate	Set up job	﻿2026-11-20T13:58:53.2256466Z Current runner version: '2.338.2'
+validate	Set up job	2026-11-20T13:58:53.2317809Z ##[group]Runner Image Provisioner
+validate	Set up job	2026-11-20T13:58:53.2318630Z Hosted Compute Agent
+validate	Set up job	2026-11-20T13:58:53.2319175Z Version: 20261111.635
+validate	Set up job	2026-11-20T13:58:53.2319758Z Commit: b8a594ea514ff44cadb5342986c68b1eac6e22ed
+validate	Set up job	2026-11-20T13:58:53.2320452Z Build Date: 2026-11-11T01:49:01Z
+validate	Set up job	2026-11-20T13:58:53.2321072Z Worker ID: {588dc9c0-aa8a-4dd2-b6ee-28e618d6c7f3}
+validate	Set up job	2026-11-20T13:58:53.2321710Z Region: northcentralus
+validate	Set up job	2026-11-20T13:58:53.2322225Z Cloud: Azure
+validate	Set up job	2026-11-20T13:58:53.2322698Z ##[endgroup]
+validate	Set up job	2026-11-20T13:58:53.2324004Z ##[group]Operating System
+validate	Set up job	2026-11-20T13:58:53.2324679Z Microsoft Windows Server 2022
+validate	Set up job	2026-11-20T13:58:53.2325252Z 10.0.20348
+validate	Set up job	2026-11-20T13:58:53.2325708Z Datacenter
+validate	Set up job	2026-11-20T13:58:53.2326202Z ##[endgroup]
+validate	Set up job	2026-11-20T13:58:53.2326680Z ##[group]Runner Image
+validate	Set up job	2026-11-20T13:58:53.2327200Z Image: windows-2022
+validate	Set up job	2026-11-20T13:58:53.2327707Z Version: 20261116.370.1
+validate	Set up job	2026-11-20T13:58:53.2328690Z Included Software: https://github.com/actions/runner-images/blob/win22/20261116.370/images/windows/Windows2022-Readme.md
+validate	Set up job	2026-11-20T13:58:53.2330442Z Image Release: https://github.com/actions/runner-images/releases/tag/win22%2F20261116.370
+validate	Set up job	2026-11-20T13:58:53.2331315Z ##[endgroup]
+validate	Set up job	2026-11-20T13:58:53.2332335Z ##[group]GITHUB_TOKEN Permissions
+validate	Set up job	2026-11-20T13:58:53.2334131Z Contents: read
+validate	Set up job	2026-11-20T13:58:53.2334691Z Metadata: read
+validate	Set up job	2026-11-20T13:58:53.2335178Z ##[endgroup]
+validate	Set up job	2026-11-20T13:58:53.2337351Z Secret source: Actions
+validate	Set up job	2026-11-20T13:58:53.2338200Z Cache mode: write
+validate	Set up job	2026-11-20T13:58:53.2338874Z Prepare workflow directory
+validate	Set up job	2026-11-20T13:58:53.2764063Z Prepare all required actions
+validate	Set up job	2026-11-20T13:58:53.2812393Z Getting action download info
+validate	Set up job	2026-11-20T13:58:53.5230663Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+validate	Set up job	2026-11-20T13:58:53.6776140Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+validate	Set up job	2026-11-20T13:58:53.8529668Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+validate	Set up job	2026-11-20T13:58:54.2409441Z Complete job name: validate
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	﻿2026-11-20T13:58:54.5057684Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.5059213Z with:
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.5059704Z   fetch-depth: 0
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.5060229Z   persist-credentials: false
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.5060864Z   repository: pedroalexcarneiro/Checkpoint
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.5065605Z   token: ***
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.5066135Z   ssh-strict: true
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.5066569Z   ssh-user: git
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.5066986Z   clean: true
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.5067431Z   sparse-checkout-cone-mode: true
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.5067967Z   fetch-tags: false
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.5068412Z   show-progress: true
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.5068860Z   lfs: false
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.5069273Z   submodules: false
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.5069756Z   set-safe-directory: true
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.5070275Z   allow-unsafe-pr-checkout: false
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.5071004Z env:
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.5071431Z   QT_QPA_PLATFORM: offscreen
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.5071930Z ##[endgroup]
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.6586640Z Syncing repository: pedroalexcarneiro/Checkpoint
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.6588616Z ##[group]Getting Git version info
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.6589292Z Working directory is 'D:\a\Checkpoint\Checkpoint'
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:54.7722594Z [command]"C:\Program Files\Git\bin\git.exe" version
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:55.3372718Z git version 2.56.1.windows.1
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:55.3427060Z ##[endgroup]
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:55.3448771Z Temporarily overriding HOME='D:\a\_temp\b81e8a58-3e1f-408e-a18c-0c4fc236d54d' before making global git config changes
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:55.3453448Z Adding repository directory to the temporary git global config as a safe directory
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:55.3463254Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Checkpoint\Checkpoint
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:55.4322366Z Deleting the contents of 'D:\a\Checkpoint\Checkpoint'
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:55.4329896Z ##[group]Initializing the repository
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:55.4340685Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\Checkpoint\Checkpoint
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:55.5274025Z Initialized empty Git repository in D:/a/Checkpoint/Checkpoint/.git/
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:55.5325568Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/pedroalexcarneiro/Checkpoint
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:55.6133295Z ##[endgroup]
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:55.6134931Z ##[group]Disabling automatic garbage collection
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:55.6142818Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:55.6447944Z ##[endgroup]
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:55.6449504Z ##[group]Setting up auth
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:55.6460855Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:55.6770168Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:57.7367607Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:57.7672446Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:58.2519495Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:58.2817797Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:58.8630729Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:58.8942073Z ##[endgroup]
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:58.8942909Z ##[group]Fetching the repository
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:58:58.8962480Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9850948Z From https://github.com/pedroalexcarneiro/Checkpoint
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9853401Z  * [new branch]      build/0.1.38-sem-admin -> origin/build/0.1.38-sem-admin
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9856497Z  * [new branch]      codex/design-fidelity-pt-br -> origin/codex/design-fidelity-pt-br
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9858282Z  * [new branch]      codex/steam-library-import -> origin/codex/steam-library-import
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9859307Z  * [new branch]      fix/0.1.29             -> origin/fix/0.1.29
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9860149Z  * [new branch]      fix/0.1.30             -> origin/fix/0.1.30
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9861340Z  * [new branch]      fix/0.1.32-visual      -> origin/fix/0.1.32-visual
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9862388Z  * [new branch]      fix/0.1.33-drive       -> origin/fix/0.1.33-drive
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9862944Z  * [new branch]      fix/0.1.34-bugs        -> origin/fix/0.1.34-bugs
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9863503Z  * [new branch]      fix/0.1.35-ajustes     -> origin/fix/0.1.35-ajustes
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9863988Z  * [new branch]      fix/0.1.36-ajustes     -> origin/fix/0.1.36-ajustes
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9864477Z  * [new branch]      fix/0.1.37-ajustes     -> origin/fix/0.1.37-ajustes
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9865000Z  * [new branch]      fix/0.1.38-abertura    -> origin/fix/0.1.38-abertura
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9865524Z  * [new branch]      fix/0.1.39-polimento   -> origin/fix/0.1.39-polimento
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9866043Z  * [new branch]      fix/pos-0139-layout    -> origin/fix/pos-0139-layout
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9866616Z  * [new branch]      fix/rename-redesign-0.1.28 -> origin/fix/rename-redesign-0.1.28
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9868131Z  * [new branch]      main                   -> origin/main
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9868525Z  * [new tag]         v0.1.10                -> v0.1.10
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9868871Z  * [new tag]         v0.1.11                -> v0.1.11
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9869166Z  * [new tag]         v0.1.12                -> v0.1.12
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9869489Z  * [new tag]         v0.1.13                -> v0.1.13
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9869785Z  * [new tag]         v0.1.14                -> v0.1.14
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9870070Z  * [new tag]         v0.1.15                -> v0.1.15
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9870351Z  * [new tag]         v0.1.16                -> v0.1.16
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9870638Z  * [new tag]         v0.1.17                -> v0.1.17
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9870919Z  * [new tag]         v0.1.18                -> v0.1.18
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9871273Z  * [new tag]         v0.1.19                -> v0.1.19
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9871846Z  * [new tag]         v0.1.2                 -> v0.1.2
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9872861Z  * [new tag]         v0.1.20                -> v0.1.20
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9873414Z  * [new tag]         v0.1.21                -> v0.1.21
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9873886Z  * [new tag]         v0.1.22                -> v0.1.22
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9874384Z  * [new tag]         v0.1.23                -> v0.1.23
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9874910Z  * [new tag]         v0.1.24                -> v0.1.24
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9875435Z  * [new tag]         v0.1.25                -> v0.1.25
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9875931Z  * [new tag]         v0.1.26                -> v0.1.26
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9876417Z  * [new tag]         v0.1.27                -> v0.1.27
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9876925Z  * [new tag]         v0.1.28                -> v0.1.28
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9877429Z  * [new tag]         v0.1.29                -> v0.1.29
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9877927Z  * [new tag]         v0.1.3                 -> v0.1.3
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9878401Z  * [new tag]         v0.1.30                -> v0.1.30
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9878930Z  * [new tag]         v0.1.32                -> v0.1.32
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9879459Z  * [new tag]         v0.1.33                -> v0.1.33
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9879998Z  * [new tag]         v0.1.34                -> v0.1.34
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9880516Z  * [new tag]         v0.1.35                -> v0.1.35
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9882119Z  * [new tag]         v0.1.36                -> v0.1.36
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9882602Z  * [new tag]         v0.1.37                -> v0.1.37
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9883087Z  * [new tag]         v0.1.38                -> v0.1.38
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9883569Z  * [new tag]         v0.1.39                -> v0.1.39
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9884048Z  * [new tag]         v0.1.4                 -> v0.1.4
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9884543Z  * [new tag]         v0.1.5                 -> v0.1.5
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9885016Z  * [new tag]         v0.1.6                 -> v0.1.6
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9885474Z  * [new tag]         v0.1.7                 -> v0.1.7
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9885964Z  * [new tag]         v0.1.8                 -> v0.1.8
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9886423Z  * [new tag]         v0.1.9                 -> v0.1.9
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:00.9968078Z [command]"C:\Program Files\Git\bin\git.exe" branch --list --remote origin/fix/pos-0139-layout
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:01.0353762Z   origin/fix/pos-0139-layout
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:01.0400582Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse refs/remotes/origin/fix/pos-0139-layout
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:01.0755634Z 9a658569309ad49d4d138c226e83ef2c2f80849c
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:01.0784446Z ##[endgroup]
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:01.0786471Z ##[group]Determining the checkout info
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:01.0786930Z ##[endgroup]
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:01.0795494Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:01.1136868Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:01.1433373Z ##[group]Checking out the ref
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:01.1442439Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B fix/pos-0139-layout refs/remotes/origin/fix/pos-0139-layout
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:01.4405992Z Switched to a new branch 'fix/pos-0139-layout'
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:01.4504110Z branch 'fix/pos-0139-layout' set up to track 'origin/fix/pos-0139-layout'.
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:01.4558894Z ##[endgroup]
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:01.5050616Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:01.5331474Z 9a658569309ad49d4d138c226e83ef2c2f80849c
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:01.5370990Z ##[group]Removing auth
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:01.5384245Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:01.5728576Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:02.0357278Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:02.0644841Z http.https://github.com/.extraheader
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:02.0678615Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:02.0976256Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:02.5555636Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:02.5845906Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+validate	Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T13:59:03.0606559Z ##[endgroup]
+validate	Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	﻿2026-11-20T13:59:03.0964125Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+validate	Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T13:59:03.0964623Z with:
+validate	Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T13:59:03.0964811Z   python-version: 3.12
+validate	Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T13:59:03.0965018Z   architecture: x64
+validate	Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T13:59:03.0965208Z   cache: pip
+validate	Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T13:59:03.0965436Z   cache-dependency-path: requirements-tested.txt
+validate	Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T13:59:03.0965734Z   check-latest: false
+validate	Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T13:59:03.0968189Z   token: ***
+validate	Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T13:59:03.0968388Z   update-environment: true
+validate	Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T13:59:03.0968614Z   allow-prereleases: false
+validate	Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T13:59:03.0968831Z   freethreaded: false
+validate	Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T13:59:03.0969017Z env:
+validate	Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T13:59:03.0969187Z   QT_QPA_PLATFORM: offscreen
+validate	Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T13:59:03.0969391Z ##[endgroup]
+validate	Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T13:59:03.2532000Z ##[group]Installed versions
+validate	Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T13:59:03.2735720Z (node:6052) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+validate	Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T13:59:03.2736497Z (Use `node --trace-deprecation ...` to show where the warning was created)
+validate	Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T13:59:03.2738063Z Successfully set up CPython (3.12.10)
+validate	Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T13:59:03.2738776Z ##[endgroup]
+validate	Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T13:59:07.6050129Z pip cache is not found
+validate	Install tested dependencies	﻿2026-11-20T13:59:07.6303545Z ##[group]Run python -m pip install -r requirements-tested.txt
+validate	Install tested dependencies	2026-11-20T13:59:07.6304125Z [36;1mpython -m pip install -r requirements-tested.txt[0m
+validate	Install tested dependencies	2026-11-20T13:59:07.6304616Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Dependências Windows indisponíveis.' }[0m
+validate	Install tested dependencies	2026-11-20T13:59:07.6305121Z [36;1mpython -m pip install --no-deps --no-build-isolation -e .[0m
+validate	Install tested dependencies	2026-11-20T13:59:07.6305548Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Projeto não instalado.' }[0m
+validate	Install tested dependencies	2026-11-20T13:59:07.6305893Z [36;1mpython -m pip check[0m
+validate	Install tested dependencies	2026-11-20T13:59:07.6306220Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Dependências inconsistentes.' }[0m
+validate	Install tested dependencies	2026-11-20T13:59:07.6421364Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+validate	Install tested dependencies	2026-11-20T13:59:07.6421787Z env:
+validate	Install tested dependencies	2026-11-20T13:59:07.6422003Z   QT_QPA_PLATFORM: offscreen
+validate	Install tested dependencies	2026-11-20T13:59:07.6422390Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Install tested dependencies	2026-11-20T13:59:07.6423171Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+validate	Install tested dependencies	2026-11-20T13:59:07.6423770Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Install tested dependencies	2026-11-20T13:59:07.6424263Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Install tested dependencies	2026-11-20T13:59:07.6424751Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Install tested dependencies	2026-11-20T13:59:07.6425133Z ##[endgroup]
+validate	Install tested dependencies	2026-11-20T13:59:11.3278338Z Collecting altgraph==0.17.5 (from -r requirements-tested.txt (line 1))
+validate	Install tested dependencies	2026-11-20T13:59:11.4899522Z   Downloading altgraph-0.17.5-py2.py3-none-any.whl.metadata (7.5 kB)
+validate	Install tested dependencies	2026-11-20T13:59:11.5880839Z Collecting certifi==2026.10.23 (from -r requirements-tested.txt (line 2))
+validate	Install tested dependencies	2026-11-20T13:59:11.5927318Z   Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+validate	Install tested dependencies	2026-11-20T13:59:11.8006866Z Collecting cffi==2.1.1 (from -r requirements-tested.txt (line 3))
+validate	Install tested dependencies	2026-11-20T13:59:11.8058542Z   Downloading cffi-2.1.1-cp312-cp312-win_amd64.whl.metadata (2.6 kB)
+validate	Install tested dependencies	2026-11-20T13:59:11.9811540Z Collecting charset-normalizer==3.5.2 (from -r requirements-tested.txt (line 4))
+validate	Install tested dependencies	2026-11-20T13:59:11.9858514Z   Downloading charset_normalizer-3.5.2-cp312-cp312-win_amd64.whl.metadata (47 kB)
+validate	Install tested dependencies	2026-11-20T13:59:12.0665610Z Requirement already satisfied: colorama==0.4.6 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from -r requirements-tested.txt (line 5)) (0.4.6)
+validate	Install tested dependencies	2026-11-20T13:59:12.2649003Z Collecting cryptography==50.0.2 (from -r requirements-tested.txt (line 6))
+validate	Install tested dependencies	2026-11-20T13:59:12.2708749Z   Downloading cryptography-50.0.2-cp311-abi3-win_amd64.whl.metadata (4.4 kB)
+validate	Install tested dependencies	2026-11-20T13:59:12.3520359Z Collecting google-api-core==2.44.0 (from -r requirements-tested.txt (line 7))
+validate	Install tested dependencies	2026-11-20T13:59:12.3574861Z   Downloading google_api_core-2.44.0-py3-none-any.whl.metadata (3.2 kB)
+validate	Install tested dependencies	2026-11-20T13:59:12.4411599Z Collecting google-api-python-client==2.202.0 (from -r requirements-tested.txt (line 8))
+validate	Install tested dependencies	2026-11-20T13:59:12.4530357Z   Downloading google_api_python_client-2.202.0-py3-none-any.whl.metadata (6.9 kB)
+validate	Install tested dependencies	2026-11-20T13:59:12.5109458Z Collecting google-auth-httplib2==0.4.4 (from -r requirements-tested.txt (line 9))
+validate	Install tested dependencies	2026-11-20T13:59:12.5162846Z   Downloading google_auth_httplib2-0.4.4-py3-none-any.whl.metadata (3.0 kB)
+validate	Install tested dependencies	2026-11-20T13:59:12.5753546Z Collecting google-auth-oauthlib==1.5.0 (from -r requirements-tested.txt (line 10))
+validate	Install tested dependencies	2026-11-20T13:59:12.5802199Z   Downloading google_auth_oauthlib-1.5.0-py3-none-any.whl.metadata (2.6 kB)
+validate	Install tested dependencies	2026-11-20T13:59:12.6711603Z Collecting google-auth==2.62.2 (from -r requirements-tested.txt (line 11))
+validate	Install tested dependencies	2026-11-20T13:59:12.6831806Z   Downloading google_auth-2.62.2-py3-none-any.whl.metadata (6.0 kB)
+validate	Install tested dependencies	2026-11-20T13:59:12.7724322Z Collecting googleapis-common-protos==1.76.0 (from -r requirements-tested.txt (line 12))
+validate	Install tested dependencies	2026-11-20T13:59:12.7850119Z   Downloading googleapis_common_protos-1.76.0-py3-none-any.whl.metadata (8.5 kB)
+validate	Install tested dependencies	2026-11-20T13:59:12.8576441Z Collecting httplib2==0.32.1 (from -r requirements-tested.txt (line 13))
+validate	Install tested dependencies	2026-11-20T13:59:12.8620919Z   Downloading httplib2-0.32.1-py3-none-any.whl.metadata (2.2 kB)
+validate	Install tested dependencies	2026-11-20T13:59:12.9316964Z Collecting idna==3.20 (from -r requirements-tested.txt (line 14))
+validate	Install tested dependencies	2026-11-20T13:59:12.9364690Z   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+validate	Install tested dependencies	2026-11-20T13:59:12.9935870Z Collecting iniconfig==2.3.1 (from -r requirements-tested.txt (line 15))
+validate	Install tested dependencies	2026-11-20T13:59:12.9983502Z   Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+validate	Install tested dependencies	2026-11-20T13:59:13.0689227Z Collecting jaraco-classes==3.4.0 (from -r requirements-tested.txt (line 16))
+validate	Install tested dependencies	2026-11-20T13:59:13.0738297Z   Downloading jaraco.classes-3.4.0-py3-none-any.whl.metadata (2.6 kB)
+validate	Install tested dependencies	2026-11-20T13:59:13.1401937Z Collecting jaraco-context==6.1.2 (from -r requirements-tested.txt (line 17))
+validate	Install tested dependencies	2026-11-20T13:59:13.1528056Z   Downloading jaraco_context-6.1.2-py3-none-any.whl.metadata (4.2 kB)
+validate	Install tested dependencies	2026-11-20T13:59:13.2244363Z Collecting jaraco-functools==4.6.0 (from -r requirements-tested.txt (line 18))
+validate	Install tested dependencies	2026-11-20T13:59:13.2292416Z   Downloading jaraco_functools-4.6.0-py3-none-any.whl.metadata (2.9 kB)
+validate	Install tested dependencies	2026-11-20T13:59:13.2939345Z Collecting keyring==25.7.0 (from -r requirements-tested.txt (line 19))
+validate	Install tested dependencies	2026-11-20T13:59:13.2985742Z   Downloading keyring-25.7.0-py3-none-any.whl.metadata (21 kB)
+validate	Install tested dependencies	2026-11-20T13:59:13.3821305Z Collecting more-itertools==11.2.1 (from -r requirements-tested.txt (line 20))
+validate	Install tested dependencies	2026-11-20T13:59:13.3894026Z   Downloading more_itertools-11.2.1-py3-none-any.whl.metadata (42 kB)
+validate	Install tested dependencies	2026-11-20T13:59:13.4772871Z Collecting oauthlib==4.0.1 (from -r requirements-tested.txt (line 21))
+validate	Install tested dependencies	2026-11-20T13:59:13.4864893Z   Downloading oauthlib-4.0.1-py3-none-any.whl.metadata (8.6 kB)
+validate	Install tested dependencies	2026-11-20T13:59:13.5471674Z Collecting opentelemetry-api==1.45.2 (from -r requirements-tested.txt (line 22))
+validate	Install tested dependencies	2026-11-20T13:59:13.5519463Z   Downloading opentelemetry_api-1.45.2-py3-none-any.whl.metadata (1.4 kB)
+validate	Install tested dependencies	2026-11-20T13:59:13.5939227Z Requirement already satisfied: packaging==26.3 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from -r requirements-tested.txt (line 23)) (26.3)
+validate	Install tested dependencies	2026-11-20T13:59:13.6284291Z Collecting pefile==2024.8.26 (from -r requirements-tested.txt (line 24))
+validate	Install tested dependencies	2026-11-20T13:59:13.6403237Z   Downloading pefile-2024.8.26-py3-none-any.whl.metadata (1.4 kB)
+validate	Install tested dependencies	2026-11-20T13:59:13.7588371Z Collecting pluggy==1.7.0 (from -r requirements-tested.txt (line 25))
+validate	Install tested dependencies	2026-11-20T13:59:13.7726293Z   Downloading pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+validate	Install tested dependencies	2026-11-20T13:59:13.8555314Z Collecting proto-plus==1.29.0 (from -r requirements-tested.txt (line 26))
+validate	Install tested dependencies	2026-11-20T13:59:13.8603866Z   Downloading proto_plus-1.29.0-py3-none-any.whl.metadata (2.2 kB)
+validate	Install tested dependencies	2026-11-20T13:59:14.0851340Z Collecting protobuf==7.36.2 (from -r requirements-tested.txt (line 27))
+validate	Install tested dependencies	2026-11-20T13:59:14.0898388Z   Downloading protobuf-7.36.2-cp310-abi3-win_amd64.whl.metadata (595 bytes)
+validate	Install tested dependencies	2026-11-20T13:59:14.1683802Z Collecting pyasn1-modules==0.4.2 (from -r requirements-tested.txt (line 28))
+validate	Install tested dependencies	2026-11-20T13:59:14.1732079Z   Downloading pyasn1_modules-0.4.2-py3-none-any.whl.metadata (3.5 kB)
+validate	Install tested dependencies	2026-11-20T13:59:14.2485517Z Collecting pyasn1==0.6.5 (from -r requirements-tested.txt (line 29))
+validate	Install tested dependencies	2026-11-20T13:59:14.2533110Z   Downloading pyasn1-0.6.5-py3-none-any.whl.metadata (8.4 kB)
+validate	Install tested dependencies	2026-11-20T13:59:14.3166363Z Collecting pycparser==3.12 (from -r requirements-tested.txt (line 30))
+validate	Install tested dependencies	2026-11-20T13:59:14.3213597Z   Downloading pycparser-3.12-py3-none-any.whl.metadata (9.7 kB)
+validate	Install tested dependencies	2026-11-20T13:59:14.3837432Z Collecting pygments==2.21.0 (from -r requirements-tested.txt (line 31))
+validate	Install tested dependencies	2026-11-20T13:59:14.3960361Z   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+validate	Install tested dependencies	2026-11-20T13:59:14.4596688Z Collecting pyinstaller-hooks-contrib==2026.10 (from -r requirements-tested.txt (line 32))
+validate	Install tested dependencies	2026-11-20T13:59:14.4643312Z   Downloading pyinstaller_hooks_contrib-2026.10-py3-none-any.whl.metadata (16 kB)
+validate	Install tested dependencies	2026-11-20T13:59:14.5508757Z Collecting pyinstaller==6.22.3 (from -r requirements-tested.txt (line 33))
+validate	Install tested dependencies	2026-11-20T13:59:14.5555558Z   Downloading pyinstaller-6.22.3-py3-none-win_amd64.whl.metadata (8.5 kB)
+validate	Install tested dependencies	2026-11-20T13:59:14.6286765Z Collecting pyparsing==3.3.3 (from -r requirements-tested.txt (line 34))
+validate	Install tested dependencies	2026-11-20T13:59:14.6344421Z   Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+validate	Install tested dependencies	2026-11-20T13:59:14.7027441Z Collecting pyside6-addons==6.8.3 (from -r requirements-tested.txt (line 35))
+validate	Install tested dependencies	2026-11-20T13:59:14.7077594Z   Downloading PySide6_Addons-6.8.3-cp39-abi3-win_amd64.whl.metadata (4.4 kB)
+validate	Install tested dependencies	2026-11-20T13:59:14.7811268Z Collecting pyside6-essentials==6.8.3 (from -r requirements-tested.txt (line 36))
+validate	Install tested dependencies	2026-11-20T13:59:14.7863676Z   Downloading PySide6_Essentials-6.8.3-cp39-abi3-win_amd64.whl.metadata (4.1 kB)
+validate	Install tested dependencies	2026-11-20T13:59:14.8755208Z Collecting pyside6==6.8.3 (from -r requirements-tested.txt (line 37))
+validate	Install tested dependencies	2026-11-20T13:59:14.8842851Z   Downloading PySide6-6.8.3-cp39-abi3-win_amd64.whl.metadata (5.7 kB)
+validate	Install tested dependencies	2026-11-20T13:59:14.9718893Z Collecting pytest==9.2.0 (from -r requirements-tested.txt (line 38))
+validate	Install tested dependencies	2026-11-20T13:59:14.9777125Z   Downloading pytest-9.2.0-py3-none-any.whl.metadata (7.9 kB)
+validate	Install tested dependencies	2026-11-20T13:59:15.0424341Z Collecting pywin32-ctypes==0.2.3 (from -r requirements-tested.txt (line 39))
+validate	Install tested dependencies	2026-11-20T13:59:15.0474381Z   Downloading pywin32_ctypes-0.2.3-py3-none-any.whl.metadata (3.9 kB)
+validate	Install tested dependencies	2026-11-20T13:59:15.1021710Z Collecting requests-oauthlib==2.0.0 (from -r requirements-tested.txt (line 40))
+validate	Install tested dependencies	2026-11-20T13:59:15.1065243Z   Downloading requests_oauthlib-2.0.0-py2.py3-none-any.whl.metadata (11 kB)
+validate	Install tested dependencies	2026-11-20T13:59:15.1808345Z Collecting requests==2.34.2 (from -r requirements-tested.txt (line 41))
+validate	Install tested dependencies	2026-11-20T13:59:15.1884606Z   Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+validate	Install tested dependencies	2026-11-20T13:59:15.3097491Z Collecting setuptools==84.2.1 (from -r requirements-tested.txt (line 42))
+validate	Install tested dependencies	2026-11-20T13:59:15.3148573Z   Downloading setuptools-84.2.1-py3-none-any.whl.metadata (6.6 kB)
+validate	Install tested dependencies	2026-11-20T13:59:15.4111693Z Collecting shiboken6==6.8.3 (from -r requirements-tested.txt (line 43))
+validate	Install tested dependencies	2026-11-20T13:59:15.4360292Z   Downloading shiboken6-6.8.3-cp39-abi3-win_amd64.whl.metadata (2.8 kB)
+validate	Install tested dependencies	2026-11-20T13:59:15.5644169Z Collecting typing-extensions==4.16.0 (from -r requirements-tested.txt (line 44))
+validate	Install tested dependencies	2026-11-20T13:59:15.5695958Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+validate	Install tested dependencies	2026-11-20T13:59:15.6626661Z Collecting tzdata==2026.6 (from -r requirements-tested.txt (line 45))
+validate	Install tested dependencies	2026-11-20T13:59:15.6679120Z   Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+validate	Install tested dependencies	2026-11-20T13:59:15.7324967Z Collecting uritemplate==4.2.0 (from -r requirements-tested.txt (line 46))
+validate	Install tested dependencies	2026-11-20T13:59:15.7375176Z   Downloading uritemplate-4.2.0-py3-none-any.whl.metadata (2.6 kB)
+validate	Install tested dependencies	2026-11-20T13:59:15.8138204Z Collecting urllib3==2.8.0 (from -r requirements-tested.txt (line 47))
+validate	Install tested dependencies	2026-11-20T13:59:15.8186303Z   Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+validate	Install tested dependencies	2026-11-20T13:59:15.9614434Z Downloading altgraph-0.17.5-py2.py3-none-any.whl (21 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.0029486Z Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.0465756Z Downloading cffi-2.1.1-cp312-cp312-win_amd64.whl (185 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.0788507Z Downloading charset_normalizer-3.5.2-cp312-cp312-win_amd64.whl (207 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.1156119Z Downloading cryptography-50.0.2-cp311-abi3-win_amd64.whl (3.8 MB)
+validate	Install tested dependencies	2026-11-20T13:59:16.2010261Z    ---------------------------------------- 3.8/3.8 MB 45.7 MB/s  0:00:00
+validate	Install tested dependencies	2026-11-20T13:59:16.2059866Z Downloading google_api_core-2.44.0-py3-none-any.whl (225 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.2364907Z Downloading google_auth-2.62.2-py3-none-any.whl (270 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.2700005Z Downloading googleapis_common_protos-1.76.0-py3-none-any.whl (307 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.3117766Z Downloading opentelemetry_api-1.45.2-py3-none-any.whl (60 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.3474589Z Downloading proto_plus-1.29.0-py3-none-any.whl (50 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.3746605Z Downloading protobuf-7.36.2-cp310-abi3-win_amd64.whl (456 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.4116752Z Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.4382385Z Downloading idna-3.20-py3-none-any.whl (69 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.4679575Z Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.5137618Z Downloading google_api_python_client-2.202.0-py3-none-any.whl (17.1 MB)
+validate	Install tested dependencies	2026-11-20T13:59:16.6713665Z    ---------------------------------------- 17.1/17.1 MB 108.2 MB/s  0:00:00
+validate	Install tested dependencies	2026-11-20T13:59:16.6757655Z Downloading google_auth_httplib2-0.4.4-py3-none-any.whl (9.5 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.7018583Z Downloading httplib2-0.32.1-py3-none-any.whl (92 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.7305449Z Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.7719503Z Downloading uritemplate-4.2.0-py3-none-any.whl (11 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.8009228Z Downloading google_auth_oauthlib-1.5.0-py3-none-any.whl (20 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.8275947Z Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.8615172Z Downloading jaraco.classes-3.4.0-py3-none-any.whl (6.8 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.8875547Z Downloading jaraco_context-6.1.2-py3-none-any.whl (7.9 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.9164758Z Downloading jaraco_functools-4.6.0-py3-none-any.whl (11 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.9431510Z Downloading keyring-25.7.0-py3-none-any.whl (39 kB)
+validate	Install tested dependencies	2026-11-20T13:59:16.9868053Z Downloading more_itertools-11.2.1-py3-none-any.whl (74 kB)
+validate	Install tested dependencies	2026-11-20T13:59:17.0134638Z Downloading oauthlib-4.0.1-py3-none-any.whl (161 kB)
+validate	Install tested dependencies	2026-11-20T13:59:17.0503267Z Downloading pefile-2024.8.26-py3-none-any.whl (74 kB)
+validate	Install tested dependencies	2026-11-20T13:59:17.0915639Z Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+validate	Install tested dependencies	2026-11-20T13:59:17.1213722Z Downloading pyasn1_modules-0.4.2-py3-none-any.whl (181 kB)
+validate	Install tested dependencies	2026-11-20T13:59:17.1552169Z Downloading pyasn1-0.6.5-py3-none-any.whl (84 kB)
+validate	Install tested dependencies	2026-11-20T13:59:17.2085494Z Downloading pycparser-3.12-py3-none-any.whl (62 kB)
+validate	Install tested dependencies	2026-11-20T13:59:17.2475368Z Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+validate	Install tested dependencies	2026-11-20T13:59:17.3011531Z    ---------------------------------------- 1.3/1.3 MB 21.0 MB/s  0:00:00
+validate	Install tested dependencies	2026-11-20T13:59:17.3070540Z Downloading pyinstaller_hooks_contrib-2026.10-py3-none-any.whl (463 kB)
+validate	Install tested dependencies	2026-11-20T13:59:17.3521218Z Downloading pyinstaller-6.22.3-py3-none-win_amd64.whl (1.5 MB)
+validate	Install tested dependencies	2026-11-20T13:59:17.4001942Z    ---------------------------------------- 1.5/1.5 MB 25.4 MB/s  0:00:00
+validate	Install tested dependencies	2026-11-20T13:59:17.4148732Z Downloading PySide6_Addons-6.8.3-cp39-abi3-win_amd64.whl (127.9 MB)
+validate	Install tested dependencies	2026-11-20T13:59:20.3161803Z    ---------------------------------------- 127.9/127.9 MB 43.7 MB/s  0:00:02
+validate	Install tested dependencies	2026-11-20T13:59:20.3246044Z Downloading PySide6_Essentials-6.8.3-cp39-abi3-win_amd64.whl (72.2 MB)
+validate	Install tested dependencies	2026-11-20T13:59:21.6600674Z    ---------------------------------------- 72.2/72.2 MB 54.2 MB/s  0:00:01
+validate	Install tested dependencies	2026-11-20T13:59:21.6652691Z Downloading PySide6-6.8.3-cp39-abi3-win_amd64.whl (561 kB)
+validate	Install tested dependencies	2026-11-20T13:59:21.7362792Z    ---------------------------------------- 561.1/561.1 kB 4.8 MB/s  0:00:00
+validate	Install tested dependencies	2026-11-20T13:59:21.7412481Z Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+validate	Install tested dependencies	2026-11-20T13:59:21.7919102Z Downloading pywin32_ctypes-0.2.3-py3-none-any.whl (30 kB)
+validate	Install tested dependencies	2026-11-20T13:59:21.8473139Z Downloading requests_oauthlib-2.0.0-py2.py3-none-any.whl (24 kB)
+validate	Install tested dependencies	2026-11-20T13:59:21.9000315Z Downloading setuptools-84.2.1-py3-none-any.whl (876 kB)
+validate	Install tested dependencies	2026-11-20T13:59:21.9638182Z    ---------------------------------------- 876.3/876.3 kB 9.7 MB/s  0:00:00
+validate	Install tested dependencies	2026-11-20T13:59:21.9793651Z Downloading shiboken6-6.8.3-cp39-abi3-win_amd64.whl (1.2 MB)
+validate	Install tested dependencies	2026-11-20T13:59:22.0382266Z    ---------------------------------------- 1.2/1.2 MB 14.1 MB/s  0:00:00
+validate	Install tested dependencies	2026-11-20T13:59:22.0440567Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+validate	Install tested dependencies	2026-11-20T13:59:22.0789200Z Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+validate	Install tested dependencies	2026-11-20T13:59:22.9548383Z Installing collected packages: altgraph, urllib3, uritemplate, tzdata, typing-extensions, shiboken6, setuptools, pywin32-ctypes, pyparsing, pyinstaller-hooks-contrib, pygments, pycparser, pyasn1, protobuf, pluggy, pefile, oauthlib, more-itertools, jaraco-context, iniconfig, idna, charset-normalizer, certifi, requests, pytest, pyside6-essentials, pyinstaller, pyasn1-modules, proto-plus, opentelemetry-api, jaraco-functools, jaraco-classes, httplib2, googleapis-common-protos, cffi, requests-oauthlib, pyside6-addons, keyring, cryptography, pyside6, google-auth, google-auth-oauthlib, google-auth-httplib2, google-api-core, google-api-python-client
+validate	Install tested dependencies	2026-11-20T14:00:00.9565842Z 
+validate	Install tested dependencies	2026-11-20T14:00:00.9618078Z Successfully installed altgraph-0.17.5 certifi-2026.10.23 cffi-2.1.1 charset-normalizer-3.5.2 cryptography-50.0.2 google-api-core-2.44.0 google-api-python-client-2.202.0 google-auth-2.62.2 google-auth-httplib2-0.4.4 google-auth-oauthlib-1.5.0 googleapis-common-protos-1.76.0 httplib2-0.32.1 idna-3.20 iniconfig-2.3.1 jaraco-classes-3.4.0 jaraco-context-6.1.2 jaraco-functools-4.6.0 keyring-25.7.0 more-itertools-11.2.1 oauthlib-4.0.1 opentelemetry-api-1.45.2 pefile-2024.8.26 pluggy-1.7.0 proto-plus-1.29.0 protobuf-7.36.2 pyasn1-0.6.5 pyasn1-modules-0.4.2 pycparser-3.12 pygments-2.21.0 pyinstaller-6.22.3 pyinstaller-hooks-contrib-2026.10 pyparsing-3.3.3 pyside6-6.8.3 pyside6-addons-6.8.3 pyside6-essentials-6.8.3 pytest-9.2.0 pywin32-ctypes-0.2.3 requests-2.34.2 requests-oauthlib-2.0.0 setuptools-84.2.1 shiboken6-6.8.3 typing-extensions-4.16.0 tzdata-2026.6 uritemplate-4.2.0 urllib3-2.8.0
+validate	Install tested dependencies	2026-11-20T14:00:02.2397640Z Obtaining file:///D:/a/Checkpoint/Checkpoint
+validate	Install tested dependencies	2026-11-20T14:00:02.2418394Z   Checking if build backend supports build_editable: started
+validate	Install tested dependencies	2026-11-20T14:00:02.6772874Z   Checking if build backend supports build_editable: finished with status 'done'
+validate	Install tested dependencies	2026-11-20T14:00:02.6795700Z   Preparing editable metadata (pyproject.toml): started
+validate	Install tested dependencies	2026-11-20T14:00:03.0900833Z   Preparing editable metadata (pyproject.toml): finished with status 'done'
+validate	Install tested dependencies	2026-11-20T14:00:03.0968293Z Building wheels for collected packages: checkpoint-desktop
+validate	Install tested dependencies	2026-11-20T14:00:03.0992330Z   Building editable for checkpoint-desktop (pyproject.toml): started
+validate	Install tested dependencies	2026-11-20T14:00:03.6874434Z   Building editable for checkpoint-desktop (pyproject.toml): finished with status 'done'
+validate	Install tested dependencies	2026-11-20T14:00:03.6889009Z   C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages\setuptools\command\editable_wheel.py:354: BuildBackendWarning: Editable installation.
+validate	Install tested dependencies	2026-11-20T14:00:03.6889922Z   !!
+validate	Install tested dependencies	2026-11-20T14:00:03.6890127Z   
+validate	Install tested dependencies	2026-11-20T14:00:03.6890399Z           ********************************************************************************
+validate	Install tested dependencies	2026-11-20T14:00:03.6890953Z           Please be careful with folders in your working directory with the same
+validate	Install tested dependencies	2026-11-20T14:00:03.6891563Z           name as your package as they may take precedence during imports.
+validate	Install tested dependencies	2026-11-20T14:00:03.6892092Z           ********************************************************************************
+validate	Install tested dependencies	2026-11-20T14:00:03.6892474Z   
+validate	Install tested dependencies	2026-11-20T14:00:03.6892664Z   !!
+validate	Install tested dependencies	2026-11-20T14:00:03.6892954Z     with strategy, WheelFile(wheel_path, "w") as wheel_obj:
+validate	Install tested dependencies	2026-11-20T14:00:03.6939328Z   Created wheel for checkpoint-desktop: filename=checkpoint_desktop-0.1.39-0.editable-py3-none-any.whl size=3273 sha256=7a3dd4ced33483bb4c853619be4b074e87ba28640c849c4b879ee98e16222505
+validate	Install tested dependencies	2026-11-20T14:00:03.6941321Z   Stored in directory: C:\Users\runneradmin\AppData\Local\Temp\pip-ephem-wheel-cache-9lmt41ne\wheels\a2\38\6e\88ad7ec70fd74394064971fa20d15ccdcdb6f76505932df31d
+validate	Install tested dependencies	2026-11-20T14:00:03.6969045Z Successfully built checkpoint-desktop
+validate	Install tested dependencies	2026-11-20T14:00:03.7196227Z Installing collected packages: checkpoint-desktop
+validate	Install tested dependencies	2026-11-20T14:00:03.7790296Z Successfully installed checkpoint-desktop-0.1.39
+validate	Install tested dependencies	2026-11-20T14:00:04.1783222Z No broken requirements found.
+validate	Test on Windows	﻿2026-11-20T14:00:04.3065462Z ##[group]Run $env:CHECKPOINT_TEST_ROOT = Join-Path $env:RUNNER_TEMP 'checkpoint-ui-tests'
+validate	Test on Windows	2026-11-20T14:00:04.3066273Z [36;1m$env:CHECKPOINT_TEST_ROOT = Join-Path $env:RUNNER_TEMP 'checkpoint-ui-tests'[0m
+validate	Test on Windows	2026-11-20T14:00:04.3066940Z [36;1mpython -X faulthandler -m pytest tests -q -p no:cacheprovider --junitxml=.ci-results/pytest.xml[0m
+validate	Test on Windows	2026-11-20T14:00:04.3067539Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Testes Windows falharam.' }[0m
+validate	Test on Windows	2026-11-20T14:00:04.3110986Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+validate	Test on Windows	2026-11-20T14:00:04.3111432Z env:
+validate	Test on Windows	2026-11-20T14:00:04.3111665Z   QT_QPA_PLATFORM: offscreen
+validate	Test on Windows	2026-11-20T14:00:04.3112073Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Test on Windows	2026-11-20T14:00:04.3112675Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+validate	Test on Windows	2026-11-20T14:00:04.3113287Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Test on Windows	2026-11-20T14:00:04.3113831Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Test on Windows	2026-11-20T14:00:04.3114340Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Test on Windows	2026-11-20T14:00:04.3114663Z ##[endgroup]
+validate	Test on Windows	2026-11-20T14:00:20.1277519Z ........................................................................ [  8%]
+validate	Test on Windows	2026-11-20T14:00:34.5729727Z ........................................................................ [ 17%]
+validate	Test on Windows	2026-11-20T14:00:49.9338320Z ........................................................................ [ 26%]
+validate	Test on Windows	2026-11-20T14:00:54.4856195Z ........................................................................ [ 35%]
+validate	Test on Windows	2026-11-20T14:01:03.9789535Z ........................................................................ [ 44%]
+validate	Test on Windows	2026-11-20T14:02:05.8969696Z ........................................................................ [ 53%]
+validate	Test on Windows	2026-11-20T14:02:45.6633484Z ........................................................................ [ 62%]
+validate	Test on Windows	2026-11-20T14:04:37.3001618Z ........................................................................ [ 71%]
+validate	Test on Windows	2026-11-20T14:05:04.3171401Z ........................................................................ [ 80%]
+validate	Test on Windows	2026-11-20T14:07:53.9123779Z ........................................................................ [ 89%]
+validate	Test on Windows	2026-11-20T14:12:59.1492710Z ........................................................................ [ 98%]
+validate	Test on Windows	2026-11-20T14:13:15.0055081Z ................                                                         [100%]
+validate	Test on Windows	2026-11-20T14:13:15.0056512Z 808 passed in 788.60s (0:13:08)
+validate	Build desktop with bundled brand assets	﻿2026-11-20T14:13:16.1044774Z ##[group]Run ./scripts/build.ps1 -Python (Get-Command python).Source
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:16.1045424Z [36;1m./scripts/build.ps1 -Python (Get-Command python).Source[0m
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:16.1088877Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:16.1089299Z env:
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:16.1089554Z   QT_QPA_PLATFORM: offscreen
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:16.1089923Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:16.1090459Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:16.1090959Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:16.1091409Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:16.1091853Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:16.1092232Z ##[endgroup]
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.2864086Z 281 INFO: PyInstaller: 6.22.3, contrib hooks: 2026.10
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.2866817Z 281 INFO: Python: 3.12.10
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.3080901Z 296 INFO: Platform: Windows-2022Server-10.0.20348-SP0
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.3081605Z 296 INFO: Python environment: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.3087050Z 296 INFO: wrote D:\a\Checkpoint\Checkpoint\work\pyinstaller\Checkpoint.spec
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.3678743Z 359 INFO: Module search paths (PYTHONPATH):
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.3679563Z ['D:\\a\\Checkpoint\\Checkpoint',
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.3680130Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python312.zip',
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.3680812Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\DLLs',
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.3681400Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib',
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.3681982Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64',
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.3682615Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages',
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.3683285Z  '__editable__.checkpoint_desktop-0.1.39.finder.__path_hook__',
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.3683804Z  'D:\\a\\Checkpoint\\Checkpoint']
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.6172303Z 609 INFO: Appending 'datas' from .spec
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.6195887Z 609 INFO: checking Analysis
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.6196744Z 609 INFO: Building Analysis because Analysis-00.toc is non existent
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.6197621Z 609 INFO: Looking for Python shared library...
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.6198485Z 609 INFO: Using Python shared library: C:\hostedtoolcache\windows\Python\3.12.10\x64\python312.dll
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.6199388Z 609 INFO: Running Analysis Analysis-00.toc
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.6200035Z 609 INFO: Target bytecode optimization level: 0
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.6200690Z 609 INFO: Initializing module dependency graph...
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.6210579Z 609 INFO: Initializing module graph hook caches...
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:17.6376270Z 625 INFO: Analyzing modules for base_library.zip ...
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:18.5890052Z 1580 INFO: Processing standard module hook 'hook-heapq.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:18.7128400Z 1704 INFO: Processing standard module hook 'hook-encodings.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:20.3363226Z 3329 INFO: Processing standard module hook 'hook-math.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:20.6067966Z 3596 INFO: Processing standard module hook 'hook-pickle.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:22.3577248Z 5348 INFO: Caching module dependency graph...
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:22.3991768Z 5395 INFO: Analyzing D:\a\Checkpoint\Checkpoint\run_checkpoint.py
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:22.5990969Z 5598 INFO: Processing standard module hook 'hook-PySide6.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:22.7644698Z 5755 INFO: Processing standard module hook 'hook-shiboken6.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:22.9020321Z 5895 INFO: Processing standard module hook 'hook-PySide6.QtNetwork.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:26.0256623Z 9014 INFO: Processing standard module hook 'hook-PySide6.QtCore.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:30.1710408Z 13166 INFO: Processing standard module hook 'hook-PySide6.QtWidgets.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:13:34.4224915Z 17419 INFO: Processing standard module hook 'hook-PySide6.QtGui.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:09.4949990Z 52485 INFO: Processing standard module hook 'hook-PySide6.QtSvg.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:09.8931251Z 52892 INFO: Processing standard module hook 'hook-_ctypes.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:09.9121649Z 52908 INFO: Processing standard module hook 'hook-sqlite3.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:10.2045541Z 53189 INFO: Processing standard module hook 'hook-platform.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:10.3295064Z 53314 INFO: Processing standard module hook 'hook-keyring.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:10.8109924Z 53799 INFO: Processing pre-safe-import-module hook 'hook-jaraco.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:10.8117246Z 53799 INFO: SetuptoolsInfo: initializing cached setuptools info...
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:11.3169891Z 54315 INFO: Setuptools: 'jaraco' appears to be a partial setuptools-vendored copy - extending search paths to ['C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\jaraco', 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\setuptools\\_vendor\\jaraco']!
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:11.3176978Z 54315 INFO: Processing pre-safe-import-module hook 'hook-jaraco.context.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:11.5512441Z 54549 INFO: Processing pre-safe-import-module hook 'hook-backports.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:11.5515105Z 54549 INFO: Setuptools: 'backports' appears to be a full setuptools-vendored copy - creating alias to 'setuptools._vendor.backports'!
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:11.5569581Z 54549 INFO: Processing standard module hook 'hook-setuptools.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:11.5683445Z 54565 INFO: Processing pre-safe-import-module hook 'hook-distutils.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:11.6251947Z 54612 INFO: Processing standard module hook 'hook-sysconfig.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:11.6306491Z 54628 INFO: Processing pre-safe-import-module hook 'hook-jaraco.functools.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:11.6409616Z 54628 INFO: Processing pre-safe-import-module hook 'hook-more_itertools.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:11.8125740Z 54800 INFO: Processing standard module hook 'hook-_osx_support.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:11.8167943Z 54815 INFO: Processing pre-safe-import-module hook 'hook-typing_extensions.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:12.1031217Z 55097 INFO: Processing standard module hook 'hook-multiprocessing.util.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:12.2102495Z 55206 INFO: Processing standard module hook 'hook-xml.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:12.8513555Z 55848 INFO: Processing pre-safe-import-module hook 'hook-packaging.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:13.2550496Z 56254 INFO: Processing pre-safe-import-module hook 'hook-jaraco.text.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:13.2552560Z 56254 INFO: Setuptools: 'jaraco.text' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.jaraco.text'!
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:13.2671097Z 56264 INFO: Processing standard module hook 'hook-setuptools._vendor.jaraco.text.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:13.2684444Z 56264 INFO: Processing pre-safe-import-module hook 'hook-importlib_resources.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:13.7311719Z 56724 INFO: Processing pre-safe-import-module hook 'hook-tomli.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:13.7314011Z 56724 INFO: Setuptools: 'tomli' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.tomli'!
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:14.3845524Z 57380 INFO: Processing pre-safe-import-module hook 'hook-wheel.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:14.3848102Z 57380 INFO: Setuptools: 'wheel' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.wheel'!
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:14.5154291Z 57505 INFO: Processing pre-safe-import-module hook 'hook-importlib_metadata.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:14.5156864Z 57505 INFO: Setuptools: 'importlib_metadata' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.importlib_metadata'!
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:14.5401862Z 57536 INFO: Processing standard module hook 'hook-setuptools._vendor.importlib_metadata.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:14.5636276Z 57563 INFO: Processing pre-safe-import-module hook 'hook-zipp.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:14.5639348Z 57564 INFO: Setuptools: 'zipp' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.zipp'!
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:14.6147887Z 57606 INFO: Processing standard module hook 'hook-win32ctypes.core.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:15.4002386Z 58396 INFO: Processing standard module hook 'hook-pycparser.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:15.9185338Z 58913 INFO: Processing standard module hook 'hook-webbrowser.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:16.2119851Z 59210 INFO: Processing standard module hook 'hook-cryptography.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:17.6226564Z 60618 INFO: hook-cryptography: cryptography does not seem to be using dynamically linked OpenSSL.
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:18.4041600Z 61400 INFO: Processing standard module hook 'hook-urllib3.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:18.9100727Z 61901 INFO: Processing standard module hook 'hook-certifi.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:18.9608848Z 61948 INFO: Processing standard module hook 'hook-charset_normalizer.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:19.6599315Z 62652 INFO: Processing standard module hook 'hook-google.api_core.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:19.6862512Z 62683 INFO: Processing standard module hook 'hook-opentelemetry.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:20.0155241Z 63011 INFO: Processing standard module hook 'hook-httplib2.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:20.3697617Z 63363 INFO: Processing standard module hook 'hook-difflib.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:20.6094498Z 63609 INFO: Processing standard module hook 'hook-googleapiclient.model.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:21.2561873Z 64247 INFO: Processing standard module hook 'hook-xml.etree.cElementTree.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:21.6199372Z 64609 INFO: Processing module hooks (post-graph stage)...
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:21.6407857Z 64638 WARNING: Hidden import "pycparser.lextab" not found!
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:21.6409011Z 64638 WARNING: Hidden import "pycparser.yacctab" not found!
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:21.6670007Z 64654 INFO: Processing pre-safe-import-module hook 'hook-gi.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:21.8367117Z 64826 INFO: Performing binary vs. data reclassification (813 entries)
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:21.9082864Z 64904 INFO: Looking for ctypes DLLs
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:21.9457265Z 64936 INFO: Analyzing run-time hooks ...
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:21.9505493Z 64936 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:21.9531879Z 64951 INFO: Including run-time hook 'pyi_rth_pkgutil.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:21.9553017Z 64951 INFO: Including run-time hook 'pyi_rth_multiprocessing.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:21.9574483Z 64951 INFO: Including run-time hook 'pyi_rth_setuptools.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:21.9587193Z 64951 INFO: Including run-time hook 'pyi_rth_pyside6.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:21.9604977Z 64951 INFO: Processing pre-find-module-path hook 'hook-_pyi_rth_utils.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_find_module_path'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:21.9619723Z 64951 INFO: Processing standard module hook 'hook-_pyi_rth_utils.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:21.9646832Z 64951 INFO: Including run-time hook 'pyi_rth_cryptography_openssl.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\rthooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:21.9981997Z 64998 INFO: Creating base_library.zip...
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:22.0201905Z 65014 INFO: Looking for dynamic libraries
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:22.8293242Z 65827 INFO: Extra DLL search directories (AddDllDirectory): ['C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\shiboken6']
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:22.8294400Z 65827 INFO: Extra DLL search directories (PATH): ['C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PySide6']
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:24.7920332Z 67782 INFO: Warnings written to D:\a\Checkpoint\Checkpoint\work\pyinstaller\Checkpoint\warn-Checkpoint.txt
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:24.8866026Z 67876 INFO: Graph cross-reference written to D:\a\Checkpoint\Checkpoint\work\pyinstaller\Checkpoint\xref-Checkpoint.html
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:24.9383210Z 67938 INFO: checking PYZ
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:24.9384233Z 67938 INFO: Building PYZ because PYZ-00.toc is non existent
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:24.9385422Z 67938 INFO: Building PYZ (ZlibArchive) D:\a\Checkpoint\Checkpoint\work\pyinstaller\Checkpoint\PYZ-00.pyz
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:25.7135608Z 68706 INFO: Building PYZ (ZlibArchive) D:\a\Checkpoint\Checkpoint\work\pyinstaller\Checkpoint\PYZ-00.pyz completed successfully.
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:25.7478353Z 68737 INFO: checking PKG
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:25.7479158Z 68737 INFO: Building PKG because PKG-00.toc is non existent
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:25.7479725Z 68737 INFO: Building PKG (CArchive) Checkpoint.pkg
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:25.7659287Z 68753 INFO: Building PKG (CArchive) Checkpoint.pkg completed successfully.
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:25.7667595Z 68753 INFO: Bootloader C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\runw.exe
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:25.7669056Z 68753 INFO: checking EXE
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:25.7669538Z 68753 INFO: Building EXE because EXE-00.toc is non existent
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:25.7670164Z 68753 INFO: Building EXE from EXE-00.toc
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:25.7671229Z 68753 INFO: Copying bootloader EXE to D:\a\Checkpoint\Checkpoint\work\pyinstaller\Checkpoint\Checkpoint.exe
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:25.7776024Z 68769 INFO: Copying icon to EXE
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:25.7793783Z 68769 INFO: Copying 0 resources to EXE
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:25.7794226Z 68769 INFO: Embedding manifest in EXE
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:25.7809110Z 68769 INFO: Appending PKG archive to EXE
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:25.7855012Z 68784 INFO: Fixing EXE headers
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:25.8649532Z 68863 INFO: Building EXE from EXE-00.toc completed successfully.
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:25.8739015Z 68863 INFO: checking COLLECT
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:25.8740133Z 68863 INFO: Building COLLECT because COLLECT-00.toc is non existent
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:25.8742453Z 68863 INFO: Building COLLECT COLLECT-00.toc
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:26.5623575Z 69550 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:26.5817568Z 69566 INFO: Build complete! The results are available in: D:\a\Checkpoint\Checkpoint\dist
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:26.9309135Z 125 INFO: PyInstaller: 6.22.3, contrib hooks: 2026.10
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:26.9313400Z 125 INFO: Python: 3.12.10
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:26.9524319Z 140 INFO: Platform: Windows-2022Server-10.0.20348-SP0
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:26.9524962Z 140 INFO: Python environment: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:26.9529938Z 140 INFO: wrote D:\a\Checkpoint\Checkpoint\work\pyinstaller\CheckpointUpdater.spec
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:26.9566673Z 140 INFO: Module search paths (PYTHONPATH):
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:26.9567389Z ['D:\\a\\Checkpoint\\Checkpoint',
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:26.9568166Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python312.zip',
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:26.9569080Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\DLLs',
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:26.9569858Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib',
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:26.9570402Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64',
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:26.9570951Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages',
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:26.9571587Z  '__editable__.checkpoint_desktop-0.1.39.finder.__path_hook__',
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:26.9572072Z  'D:\\a\\Checkpoint\\Checkpoint']
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:27.1972478Z 390 INFO: checking Analysis
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:27.1973497Z 390 INFO: Building Analysis because Analysis-00.toc is non existent
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:27.1974546Z 390 INFO: Looking for Python shared library...
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:27.1975757Z 390 INFO: Using Python shared library: C:\hostedtoolcache\windows\Python\3.12.10\x64\python312.dll
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:27.1977064Z 390 INFO: Running Analysis Analysis-00.toc
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:27.1977815Z 390 INFO: Target bytecode optimization level: 0
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:27.1978490Z 390 INFO: Initializing module dependency graph...
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:27.1987710Z 390 INFO: Initializing module graph hook caches...
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:27.2142675Z 406 INFO: Analyzing modules for base_library.zip ...
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:28.2670457Z 1453 INFO: Processing standard module hook 'hook-encodings.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:28.6089619Z 1797 INFO: Processing standard module hook 'hook-math.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:28.7940155Z 1984 INFO: Processing standard module hook 'hook-heapq.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:29.6624186Z 2845 INFO: Processing standard module hook 'hook-pickle.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:30.9222872Z 4111 INFO: Caching module dependency graph...
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:30.9623125Z 4158 INFO: Analyzing D:\a\Checkpoint\Checkpoint\run_updater.py
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:30.9859313Z 4173 INFO: Processing standard module hook 'hook-_ctypes.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.0590476Z 4251 INFO: Processing standard module hook 'hook-platform.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.0697688Z 4267 INFO: Processing module hooks (post-graph stage)...
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.0757262Z 4267 INFO: Performing binary vs. data reclassification (1 entries)
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.0767577Z 4267 INFO: Looking for ctypes DLLs
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.0832787Z 4267 INFO: Analyzing run-time hooks ...
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.0842213Z 4267 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.0893824Z 4283 INFO: Creating base_library.zip...
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.1098299Z 4298 INFO: Looking for dynamic libraries
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.2211837Z 4408 INFO: Extra DLL search directories (AddDllDirectory): []
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.2212380Z 4408 INFO: Extra DLL search directories (PATH): []
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.5354029Z 4720 INFO: Warnings written to D:\a\Checkpoint\Checkpoint\work\pyinstaller\helper-build\CheckpointUpdater\warn-CheckpointUpdater.txt
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.5507946Z 4736 INFO: Graph cross-reference written to D:\a\Checkpoint\Checkpoint\work\pyinstaller\helper-build\CheckpointUpdater\xref-CheckpointUpdater.html
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.5653470Z 4751 INFO: checking PYZ
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.5654557Z 4751 INFO: Building PYZ because PYZ-00.toc is non existent
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.5656281Z 4751 INFO: Building PYZ (ZlibArchive) D:\a\Checkpoint\Checkpoint\work\pyinstaller\helper-build\CheckpointUpdater\PYZ-00.pyz
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.7185451Z 4908 INFO: Building PYZ (ZlibArchive) D:\a\Checkpoint\Checkpoint\work\pyinstaller\helper-build\CheckpointUpdater\PYZ-00.pyz completed successfully.
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.7226157Z 4908 INFO: checking PKG
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.7227006Z 4908 INFO: Building PKG because PKG-00.toc is non existent
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.7227948Z 4908 INFO: Building PKG (CArchive) CheckpointUpdater.pkg
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.7350123Z 4924 INFO: Building PKG (CArchive) CheckpointUpdater.pkg completed successfully.
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.7357033Z 4924 INFO: Bootloader C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\run.exe
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.7358239Z 4924 INFO: checking EXE
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.7358706Z 4924 INFO: Building EXE because EXE-00.toc is non existent
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.7359155Z 4924 INFO: Building EXE from EXE-00.toc
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.7360779Z 4924 INFO: Copying bootloader EXE to D:\a\Checkpoint\Checkpoint\work\pyinstaller\helper-build\CheckpointUpdater\CheckpointUpdater.exe
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.7380420Z 4924 INFO: Copying icon to EXE
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.7398366Z 4924 INFO: Copying 0 resources to EXE
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.7398937Z 4924 INFO: Embedding manifest in EXE
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.7414076Z 4924 INFO: Appending PKG archive to EXE
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.7422783Z 4939 INFO: Fixing EXE headers
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.8112469Z 5002 INFO: Building EXE from EXE-00.toc completed successfully.
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.8127586Z 5002 INFO: checking COLLECT
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.8128995Z 5002 INFO: Building COLLECT because COLLECT-00.toc is non existent
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.8131144Z 5002 INFO: Building COLLECT COLLECT-00.toc
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.8484884Z 5033 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+validate	Build desktop with bundled brand assets	2026-11-20T14:14:31.8500164Z 5033 INFO: Build complete! The results are available in: D:\a\Checkpoint\Checkpoint\work\pyinstaller\helper-dist
+validate	Validate source and extracted executable	﻿2026-11-20T14:14:31.9905588Z ##[group]Run python scripts/package_windows_release.py --test-report .ci-results/pytest.xml
+validate	Validate source and extracted executable	2026-11-20T14:14:31.9906391Z [36;1mpython scripts/package_windows_release.py --test-report .ci-results/pytest.xml[0m
+validate	Validate source and extracted executable	2026-11-20T14:14:31.9906972Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Smokes Windows falharam.' }[0m
+validate	Validate source and extracted executable	2026-11-20T14:14:31.9985267Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+validate	Validate source and extracted executable	2026-11-20T14:14:31.9985697Z env:
+validate	Validate source and extracted executable	2026-11-20T14:14:31.9985938Z   QT_QPA_PLATFORM: offscreen
+validate	Validate source and extracted executable	2026-11-20T14:14:31.9986302Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Validate source and extracted executable	2026-11-20T14:14:31.9986814Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+validate	Validate source and extracted executable	2026-11-20T14:14:31.9987332Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Validate source and extracted executable	2026-11-20T14:14:31.9987961Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Validate source and extracted executable	2026-11-20T14:14:31.9988410Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Validate source and extracted executable	2026-11-20T14:14:31.9988771Z ##[endgroup]
+validate	Validate source and extracted executable	2026-11-20T14:14:46.1874813Z Checkpoint smoke: 6 pages OK; SQLite integrity=ok
+validate	Validate source and extracted executable	2026-11-20T14:14:47.5074493Z Cadastro smoke: salvar, auxiliar, renderiza��o e SQLite OK
+validate	Validate source and extracted executable	2026-11-20T14:14:56.7567082Z Checkpoint 0.1.39 � Windows x64
+validate	Validate source and extracted executable	2026-11-20T14:14:56.7567771Z Commit: 9a658569309ad49d4d138c226e83ef2c2f80849c
+validate	Validate source and extracted executable	2026-11-20T14:14:56.7568262Z Python: 3.12.10
+validate	Validate source and extracted executable	2026-11-20T14:14:56.7568672Z Testes: {'tests': 808, 'failures': 0, 'errors': 0, 'skipped': 0}
+validate	Validate source and extracted executable	2026-11-20T14:14:56.7569664Z Smoke do fonte: 6 p�ginas; SQLite �ntegro; biblioteca vazia.
+validate	Validate source and extracted executable	2026-11-20T14:14:56.7571771Z Smoke do ZIP extra�do: 6 p�ginas; SQLite �ntegro; biblioteca vazia.
+validate	Validate source and extracted executable	2026-11-20T14:14:56.7573917Z Auxiliar isolado do fonte e do ZIP extra�do: resposta e schema verificados.
+validate	Validate source and extracted executable	2026-11-20T14:14:56.7575631Z Cadastro completo do fonte e do ZIP: salvar, auxiliar, imagem e SQLite verificados (fixture isolada).
+validate	Validate source and extracted executable	2026-11-20T14:14:56.7577638Z CheckpointUpdater.exe --check: sa�da 0.
+validate	Validate source and extracted executable	2026-11-20T14:14:56.7579694Z Inicializa��o normal nativa Windows do fonte e do execut�vel extra�do: HWND vis�vel, resposta, captura, fechamento e SQLite verificados; executor j� elevado, sem automatizar consentimento UAC.
+validate	Validate source and extracted executable	2026-11-20T14:14:56.7581660Z ZIP SHA-256: b24b3bac05b3705b368a29a4bc7ae6a88415786c318f1e12a515e51909e0b896
+validate	Validate source and extracted executable	2026-11-20T14:14:56.7583051Z Steam autenticada e homologa��o Windows 10/11 pessoal n�o est�o cobertas.
+validate	Render Windows captures with isolated fixtures	﻿2026-11-20T14:14:56.8942629Z ##[group]Run python scripts/render_ui_review.py work/ui-review
+validate	Render Windows captures with isolated fixtures	2026-11-20T14:14:56.8943252Z [36;1mpython scripts/render_ui_review.py work/ui-review[0m
+validate	Render Windows captures with isolated fixtures	2026-11-20T14:14:56.8943750Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Capturas Windows falharam.' }[0m
+validate	Render Windows captures with isolated fixtures	2026-11-20T14:14:56.8944306Z [36;1mpython scripts/package_ui_review.py work/ui-review release-assets[0m
+validate	Render Windows captures with isolated fixtures	2026-11-20T14:14:56.8944817Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Empacotamento visual falhou.' }[0m
+validate	Render Windows captures with isolated fixtures	2026-11-20T14:14:56.8986071Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+validate	Render Windows captures with isolated fixtures	2026-11-20T14:14:56.8986469Z env:
+validate	Render Windows captures with isolated fixtures	2026-11-20T14:14:56.8986710Z   QT_QPA_PLATFORM: offscreen
+validate	Render Windows captures with isolated fixtures	2026-11-20T14:14:56.8987086Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Render Windows captures with isolated fixtures	2026-11-20T14:14:56.8987601Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+validate	Render Windows captures with isolated fixtures	2026-11-20T14:14:56.8988128Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Render Windows captures with isolated fixtures	2026-11-20T14:14:56.8988613Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Render Windows captures with isolated fixtures	2026-11-20T14:14:56.8989139Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Render Windows captures with isolated fixtures	2026-11-20T14:14:56.8989518Z ##[endgroup]
+validate	Render Windows captures with isolated fixtures	2026-11-20T14:14:58.8967347Z WARNING:root:Moldura integrada indispon�vel; controles nativos preservados.
+validate	Render Windows captures with isolated fixtures	2026-11-20T14:15:08.6158947Z WARNING:root:Moldura integrada indispon�vel; controles nativos preservados.
+validate	Render Windows captures with isolated fixtures	2026-11-20T14:15:08.8916876Z D:\a\Checkpoint\Checkpoint\work\ui-review
+validate	Render Windows captures with isolated fixtures	2026-11-20T14:15:09.2513879Z Revis�o visual: 61 PNGs e �ndice HTML; bases e logs exclu�dos.
+validate	Preserve review artifacts without publishing a release	﻿2026-11-20T14:15:09.3713174Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.3713677Z with:
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.3713878Z   name: checkpoint-windows-ui-review
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.3714142Z   path: release-assets/*
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.3714364Z   if-no-files-found: error
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.3714580Z   retention-days: 14
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.3714775Z   compression-level: 6
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.3714976Z   overwrite: false
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.3715167Z   include-hidden-files: false
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.3715374Z env:
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.3715544Z   QT_QPA_PLATFORM: offscreen
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.3715848Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.3716308Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.3716757Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.3718061Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.3718474Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.3718828Z ##[endgroup]
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.5724479Z (node:5632) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.5725233Z (Use `node --trace-deprecation ...` to show where the warning was created)
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.5823886Z With the provided path, there will be 10 files uploaded
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.5829264Z Artifact name is valid!
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.5832084Z Root directory input is valid!
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:09.8731596Z Beginning upload of artifact content to blob storage
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:10.1605648Z (node:5632) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:10.6690462Z Uploaded bytes 8388608
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:10.9838836Z Uploaded bytes 16777216
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:11.0152376Z Uploaded bytes 25165824
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:11.2266563Z Uploaded bytes 33554432
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:11.5191045Z Uploaded bytes 41943040
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:11.7223442Z Uploaded bytes 50331648
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:11.9768685Z Uploaded bytes 58720256
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:12.3260372Z Uploaded bytes 67108864
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:12.4866324Z Uploaded bytes 75497472
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:12.7659397Z Uploaded bytes 83886080
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:12.9339067Z Uploaded bytes 88917658
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:12.9695988Z Finished uploading artifact content to blob storage!
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:12.9700696Z SHA256 digest of uploaded artifact zip is 95d736ce19644524b1808a08e8e4b6051c9d65251a3fa8e7b8c52e71a682b088
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:12.9703399Z Finalizing artifact upload
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:13.3459054Z Artifact checkpoint-windows-ui-review.zip successfully finalized. Artifact ID 14635591757
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:13.3460446Z Artifact checkpoint-windows-ui-review has been successfully uploaded! Final size is 88917658 bytes. Artifact ID is 14635591757
+validate	Preserve review artifacts without publishing a release	2026-11-20T14:15:13.3471425Z Artifact download URL: https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/44749088810/artifacts/14635591757
+validate	Preserve test report	﻿2026-11-20T14:15:13.3764676Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+validate	Preserve test report	2026-11-20T14:15:13.3765156Z with:
+validate	Preserve test report	2026-11-20T14:15:13.3765358Z   name: checkpoint-windows-ui-tests
+validate	Preserve test report	2026-11-20T14:15:13.3765697Z   path: .ci-results/pytest.xml
+validate	Preserve test report	2026-11-20T14:15:13.3765962Z   if-no-files-found: ignore
+validate	Preserve test report	2026-11-20T14:15:13.3766192Z   retention-days: 14
+validate	Preserve test report	2026-11-20T14:15:13.3766399Z   compression-level: 6
+validate	Preserve test report	2026-11-20T14:15:13.3766601Z   overwrite: false
+validate	Preserve test report	2026-11-20T14:15:13.3766808Z   include-hidden-files: false
+validate	Preserve test report	2026-11-20T14:15:13.3767039Z env:
+validate	Preserve test report	2026-11-20T14:15:13.3767218Z   QT_QPA_PLATFORM: offscreen
+validate	Preserve test report	2026-11-20T14:15:13.3767539Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Preserve test report	2026-11-20T14:15:13.3768033Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+validate	Preserve test report	2026-11-20T14:15:13.3768497Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Preserve test report	2026-11-20T14:15:13.3768915Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Preserve test report	2026-11-20T14:15:13.3769386Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+validate	Preserve test report	2026-11-20T14:15:13.3769709Z ##[endgroup]
+validate	Preserve test report	2026-11-20T14:15:13.5657834Z (node:3824) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+validate	Preserve test report	2026-11-20T14:15:13.5658611Z (Use `node --trace-deprecation ...` to show where the warning was created)
+validate	Preserve test report	2026-11-20T14:15:13.5712139Z With the provided path, there will be 1 file uploaded
+validate	Preserve test report	2026-11-20T14:15:13.5717411Z Artifact name is valid!
+validate	Preserve test report	2026-11-20T14:15:13.5720757Z Root directory input is valid!
+validate	Preserve test report	2026-11-20T14:15:13.8344232Z Beginning upload of artifact content to blob storage
+validate	Preserve test report	2026-11-20T14:15:13.8578839Z (node:3824) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+validate	Preserve test report	2026-11-20T14:15:14.0000603Z Uploaded bytes 16193
+validate	Preserve test report	2026-11-20T14:15:14.0392222Z Finished uploading artifact content to blob storage!
+validate	Preserve test report	2026-11-20T14:15:14.0393408Z SHA256 digest of uploaded artifact zip is 28540eaf46eb212e09782f7eb95b368a1c45364bef7c5cb673d73a47d2b6be07
+validate	Preserve test report	2026-11-20T14:15:14.0395991Z Finalizing artifact upload
+validate	Preserve test report	2026-11-20T14:15:14.4378824Z Artifact checkpoint-windows-ui-tests.zip successfully finalized. Artifact ID 14635646786
+validate	Preserve test report	2026-11-20T14:15:14.4380335Z Artifact checkpoint-windows-ui-tests has been successfully uploaded! Final size is 16193 bytes. Artifact ID is 14635646786
+validate	Preserve test report	2026-11-20T14:15:14.4390446Z Artifact download URL: https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/44749088810/artifacts/14635646786
+validate	Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	﻿2026-11-20T14:15:14.4716067Z Post job cleanup.
+validate	Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T14:15:14.6257045Z (node:5724) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+validate	Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T14:15:14.6258256Z (Use `node --trace-deprecation ...` to show where the warning was created)
+validate	Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T14:15:14.7762856Z [command]"C:\Program Files\Git\usr\bin\tar.exe" --posix -cf cache.tzst --exclude cache.tzst -P -C D:/a/Checkpoint/Checkpoint --files-from manifest.txt --force-local --use-compress-program "zstd -T0"
+validate	Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T14:15:15.8745826Z (node:5724) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+validate	Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T14:15:16.8604374Z Sent 30283581 of 231610173 (13.1%), 28.8 MBs/sec
+validate	Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T14:15:17.2556494Z Sent 231610173 of 231610173 (100.0%), 158.0 MBs/sec
+validate	Post Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065	2026-11-20T14:15:17.4343689Z Cache saved with the key: setup-python-Windows-x64-python-3.12.10-pip-eb71efc05b2754f3c8048b82aafb5b6c4b1d694285a4ae18da9e58d103e7bab6
+validate	Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	﻿2026-11-20T14:15:17.4696932Z Post job cleanup.
+validate	Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T14:15:17.7231144Z [command]"C:\Program Files\Git\bin\git.exe" version
+validate	Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T14:15:17.7511875Z git version 2.56.1.windows.1
+validate	Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T14:15:17.7575787Z Temporarily overriding HOME='D:\a\_temp\320ab591-679c-4e05-a2fe-d87f0cc0c594' before making global git config changes
+validate	Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T14:15:17.7577629Z Adding repository directory to the temporary git global config as a safe directory
+validate	Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T14:15:17.7587755Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Checkpoint\Checkpoint
+validate	Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T14:15:17.7910972Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+validate	Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T14:15:17.8223375Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+validate	Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T14:15:18.3270271Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+validate	Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T14:15:18.3585177Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+validate	Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T14:15:18.8305433Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+validate	Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262	2026-11-20T14:15:18.8605881Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+validate	Complete job	﻿2026-11-20T14:15:19.3834484Z Cleaning up orphan processes
+validate	Complete job	2026-11-20T14:15:19.4165498Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

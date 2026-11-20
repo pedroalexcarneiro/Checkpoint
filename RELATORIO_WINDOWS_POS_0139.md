@@ -132,10 +132,13 @@ apenas Windows UI validation executado nesta branch.
 
 Evidências verificadas (SHA-256 de cada arquivo e XML/contagem) em
 `evidence/windows-pos-0139/verified-files.json`; log integral baixado em
-`evidence/windows-pos-0139/workflow.log`. Nenhum banco, ROM, save, token ou dado
+`evidence/windows-pos-0139/workflow.txt`. Nenhum banco, ROM, save, token ou dado
 pessoal incluído. Capturas são de fixtures do runner.
 
 
 ## Limites
 
 Fixtures/runner não homologam HSR, emuladores, contas/cofre ou UAC no PC do dono. API autenticada não validada; consulta console continua sem cobertura confirmada. Protegidos, schema, dados e fluxos A4 preservados.
+
+Espaços finais dentro dos blocos de stdout/stderr de git push foram preservados
+para manter a saída integral. Não são alterações de código.
