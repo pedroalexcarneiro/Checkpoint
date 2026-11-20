@@ -140,14 +140,18 @@ class CardGrid(QWidget):
 
 
 class ArtworkButton(QPushButton):
-    def __init__(self,path,caption,callback,height=130,parent=None):
+    def __init__(self,path,caption,callback,height=130,parent=None,background=True):
         super().__init__(parent);self.pixmap=QPixmap(path);self.setObjectName('artworkButton');self.setFixedHeight(height);self.setMinimumWidth(100)
+        self.background=background
         self.setAccessibleName(caption);self.setToolTip(caption);self.clicked.connect(callback)
     def paintEvent(self,event):
         p=QPainter(self);p.setRenderHint(QPainter.Antialiasing);path=QPainterPath();path.addRoundedRect(QRectF(self.rect().adjusted(1,1,-1,-1)),RADIUS['card'],RADIUS['card']);p.setClipPath(path)
-        p.fillRect(self.rect(),QColor(colors()['input']))
+        if self.background or self.pixmap.isNull():p.fillRect(self.rect(),QColor(colors()['input']))
         if not self.pixmap.isNull():
-            pix=self.pixmap.scaled(self.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation);p.drawPixmap((self.width()-pix.width())//2,(self.height()-pix.height())//2,pix)
+            pix=self.pixmap.scaled(self.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation)
+            target=QRectF((self.width()-pix.width())/2,(self.height()-pix.height())/2,pix.width(),pix.height())
+            image_clip=QPainterPath();image_clip.addRoundedRect(target,RADIUS['card'],RADIUS['card']);p.setClipPath(image_clip,Qt.IntersectClip)
+            p.drawPixmap(round(target.x()),round(target.y()),pix)
         else:p.drawPixmap(self.width()//2-12,self.height()//2-12,icon('memories',24))
         p.setClipping(False)
         if self.underMouse() or self.hasFocus():p.setPen(QPen(QColor(colors()['accent']),2));p.setBrush(Qt.NoBrush);p.drawRoundedRect(QRectF(self.rect().adjusted(1,1,-1,-1)),RADIUS['card'],RADIUS['card'])

@@ -1,5 +1,15 @@
 # Arquitetura
 
+## Revisão local pós-0.1.39
+
+Início agora projeta recent_games únicos por ID, sem alterar execution_history
+ou recent_sessions. MemoryGrid/MemoryCarousel limitam larguras e ArtworkButton
+permite fundo transparente só nessas prévias, mantendo proporção e mídia original.
+Theme acrescenta modo claro/escuro independente; get_theme usa o modo ativo quando
+não informado, permitindo que consumidores existentes acompanhem a aparência sem
+alterar métodos protegidos. apply_theme mantém paleta/QSS/propriedades coerentes.
+Superfícies e barra superior usam a cor escolhida, sem base azul-petróleo constante.
+
 ## Correções de apresentação 0.1.39
 
 Complemento de captura: WindowsCapture verifica primeiro plano/PID e limites

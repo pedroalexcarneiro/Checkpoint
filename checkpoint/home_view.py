@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QLabel,QSizePolicy
 from .design_system import SectionHeader,AdaptiveColumns,CardSurface,empty_state,ArtworkButton,Badge
 from .ui_components import text,action,ElidedAction
 from .home_components import GameStrip,MemoryCarousel,show_execution_history,HomeSectionHeader,HomeOfferRow
-from .home_data import recent_sessions,week_summary,wish_offers,recent_memories
+from .home_data import recent_games,week_summary,wish_offers,recent_memories
 from .playtime import format_time,total_seconds
 from .smooth_scroll import SmoothScrollArea
 
@@ -26,7 +26,7 @@ def section(title,callback=None,button='Ver tudo'):
 def build_home(window):
     outer=window.clear_page(0);scroll=SmoothScrollArea();scroll.setObjectName('homeScroll');scroll.setWidgetResizable(True)
     body=QWidget();layout=QVBoxLayout(body);layout.setContentsMargins(0,0,8,0);layout.setSpacing(20)
-    games=window.library.owned_games();recent=recent_sessions(window.library)
+    games=window.library.owned_games();recent=recent_games(window.library,limit=None)
     left,inside=section('Últimas sessões',lambda:show_execution_history(window),'Ver histórico');left.setObjectName('homeRecentSection')
     if recent:inside.addWidget(GameStrip(window,recent))
     elif games:inside.addWidget(empty_state('library','Nenhuma execução registrada','Escolha um jogo para começar.',lambda:window.navigate(1),'Abrir biblioteca'))

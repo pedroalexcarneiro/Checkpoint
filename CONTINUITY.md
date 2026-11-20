@@ -1,5 +1,15 @@
 # Continuidade do Checkpoint
 
+## Revisão local após 0.1.39 — fix/pos-0139-layout
+
+Base d57dc56, sem alterar publicação/tag 7703d80. Pedido novo: jogos únicos no
+Início, memórias sem expansão/faixas artificiais (Início e grade), cores mais
+vivas com fundos por destaque, claro/escuro e barra do topo adaptada. Implementado
+localmente, 92 testes direcionados finais aprovados; suíte completa a repetir.
+Sem push/workflow/release novo. Percentual depende de dado original da oferta;
+proposta opcional GG.deals público ainda depende de escolha. Capa mantida após
+comparação com banner. PLANO_POS_0139.md e RELATORIO_POS_0139.md registram a revisão.
+
 ## 0.1.39 publicada — correções e degradê aprovado
 
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.39

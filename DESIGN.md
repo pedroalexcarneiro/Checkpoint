@@ -1,5 +1,14 @@
 # Referência visual do Checkpoint
 
+## Revisão local pós-0.1.39
+
+Requisito posterior substitui repetição do Início: cada ID de jogo aparece uma
+vez, pela sessão mais recente; histórico completo separado. Memórias têm largura
+padrão, sem preencher a linha com poucos itens; não pintar faixa artificial na
+foto e não cortar faixas existentes no arquivo. Modos claro/escuro independentes
+da cor, destaque moderadamente mais vivo e superfícies/título no mesmo tema.
+HTML de referência usado somente para tokens de interface, sem seus dados/gráficos.
+
 ## Decisões atuais 0.1.39
 
 Complemento aprovado após a segunda prévia do Início: degradê azul-petróleo

@@ -23,7 +23,7 @@ def recent_games(library, limit=2, now=None):
     for record in execution_history(library,now=now):
         game=record['game']
         if game['id'] in seen:continue
-        seen.add(game['id']);selected.append({**game,'last_played':record['started_at'],
+        seen.add(game['id']);selected.append({**game,'session_id':record['id'],'last_played':record['started_at'],
                                              'seconds':totals.get(game['id'],0)})
         if limit is not None and len(selected)>=limit:break
     return selected

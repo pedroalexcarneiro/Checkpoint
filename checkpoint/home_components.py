@@ -209,15 +209,17 @@ def open_memory(window,record):
 class MemoryCarousel(CardSurface):
     def __init__(self,window,records):
         super().__init__();self.host_window=window;self.records=records;self.offset=0;self.visible_count=3;self.setObjectName('homeMemories')
-        self.setFocusPolicy(Qt.StrongFocus);self.setMinimumWidth(0)
+        self.setFocusPolicy(Qt.StrongFocus);self.setMinimumWidth(0);self.card_width=300;self.cards=[]
         layout=QVBoxLayout(self);layout.setContentsMargins(16,16,16,16);layout.setSpacing(14)
         head=QHBoxLayout();head.addWidget(text('Memórias recentes','sectionTitle'),1)
         head.addWidget(action('Ver todas',lambda:window.navigate(3)))
         self.previous=IconButton('chevron-left','Memórias anteriores',lambda:self.move_by(-1));head.addWidget(self.previous)
         self.next=IconButton('chevron-right','Próximas memórias',lambda:self.move_by(1));head.addWidget(self.next);layout.addLayout(head)
-        self.body=QWidget();self.row=QHBoxLayout(self.body);self.row.setContentsMargins(0,0,0,0);self.row.setSpacing(14);layout.addWidget(self.body)
+        self.body=QWidget();self.body.setMinimumWidth(0);self.row=QHBoxLayout(self.body);self.row.setSizeConstraint(QLayout.SetNoConstraint);self.row.setContentsMargins(0,0,0,0);self.row.setSpacing(14);layout.addWidget(self.body)
         self.render()
+    def minimumSizeHint(self):return QSize(0,self.sizeHint().height())
     def render(self):
+        self.cards=[]
         while self.row.count():
             item=self.row.takeAt(0)
             if item.widget():
@@ -225,20 +227,21 @@ class MemoryCarousel(CardSurface):
         if not self.records:
             self.row.addWidget(action('Adicionar memória',self.host_window.first_memory,True))
         for record in self.records[self.offset:self.offset+self.visible_count]:
-            frame=CardSurface();frame.setObjectName('homeMemoryCard');frame.setMinimumWidth(0);frame.setSizePolicy(QSizePolicy.Ignored,QSizePolicy.Preferred)
+            frame=CardSurface();frame.setObjectName('homeMemoryCard');frame.setSizePolicy(QSizePolicy.Fixed,QSizePolicy.Preferred)
             inside=QVBoxLayout(frame);inside.setContentsMargins(12,12,12,12);inside.setSpacing(8)
             callback=lambda checked=False,r=record:open_memory(self.host_window,r)
             if record['kind']=='diary':
-                preview=QPushButton();preview.setObjectName('memoryTextPreview');preview.setFixedHeight(114)
+                preview=QPushButton();preview.setObjectName('memoryTextPreview');preview.setFixedHeight(160)
                 preview.setAccessibleName(record['text']);preview.setToolTip(record['text']);preview.clicked.connect(callback)
                 words=QVBoxLayout(preview);words.setContentsMargins(10,10,10,10)
                 label=text(record['text'],'bodyText');label.setAlignment(Qt.AlignTop|Qt.AlignLeft)
-                label.setAttribute(Qt.WA_TransparentForMouseEvents);label.setMaximumHeight(90);words.addWidget(label,0,Qt.AlignTop);words.setAlignment(Qt.AlignTop)
-            else:preview=ArtworkButton(record['path'],record.get('caption') or 'Abrir captura',callback,height=114)
+                label.setAttribute(Qt.WA_TransparentForMouseEvents);label.setMaximumHeight(136);words.addWidget(label,0,Qt.AlignTop);words.setAlignment(Qt.AlignTop)
+            else:preview=ArtworkButton(record['path'],record.get('caption') or 'Abrir captura',callback,height=160,background=False)
             inside.addWidget(preview)
             title=ElidedAction(record['title'],callback);title.setObjectName('activityLink');inside.addWidget(title)
             inside.addWidget(text('Diário' if record['kind']=='diary' else 'Vídeo' if record['kind']=='video' else 'Captura','caption'))
-            inside.addWidget(text(datetime_display(record['created_at']),'caption'));self.row.addWidget(frame,1)
+            inside.addWidget(text(datetime_display(record['created_at']),'caption'));frame.setFixedWidth(min(self.card_width,max(1,self.width()-32)));self.cards.append(frame);self.row.addWidget(frame);frame.show()
+        self.row.addStretch()
         self.previous.setEnabled(self.offset>0);self.next.setEnabled(self.offset+self.visible_count<len(self.records))
     def move_by(self,step):
         self.offset=max(0,min(max(0,len(self.records)-self.visible_count),self.offset+step));self.render()
@@ -246,9 +249,10 @@ class MemoryCarousel(CardSurface):
         if event.key() in (Qt.Key_Left,Qt.Key_Right):self.move_by(-1 if event.key()==Qt.Key_Left else 1);event.accept()
         else:super().keyPressEvent(event)
     def resizeEvent(self,event):
-        count=3 if self.width()>=740 else 2 if self.width()>=480 else 1
+        count=max(1,min(8,(self.width()-32+14)//(self.card_width+14)))
         if count!=self.visible_count:
             self.visible_count=count;self.offset=min(self.offset,max(0,len(self.records)-count));self.render()
+        for frame in self.cards:frame.setFixedWidth(min(self.card_width,max(1,self.width()-32)))
         super().resizeEvent(event)
 
 

@@ -63,6 +63,13 @@ def test_recent_cards_height_follows_content_and_button_fits(ui, app):
 def test_session_carousel_mouse_and_keyboard_show_other_sessions(ui, app):
     w, identity = ui
     sessions(w, identity)
+    # Início passou a exibir jogos únicos por pedido posterior do dono.
+    # Cinco jogos distintos mantêm a cobertura das setas sem repetir cards.
+    with w.library.sql:
+        for n in range(3):
+            game=w.library.save_game({'title':f'Outro jogo de teste {n}','platform':'PC'})
+            w.library.sql.execute("INSERT INTO play_sessions(game_id,started_at,state,pid) VALUES(?,?,'finished',?)",
+                (game,(datetime.now(timezone.utc)-timedelta(days=n+1)).isoformat(),200+n))
     w.resize(1280, 800)
     w.navigate(0)
     settle(app)

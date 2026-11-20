@@ -1,5 +1,11 @@
 # Estado atual — Checkpoint 0.1.39 publicada
 
+Revisão local em fix/pos-0139-layout, sem nova publicação: Início sem jogos
+repetidos, memórias com largura padrão/fundo transparente, nove destaques mais
+vivos e modos claro/escuro independentes, topo adaptado. Validação em execução;
+percentual ausente na API exige complemento opcional ainda não autorizado/ativado.
+Estado do release publicado abaixo; detalhes da revisão em RELATORIO_POS_0139.md.
+
 Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.39
 Fonte/tag 7703d8048884009a5d9e9addb348620d4a788ff0; workflow 44660106137
 aprovado. 764 testes Linux e 764 Windows, zero falhas/erros/skips. Pacote

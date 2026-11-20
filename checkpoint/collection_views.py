@@ -165,7 +165,7 @@ def memory_card(window,record,diary_only=False):
             content.setStyleSheet('QTextEdit#memoryTextArea { background: '+colors()['input']+'; border: none; border-radius: 12px; padding: 10px; font-size: 14px; }')
             content.setAccessibleName('Anotação de '+record['title']);inside.addWidget(content);inside.addStretch()
     else:
-        inside.addWidget(ArtworkButton(record['path'],record['caption'] or Path(record['path']).name,lambda checked=False,m=record:window.show_media(m),height=160))
+        inside.addWidget(ArtworkButton(record['path'],record['caption'] or Path(record['path']).name,lambda checked=False,m=record:window.show_media(m),height=160,background=False))
         if record['caption']:inside.addWidget(text(record['caption'],'muted'))
         inside.addStretch()
     bottom=QHBoxLayout();bottom.addWidget(text('Diário' if record['kind']=='diary' else 'Vídeo' if record['kind']=='video' else 'Captura','caption'));bottom.addStretch();bottom.addWidget(text(relative_date(record['created_at']),'caption'));inside.addLayout(bottom)
@@ -174,8 +174,16 @@ def memory_card(window,record,diary_only=False):
 
 class MemoryGrid(CardGrid):
     def reflow(self):
-        super().reflow()
-        for panel in self.cards:self.grid.setAlignment(panel,Qt.AlignTop)
+        width=min(self.target,max(1,self.width()));gap=self.grid.spacing()
+        columns=max(1,(self.width()+gap)//(self.target+gap))
+        for column in range(max(columns,self.columns)):
+            self.grid.setColumnStretch(column,0)
+            self.grid.setColumnMinimumWidth(column,width if column<columns else 0)
+        self.grid.setAlignment(Qt.AlignTop|Qt.AlignLeft)
+        while self.grid.count():self.grid.takeAt(0)
+        for index,panel in enumerate(self.cards):
+            panel.setFixedWidth(width);self.grid.addWidget(panel,index//columns,index%columns,Qt.AlignTop|Qt.AlignLeft)
+        self.columns=columns
 
 
 def build_memories(window):
