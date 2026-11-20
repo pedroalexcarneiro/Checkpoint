@@ -145,3 +145,7 @@ Evidências integrais locais: /workspace/work/evidence-0139 (sem dados pessoais)
 Acrescentar commits, sem alterar os já feitos. Repetir a suíte integral após
 os complementos; os 752 testes anteriores não validam o novo código. A
 autorização de release permanece condicionada aos gates finais.
+
+Resultado posterior: gates aprovados (764 testes em cada plataforma), workflow
+44660106137 concluído e v0.1.39 publicada em 7703d80; dez arquivos/hashes/CRC
+conferidos. HSR real e os bloqueios de integração permanecem explícitos.

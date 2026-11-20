@@ -92,6 +92,10 @@ Os blocos abaixo contêm stdout/stderr completos dos arquivos de evidência, sem
 | activity-summary-regression | 1 | 0.507 |
 | legend-measurement-after | 0 | 17.496 |
 | full-linux-complements-final | 0 | 488.680 |
+| push-source | 0 | 2.722 |
+| confirm-source-remote | 0 | 0.244 |
+| dispatch-windows | 0 | 1.774 |
+| verify-published | 0 | 10.517 |
 
 ## baseline
 
@@ -9171,4 +9175,1220 @@ stderr integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649
 
 ````text
 
+````
+
+## push-source
+
+```json
+{
+  "command": [
+    "git",
+    "push",
+    "origin",
+    "fix/0.1.39-polimento"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795141226.9601884,
+  "exit_code": 0,
+  "elapsed": 2.72184419631958
+}
+```
+
+Comando:
+
+```sh
+git push origin fix/0.1.39-polimento
+```
+
+stdout integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
+
+````text
+
+````
+
+stderr integral — 326 bytes; SHA-256 7bd11928348b705cc84edcf7ff24e9d7e35f9eb7c57d5ac6d05caa0333bf8389:
+
+````text
+remote: 
+remote: Create a pull request for 'fix/0.1.39-polimento' on GitHub by visiting:        
+remote:      https://github.com/pedroalexcarneiro/Checkpoint/pull/new/fix/0.1.39-polimento        
+remote: 
+To https://github.com/pedroalexcarneiro/Checkpoint.git
+ * [new branch]      fix/0.1.39-polimento -> fix/0.1.39-polimento
+````
+
+## confirm-source-remote
+
+```json
+{
+  "command": [
+    "git",
+    "ls-remote",
+    "origin",
+    "refs/heads/fix/0.1.39-polimento"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795141235.1972308,
+  "exit_code": 0,
+  "elapsed": 0.24373483657836914
+}
+```
+
+Comando:
+
+```sh
+git ls-remote origin refs/heads/fix/0.1.39-polimento
+```
+
+stdout integral — 73 bytes; SHA-256 2cc1818bf17bba480ee750a29309203d4b0fdd222eac7268be561f184a82e2ab:
+
+````text
+7703d8048884009a5d9e9addb348620d4a788ff0	refs/heads/fix/0.1.39-polimento
+````
+
+stderr integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
+
+````text
+
+````
+
+## dispatch-windows
+
+```json
+{
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "windows-release.yml",
+    "--ref",
+    "fix/0.1.39-polimento",
+    "--repo",
+    "pedroalexcarneiro/Checkpoint"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795141242.184171,
+  "exit_code": 0,
+  "elapsed": 1.7739243507385254
+}
+```
+
+Comando:
+
+```sh
+gh workflow run windows-release.yml --ref fix/0.1.39-polimento --repo pedroalexcarneiro/Checkpoint
+```
+
+stdout integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
+
+````text
+
+````
+
+stderr integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
+
+````text
+
+````
+
+## verify-published
+
+```json
+{
+  "command": [
+    "/workspace/work/venv/bin/python",
+    "/workspace/work/evidence-0139/verify_published.py",
+    "7703d8048884009a5d9e9addb348620d4a788ff0"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795142188.6737578,
+  "exit_code": 0,
+  "elapsed": 10.517379999160767
+}
+```
+
+Comando:
+
+```sh
+/workspace/work/venv/bin/python /workspace/work/evidence-0139/verify_published.py 7703d8048884009a5d9e9addb348620d4a788ff0
+```
+
+stdout integral — 3638 bytes; SHA-256 e939fec122073ccb2ed93e80eae4b74d5680475f740405800236a5abe3ac9970:
+
+````text
+{
+  "tag_sha": "7703d8048884009a5d9e9addb348620d4a788ff0",
+  "release": "https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.39",
+  "prerelease": true,
+  "assets": [
+    {
+      "name": "Checkpoint-0.1.39-detail-overview.png",
+      "id": 770147078,
+      "bytes": 144968,
+      "sha256": "5ed57f2c8420906073ea78b71fa3d88f3431b4418d5c3377dd422274a94f9a9e",
+      "url": "https://github.com/pedroalexcarneiro/Checkpoint/releases/download/v0.1.39/Checkpoint-0.1.39-detail-overview.png"
+    },
+    {
+      "name": "Checkpoint-0.1.39-home.png",
+      "id": 770147075,
+      "bytes": 146649,
+      "sha256": "ad5aefe95e55af40de7030a76a505255d3d6e7130caff18c924af78c7e6c6a24",
+      "url": "https://github.com/pedroalexcarneiro/Checkpoint/releases/download/v0.1.39/Checkpoint-0.1.39-home.png"
+    },
+    {
+      "name": "Checkpoint-0.1.39-library.png",
+      "id": 770147080,
+      "bytes": 164658,
+      "sha256": "2c1d88122f5216b891dcceb88cd7bfc7ade827f78636e228ed755b7a540c2cae",
+      "url": "https://github.com/pedroalexcarneiro/Checkpoint/releases/download/v0.1.39/Checkpoint-0.1.39-library.png"
+    },
+    {
+      "name": "Checkpoint-0.1.39-native-startup.json",
+      "id": 770147076,
+      "bytes": 284,
+      "sha256": "046e35968f6f8b6f6256c778f48dda71cded9cd484f913e6afc4ce8859115bd2",
+      "url": "https://github.com/pedroalexcarneiro/Checkpoint/releases/download/v0.1.39/Checkpoint-0.1.39-native-startup.json"
+    },
+    {
+      "name": "Checkpoint-0.1.39-native-startup.png",
+      "id": 770147077,
+      "bytes": 165601,
+      "sha256": "afbd6259905b068a17d093a8cdffca39d0c223d630e88abaf889303e4e4d4869",
+      "url": "https://github.com/pedroalexcarneiro/Checkpoint/releases/download/v0.1.39/Checkpoint-0.1.39-native-startup.png"
+    },
+    {
+      "name": "Checkpoint-0.1.39-ui-review.txt",
+      "id": 770147098,
+      "bytes": 560,
+      "sha256": "901ba4c188aa4c4f0e3bc6acc0d3a50240203f1dd55fcfd17d522a90b2a486c7",
+      "url": "https://github.com/pedroalexcarneiro/Checkpoint/releases/download/v0.1.39/Checkpoint-0.1.39-ui-review.txt"
+    },
+    {
+      "name": "Checkpoint-0.1.39-ui-review.zip",
+      "id": 770147100,
+      "bytes": 5901996,
+      "sha256": "ff8f78c7b014bca6d7a28d6812285adfbaf38fb2e6cd5610b174ef524a7a7895",
+      "url": "https://github.com/pedroalexcarneiro/Checkpoint/releases/download/v0.1.39/Checkpoint-0.1.39-ui-review.zip"
+    },
+    {
+      "name": "Checkpoint-0.1.39-validation.txt",
+      "id": 770147104,
+      "bytes": 884,
+      "sha256": "7985a0601ed045a3830c3646de3db2abd981a96be8c66ff5a39a20ee7e617293",
+      "url": "https://github.com/pedroalexcarneiro/Checkpoint/releases/download/v0.1.39/Checkpoint-0.1.39-validation.txt"
+    },
+    {
+      "name": "Checkpoint-0.1.39-windows-x64.zip",
+      "id": 770147107,
+      "bytes": 84345311,
+      "sha256": "dc6132969de8622e64ab4a36afbc0197c8de527a55cd6ad040813d18ddc9f4a3",
+      "url": "https://github.com/pedroalexcarneiro/Checkpoint/releases/download/v0.1.39/Checkpoint-0.1.39-windows-x64.zip"
+    },
+    {
+      "name": "Checkpoint-0.1.39-windows-x64.zip.sha256",
+      "id": 770147124,
+      "bytes": 101,
+      "sha256": "ab0a5f28c57455d496eb799117f54247c5f3236d01514de6c0c8f8d619110a25",
+      "url": "https://github.com/pedroalexcarneiro/Checkpoint/releases/download/v0.1.39/Checkpoint-0.1.39-windows-x64.zip.sha256"
+    }
+  ],
+  "previous_releases": [
+    {
+      "version": "0.1.38",
+      "tag_sha": "c4a7e1d221ba52a8580dd73ab884b1964e6ffd32",
+      "assets_unchanged": 10
+    },
+    {
+      "version": "0.1.37",
+      "tag_sha": "c526cb4bc5e8721dfdfdf20222c8c1c41562ce52",
+      "assets_unchanged": 8
+    }
+  ]
+}
+````
+
+stderr integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
+
+````text
+
+````
+
+## Windows — execução publicada 44660106137
+
+Fonte/tag 7703d8048884009a5d9e9addb348620d4a788ff0.
+Windows x64/Python 3.12.10: 764 passed in 664.04s (0:11:04).
+JUnit baixado: 764 testes, 0 falhas, 0 erros, 0 skips.
+SHA-256 do ZIP JUnit: aa7079708a57f208ad85840dfc6d9f85f378fefc310fdfd094dde28c72ffa1fd.
+Dois casos de quadros sucessivos executados pelo backend nativo Windows.
+Comandos e logs integrais dos jobs a seguir; terminações de linha normalizadas
+para LF no Markdown, conteúdo retornado pela API preservado; hashes referem-se
+aos arquivos UTF-8 brutos guardados em /workspace/work/evidence-0139.
+
+### Job build — success
+
+Arquivo bruto: windows-build.log; 79817 bytes; SHA-256 5d8bdf7e9b45e21fcb702fbd461a61ea3a8a9c5ff6ba5095aee8e97f0b7aaa39.
+
+````text
+﻿2026-11-20T02:20:47.7044952Z Current runner version: '2.338.2'
+2026-11-20T02:20:47.7073898Z ##[group]Runner Image Provisioner
+2026-11-20T02:20:47.7074824Z Hosted Compute Agent
+2026-11-20T02:20:47.7075341Z Version: 20261103.629
+2026-11-20T02:20:47.7075978Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-20T02:20:47.7076658Z Build Date: 2026-11-03T17:26:59Z
+2026-11-20T02:20:47.7077845Z Worker ID: {32fa51a5-6de8-4e1c-8598-b5a7948bcb45}
+2026-11-20T02:20:47.7078545Z Region: northcentralus
+2026-11-20T02:20:47.7079068Z Cloud: Azure
+2026-11-20T02:20:47.7079714Z ##[endgroup]
+2026-11-20T02:20:47.7081100Z ##[group]Operating System
+2026-11-20T02:20:47.7081668Z Microsoft Windows Server 2022
+2026-11-20T02:20:47.7082230Z 10.0.20348
+2026-11-20T02:20:47.7082700Z Datacenter
+2026-11-20T02:20:47.7083175Z ##[endgroup]
+2026-11-20T02:20:47.7083660Z ##[group]Runner Image
+2026-11-20T02:20:47.7084161Z Image: windows-2022
+2026-11-20T02:20:47.7084703Z Version: 20261112.366.7
+2026-11-20T02:20:47.7086212Z Included Software: https://github.com/actions/runner-images/blob/win22/20261112.366/images/windows/Windows2022-Readme.md
+2026-11-20T02:20:47.7087783Z Image Release: https://github.com/actions/runner-images/releases/tag/win22%2F20261112.366
+2026-11-20T02:20:47.7088636Z ##[endgroup]
+2026-11-20T02:20:47.7089692Z ##[group]GITHUB_TOKEN Permissions
+2026-11-20T02:20:47.7091713Z Contents: read
+2026-11-20T02:20:47.7092265Z Metadata: read
+2026-11-20T02:20:47.7092731Z ##[endgroup]
+2026-11-20T02:20:47.7094677Z Secret source: Actions
+2026-11-20T02:20:47.7095445Z Cache mode: write
+2026-11-20T02:20:47.7096052Z Prepare workflow directory
+2026-11-20T02:20:47.7475280Z Prepare all required actions
+2026-11-20T02:20:47.7524086Z Getting action download info
+2026-11-20T02:20:48.0105785Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-20T02:20:48.1058275Z Download action repository 'actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-11-20T02:20:48.2389869Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-20T02:20:48.8153186Z Complete job name: build
+2026-11-20T02:20:48.9865332Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-11-20T02:20:48.9867286Z with:
+2026-11-20T02:20:48.9867847Z   persist-credentials: false
+2026-11-20T02:20:48.9868457Z   fetch-depth: 0
+2026-11-20T02:20:48.9868994Z   repository: pedroalexcarneiro/Checkpoint
+2026-11-20T02:20:48.9874168Z   token: ***
+2026-11-20T02:20:48.9874674Z   ssh-strict: true
+2026-11-20T02:20:48.9875161Z   ssh-user: git
+2026-11-20T02:20:48.9875675Z   clean: true
+2026-11-20T02:20:48.9876181Z   sparse-checkout-cone-mode: true
+2026-11-20T02:20:48.9876760Z   fetch-tags: false
+2026-11-20T02:20:48.9877282Z   show-progress: true
+2026-11-20T02:20:48.9877777Z   lfs: false
+2026-11-20T02:20:48.9878279Z   submodules: false
+2026-11-20T02:20:48.9878879Z   set-safe-directory: true
+2026-11-20T02:20:48.9879448Z   allow-unsafe-pr-checkout: false
+2026-11-20T02:20:48.9880814Z env:
+2026-11-20T02:20:48.9881792Z   QT_QPA_PLATFORM: offscreen
+2026-11-20T02:20:48.9882414Z ##[endgroup]
+2026-11-20T02:20:49.1290966Z Syncing repository: pedroalexcarneiro/Checkpoint
+2026-11-20T02:20:49.1293062Z ##[group]Getting Git version info
+2026-11-20T02:20:49.1293742Z Working directory is 'D:\a\Checkpoint\Checkpoint'
+2026-11-20T02:20:49.2075666Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-20T02:20:49.5787353Z git version 2.56.1.windows.1
+2026-11-20T02:20:49.5837097Z ##[endgroup]
+2026-11-20T02:20:49.5856488Z Temporarily overriding HOME='D:\a\_temp\ab8ac9d2-fa0e-4d1c-b24c-9afbe4510468' before making global git config changes
+2026-11-20T02:20:49.5859252Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-20T02:20:49.5866840Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Checkpoint\Checkpoint
+2026-11-20T02:20:49.6501821Z Deleting the contents of 'D:\a\Checkpoint\Checkpoint'
+2026-11-20T02:20:49.6507041Z ##[group]Initializing the repository
+2026-11-20T02:20:49.6516576Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\Checkpoint\Checkpoint
+2026-11-20T02:20:49.7443577Z Initialized empty Git repository in D:/a/Checkpoint/Checkpoint/.git/
+2026-11-20T02:20:49.7498201Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/pedroalexcarneiro/Checkpoint
+2026-11-20T02:20:49.8129657Z ##[endgroup]
+2026-11-20T02:20:49.8131035Z ##[group]Disabling automatic garbage collection
+2026-11-20T02:20:49.8138871Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-11-20T02:20:49.8451902Z ##[endgroup]
+2026-11-20T02:20:49.8453179Z ##[group]Setting up auth
+2026-11-20T02:20:49.8464501Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-20T02:20:49.8873376Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-20T02:20:51.3122329Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-20T02:20:51.3440696Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-20T02:20:51.8171541Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-20T02:20:51.8492571Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-20T02:20:52.3496206Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-11-20T02:20:52.3811309Z ##[endgroup]
+2026-11-20T02:20:52.3811972Z ##[group]Fetching the repository
+2026-11-20T02:20:52.3829163Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-11-20T02:20:53.9398229Z From https://github.com/pedroalexcarneiro/Checkpoint
+2026-11-20T02:20:53.9399212Z  * [new branch]      build/0.1.38-sem-admin -> origin/build/0.1.38-sem-admin
+2026-11-20T02:20:53.9399946Z  * [new branch]      codex/design-fidelity-pt-br -> origin/codex/design-fidelity-pt-br
+2026-11-20T02:20:53.9400643Z  * [new branch]      codex/steam-library-import -> origin/codex/steam-library-import
+2026-11-20T02:20:53.9401385Z  * [new branch]      fix/0.1.29             -> origin/fix/0.1.29
+2026-11-20T02:20:53.9402102Z  * [new branch]      fix/0.1.30             -> origin/fix/0.1.30
+2026-11-20T02:20:53.9402758Z  * [new branch]      fix/0.1.32-visual      -> origin/fix/0.1.32-visual
+2026-11-20T02:20:53.9403360Z  * [new branch]      fix/0.1.33-drive       -> origin/fix/0.1.33-drive
+2026-11-20T02:20:53.9403837Z  * [new branch]      fix/0.1.34-bugs        -> origin/fix/0.1.34-bugs
+2026-11-20T02:20:53.9404459Z  * [new branch]      fix/0.1.35-ajustes     -> origin/fix/0.1.35-ajustes
+2026-11-20T02:20:53.9404964Z  * [new branch]      fix/0.1.36-ajustes     -> origin/fix/0.1.36-ajustes
+2026-11-20T02:20:53.9405448Z  * [new branch]      fix/0.1.37-ajustes     -> origin/fix/0.1.37-ajustes
+2026-11-20T02:20:53.9405992Z  * [new branch]      fix/0.1.38-abertura    -> origin/fix/0.1.38-abertura
+2026-11-20T02:20:53.9406476Z  * [new branch]      fix/0.1.39-polimento   -> origin/fix/0.1.39-polimento
+2026-11-20T02:20:53.9407007Z  * [new branch]      fix/rename-redesign-0.1.28 -> origin/fix/rename-redesign-0.1.28
+2026-11-20T02:20:53.9407508Z  * [new branch]      main                   -> origin/main
+2026-11-20T02:20:53.9407986Z  * [new tag]         v0.1.10                -> v0.1.10
+2026-11-20T02:20:53.9409599Z  * [new tag]         v0.1.11                -> v0.1.11
+2026-11-20T02:20:53.9410194Z  * [new tag]         v0.1.12                -> v0.1.12
+2026-11-20T02:20:53.9411847Z  * [new tag]         v0.1.13                -> v0.1.13
+2026-11-20T02:20:53.9412444Z  * [new tag]         v0.1.14                -> v0.1.14
+2026-11-20T02:20:53.9413035Z  * [new tag]         v0.1.15                -> v0.1.15
+2026-11-20T02:20:53.9413651Z  * [new tag]         v0.1.16                -> v0.1.16
+2026-11-20T02:20:53.9414201Z  * [new tag]         v0.1.17                -> v0.1.17
+2026-11-20T02:20:53.9414675Z  * [new tag]         v0.1.18                -> v0.1.18
+2026-11-20T02:20:53.9415253Z  * [new tag]         v0.1.19                -> v0.1.19
+2026-11-20T02:20:53.9415787Z  * [new tag]         v0.1.2                 -> v0.1.2
+2026-11-20T02:20:53.9416376Z  * [new tag]         v0.1.20                -> v0.1.20
+2026-11-20T02:20:53.9416885Z  * [new tag]         v0.1.21                -> v0.1.21
+2026-11-20T02:20:53.9417409Z  * [new tag]         v0.1.22                -> v0.1.22
+2026-11-20T02:20:53.9417984Z  * [new tag]         v0.1.23                -> v0.1.23
+2026-11-20T02:20:53.9418524Z  * [new tag]         v0.1.24                -> v0.1.24
+2026-11-20T02:20:53.9419032Z  * [new tag]         v0.1.25                -> v0.1.25
+2026-11-20T02:20:53.9419630Z  * [new tag]         v0.1.26                -> v0.1.26
+2026-11-20T02:20:53.9420234Z  * [new tag]         v0.1.27                -> v0.1.27
+2026-11-20T02:20:53.9420793Z  * [new tag]         v0.1.28                -> v0.1.28
+2026-11-20T02:20:53.9421318Z  * [new tag]         v0.1.29                -> v0.1.29
+2026-11-20T02:20:53.9421823Z  * [new tag]         v0.1.3                 -> v0.1.3
+2026-11-20T02:20:53.9422364Z  * [new tag]         v0.1.30                -> v0.1.30
+2026-11-20T02:20:53.9422892Z  * [new tag]         v0.1.32                -> v0.1.32
+2026-11-20T02:20:53.9423419Z  * [new tag]         v0.1.33                -> v0.1.33
+2026-11-20T02:20:53.9424023Z  * [new tag]         v0.1.34                -> v0.1.34
+2026-11-20T02:20:53.9424559Z  * [new tag]         v0.1.35                -> v0.1.35
+2026-11-20T02:20:53.9425985Z  * [new tag]         v0.1.36                -> v0.1.36
+2026-11-20T02:20:53.9426536Z  * [new tag]         v0.1.37                -> v0.1.37
+2026-11-20T02:20:53.9427028Z  * [new tag]         v0.1.38                -> v0.1.38
+2026-11-20T02:20:53.9427521Z  * [new tag]         v0.1.4                 -> v0.1.4
+2026-11-20T02:20:53.9428574Z  * [new tag]         v0.1.5                 -> v0.1.5
+2026-11-20T02:20:53.9429223Z  * [new tag]         v0.1.6                 -> v0.1.6
+2026-11-20T02:20:53.9429603Z  * [new tag]         v0.1.7                 -> v0.1.7
+2026-11-20T02:20:53.9430024Z  * [new tag]         v0.1.8                 -> v0.1.8
+2026-11-20T02:20:53.9430388Z  * [new tag]         v0.1.9                 -> v0.1.9
+2026-11-20T02:20:53.9460597Z [command]"C:\Program Files\Git\bin\git.exe" branch --list --remote origin/fix/0.1.39-polimento
+2026-11-20T02:20:53.9860256Z   origin/fix/0.1.39-polimento
+2026-11-20T02:20:53.9905579Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse refs/remotes/origin/fix/0.1.39-polimento
+2026-11-20T02:20:54.0189181Z 7703d8048884009a5d9e9addb348620d4a788ff0
+2026-11-20T02:20:54.0221948Z ##[endgroup]
+2026-11-20T02:20:54.0222532Z ##[group]Determining the checkout info
+2026-11-20T02:20:54.0223136Z ##[endgroup]
+2026-11-20T02:20:54.0235303Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-11-20T02:20:54.0710353Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-11-20T02:20:54.1025151Z ##[group]Checking out the ref
+2026-11-20T02:20:54.1034483Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B fix/0.1.39-polimento refs/remotes/origin/fix/0.1.39-polimento
+2026-11-20T02:20:54.3759550Z Switched to a new branch 'fix/0.1.39-polimento'
+2026-11-20T02:20:54.3778726Z branch 'fix/0.1.39-polimento' set up to track 'origin/fix/0.1.39-polimento'.
+2026-11-20T02:20:54.3841348Z ##[endgroup]
+2026-11-20T02:20:54.4285666Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-11-20T02:20:54.4576151Z 7703d8048884009a5d9e9addb348620d4a788ff0
+2026-11-20T02:20:54.4616387Z ##[group]Removing auth
+2026-11-20T02:20:54.4625477Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-20T02:20:54.4943928Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-20T02:20:55.0246076Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-20T02:20:55.0532444Z http.https://github.com/.extraheader
+2026-11-20T02:20:55.0574109Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-11-20T02:20:55.0910236Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-20T02:20:55.5885845Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-20T02:20:55.6199405Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-20T02:20:56.1324952Z ##[endgroup]
+2026-11-20T02:20:56.1737342Z ##[group]Run actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+2026-11-20T02:20:56.1738051Z with:
+2026-11-20T02:20:56.1738328Z   python-version: 3.12
+2026-11-20T02:20:56.1738619Z   architecture: x64
+2026-11-20T02:20:56.1738896Z   cache: pip
+2026-11-20T02:20:56.1739224Z   cache-dependency-path: requirements-tested.txt
+2026-11-20T02:20:56.1739626Z   check-latest: false
+2026-11-20T02:20:56.1742167Z   token: ***
+2026-11-20T02:20:56.1742427Z   update-environment: true
+2026-11-20T02:20:56.1742751Z   allow-prereleases: false
+2026-11-20T02:20:56.1743039Z   freethreaded: false
+2026-11-20T02:20:56.1743618Z env:
+2026-11-20T02:20:56.1743906Z   QT_QPA_PLATFORM: offscreen
+2026-11-20T02:20:56.1744182Z ##[endgroup]
+2026-11-20T02:20:56.3269718Z ##[group]Installed versions
+2026-11-20T02:20:56.3473072Z (node:7744) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-20T02:20:56.3474171Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-20T02:20:56.3474909Z Successfully set up CPython (3.12.10)
+2026-11-20T02:20:56.3475601Z ##[endgroup]
+2026-11-20T02:20:59.0386458Z pip cache is not found
+2026-11-20T02:20:59.0748813Z ##[group]Run $version = python -c 'import tomllib; from pathlib import Path; from checkpoint import __version__; assert tomllib.loads(Path("pyproject.toml").read_text())["project"]["version"] == __version__; print(__version__)'
+2026-11-20T02:20:59.0750738Z [36;1m$version = python -c 'import tomllib; from pathlib import Path; from checkpoint import __version__; assert tomllib.loads(Path("pyproject.toml").read_text())["project"]["version"] == __version__; print(__version__)'[0m
+2026-11-20T02:20:59.0751672Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Falha ao ler a versão.' }[0m
+2026-11-20T02:20:59.0752222Z [36;1mif ($version -notmatch '^\d+\.\d+\.\d+$') { throw 'Versão inválida.' }[0m
+2026-11-20T02:20:59.0752679Z [36;1m"version=$version" >> $env:GITHUB_OUTPUT[0m
+2026-11-20T02:20:59.1058725Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-20T02:20:59.1059261Z env:
+2026-11-20T02:20:59.1059528Z   QT_QPA_PLATFORM: offscreen
+2026-11-20T02:20:59.1060040Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:20:59.1060743Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-20T02:20:59.1061221Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:20:59.1061680Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:20:59.1062110Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:20:59.1062465Z ##[endgroup]
+2026-11-20T02:20:59.5957593Z ##[group]Run python -m pip install -r requirements-tested.txt
+2026-11-20T02:20:59.5958223Z [36;1mpython -m pip install -r requirements-tested.txt[0m
+2026-11-20T02:20:59.5958791Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Falha ao instalar dependências.' }[0m
+2026-11-20T02:20:59.5959312Z [36;1mpython -m pip install --no-deps --no-build-isolation -e .[0m
+2026-11-20T02:20:59.5959831Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Falha ao instalar o projeto.' }[0m
+2026-11-20T02:20:59.5960265Z [36;1mpython -m pip check[0m
+2026-11-20T02:20:59.5960648Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Dependências inconsistentes.' }[0m
+2026-11-20T02:20:59.5996297Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-20T02:20:59.6001627Z env:
+2026-11-20T02:20:59.6002112Z   QT_QPA_PLATFORM: offscreen
+2026-11-20T02:20:59.6005374Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:20:59.6021779Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-20T02:20:59.6022648Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:20:59.6023394Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:20:59.6023837Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:20:59.6024220Z ##[endgroup]
+2026-11-20T02:21:05.1819232Z Collecting altgraph==0.17.5 (from -r requirements-tested.txt (line 1))
+2026-11-20T02:21:05.3425441Z   Downloading altgraph-0.17.5-py2.py3-none-any.whl.metadata (7.5 kB)
+2026-11-20T02:21:05.4116009Z Collecting certifi==2026.10.23 (from -r requirements-tested.txt (line 2))
+2026-11-20T02:21:05.4175803Z   Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+2026-11-20T02:21:05.6134179Z Collecting cffi==2.1.1 (from -r requirements-tested.txt (line 3))
+2026-11-20T02:21:05.6209730Z   Downloading cffi-2.1.1-cp312-cp312-win_amd64.whl.metadata (2.6 kB)
+2026-11-20T02:21:05.7713097Z Collecting charset-normalizer==3.5.2 (from -r requirements-tested.txt (line 4))
+2026-11-20T02:21:05.7763597Z   Downloading charset_normalizer-3.5.2-cp312-cp312-win_amd64.whl.metadata (47 kB)
+2026-11-20T02:21:05.8392898Z Requirement already satisfied: colorama==0.4.6 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from -r requirements-tested.txt (line 5)) (0.4.6)
+2026-11-20T02:21:06.0077741Z Collecting cryptography==50.0.2 (from -r requirements-tested.txt (line 6))
+2026-11-20T02:21:06.0132146Z   Downloading cryptography-50.0.2-cp311-abi3-win_amd64.whl.metadata (4.4 kB)
+2026-11-20T02:21:06.0763144Z Collecting google-api-core==2.44.0 (from -r requirements-tested.txt (line 7))
+2026-11-20T02:21:06.0813631Z   Downloading google_api_core-2.44.0-py3-none-any.whl.metadata (3.2 kB)
+2026-11-20T02:21:06.1610447Z Collecting google-api-python-client==2.202.0 (from -r requirements-tested.txt (line 8))
+2026-11-20T02:21:06.1658853Z   Downloading google_api_python_client-2.202.0-py3-none-any.whl.metadata (6.9 kB)
+2026-11-20T02:21:06.2191140Z Collecting google-auth-httplib2==0.4.4 (from -r requirements-tested.txt (line 9))
+2026-11-20T02:21:06.2281532Z   Downloading google_auth_httplib2-0.4.4-py3-none-any.whl.metadata (3.0 kB)
+2026-11-20T02:21:06.2806319Z Collecting google-auth-oauthlib==1.5.0 (from -r requirements-tested.txt (line 10))
+2026-11-20T02:21:06.2850081Z   Downloading google_auth_oauthlib-1.5.0-py3-none-any.whl.metadata (2.6 kB)
+2026-11-20T02:21:06.3474751Z Collecting google-auth==2.62.2 (from -r requirements-tested.txt (line 11))
+2026-11-20T02:21:06.3526663Z   Downloading google_auth-2.62.2-py3-none-any.whl.metadata (6.0 kB)
+2026-11-20T02:21:06.4128118Z Collecting googleapis-common-protos==1.76.0 (from -r requirements-tested.txt (line 12))
+2026-11-20T02:21:06.4178933Z   Downloading googleapis_common_protos-1.76.0-py3-none-any.whl.metadata (8.5 kB)
+2026-11-20T02:21:06.4767640Z Collecting httplib2==0.32.1 (from -r requirements-tested.txt (line 13))
+2026-11-20T02:21:06.4819335Z   Downloading httplib2-0.32.1-py3-none-any.whl.metadata (2.2 kB)
+2026-11-20T02:21:06.5318984Z Collecting idna==3.20 (from -r requirements-tested.txt (line 14))
+2026-11-20T02:21:06.5424698Z   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+2026-11-20T02:21:06.5959788Z Collecting iniconfig==2.3.1 (from -r requirements-tested.txt (line 15))
+2026-11-20T02:21:06.6002704Z   Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+2026-11-20T02:21:06.6546767Z Collecting jaraco-classes==3.4.0 (from -r requirements-tested.txt (line 16))
+2026-11-20T02:21:06.6600045Z   Downloading jaraco.classes-3.4.0-py3-none-any.whl.metadata (2.6 kB)
+2026-11-20T02:21:06.7163509Z Collecting jaraco-context==6.1.2 (from -r requirements-tested.txt (line 17))
+2026-11-20T02:21:06.7271138Z   Downloading jaraco_context-6.1.2-py3-none-any.whl.metadata (4.2 kB)
+2026-11-20T02:21:06.7887799Z Collecting jaraco-functools==4.6.0 (from -r requirements-tested.txt (line 18))
+2026-11-20T02:21:06.7940307Z   Downloading jaraco_functools-4.6.0-py3-none-any.whl.metadata (2.9 kB)
+2026-11-20T02:21:06.8578591Z Collecting keyring==25.7.0 (from -r requirements-tested.txt (line 19))
+2026-11-20T02:21:06.8658453Z   Downloading keyring-25.7.0-py3-none-any.whl.metadata (21 kB)
+2026-11-20T02:21:06.9210543Z Collecting more-itertools==11.2.1 (from -r requirements-tested.txt (line 20))
+2026-11-20T02:21:06.9265894Z   Downloading more_itertools-11.2.1-py3-none-any.whl.metadata (42 kB)
+2026-11-20T02:21:06.9815210Z Collecting oauthlib==4.0.1 (from -r requirements-tested.txt (line 21))
+2026-11-20T02:21:06.9887875Z   Downloading oauthlib-4.0.1-py3-none-any.whl.metadata (8.6 kB)
+2026-11-20T02:21:07.0534697Z Collecting opentelemetry-api==1.45.2 (from -r requirements-tested.txt (line 22))
+2026-11-20T02:21:07.0585041Z   Downloading opentelemetry_api-1.45.2-py3-none-any.whl.metadata (1.4 kB)
+2026-11-20T02:21:07.0835423Z Requirement already satisfied: packaging==26.3 in C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages (from -r requirements-tested.txt (line 23)) (26.3)
+2026-11-20T02:21:07.1111675Z Collecting pefile==2024.8.26 (from -r requirements-tested.txt (line 24))
+2026-11-20T02:21:07.1164462Z   Downloading pefile-2024.8.26-py3-none-any.whl.metadata (1.4 kB)
+2026-11-20T02:21:07.1723916Z Collecting pluggy==1.7.0 (from -r requirements-tested.txt (line 25))
+2026-11-20T02:21:07.1773126Z   Downloading pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+2026-11-20T02:21:07.2328100Z Collecting proto-plus==1.29.0 (from -r requirements-tested.txt (line 26))
+2026-11-20T02:21:07.2398707Z   Downloading proto_plus-1.29.0-py3-none-any.whl.metadata (2.2 kB)
+2026-11-20T02:21:07.4494074Z Collecting protobuf==7.36.2 (from -r requirements-tested.txt (line 27))
+2026-11-20T02:21:07.4551813Z   Downloading protobuf-7.36.2-cp310-abi3-win_amd64.whl.metadata (595 bytes)
+2026-11-20T02:21:07.5142301Z Collecting pyasn1-modules==0.4.2 (from -r requirements-tested.txt (line 28))
+2026-11-20T02:21:07.5203335Z   Downloading pyasn1_modules-0.4.2-py3-none-any.whl.metadata (3.5 kB)
+2026-11-20T02:21:07.5771279Z Collecting pyasn1==0.6.5 (from -r requirements-tested.txt (line 29))
+2026-11-20T02:21:07.5824140Z   Downloading pyasn1-0.6.5-py3-none-any.whl.metadata (8.4 kB)
+2026-11-20T02:21:07.6337436Z Collecting pycparser==3.12 (from -r requirements-tested.txt (line 30))
+2026-11-20T02:21:07.6387509Z   Downloading pycparser-3.12-py3-none-any.whl.metadata (9.7 kB)
+2026-11-20T02:21:07.7177129Z Collecting pygments==2.21.0 (from -r requirements-tested.txt (line 31))
+2026-11-20T02:21:07.7313790Z   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+2026-11-20T02:21:07.8108839Z Collecting pyinstaller-hooks-contrib==2026.10 (from -r requirements-tested.txt (line 32))
+2026-11-20T02:21:07.8165430Z   Downloading pyinstaller_hooks_contrib-2026.10-py3-none-any.whl.metadata (16 kB)
+2026-11-20T02:21:07.9050470Z Collecting pyinstaller==6.22.3 (from -r requirements-tested.txt (line 33))
+2026-11-20T02:21:07.9105229Z   Downloading pyinstaller-6.22.3-py3-none-win_amd64.whl.metadata (8.5 kB)
+2026-11-20T02:21:07.9738479Z Collecting pyparsing==3.3.3 (from -r requirements-tested.txt (line 34))
+2026-11-20T02:21:07.9795853Z   Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+2026-11-20T02:21:08.0401922Z Collecting pyside6-addons==6.8.3 (from -r requirements-tested.txt (line 35))
+2026-11-20T02:21:08.0466958Z   Downloading PySide6_Addons-6.8.3-cp39-abi3-win_amd64.whl.metadata (4.4 kB)
+2026-11-20T02:21:08.1133939Z Collecting pyside6-essentials==6.8.3 (from -r requirements-tested.txt (line 36))
+2026-11-20T02:21:08.1191745Z   Downloading PySide6_Essentials-6.8.3-cp39-abi3-win_amd64.whl.metadata (4.1 kB)
+2026-11-20T02:21:08.1828417Z Collecting pyside6==6.8.3 (from -r requirements-tested.txt (line 37))
+2026-11-20T02:21:08.1936054Z   Downloading PySide6-6.8.3-cp39-abi3-win_amd64.whl.metadata (5.7 kB)
+2026-11-20T02:21:08.2585554Z Collecting pytest==9.2.0 (from -r requirements-tested.txt (line 38))
+2026-11-20T02:21:08.2669230Z   Downloading pytest-9.2.0-py3-none-any.whl.metadata (7.9 kB)
+2026-11-20T02:21:08.3236136Z Collecting pywin32-ctypes==0.2.3 (from -r requirements-tested.txt (line 39))
+2026-11-20T02:21:08.3284994Z   Downloading pywin32_ctypes-0.2.3-py3-none-any.whl.metadata (3.9 kB)
+2026-11-20T02:21:08.3788601Z Collecting requests-oauthlib==2.0.0 (from -r requirements-tested.txt (line 40))
+2026-11-20T02:21:08.3838097Z   Downloading requests_oauthlib-2.0.0-py2.py3-none-any.whl.metadata (11 kB)
+2026-11-20T02:21:08.4437097Z Collecting requests==2.34.2 (from -r requirements-tested.txt (line 41))
+2026-11-20T02:21:08.4491076Z   Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+2026-11-20T02:21:08.5476155Z Collecting setuptools==84.2.1 (from -r requirements-tested.txt (line 42))
+2026-11-20T02:21:08.5527319Z   Downloading setuptools-84.2.1-py3-none-any.whl.metadata (6.6 kB)
+2026-11-20T02:21:08.6148725Z Collecting shiboken6==6.8.3 (from -r requirements-tested.txt (line 43))
+2026-11-20T02:21:08.6233739Z   Downloading shiboken6-6.8.3-cp39-abi3-win_amd64.whl.metadata (2.8 kB)
+2026-11-20T02:21:08.6808151Z Collecting typing-extensions==4.16.0 (from -r requirements-tested.txt (line 44))
+2026-11-20T02:21:08.6854653Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-11-20T02:21:08.7360255Z Collecting tzdata==2026.6 (from -r requirements-tested.txt (line 45))
+2026-11-20T02:21:08.7413502Z   Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+2026-11-20T02:21:08.8000158Z Collecting uritemplate==4.2.0 (from -r requirements-tested.txt (line 46))
+2026-11-20T02:21:08.8058012Z   Downloading uritemplate-4.2.0-py3-none-any.whl.metadata (2.6 kB)
+2026-11-20T02:21:08.8653889Z Collecting urllib3==2.8.0 (from -r requirements-tested.txt (line 47))
+2026-11-20T02:21:08.8701774Z   Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+2026-11-20T02:21:08.9643905Z Downloading altgraph-0.17.5-py2.py3-none-any.whl (21 kB)
+2026-11-20T02:21:08.9905276Z Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+2026-11-20T02:21:09.0201817Z Downloading cffi-2.1.1-cp312-cp312-win_amd64.whl (185 kB)
+2026-11-20T02:21:09.0637590Z Downloading charset_normalizer-3.5.2-cp312-cp312-win_amd64.whl (207 kB)
+2026-11-20T02:21:09.1110473Z Downloading cryptography-50.0.2-cp311-abi3-win_amd64.whl (3.8 MB)
+2026-11-20T02:21:09.1805915Z    ---------------------------------------- 3.8/3.8 MB 56.5 MB/s  0:00:00
+2026-11-20T02:21:09.1847877Z Downloading google_api_core-2.44.0-py3-none-any.whl (225 kB)
+2026-11-20T02:21:09.2164262Z Downloading google_auth-2.62.2-py3-none-any.whl (270 kB)
+2026-11-20T02:21:09.2411898Z Downloading googleapis_common_protos-1.76.0-py3-none-any.whl (307 kB)
+2026-11-20T02:21:09.2712482Z Downloading opentelemetry_api-1.45.2-py3-none-any.whl (60 kB)
+2026-11-20T02:21:09.2971806Z Downloading proto_plus-1.29.0-py3-none-any.whl (50 kB)
+2026-11-20T02:21:09.3278345Z Downloading protobuf-7.36.2-cp310-abi3-win_amd64.whl (456 kB)
+2026-11-20T02:21:09.3572123Z Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+2026-11-20T02:21:09.3850737Z Downloading idna-3.20-py3-none-any.whl (69 kB)
+2026-11-20T02:21:09.4093136Z Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+2026-11-20T02:21:09.4410429Z Downloading google_api_python_client-2.202.0-py3-none-any.whl (17.1 MB)
+2026-11-20T02:21:09.6545493Z    ---------------------------------------- 17.1/17.1 MB 82.8 MB/s  0:00:00
+2026-11-20T02:21:09.6599841Z Downloading google_auth_httplib2-0.4.4-py3-none-any.whl (9.5 kB)
+2026-11-20T02:21:09.6869482Z Downloading httplib2-0.32.1-py3-none-any.whl (92 kB)
+2026-11-20T02:21:09.7112525Z Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+2026-11-20T02:21:09.7362938Z Downloading uritemplate-4.2.0-py3-none-any.whl (11 kB)
+2026-11-20T02:21:09.7655307Z Downloading google_auth_oauthlib-1.5.0-py3-none-any.whl (20 kB)
+2026-11-20T02:21:09.7915390Z Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+2026-11-20T02:21:09.8140271Z Downloading jaraco.classes-3.4.0-py3-none-any.whl (6.8 kB)
+2026-11-20T02:21:09.8406316Z Downloading jaraco_context-6.1.2-py3-none-any.whl (7.9 kB)
+2026-11-20T02:21:09.8651409Z Downloading jaraco_functools-4.6.0-py3-none-any.whl (11 kB)
+2026-11-20T02:21:09.9013815Z Downloading keyring-25.7.0-py3-none-any.whl (39 kB)
+2026-11-20T02:21:09.9651212Z Downloading more_itertools-11.2.1-py3-none-any.whl (74 kB)
+2026-11-20T02:21:10.0248978Z Downloading oauthlib-4.0.1-py3-none-any.whl (161 kB)
+2026-11-20T02:21:10.0591999Z Downloading pefile-2024.8.26-py3-none-any.whl (74 kB)
+2026-11-20T02:21:10.0967334Z Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+2026-11-20T02:21:10.1279391Z Downloading pyasn1_modules-0.4.2-py3-none-any.whl (181 kB)
+2026-11-20T02:21:10.1588600Z Downloading pyasn1-0.6.5-py3-none-any.whl (84 kB)
+2026-11-20T02:21:10.1907316Z Downloading pycparser-3.12-py3-none-any.whl (62 kB)
+2026-11-20T02:21:10.2177023Z Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-11-20T02:21:10.2575127Z    ---------------------------------------- 1.3/1.3 MB 21.0 MB/s  0:00:00
+2026-11-20T02:21:10.2619383Z Downloading pyinstaller_hooks_contrib-2026.10-py3-none-any.whl (463 kB)
+2026-11-20T02:21:10.2895682Z Downloading pyinstaller-6.22.3-py3-none-win_amd64.whl (1.5 MB)
+2026-11-20T02:21:10.3296894Z    ---------------------------------------- 1.5/1.5 MB 38.5 MB/s  0:00:00
+2026-11-20T02:21:10.3360061Z Downloading PySide6_Addons-6.8.3-cp39-abi3-win_amd64.whl (127.9 MB)
+2026-11-20T02:21:14.0146412Z    ---------------------------------------- 127.9/127.9 MB 34.6 MB/s  0:00:03
+2026-11-20T02:21:14.0208139Z Downloading PySide6_Essentials-6.8.3-cp39-abi3-win_amd64.whl (72.2 MB)
+2026-11-20T02:21:15.9240622Z    ---------------------------------------- 72.2/72.2 MB 37.7 MB/s  0:00:01
+2026-11-20T02:21:15.9298963Z Downloading PySide6-6.8.3-cp39-abi3-win_amd64.whl (561 kB)
+2026-11-20T02:21:15.9682089Z    ---------------------------------------- 561.1/561.1 kB 6.4 MB/s  0:00:00
+2026-11-20T02:21:15.9727672Z Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+2026-11-20T02:21:16.0114695Z Downloading pywin32_ctypes-0.2.3-py3-none-any.whl (30 kB)
+2026-11-20T02:21:16.0398701Z Downloading requests_oauthlib-2.0.0-py2.py3-none-any.whl (24 kB)
+2026-11-20T02:21:16.0665288Z Downloading setuptools-84.2.1-py3-none-any.whl (876 kB)
+2026-11-20T02:21:16.0981587Z    ---------------------------------------- 876.3/876.3 kB 19.2 MB/s  0:00:00
+2026-11-20T02:21:16.1049646Z Downloading shiboken6-6.8.3-cp39-abi3-win_amd64.whl (1.2 MB)
+2026-11-20T02:21:16.1497766Z    ---------------------------------------- 1.2/1.2 MB 18.9 MB/s  0:00:00
+2026-11-20T02:21:16.1548149Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-11-20T02:21:16.1842918Z Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+2026-11-20T02:21:16.9754092Z Installing collected packages: altgraph, urllib3, uritemplate, tzdata, typing-extensions, shiboken6, setuptools, pywin32-ctypes, pyparsing, pyinstaller-hooks-contrib, pygments, pycparser, pyasn1, protobuf, pluggy, pefile, oauthlib, more-itertools, jaraco-context, iniconfig, idna, charset-normalizer, certifi, requests, pytest, pyside6-essentials, pyinstaller, pyasn1-modules, proto-plus, opentelemetry-api, jaraco-functools, jaraco-classes, httplib2, googleapis-common-protos, cffi, requests-oauthlib, pyside6-addons, keyring, cryptography, pyside6, google-auth, google-auth-oauthlib, google-auth-httplib2, google-api-core, google-api-python-client
+2026-11-20T02:21:51.5978226Z 
+2026-11-20T02:21:51.6020315Z Successfully installed altgraph-0.17.5 certifi-2026.10.23 cffi-2.1.1 charset-normalizer-3.5.2 cryptography-50.0.2 google-api-core-2.44.0 google-api-python-client-2.202.0 google-auth-2.62.2 google-auth-httplib2-0.4.4 google-auth-oauthlib-1.5.0 googleapis-common-protos-1.76.0 httplib2-0.32.1 idna-3.20 iniconfig-2.3.1 jaraco-classes-3.4.0 jaraco-context-6.1.2 jaraco-functools-4.6.0 keyring-25.7.0 more-itertools-11.2.1 oauthlib-4.0.1 opentelemetry-api-1.45.2 pefile-2024.8.26 pluggy-1.7.0 proto-plus-1.29.0 protobuf-7.36.2 pyasn1-0.6.5 pyasn1-modules-0.4.2 pycparser-3.12 pygments-2.21.0 pyinstaller-6.22.3 pyinstaller-hooks-contrib-2026.10 pyparsing-3.3.3 pyside6-6.8.3 pyside6-addons-6.8.3 pyside6-essentials-6.8.3 pytest-9.2.0 pywin32-ctypes-0.2.3 requests-2.34.2 requests-oauthlib-2.0.0 setuptools-84.2.1 shiboken6-6.8.3 typing-extensions-4.16.0 tzdata-2026.6 uritemplate-4.2.0 urllib3-2.8.0
+2026-11-20T02:21:53.0768301Z Obtaining file:///D:/a/Checkpoint/Checkpoint
+2026-11-20T02:21:53.0790321Z   Checking if build backend supports build_editable: started
+2026-11-20T02:21:53.6772693Z   Checking if build backend supports build_editable: finished with status 'done'
+2026-11-20T02:21:53.6791936Z   Preparing editable metadata (pyproject.toml): started
+2026-11-20T02:21:54.0373149Z   Preparing editable metadata (pyproject.toml): finished with status 'done'
+2026-11-20T02:21:54.0429122Z Building wheels for collected packages: checkpoint-desktop
+2026-11-20T02:21:54.0447294Z   Building editable for checkpoint-desktop (pyproject.toml): started
+2026-11-20T02:21:55.3720915Z   Building editable for checkpoint-desktop (pyproject.toml): finished with status 'done'
+2026-11-20T02:21:55.3744949Z   C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages\setuptools\command\editable_wheel.py:354: BuildBackendWarning: Editable installation.
+2026-11-20T02:21:55.3745682Z   !!
+2026-11-20T02:21:55.3745917Z   
+2026-11-20T02:21:55.3746244Z           ********************************************************************************
+2026-11-20T02:21:55.3746738Z           Please be careful with folders in your working directory with the same
+2026-11-20T02:21:55.3747485Z           name as your package as they may take precedence during imports.
+2026-11-20T02:21:55.3747993Z           ********************************************************************************
+2026-11-20T02:21:55.3748393Z   
+2026-11-20T02:21:55.3748702Z   !!
+2026-11-20T02:21:55.3749026Z     with strategy, WheelFile(wheel_path, "w") as wheel_obj:
+2026-11-20T02:21:55.3785640Z   Created wheel for checkpoint-desktop: filename=checkpoint_desktop-0.1.39-0.editable-py3-none-any.whl size=3273 sha256=7c2055f316e5d0d99a85a7d8ae013def8238e49ac7ae202e990a3f33a880230d
+2026-11-20T02:21:55.3787031Z   Stored in directory: C:\Users\runneradmin\AppData\Local\Temp\pip-ephem-wheel-cache-t_zg1lbv\wheels\a2\38\6e\88ad7ec70fd74394064971fa20d15ccdcdb6f76505932df31d
+2026-11-20T02:21:55.3813917Z Successfully built checkpoint-desktop
+2026-11-20T02:21:55.4027319Z Installing collected packages: checkpoint-desktop
+2026-11-20T02:21:55.4481925Z Successfully installed checkpoint-desktop-0.1.39
+2026-11-20T02:21:56.0537161Z No broken requirements found.
+2026-11-20T02:21:56.1806607Z ##[group]Run $env:CHECKPOINT_TEST_ROOT = Join-Path $env:RUNNER_TEMP 'checkpoint-tests'
+2026-11-20T02:21:56.1808069Z [36;1m$env:CHECKPOINT_TEST_ROOT = Join-Path $env:RUNNER_TEMP 'checkpoint-tests'[0m
+2026-11-20T02:21:56.1808713Z [36;1mpython -X faulthandler -m pytest tests -q -p no:cacheprovider --junitxml=.ci-results/pytest.xml[0m
+2026-11-20T02:21:56.1809261Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Testes Windows falharam.' }[0m
+2026-11-20T02:21:56.1844483Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-20T02:21:56.1844924Z env:
+2026-11-20T02:21:56.1845197Z   QT_QPA_PLATFORM: offscreen
+2026-11-20T02:21:56.1845567Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:21:56.1846063Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-20T02:21:56.1846549Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:21:56.1847103Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:21:56.1847559Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:21:56.1847953Z ##[endgroup]
+2026-11-20T02:22:10.0840656Z ........................................................................ [  9%]
+2026-11-20T02:22:23.8955613Z ........................................................................ [ 18%]
+2026-11-20T02:22:37.9688590Z ........................................................................ [ 28%]
+2026-11-20T02:22:42.2288735Z ........................................................................ [ 37%]
+2026-11-20T02:22:51.4034625Z ........................................................................ [ 47%]
+2026-11-20T02:23:52.1074570Z ........................................................................ [ 56%]
+2026-11-20T02:25:10.4883957Z ........................................................................ [ 65%]
+2026-11-20T02:25:36.7480228Z ........................................................................ [ 75%]
+2026-11-20T02:27:33.3113847Z ........................................................................ [ 84%]
+2026-11-20T02:32:21.2150461Z ........................................................................ [ 94%]
+2026-11-20T02:33:01.3599550Z ............................................                             [100%]
+2026-11-20T02:33:01.3600204Z 764 passed in 664.04s (0:11:04)
+2026-11-20T02:33:02.4947566Z ##[group]Run ./scripts/build.ps1 -Python (Get-Command python).Source
+2026-11-20T02:33:02.4948331Z [36;1m./scripts/build.ps1 -Python (Get-Command python).Source[0m
+2026-11-20T02:33:02.4984984Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-20T02:33:02.4985396Z env:
+2026-11-20T02:33:02.4985684Z   QT_QPA_PLATFORM: offscreen
+2026-11-20T02:33:02.4986075Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:33:02.4986578Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-20T02:33:02.4987103Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:33:02.4987571Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:33:02.4988097Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:33:02.4988490Z ##[endgroup]
+2026-11-20T02:33:03.4690212Z 203 INFO: PyInstaller: 6.22.3, contrib hooks: 2026.10
+2026-11-20T02:33:03.4692838Z 203 INFO: Python: 3.12.10
+2026-11-20T02:33:03.4901500Z 234 INFO: Platform: Windows-2022Server-10.0.20348-SP0
+2026-11-20T02:33:03.4902116Z 234 INFO: Python environment: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:33:03.4906467Z 234 INFO: wrote D:\a\Checkpoint\Checkpoint\work\pyinstaller\Checkpoint.spec
+2026-11-20T02:33:03.5266647Z 265 INFO: Module search paths (PYTHONPATH):
+2026-11-20T02:33:03.5267238Z ['D:\\a\\Checkpoint\\Checkpoint',
+2026-11-20T02:33:03.5267863Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python312.zip',
+2026-11-20T02:33:03.5268635Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\DLLs',
+2026-11-20T02:33:03.5269723Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib',
+2026-11-20T02:33:03.5271269Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64',
+2026-11-20T02:33:03.5272169Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages',
+2026-11-20T02:33:03.5272920Z  '__editable__.checkpoint_desktop-0.1.39.finder.__path_hook__',
+2026-11-20T02:33:03.5273515Z  'D:\\a\\Checkpoint\\Checkpoint']
+2026-11-20T02:33:03.7498665Z 484 INFO: Appending 'datas' from .spec
+2026-11-20T02:33:03.7515662Z 484 INFO: checking Analysis
+2026-11-20T02:33:03.7516325Z 484 INFO: Building Analysis because Analysis-00.toc is non existent
+2026-11-20T02:33:03.7517143Z 484 INFO: Looking for Python shared library...
+2026-11-20T02:33:03.7518121Z 484 INFO: Using Python shared library: C:\hostedtoolcache\windows\Python\3.12.10\x64\python312.dll
+2026-11-20T02:33:03.7518932Z 484 INFO: Running Analysis Analysis-00.toc
+2026-11-20T02:33:03.7519518Z 484 INFO: Target bytecode optimization level: 0
+2026-11-20T02:33:03.7519922Z 484 INFO: Initializing module dependency graph...
+2026-11-20T02:33:03.7527245Z 500 INFO: Initializing module graph hook caches...
+2026-11-20T02:33:03.7668310Z 500 INFO: Analyzing modules for base_library.zip ...
+2026-11-20T02:33:04.7844730Z 1516 INFO: Processing standard module hook 'hook-encodings.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:05.1433673Z 1876 INFO: Processing standard module hook 'hook-math.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:06.5467787Z 3283 INFO: Processing standard module hook 'hook-pickle.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:07.7250183Z 4456 INFO: Processing standard module hook 'hook-heapq.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:08.2786083Z 5020 INFO: Caching module dependency graph...
+2026-11-20T02:33:08.3131959Z 5059 INFO: Analyzing D:\a\Checkpoint\Checkpoint\run_checkpoint.py
+2026-11-20T02:33:08.4696115Z 5208 INFO: Processing standard module hook 'hook-PySide6.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:08.6186594Z 5364 INFO: Processing standard module hook 'hook-shiboken6.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:08.7353264Z 5473 INFO: Processing standard module hook 'hook-PySide6.QtNetwork.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:11.1852516Z 7928 INFO: Processing standard module hook 'hook-PySide6.QtCore.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:13.9435966Z 10680 INFO: Processing standard module hook 'hook-PySide6.QtWidgets.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:16.7285900Z 13465 INFO: Processing standard module hook 'hook-PySide6.QtGui.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:45.1728173Z 41915 INFO: Processing standard module hook 'hook-PySide6.QtSvg.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:45.5855548Z 42322 INFO: Processing standard module hook 'hook-_ctypes.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:45.5934210Z 42337 INFO: Processing standard module hook 'hook-sqlite3.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:45.8583703Z 42603 INFO: Processing standard module hook 'hook-platform.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:45.9749713Z 42713 INFO: Processing standard module hook 'hook-keyring.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:46.4248434Z 43167 INFO: Processing pre-safe-import-module hook 'hook-jaraco.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+2026-11-20T02:33:46.4255095Z 43167 INFO: SetuptoolsInfo: initializing cached setuptools info...
+2026-11-20T02:33:46.8420091Z 43588 INFO: Setuptools: 'jaraco' appears to be a partial setuptools-vendored copy - extending search paths to ['C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\jaraco', 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\setuptools\\_vendor\\jaraco']!
+2026-11-20T02:33:46.8424935Z 43588 INFO: Processing pre-safe-import-module hook 'hook-jaraco.context.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+2026-11-20T02:33:47.0534166Z 43791 INFO: Processing pre-safe-import-module hook 'hook-backports.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+2026-11-20T02:33:47.0535584Z 43791 INFO: Setuptools: 'backports' appears to be a full setuptools-vendored copy - creating alias to 'setuptools._vendor.backports'!
+2026-11-20T02:33:47.0585060Z 43791 INFO: Processing standard module hook 'hook-setuptools.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:47.0688106Z 43807 INFO: Processing pre-safe-import-module hook 'hook-distutils.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+2026-11-20T02:33:47.1176205Z 43854 INFO: Processing standard module hook 'hook-sysconfig.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:47.1263468Z 43869 INFO: Processing pre-safe-import-module hook 'hook-jaraco.functools.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+2026-11-20T02:33:47.1359811Z 43877 INFO: Processing pre-safe-import-module hook 'hook-more_itertools.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+2026-11-20T02:33:47.3048257Z 44043 INFO: Processing standard module hook 'hook-_osx_support.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:47.3085363Z 44043 INFO: Processing pre-safe-import-module hook 'hook-typing_extensions.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+2026-11-20T02:33:47.5533739Z 44293 INFO: Processing standard module hook 'hook-multiprocessing.util.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:47.6480276Z 44386 INFO: Processing standard module hook 'hook-xml.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:48.1679221Z 44902 INFO: Processing pre-safe-import-module hook 'hook-packaging.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+2026-11-20T02:33:48.5147813Z 45250 INFO: Processing pre-safe-import-module hook 'hook-jaraco.text.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+2026-11-20T02:33:48.5149045Z 45250 INFO: Setuptools: 'jaraco.text' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.jaraco.text'!
+2026-11-20T02:33:48.5255065Z 45266 INFO: Processing standard module hook 'hook-setuptools._vendor.jaraco.text.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:48.5267871Z 45266 INFO: Processing pre-safe-import-module hook 'hook-importlib_resources.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+2026-11-20T02:33:48.9139570Z 45657 INFO: Processing pre-safe-import-module hook 'hook-tomli.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+2026-11-20T02:33:48.9142012Z 45657 INFO: Setuptools: 'tomli' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.tomli'!
+2026-11-20T02:33:49.4876359Z 46219 INFO: Processing pre-safe-import-module hook 'hook-wheel.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+2026-11-20T02:33:49.4877762Z 46235 INFO: Setuptools: 'wheel' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.wheel'!
+2026-11-20T02:33:49.5986094Z 46344 INFO: Processing pre-safe-import-module hook 'hook-importlib_metadata.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+2026-11-20T02:33:49.5988374Z 46344 INFO: Setuptools: 'importlib_metadata' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.importlib_metadata'!
+2026-11-20T02:33:49.6194299Z 46360 INFO: Processing standard module hook 'hook-setuptools._vendor.importlib_metadata.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:49.6376857Z 46376 INFO: Processing pre-safe-import-module hook 'hook-zipp.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+2026-11-20T02:33:49.6382428Z 46376 INFO: Setuptools: 'zipp' appears to be a setuptools-vendored copy - creating alias to 'setuptools._vendor.zipp'!
+2026-11-20T02:33:49.6819742Z 46423 INFO: Processing standard module hook 'hook-win32ctypes.core.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:50.3817863Z 47126 INFO: Processing standard module hook 'hook-pycparser.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+2026-11-20T02:33:50.8305482Z 47564 INFO: Processing standard module hook 'hook-webbrowser.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:51.0877905Z 47829 INFO: Processing standard module hook 'hook-cryptography.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+2026-11-20T02:33:52.2008511Z 48940 INFO: hook-cryptography: cryptography does not seem to be using dynamically linked OpenSSL.
+2026-11-20T02:33:52.8997169Z 49643 INFO: Processing standard module hook 'hook-urllib3.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+2026-11-20T02:33:53.3631640Z 50097 INFO: Processing standard module hook 'hook-certifi.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+2026-11-20T02:33:53.4027919Z 50144 INFO: Processing standard module hook 'hook-charset_normalizer.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+2026-11-20T02:33:53.9979359Z 50738 INFO: Processing standard module hook 'hook-google.api_core.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+2026-11-20T02:33:54.0206801Z 50753 INFO: Processing standard module hook 'hook-opentelemetry.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+2026-11-20T02:33:54.3210955Z 51066 INFO: Processing standard module hook 'hook-httplib2.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+2026-11-20T02:33:54.6345755Z 51379 INFO: Processing standard module hook 'hook-difflib.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:54.8473710Z 51582 INFO: Processing standard module hook 'hook-googleapiclient.model.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\stdhooks'
+2026-11-20T02:33:55.3900571Z 52129 INFO: Processing standard module hook 'hook-xml.etree.cElementTree.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:55.7029416Z 52442 INFO: Processing module hooks (post-graph stage)...
+2026-11-20T02:33:55.7210171Z 52458 WARNING: Hidden import "pycparser.lextab" not found!
+2026-11-20T02:33:55.7210814Z 52458 WARNING: Hidden import "pycparser.yacctab" not found!
+2026-11-20T02:33:55.7440783Z 52489 INFO: Processing pre-safe-import-module hook 'hook-gi.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_safe_import_module'
+2026-11-20T02:33:55.8801899Z 52614 INFO: Performing binary vs. data reclassification (813 entries)
+2026-11-20T02:33:55.9271055Z 52661 INFO: Looking for ctypes DLLs
+2026-11-20T02:33:55.9638856Z 52708 INFO: Analyzing run-time hooks ...
+2026-11-20T02:33:55.9688526Z 52708 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+2026-11-20T02:33:55.9709052Z 52708 INFO: Including run-time hook 'pyi_rth_pkgutil.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+2026-11-20T02:33:55.9727423Z 52708 INFO: Including run-time hook 'pyi_rth_multiprocessing.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+2026-11-20T02:33:55.9747427Z 52708 INFO: Including run-time hook 'pyi_rth_setuptools.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+2026-11-20T02:33:55.9760763Z 52708 INFO: Including run-time hook 'pyi_rth_pyside6.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+2026-11-20T02:33:55.9777911Z 52723 INFO: Processing pre-find-module-path hook 'hook-_pyi_rth_utils.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\pre_find_module_path'
+2026-11-20T02:33:55.9790898Z 52723 INFO: Processing standard module hook 'hook-_pyi_rth_utils.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:33:55.9815444Z 52723 INFO: Including run-time hook 'pyi_rth_cryptography_openssl.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\_pyinstaller_hooks_contrib\\rthooks'
+2026-11-20T02:33:56.0112152Z 52754 INFO: Creating base_library.zip...
+2026-11-20T02:33:56.0301065Z 52770 INFO: Looking for dynamic libraries
+2026-11-20T02:33:56.7086955Z 53442 INFO: Extra DLL search directories (AddDllDirectory): ['C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\shiboken6']
+2026-11-20T02:33:56.7087919Z 53442 INFO: Extra DLL search directories (PATH): ['C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PySide6']
+2026-11-20T02:33:58.2733677Z 55006 INFO: Warnings written to D:\a\Checkpoint\Checkpoint\work\pyinstaller\Checkpoint\warn-Checkpoint.txt
+2026-11-20T02:33:58.3470937Z 55084 INFO: Graph cross-reference written to D:\a\Checkpoint\Checkpoint\work\pyinstaller\Checkpoint\xref-Checkpoint.html
+2026-11-20T02:33:58.3916579Z 55131 INFO: checking PYZ
+2026-11-20T02:33:58.3917309Z 55131 INFO: Building PYZ because PYZ-00.toc is non existent
+2026-11-20T02:33:58.3917952Z 55131 INFO: Building PYZ (ZlibArchive) D:\a\Checkpoint\Checkpoint\work\pyinstaller\Checkpoint\PYZ-00.pyz
+2026-11-20T02:33:59.1734210Z 55913 INFO: Building PYZ (ZlibArchive) D:\a\Checkpoint\Checkpoint\work\pyinstaller\Checkpoint\PYZ-00.pyz completed successfully.
+2026-11-20T02:33:59.1982699Z 55944 INFO: checking PKG
+2026-11-20T02:33:59.1984137Z 55944 INFO: Building PKG because PKG-00.toc is non existent
+2026-11-20T02:33:59.1984894Z 55944 INFO: Building PKG (CArchive) Checkpoint.pkg
+2026-11-20T02:33:59.2175204Z 55960 INFO: Building PKG (CArchive) Checkpoint.pkg completed successfully.
+2026-11-20T02:33:59.2181655Z 55960 INFO: Bootloader C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\runw.exe
+2026-11-20T02:33:59.2182609Z 55960 INFO: checking EXE
+2026-11-20T02:33:59.2183102Z 55960 INFO: Building EXE because EXE-00.toc is non existent
+2026-11-20T02:33:59.2183571Z 55960 INFO: Building EXE from EXE-00.toc
+2026-11-20T02:33:59.2184288Z 55960 INFO: Copying bootloader EXE to D:\a\Checkpoint\Checkpoint\work\pyinstaller\Checkpoint\Checkpoint.exe
+2026-11-20T02:33:59.2215676Z 55960 INFO: Copying icon to EXE
+2026-11-20T02:33:59.2230984Z 55960 INFO: Copying 0 resources to EXE
+2026-11-20T02:33:59.2231454Z 55960 INFO: Embedding manifest in EXE
+2026-11-20T02:33:59.2244242Z 55960 INFO: Appending PKG archive to EXE
+2026-11-20T02:33:59.2289395Z 55976 INFO: Fixing EXE headers
+2026-11-20T02:33:59.2971416Z 56038 INFO: Building EXE from EXE-00.toc completed successfully.
+2026-11-20T02:33:59.3052899Z 56038 INFO: checking COLLECT
+2026-11-20T02:33:59.3053522Z 56038 INFO: Building COLLECT because COLLECT-00.toc is non existent
+2026-11-20T02:33:59.3054149Z 56038 INFO: Building COLLECT COLLECT-00.toc
+2026-11-20T02:33:59.8922498Z 56632 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+2026-11-20T02:33:59.9088096Z 56648 INFO: Build complete! The results are available in: D:\a\Checkpoint\Checkpoint\dist
+2026-11-20T02:34:00.2384878Z 109 INFO: PyInstaller: 6.22.3, contrib hooks: 2026.10
+2026-11-20T02:34:00.2387943Z 109 INFO: Python: 3.12.10
+2026-11-20T02:34:00.2620004Z 140 INFO: Platform: Windows-2022Server-10.0.20348-SP0
+2026-11-20T02:34:00.2620987Z 140 INFO: Python environment: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:34:00.2626386Z 140 INFO: wrote D:\a\Checkpoint\Checkpoint\work\pyinstaller\CheckpointUpdater.spec
+2026-11-20T02:34:00.2675881Z 140 INFO: Module search paths (PYTHONPATH):
+2026-11-20T02:34:00.2676406Z ['D:\\a\\Checkpoint\\Checkpoint',
+2026-11-20T02:34:00.2677045Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\python312.zip',
+2026-11-20T02:34:00.2677658Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\DLLs',
+2026-11-20T02:34:00.2678236Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib',
+2026-11-20T02:34:00.2678764Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64',
+2026-11-20T02:34:00.2679370Z  'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages',
+2026-11-20T02:34:00.2679966Z  '__editable__.checkpoint_desktop-0.1.39.finder.__path_hook__',
+2026-11-20T02:34:00.2680544Z  'D:\\a\\Checkpoint\\Checkpoint']
+2026-11-20T02:34:00.5083144Z 375 INFO: checking Analysis
+2026-11-20T02:34:00.5083821Z 375 INFO: Building Analysis because Analysis-00.toc is non existent
+2026-11-20T02:34:00.5084450Z 375 INFO: Looking for Python shared library...
+2026-11-20T02:34:00.5085251Z 375 INFO: Using Python shared library: C:\hostedtoolcache\windows\Python\3.12.10\x64\python312.dll
+2026-11-20T02:34:00.5085840Z 375 INFO: Running Analysis Analysis-00.toc
+2026-11-20T02:34:00.5086192Z 375 INFO: Target bytecode optimization level: 0
+2026-11-20T02:34:00.5086581Z 375 INFO: Initializing module dependency graph...
+2026-11-20T02:34:00.5094504Z 375 INFO: Initializing module graph hook caches...
+2026-11-20T02:34:00.5233473Z 391 INFO: Analyzing modules for base_library.zip ...
+2026-11-20T02:34:01.4660884Z 1346 INFO: Processing standard module hook 'hook-encodings.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:34:01.7932538Z 1659 INFO: Processing standard module hook 'hook-math.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:34:01.9691377Z 1846 INFO: Processing standard module hook 'hook-heapq.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:34:02.7554359Z 2630 INFO: Processing standard module hook 'hook-pickle.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:34:03.8810112Z 3755 INFO: Caching module dependency graph...
+2026-11-20T02:34:03.9146782Z 3786 INFO: Analyzing D:\a\Checkpoint\Checkpoint\run_updater.py
+2026-11-20T02:34:03.9356478Z 3802 INFO: Processing standard module hook 'hook-_ctypes.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:34:03.9999660Z 3864 INFO: Processing standard module hook 'hook-platform.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks'
+2026-11-20T02:34:04.0085440Z 3880 INFO: Processing module hooks (post-graph stage)...
+2026-11-20T02:34:04.0133930Z 3880 INFO: Performing binary vs. data reclassification (1 entries)
+2026-11-20T02:34:04.0143328Z 3880 INFO: Looking for ctypes DLLs
+2026-11-20T02:34:04.0201759Z 3896 INFO: Analyzing run-time hooks ...
+2026-11-20T02:34:04.0211235Z 3896 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'C:\\hostedtoolcache\\windows\\Python\\3.12.10\\x64\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+2026-11-20T02:34:04.0253827Z 3896 INFO: Creating base_library.zip...
+2026-11-20T02:34:04.0428447Z 3911 INFO: Looking for dynamic libraries
+2026-11-20T02:34:04.1456594Z 4021 INFO: Extra DLL search directories (AddDllDirectory): []
+2026-11-20T02:34:04.1457077Z 4021 INFO: Extra DLL search directories (PATH): []
+2026-11-20T02:34:04.3989013Z 4271 INFO: Warnings written to D:\a\Checkpoint\Checkpoint\work\pyinstaller\helper-build\CheckpointUpdater\warn-CheckpointUpdater.txt
+2026-11-20T02:34:04.4113017Z 4287 INFO: Graph cross-reference written to D:\a\Checkpoint\Checkpoint\work\pyinstaller\helper-build\CheckpointUpdater\xref-CheckpointUpdater.html
+2026-11-20T02:34:04.4248320Z 4302 INFO: checking PYZ
+2026-11-20T02:34:04.4249215Z 4302 INFO: Building PYZ because PYZ-00.toc is non existent
+2026-11-20T02:34:04.4249859Z 4302 INFO: Building PYZ (ZlibArchive) D:\a\Checkpoint\Checkpoint\work\pyinstaller\helper-build\CheckpointUpdater\PYZ-00.pyz
+2026-11-20T02:34:04.5847541Z 4459 INFO: Building PYZ (ZlibArchive) D:\a\Checkpoint\Checkpoint\work\pyinstaller\helper-build\CheckpointUpdater\PYZ-00.pyz completed successfully.
+2026-11-20T02:34:04.5885781Z 4459 INFO: checking PKG
+2026-11-20T02:34:04.5887167Z 4459 INFO: Building PKG because PKG-00.toc is non existent
+2026-11-20T02:34:04.5887798Z 4459 INFO: Building PKG (CArchive) CheckpointUpdater.pkg
+2026-11-20T02:34:04.6009957Z 4474 INFO: Building PKG (CArchive) CheckpointUpdater.pkg completed successfully.
+2026-11-20T02:34:04.6024479Z 4474 INFO: Bootloader C:\hostedtoolcache\windows\Python\3.12.10\x64\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\run.exe
+2026-11-20T02:34:04.6025423Z 4474 INFO: checking EXE
+2026-11-20T02:34:04.6025810Z 4474 INFO: Building EXE because EXE-00.toc is non existent
+2026-11-20T02:34:04.6026241Z 4474 INFO: Building EXE from EXE-00.toc
+2026-11-20T02:34:04.6027116Z 4474 INFO: Copying bootloader EXE to D:\a\Checkpoint\Checkpoint\work\pyinstaller\helper-build\CheckpointUpdater\CheckpointUpdater.exe
+2026-11-20T02:34:04.6937639Z 4573 INFO: Copying icon to EXE
+2026-11-20T02:34:04.6955551Z 4573 INFO: Copying 0 resources to EXE
+2026-11-20T02:34:04.6956113Z 4573 INFO: Embedding manifest in EXE
+2026-11-20T02:34:04.6970443Z 4573 INFO: Appending PKG archive to EXE
+2026-11-20T02:34:04.6980766Z 4573 INFO: Fixing EXE headers
+2026-11-20T02:34:04.7522107Z 4620 INFO: Building EXE from EXE-00.toc completed successfully.
+2026-11-20T02:34:04.7533167Z 4620 INFO: checking COLLECT
+2026-11-20T02:34:04.7534160Z 4620 INFO: Building COLLECT because COLLECT-00.toc is non existent
+2026-11-20T02:34:04.7536221Z 4620 INFO: Building COLLECT COLLECT-00.toc
+2026-11-20T02:34:04.7837467Z 4651 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+2026-11-20T02:34:04.7850684Z 4651 INFO: Build complete! The results are available in: D:\a\Checkpoint\Checkpoint\work\pyinstaller\helper-dist
+2026-11-20T02:34:04.9200747Z ##[group]Run python scripts/package_windows_release.py --test-report .ci-results/pytest.xml
+2026-11-20T02:34:04.9201719Z [36;1mpython scripts/package_windows_release.py --test-report .ci-results/pytest.xml[0m
+2026-11-20T02:34:04.9202390Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Validação do pacote Windows falhou.' }[0m
+2026-11-20T02:34:04.9236787Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-20T02:34:04.9237189Z env:
+2026-11-20T02:34:04.9237457Z   QT_QPA_PLATFORM: offscreen
+2026-11-20T02:34:04.9237833Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:34:04.9238376Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-20T02:34:04.9238870Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:34:04.9239314Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:34:04.9239849Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:34:04.9240216Z ##[endgroup]
+2026-11-20T02:34:19.3651056Z Checkpoint smoke: 6 pages OK; SQLite integrity=ok
+2026-11-20T02:34:20.5553896Z Cadastro smoke: salvar, auxiliar, renderiza��o e SQLite OK
+2026-11-20T02:34:30.0212226Z Checkpoint 0.1.39 � Windows x64
+2026-11-20T02:34:30.0212876Z Commit: 7703d8048884009a5d9e9addb348620d4a788ff0
+2026-11-20T02:34:30.0213611Z Python: 3.12.10
+2026-11-20T02:34:30.0214103Z Testes: {'tests': 764, 'failures': 0, 'errors': 0, 'skipped': 0}
+2026-11-20T02:34:30.0215987Z Smoke do fonte: 6 p�ginas; SQLite �ntegro; biblioteca vazia.
+2026-11-20T02:34:30.0218912Z Smoke do ZIP extra�do: 6 p�ginas; SQLite �ntegro; biblioteca vazia.
+2026-11-20T02:34:30.0221368Z Auxiliar isolado do fonte e do ZIP extra�do: resposta e schema verificados.
+2026-11-20T02:34:30.0222314Z Cadastro completo do fonte e do ZIP: salvar, auxiliar, imagem e SQLite verificados (fixture isolada).
+2026-11-20T02:34:30.0223143Z CheckpointUpdater.exe --check: sa�da 0.
+2026-11-20T02:34:30.0224363Z Inicializa��o normal nativa Windows do fonte e do execut�vel extra�do: HWND vis�vel, resposta, captura, fechamento e SQLite verificados; executor j� elevado, sem automatizar consentimento UAC.
+2026-11-20T02:34:30.0225646Z ZIP SHA-256: dc6132969de8622e64ab4a36afbc0197c8de527a55cd6ad040813d18ddc9f4a3
+2026-11-20T02:34:30.0226442Z Steam autenticada e homologa��o Windows 10/11 pessoal n�o est�o cobertas.
+2026-11-20T02:34:30.1597323Z ##[group]Run python scripts/render_ui_review.py work/ui-review
+2026-11-20T02:34:30.1598089Z [36;1mpython scripts/render_ui_review.py work/ui-review[0m
+2026-11-20T02:34:30.1598577Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Capturas da interface falharam.' }[0m
+2026-11-20T02:34:30.1599126Z [36;1mpython scripts/package_ui_review.py work/ui-review release-assets[0m
+2026-11-20T02:34:30.1599630Z [36;1mif ($LASTEXITCODE -ne 0) { throw 'Revisão visual incompleta.' }[0m
+2026-11-20T02:34:30.1636080Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-11-20T02:34:30.1636465Z env:
+2026-11-20T02:34:30.1636759Z   QT_QPA_PLATFORM: offscreen
+2026-11-20T02:34:30.1637125Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:34:30.1637608Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-20T02:34:30.1638086Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:34:30.1638892Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:34:30.1639351Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:34:30.1639726Z ##[endgroup]
+2026-11-20T02:34:31.9147699Z WARNING:root:Moldura integrada indispon�vel; controles nativos preservados.
+2026-11-20T02:34:40.9790462Z WARNING:root:Moldura integrada indispon�vel; controles nativos preservados.
+2026-11-20T02:34:41.2600049Z D:\a\Checkpoint\Checkpoint\work\ui-review
+2026-11-20T02:34:41.6661657Z Revis�o visual: 61 PNGs e �ndice HTML; bases e logs exclu�dos.
+2026-11-20T02:34:41.7974904Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-20T02:34:41.7975535Z with:
+2026-11-20T02:34:41.7975813Z   name: checkpoint-windows-release
+2026-11-20T02:34:41.7976192Z   path: release-assets/*
+2026-11-20T02:34:41.7976547Z   if-no-files-found: error
+2026-11-20T02:34:41.7976858Z   retention-days: 14
+2026-11-20T02:34:41.7977143Z   compression-level: 6
+2026-11-20T02:34:41.7977415Z   overwrite: false
+2026-11-20T02:34:41.7977764Z   include-hidden-files: false
+2026-11-20T02:34:41.7978069Z env:
+2026-11-20T02:34:41.7978350Z   QT_QPA_PLATFORM: offscreen
+2026-11-20T02:34:41.7978753Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:34:41.7979304Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-20T02:34:41.7979852Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:34:41.7980312Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:34:41.7980952Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:34:41.7981326Z ##[endgroup]
+2026-11-20T02:34:41.9813196Z (node:6644) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-20T02:34:41.9814143Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-20T02:34:41.9900604Z With the provided path, there will be 10 files uploaded
+2026-11-20T02:34:41.9905632Z Artifact name is valid!
+2026-11-20T02:34:41.9908019Z Root directory input is valid!
+2026-11-20T02:34:42.2630859Z Beginning upload of artifact content to blob storage
+2026-11-20T02:34:42.5530787Z (node:6644) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-20T02:34:43.1543423Z Uploaded bytes 8388608
+2026-11-20T02:34:43.3361796Z Uploaded bytes 16777216
+2026-11-20T02:34:43.6095983Z Uploaded bytes 25165824
+2026-11-20T02:34:43.7525800Z Uploaded bytes 33554432
+2026-11-20T02:34:43.9731943Z Uploaded bytes 41943040
+2026-11-20T02:34:44.3744398Z Uploaded bytes 50331648
+2026-11-20T02:34:44.5146100Z Uploaded bytes 58720256
+2026-11-20T02:34:44.6668579Z Uploaded bytes 67108864
+2026-11-20T02:34:44.9391950Z Uploaded bytes 75497472
+2026-11-20T02:34:45.1680813Z Uploaded bytes 83886080
+2026-11-20T02:34:45.3799000Z Uploaded bytes 90423866
+2026-11-20T02:34:45.4168753Z Finished uploading artifact content to blob storage!
+2026-11-20T02:34:45.4172917Z SHA256 digest of uploaded artifact zip is f5c6e15653891a170fead8f324571e773c6ebd38eacedfd46dfc696aa52a6748
+2026-11-20T02:34:45.4175577Z Finalizing artifact upload
+2026-11-20T02:34:45.8023947Z Artifact checkpoint-windows-release.zip successfully finalized. Artifact ID 14595443414
+2026-11-20T02:34:45.8024874Z Artifact checkpoint-windows-release has been successfully uploaded! Final size is 90423866 bytes. Artifact ID is 14595443414
+2026-11-20T02:34:45.8035684Z Artifact download URL: https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/44660106137/artifacts/14595443414
+2026-11-20T02:34:45.8347410Z ##[group]Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+2026-11-20T02:34:45.8348032Z with:
+2026-11-20T02:34:45.8348341Z   name: checkpoint-windows-test-report
+2026-11-20T02:34:45.8348726Z   path: .ci-results/pytest.xml
+2026-11-20T02:34:45.8349048Z   if-no-files-found: ignore
+2026-11-20T02:34:45.8349413Z   retention-days: 14
+2026-11-20T02:34:45.8349693Z   compression-level: 6
+2026-11-20T02:34:45.8349977Z   overwrite: false
+2026-11-20T02:34:45.8350452Z   include-hidden-files: false
+2026-11-20T02:34:45.8350773Z env:
+2026-11-20T02:34:45.8351056Z   QT_QPA_PLATFORM: offscreen
+2026-11-20T02:34:45.8351442Z   pythonLocation: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:34:45.8351953Z   PKG_CONFIG_PATH: C:\hostedtoolcache\windows\Python\3.12.10\x64/lib/pkgconfig
+2026-11-20T02:34:45.8352502Z   Python_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:34:45.8353076Z   Python2_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:34:45.8353537Z   Python3_ROOT_DIR: C:\hostedtoolcache\windows\Python\3.12.10\x64
+2026-11-20T02:34:45.8353902Z ##[endgroup]
+2026-11-20T02:34:46.0218257Z (node:676) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-20T02:34:46.0219052Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-20T02:34:46.0276657Z With the provided path, there will be 1 file uploaded
+2026-11-20T02:34:46.0281752Z Artifact name is valid!
+2026-11-20T02:34:46.0284487Z Root directory input is valid!
+2026-11-20T02:34:46.2895597Z Beginning upload of artifact content to blob storage
+2026-11-20T02:34:46.3154998Z (node:676) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-20T02:34:46.4332946Z Uploaded bytes 15564
+2026-11-20T02:34:46.4665999Z Finished uploading artifact content to blob storage!
+2026-11-20T02:34:46.4666841Z SHA256 digest of uploaded artifact zip is aa7079708a57f208ad85840dfc6d9f85f378fefc310fdfd094dde28c72ffa1fd
+2026-11-20T02:34:46.4669361Z Finalizing artifact upload
+2026-11-20T02:34:46.8312684Z Artifact checkpoint-windows-test-report.zip successfully finalized. Artifact ID 14595283978
+2026-11-20T02:34:46.8313622Z Artifact checkpoint-windows-test-report has been successfully uploaded! Final size is 15564 bytes. Artifact ID is 14595283978
+2026-11-20T02:34:46.8322441Z Artifact download URL: https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/44660106137/artifacts/14595283978
+2026-11-20T02:34:46.8643039Z Post job cleanup.
+2026-11-20T02:34:47.0094663Z (node:2016) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-20T02:34:47.0095308Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-20T02:34:47.1053995Z [command]"C:\Program Files\Git\usr\bin\tar.exe" --posix -cf cache.tzst --exclude cache.tzst -P -C D:/a/Checkpoint/Checkpoint --files-from manifest.txt --force-local --use-compress-program "zstd -T0"
+2026-11-20T02:34:47.9161716Z (node:2016) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-20T02:34:48.9029271Z Sent 97392083 of 231609811 (42.1%), 92.9 MBs/sec
+2026-11-20T02:34:49.9098072Z Sent 164500947 of 231609811 (71.0%), 78.2 MBs/sec
+2026-11-20T02:34:50.9133124Z Sent 164500947 of 231609811 (71.0%), 52.1 MBs/sec
+2026-11-20T02:34:51.9177981Z Sent 164500947 of 231609811 (71.0%), 39.1 MBs/sec
+2026-11-20T02:34:52.9185564Z Sent 164500947 of 231609811 (71.0%), 31.3 MBs/sec
+2026-11-20T02:34:53.3346323Z Sent 231609811 of 231609811 (100.0%), 40.7 MBs/sec
+2026-11-20T02:34:53.5490687Z Cache saved with the key: setup-python-Windows-x64-python-3.12.10-pip-eb71efc05b2754f3c8048b82aafb5b6c4b1d694285a4ae18da9e58d103e7bab6
+2026-11-20T02:34:53.5766057Z Post job cleanup.
+2026-11-20T02:34:53.7492627Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-11-20T02:34:53.7773129Z git version 2.56.1.windows.1
+2026-11-20T02:34:53.7830147Z Temporarily overriding HOME='D:\a\_temp\7b1a18c5-931a-44a9-a508-e75dc7b59120' before making global git config changes
+2026-11-20T02:34:53.7830840Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-20T02:34:53.7841190Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Checkpoint\Checkpoint
+2026-11-20T02:34:53.8152347Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-11-20T02:34:53.8459832Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-11-20T02:34:54.3359733Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-20T02:34:54.3663842Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-11-20T02:34:54.9284811Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-20T02:34:54.9588548Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-11-20T02:34:55.4465309Z Evaluate and set job outputs
+2026-11-20T02:34:55.4473377Z Set output 'version'
+2026-11-20T02:34:55.4475115Z Cleaning up orphan processes
+2026-11-20T02:34:55.5055036Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065, actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+````
+
+### Job publish — success
+
+Arquivo bruto: windows-publish.log; 15046 bytes; SHA-256 d9c02fec59bdb92230da63883178157b313c9661cc7a0f43c7073bda0f489007.
+
+````text
+﻿2026-11-20T02:34:59.6246158Z Current runner version: '2.338.2'
+2026-11-20T02:34:59.6270236Z ##[group]Runner Image Provisioner
+2026-11-20T02:34:59.6271073Z Hosted Compute Agent
+2026-11-20T02:34:59.6271660Z Version: 20261103.629
+2026-11-20T02:34:59.6272301Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-20T02:34:59.6273021Z Build Date: 2026-11-03T17:26:59Z
+2026-11-20T02:34:59.6273688Z Worker ID: {3353abc8-7e2e-404d-990f-e54960b3e922}
+2026-11-20T02:34:59.6274668Z Region: us-east-1
+2026-11-20T02:34:59.6275246Z Cloud: AWS
+2026-11-20T02:34:59.6275798Z ##[endgroup]
+2026-11-20T02:34:59.6277403Z ##[group]Operating System
+2026-11-20T02:34:59.6277986Z Ubuntu
+2026-11-20T02:34:59.6278533Z 26.04.1
+2026-11-20T02:34:59.6279083Z LTS
+2026-11-20T02:34:59.6279570Z ##[endgroup]
+2026-11-20T02:34:59.6280356Z ##[group]Runner Image
+2026-11-20T02:34:59.6280947Z Image: ubuntu-26.04
+2026-11-20T02:34:59.6281519Z Version: 20261111.82.6
+2026-11-20T02:34:59.6282839Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261111.82/images/ubuntu/Ubuntu2604-Readme.md
+2026-11-20T02:34:59.6284655Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261111.82
+2026-11-20T02:34:59.6285608Z ##[endgroup]
+2026-11-20T02:34:59.6286738Z ##[group]GITHUB_TOKEN Permissions
+2026-11-20T02:34:59.6289106Z Contents: write
+2026-11-20T02:34:59.6289752Z Metadata: read
+2026-11-20T02:34:59.6290264Z ##[endgroup]
+2026-11-20T02:34:59.6292484Z Secret source: Actions
+2026-11-20T02:34:59.6293324Z Cache mode: write
+2026-11-20T02:34:59.6294226Z Prepare workflow directory
+2026-11-20T02:34:59.6630571Z Prepare all required actions
+2026-11-20T02:34:59.6681013Z Getting action download info
+2026-11-20T02:34:59.8161799Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-20T02:35:01.5557606Z Download action repository 'actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+2026-11-20T02:35:01.8007701Z Complete job name: publish
+2026-11-20T02:35:01.8730531Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-11-20T02:35:01.8731969Z with:
+2026-11-20T02:35:01.8732816Z   persist-credentials: false
+2026-11-20T02:35:01.8733795Z   repository: pedroalexcarneiro/Checkpoint
+2026-11-20T02:35:01.8740811Z   token: ***
+2026-11-20T02:35:01.8741601Z   ssh-strict: true
+2026-11-20T02:35:01.8742384Z   ssh-user: git
+2026-11-20T02:35:01.8743173Z   clean: true
+2026-11-20T02:35:01.8743963Z   sparse-checkout-cone-mode: true
+2026-11-20T02:35:01.8745041Z   fetch-depth: 1
+2026-11-20T02:35:01.8745847Z   fetch-tags: false
+2026-11-20T02:35:01.8746658Z   show-progress: true
+2026-11-20T02:35:01.8747600Z   lfs: false
+2026-11-20T02:35:01.8748366Z   submodules: false
+2026-11-20T02:35:01.8749228Z   set-safe-directory: true
+2026-11-20T02:35:01.8750151Z   allow-unsafe-pr-checkout: false
+2026-11-20T02:35:01.8751301Z ##[endgroup]
+2026-11-20T02:35:05.0324118Z Syncing repository: pedroalexcarneiro/Checkpoint
+2026-11-20T02:35:05.0326559Z ##[group]Getting Git version info
+2026-11-20T02:35:05.0327213Z Working directory is '/home/runner/work/Checkpoint/Checkpoint'
+2026-11-20T02:35:05.0328073Z [command]/usr/bin/git version
+2026-11-20T02:35:05.0334787Z git version 2.56.1
+2026-11-20T02:35:05.0349304Z ##[endgroup]
+2026-11-20T02:35:05.0356849Z Temporarily overriding HOME='/home/runner/work/_temp/95f0a141-b00f-4e0c-9eb5-77666a89ff5f' before making global git config changes
+2026-11-20T02:35:05.0357647Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-20T02:35:05.0359873Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Checkpoint/Checkpoint
+2026-11-20T02:35:05.0431987Z Deleting the contents of '/home/runner/work/Checkpoint/Checkpoint'
+2026-11-20T02:35:05.0434263Z ##[group]Initializing the repository
+2026-11-20T02:35:05.0438303Z [command]/usr/bin/git init /home/runner/work/Checkpoint/Checkpoint
+2026-11-20T02:35:05.0559631Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-20T02:35:05.0561105Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-20T02:35:05.0561903Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-20T02:35:05.0562568Z hint: call:
+2026-11-20T02:35:05.0562913Z hint:
+2026-11-20T02:35:05.0563338Z hint: 	git config --global init.defaultBranch <name>
+2026-11-20T02:35:05.0563775Z hint:
+2026-11-20T02:35:05.0564162Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-20T02:35:05.0565125Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-20T02:35:05.0565601Z hint:
+2026-11-20T02:35:05.0565911Z hint: 	git branch -m <name>
+2026-11-20T02:35:05.0566203Z hint:
+2026-11-20T02:35:05.0566583Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-20T02:35:05.0578961Z Initialized empty Git repository in /home/runner/work/Checkpoint/Checkpoint/.git/
+2026-11-20T02:35:05.0588100Z [command]/usr/bin/git remote add origin https://github.com/pedroalexcarneiro/Checkpoint
+2026-11-20T02:35:05.0641568Z ##[endgroup]
+2026-11-20T02:35:05.0642082Z ##[group]Disabling automatic garbage collection
+2026-11-20T02:35:05.0645201Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-20T02:35:05.0675598Z ##[endgroup]
+2026-11-20T02:35:05.0676213Z ##[group]Setting up auth
+2026-11-20T02:35:05.0680214Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-20T02:35:05.0702286Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-20T02:35:05.3247089Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-20T02:35:05.3268187Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-20T02:35:05.3440000Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-20T02:35:05.3460178Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-20T02:35:05.3631613Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-20T02:35:05.3655345Z ##[endgroup]
+2026-11-20T02:35:05.3655810Z ##[group]Fetching the repository
+2026-11-20T02:35:05.3661857Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +7703d8048884009a5d9e9addb348620d4a788ff0:refs/remotes/origin/fix/0.1.39-polimento
+2026-11-20T02:35:06.2984256Z From https://github.com/pedroalexcarneiro/Checkpoint
+2026-11-20T02:35:06.2985118Z  * [new ref]         7703d8048884009a5d9e9addb348620d4a788ff0 -> origin/fix/0.1.39-polimento
+2026-11-20T02:35:06.2997330Z ##[endgroup]
+2026-11-20T02:35:06.2998112Z ##[group]Determining the checkout info
+2026-11-20T02:35:06.2998640Z ##[endgroup]
+2026-11-20T02:35:06.2998988Z [command]/usr/bin/git sparse-checkout disable
+2026-11-20T02:35:06.3055568Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-20T02:35:06.3061317Z ##[group]Checking out the ref
+2026-11-20T02:35:06.3064819Z [command]/usr/bin/git checkout --progress --force -B fix/0.1.39-polimento refs/remotes/origin/fix/0.1.39-polimento
+2026-11-20T02:35:06.3940804Z Switched to a new branch 'fix/0.1.39-polimento'
+2026-11-20T02:35:06.3947068Z branch 'fix/0.1.39-polimento' set up to track 'origin/fix/0.1.39-polimento'.
+2026-11-20T02:35:06.3953565Z ##[endgroup]
+2026-11-20T02:35:06.3992444Z [command]/usr/bin/git log -1 --format=%H
+2026-11-20T02:35:06.4009062Z 7703d8048884009a5d9e9addb348620d4a788ff0
+2026-11-20T02:35:06.4015459Z ##[group]Removing auth
+2026-11-20T02:35:06.4018383Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-20T02:35:06.4040750Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-20T02:35:06.4226390Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-20T02:35:06.4241490Z http.https://github.com/.extraheader
+2026-11-20T02:35:06.4246813Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-20T02:35:06.4266316Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-20T02:35:06.4437333Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-20T02:35:06.4456427Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-20T02:35:06.4623011Z ##[endgroup]
+2026-11-20T02:35:06.4798929Z ##[group]Run actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+2026-11-20T02:35:06.4799307Z with:
+2026-11-20T02:35:06.4799556Z   name: checkpoint-windows-release
+2026-11-20T02:35:06.4799826Z   path: release-assets
+2026-11-20T02:35:06.4800065Z   merge-multiple: false
+2026-11-20T02:35:06.4800350Z   repository: pedroalexcarneiro/Checkpoint
+2026-11-20T02:35:06.4800643Z   run-id: 44660106137
+2026-11-20T02:35:06.4800863Z ##[endgroup]
+2026-11-20T02:35:06.5964269Z Downloading single artifact
+2026-11-20T02:35:06.6126461Z (node:2475) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-20T02:35:06.6127181Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-20T02:35:06.6935140Z Preparing to download the following artifacts:
+2026-11-20T02:35:06.6936104Z - checkpoint-windows-release (ID: 14595443414, Size: 90423866, Expected Digest: sha256:f5c6e15653891a170fead8f324571e773c6ebd38eacedfd46dfc696aa52a6748)
+2026-11-20T02:35:06.8689574Z Redirecting to blob download url: https://productionresultssa16.blob.core.windows.net/actions-results/b3608c3c-f6ab-4631-a4e3-2b64916c3fbf/workflow-job-run-07393ffd-2b2d-52e4-9fd9-c6d4fc6f145d/artifacts/d095d2198859dc3c3e02d418c76faec0855c22a10d8c5884fc5e0e95f6580570.zip
+2026-11-20T02:35:06.8690608Z Starting download of artifact to: /home/runner/work/Checkpoint/Checkpoint/release-assets
+2026-11-20T02:35:07.0171987Z (node:2475) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-11-20T02:35:08.8697613Z SHA256 digest of downloaded artifact is f5c6e15653891a170fead8f324571e773c6ebd38eacedfd46dfc696aa52a6748
+2026-11-20T02:35:08.8698270Z Artifact download completed successfully.
+2026-11-20T02:35:08.8705604Z Total of 1 artifact(s) downloaded
+2026-11-20T02:35:08.8706045Z Download artifact has finished successfully
+2026-11-20T02:35:08.8846161Z ##[group]Run set -euo pipefail
+2026-11-20T02:35:08.8846647Z [36;1mset -euo pipefail[0m
+2026-11-20T02:35:08.8847109Z [36;1mif existing=$(gh api "repos/$GH_REPO/git/ref/tags/$RELEASE_TAG" --jq '.object.type + ":" + .object.sha' 2>/dev/null); then[0m
+2026-11-20T02:35:08.8847992Z [36;1m  if [[ "$existing" != "commit:$SOURCE_SHA" ]]; then[0m
+2026-11-20T02:35:08.8848376Z [36;1m    echo 'A tag já existe em outro commit; não será alterada.' >&2[0m
+2026-11-20T02:35:08.8848711Z [36;1m    exit 1[0m
+2026-11-20T02:35:08.8848962Z [36;1m  fi[0m
+2026-11-20T02:35:08.8849166Z [36;1melse[0m
+2026-11-20T02:35:08.8849452Z [36;1m  gh api --method POST "repos/$GH_REPO/git/refs" \[0m
+2026-11-20T02:35:08.8849820Z [36;1m    -f "ref=refs/tags/$RELEASE_TAG" -f "sha=$SOURCE_SHA" >/dev/null[0m
+2026-11-20T02:35:08.8850124Z [36;1mfi[0m
+2026-11-20T02:35:08.8850431Z [36;1mgh release create "$RELEASE_TAG" release-assets/* \[0m
+2026-11-20T02:35:08.8850947Z [36;1m  --verify-tag --prerelease \[0m
+2026-11-20T02:35:08.8851309Z [36;1m  --title "Checkpoint ${RELEASE_TAG#v} · Interface e PT-BR" \[0m
+2026-11-20T02:35:08.8851656Z [36;1m  --notes-file .github/release-notes.md[0m
+2026-11-20T02:35:08.8874047Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-20T02:35:08.8874782Z env:
+2026-11-20T02:35:08.8876693Z   GH_TOKEN: ***
+2026-11-20T02:35:08.8876913Z   RELEASE_TAG: v0.1.39
+2026-11-20T02:35:08.8877235Z   SOURCE_SHA: 7703d8048884009a5d9e9addb348620d4a788ff0
+2026-11-20T02:35:08.8877542Z   GH_REPO: pedroalexcarneiro/Checkpoint
+2026-11-20T02:35:08.8877814Z ##[endgroup]
+2026-11-20T02:35:15.7608127Z https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.39
+2026-11-20T02:35:15.7716545Z Post job cleanup.
+2026-11-20T02:35:15.8332673Z [command]/usr/bin/git version
+2026-11-20T02:35:15.8361802Z git version 2.56.1
+2026-11-20T02:35:15.8392390Z Temporarily overriding HOME='/home/runner/work/_temp/f6af0a9d-74c4-48c7-8b05-0550d581c7a9' before making global git config changes
+2026-11-20T02:35:15.8393283Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-20T02:35:15.8397283Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Checkpoint/Checkpoint
+2026-11-20T02:35:15.8427462Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-20T02:35:15.8451903Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-20T02:35:15.8643088Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-20T02:35:15.8665161Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-20T02:35:15.8859893Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-20T02:35:15.8880781Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-20T02:35:15.9164041Z Cleaning up orphan processes
+2026-11-20T02:35:15.9410274Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
 ````

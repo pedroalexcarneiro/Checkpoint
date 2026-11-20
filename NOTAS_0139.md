@@ -1,6 +1,7 @@
 # Checkpoint 0.1.39 — correções e polimento
 
-Lançamento autorizado após as validações; publicação ainda não confirmada.
+Publicada em https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.39,
+após 764 testes Linux e 764 Windows, build e validação do pacote extraído.
 
 - Degradê aprovado nas superfícies, preservando as cores de destaque e o Preto neutro.
 - Captura de quadro novo da área visível do jogo, com atualização imediata de Memórias.

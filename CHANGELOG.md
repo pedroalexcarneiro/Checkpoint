@@ -1,6 +1,10 @@
 # Changelog
 
-## 0.1.39 — correções em validação
+## 0.1.39 — correções e degradê publicados
+
+Tag 7703d80; workflow 44660106137 aprovado. 764 testes Linux e 764 Windows,
+zero falhas/erros/skips; executável extraído validado; dez arquivos baixados e
+digests/CRC conferidos. HSR real/PC do dono continuam sem homologação.
 
 - Degradê aprovado nas superfícies; temas e Preto neutro preservados.
 - Novo quadro da área cliente visível a cada captura e Memórias atualizada
@@ -17,7 +21,7 @@
 - Diálogos próprios no tema/em português, ações explícitas e espaçamento revisto.
 - Schema 4, dados/A4/assets/UAC preservados; exceção ImageDialog autorizada.
 - Consulta console não comprovada e saves sem upload Drive continuam pendentes.
-  Lançamento autorizado após os gates, ainda sem confirmação de publicação.
+  Lançamento autorizado e publicado; essas integrações não são declaradas prontas.
 
 ## 0.1.38 — correção de abertura publicada em 16/11/2026
 

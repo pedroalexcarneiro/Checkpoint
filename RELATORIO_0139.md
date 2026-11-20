@@ -1,10 +1,17 @@
 # Checkpoint 0.1.39 — relatório da rodada local
 
-**Em validação; lançamento autorizado posteriormente pelo dono.** Branch fix/0.1.39-polimento.
+**Publicada após autorização e gates Linux/Windows.** Branch fix/0.1.39-polimento.
 Plano: PLANO_0139.md. Este relatório distingue reprodução local, relato,
-documentação do provedor e homologação Windows. Não é declaração de conclusão.
+documentação do provedor e homologação Windows. Não declara o projeto inteiro concluído.
 
-## Complementos — gate Linux aprovado; Windows a validar
+Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.39.
+Código/tag: 7703d8048884009a5d9e9addb348620d4a788ff0. Workflow 44660106137
+aprovado: 764 testes Linux e 764 Windows, sem falhas/erros/skips. Executável
+extraído validado; dez arquivos baixados, hashes/digests e CRC dos dois ZIPs
+conferidos. ZIP SHA-256 dc6132969de8622e64ab4a36afbc0197c8de527a55cd6ad040813d18ddc9f4a3.
+HSR real e demais pendências continuam explícitos; ver relatório de lançamento.
+
+## Complementos — gates Linux e Windows aprovados
 
 Suíte integral complementar: **764 passed in 487.00s (0:08:07), exit 0**,
 Linux/Python 3.12.14/Qt offscreen, CHECKPOINT_TEST_ROOT=/tmp. Código congelado
@@ -12,8 +19,9 @@ em 03272d021b70c5584b424445d53aa3a18c70ac62. Registro integral:
 full-linux-complements-final em RELATORIO_0139_TESTES.md. Sem skips/xfails novos.
 Smokes de seis páginas/SQLite/cadastro e verificação de contratos aprovados.
 Nove capturas complementares com hashes em evidence/ui-0.1.39/complementos;
-revisão em DPR 1,5 e 2 também gerada em dados isolados. Windows/HSR real
-não são homologados por esses resultados; o workflow é o próximo gate.
+revisão em DPR 1,5 e 2 também gerada em dados isolados. Windows no runner
+passou em 764 testes/664.04s, incluindo duas janelas de captura nativa; HSR
+real/DirectX/tela cheia/PC do dono ainda não são homologados.
 
 O dono relatou captura repetida no HSR, Memórias desatualizada e nomes/legenda
 sobrepostos em Estatísticas menor. Também pediu degradê como referência e
@@ -448,3 +456,20 @@ Intervalo 8dd4c24a9aa73d716dc5c2bd7fc9f805e2a44767..03272d021b70c5584b424445d53a
 | aad7e30274cfe4870b4f467f6f4413f2301962f9 | fix: capturar quadro atual e atualizar Memorias imediatamente | d1116861ee92dae7307dd0a947c88dfb29d9c493aaabcca1154c67c74fa5b002 |
 | 0b1378bb5fee3a2bfd39f30e056f5862505d227e | fix: compactar grafico e preservar leitura das estatisticas | 6240d79fdcb0662387a8e8ab608cfebca23960a1238fee7b42de3901cf66d5a5 |
 | 03272d021b70c5584b424445d53aa3a18c70ac62 | fix: medir legenda com as metricas concretas da fonte | f7b01663d6a9914f1168f8e1495fe5dee3c98a7325245b4668b60ccd459babb4 |
+
+Commit documental/capturas do candidato enviado: 7703d8048884009a5d9e9addb348620d4a788ff0. Patch completo
+`complemento-7703d8048884009a5d9e9addb348620d4a788ff0.patch`, SHA-256 `ffbc1c17764be0be3e987399ba51204e46efd8cb7c5a528acaec0a7b95fd3525`. Assim, os 26 commits
+do intervalo base..candidato enviado têm patches completos/hashes registrados.
+
+## Situação dos complementos por unidade
+
+| Unidade | Commits | Status e limite |
+|---|---|---|
+| C1 — quadros novos/atualização imediata | aad7e30 (ajuste do verificador em 0b1378b) | Parcial: fluxo/quadros controlados aprovados em Linux e Windows; HSR real não homologado |
+| C2 — mapa compacto, nomes/legenda | 0b1378b e 03272d0 | Feito e testado em Linux/Windows; revisão posterior elimina o painel largo rejeitado |
+| C3 — Jogos concluídos | ddac441 | Feito, confirmado novamente; usa última marcação real, não cria histórico |
+| C4 — degradê | c32550e | Feito; intensidade da segunda prévia aprovada; nove temas/Preto neutro preservados |
+
+Dados/preferências: sem migração, backfill ou correção de datas. A captura
+adiciona nova mídia ao jogo em sessão, sem substituir arquivos anteriores.
+Diretório/preferências de captura, identidade, histórico e schema 4 preservados.

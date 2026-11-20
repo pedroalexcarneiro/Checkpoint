@@ -2,8 +2,13 @@
 
 ## Após as correções 0.1.39
 
-Concluir gates Linux/Windows/pacote e publicar somente após aprovação dos gates,
-conforme autorização posterior expressa do dono. Não declarar o projeto inteiro
+0.1.39 publicada em 7703d80 após 764 testes em cada plataforma, pacote extraído
+validado e hashes/CRC conferidos. Próxima homologação: quadros sucessivos no
+HSR real e atualização imediata na biblioteca do dono; os testes Windows nativos
+usaram duas janelas próprias. Demais pendências de integrações permanecem.
+
+Gates Linux/Windows/pacote e publicação concluídos conforme autorização posterior
+expressa do dono. Não declarar o projeto inteiro
 concluído: console depende de cobertura/identidade/plano comprovados; saves/Drive
 precisam de escopo e autorização separados para upload. A4 e fechar somente ROM
 com emulador vivo seguem separados, sem troca automática de ROM.

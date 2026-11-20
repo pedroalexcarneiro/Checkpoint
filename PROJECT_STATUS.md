@@ -1,4 +1,13 @@
-# Estado atual — Checkpoint 0.1.39 em validação Windows
+# Estado atual — Checkpoint 0.1.39 publicada
+
+Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.39
+Fonte/tag 7703d8048884009a5d9e9addb348620d4a788ff0; workflow 44660106137
+aprovado. 764 testes Linux e 764 Windows, zero falhas/erros/skips. Pacote
+extraído validado, dez arquivos baixados e hashes/CRC conferidos. ZIP:
+dc6132969de8622e64ab4a36afbc0197c8de527a55cd6ad040813d18ddc9f4a3.
+0.1.38/0.1.37 e workflows preservados. HSR real/contas/UAC pessoal ainda não
+homologados; preços console/saves Drive/fechar só ROM continuam pendentes.
+Detalhes atuais no relatório de lançamento; registros anteriores abaixo.
 
 ## 0.1.39 — rodada de correções
 

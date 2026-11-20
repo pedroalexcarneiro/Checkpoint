@@ -2,6 +2,16 @@
 
 ## Rodada atual 0.1.39
 
+Publicação confirmada no código 7703d80, mesma árvore de aplicação/testes/scripts
+do gate Linux 03272d0. Workflow 44660106137: **764 passed in 664.04s**, Windows
+x64/Python 3.12.10, JUnit com 764 testes/0 falhas/0 erros/0 skips, SHA-256 do
+artefato aa7079708a57f208ad85840dfc6d9f85f378fefc310fdfd094dde28c72ffa1fd.
+Dois casos nativos de quadros sucessivos aprovados. Executável extraído, fonte,
+cadastro/auxiliar/atualizador e abertura normal Qt windows/SQLite aprovados.
+Dez arquivos de release baixados, digests e dois ZIPs/CRC conferidos. Registros
+integrais Linux/Windows no relatório de testes e no de lançamento.
+Não homologa HSR/DirectX/tela cheia, contas, emuladores ou consentimento UAC real.
+
 Complementos C1–C4 posteriores: tests/test_capture_refresh_0139.py valida quadros
 distintos, associação a dois jogos, atualização sem navegar, preservação do filtro
 e rejeição de alvo mudado. scripts/check_capture_frames.py usa duas janelas

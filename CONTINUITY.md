@@ -1,5 +1,27 @@
 # Continuidade do Checkpoint
 
+## 0.1.39 publicada — correções e degradê aprovado
+
+Release: https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.39
+Tag/código: 7703d8048884009a5d9e9addb348620d4a788ff0. Windows release
+44660106137 concluiu testes/build/pacote/publicação com sucesso. Linux:
+764 passed in 487.00s; Windows/Python 3.12.10: 764 passed in 664.04s,
+zero falhas/erros/skips. JUnit baixado e conferido; quadros vermelho/azul
+passaram em duas janelas próprias usando backend nativo Windows.
+
+Dez arquivos publicados baixados e conferidos por tamanho/SHA-256/digests
+GitHub; CRC dos dois ZIPs válido. ZIP Windows: 84345311 bytes, SHA-256
+dc6132969de8622e64ab4a36afbc0197c8de527a55cd6ad040813d18ddc9f4a3.
+Fonte e executável extraído passaram por abertura normal nativa/SQLite/
+cadastro/auxiliar/atualizador; runner já elevado não homologa consentimento UAC.
+Tags/arquivos 0.1.38 e 0.1.37 preservados, sem force push ou mudanças de workflow.
+
+HSR/DirectX/tela cheia e uso pessoal ainda não homologados. Console sem preço
+autenticado comprovado, saves sem upload Drive e fechar apenas ROM continuam
+limitações. Não declarar o projeto inteiro concluído. Relatórios completos:
+RELATORIO_0139.md, RELATORIO_0139_TESTES.md e RELATORIO_LANCAMENTO_0139.md.
+Documentação posterior não move a tag. Os registros seguintes são históricos.
+
 ## 0.1.39 — correções em validação e lançamento autorizado
 
 Complementos implementados após o fechamento inicial: quadros novos na captura,
