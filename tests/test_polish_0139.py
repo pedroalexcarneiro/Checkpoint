@@ -82,7 +82,8 @@ def test_black_is_neutral_and_other_themes_preserved():
     for key in ('background', 'sidebar', 'surface', 'elevated', 'card', 'panel', 'input', 'button', 'border', 'border_subtle'):
         c = QColor(black[key])
         assert c.red() == c.green() == c.blue(), (key, black[key])
-    assert THEMES['green'].colors['background'] == '#0e141d'
+    # Pedido posterior: superfícies acompanham a cor, sem fundo azul fixo.
+    assert THEMES['green'].colors['background'] != THEMES['purple'].colors['background']
     assert len(THEMES) == 9
 
 

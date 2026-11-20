@@ -7,6 +7,7 @@ class Theme:
     key: str
     name: str
     colors: dict
+    mode: str = 'dark'
 
 def blend(base,tint,amount):
     values=[round(int(base[i:i+2],16)*(1-amount)+int(tint[i:i+2],16)*amount) for i in (1,3,5)]
@@ -48,38 +49,79 @@ _black['hover']=blend(_black['elevated'],_black['accent'],.10)
 _black['selected']=blend(_black['surface'],_black['accent'],.18)
 THEMES['black']=Theme('black','Preto',_black)
 
-def get_theme(key): return THEMES.get(key,THEMES[DEFAULT_THEME]) if isinstance(key,str) else THEMES[DEFAULT_THEME]
+def _contrast(a,b):
+    def luminance(value):
+        channels=[int(value[n:n+2],16)/255 for n in (1,3,5)]
+        return sum((v/12.92 if v<=.04045 else ((v+.055)/1.055)**2.4)*weight for v,weight in zip(channels,(.2126,.7152,.0722)))
+    high,low=sorted((luminance(a),luminance(b)),reverse=True)
+    return (high+.05)/(low+.05)
 
-def surface_gradients(key):
+
+def _hsl(hue,saturation,lightness):
+    from colorsys import hls_to_rgb
+    return '#'+''.join(f'{round(value*255):02x}' for value in hls_to_rgb(hue/360,lightness,saturation))
+
+
+def _palette(key,name,mode):
+    hues={'blue':215,'green':102,'yellow':44,'red':4,'purple':268,'pink':330,'orange':28,'cyan':182}
+    light=mode=='light'
+    accent=('#363636' if light else '#b8b8b8') if key=='black' else _hsl(hues[key],.67,.34 if light else .69)
+    if light:
+        while _contrast(accent,'#ffffff')<4.5:accent=blend(accent,'#000000',.03)
+        c={**dark_theme(key,name,accent).colors,'background':'#f5f6f8','sidebar':'#eff1f4','surface':'#ffffff',
+            'elevated':'#e6e9ed','card':'#ffffff','panel':'#ffffff','input':'#ffffff','button':'#e6e9ed',
+            'border':'#a4adb7','border_subtle':'#d0d6dd','text':'#17212d','secondary':'#374555','muted':'#536170',
+            'on_accent':'#ffffff','success':'#14734c','alert':'#775800','error':'#b32638','disabled':'#687585'}
+    else:c={**dark_theme(key,name,accent).colors,'background':'#111315','sidebar':'#16181b','surface':'#1a1c20',
+        'elevated':'#292d33','card':'#1d2025','panel':'#1d2025','input':'#15171a','button':'#292d33'}
+    amount=.045 if light else .09
+    for role in ('background','sidebar','surface','elevated','card','panel','input','button'):
+        c[role]=blend(c[role],accent,amount)
+    if key=='black':
+        for role in ('background','sidebar','surface','elevated','card','panel','input','button','border','border_subtle'):
+            value=QColor(c[role]);gray=round((value.red()+value.green()+value.blue())/3);c[role]='#'+f'{gray:02x}'*3
+    c['hover']=blend(c['button'],accent,.10)
+    c['selected']=blend(c['surface'],accent,.14 if light else .18)
+    while min(_contrast(c['muted'],c[role]) for role in ('background','surface','elevated','card','selected'))<4.5:
+        c['muted']=blend(c['muted'],c['text'],.05)
+    return Theme(key,name,c,mode)
+
+
+# Nove cores existentes; o modo claro/escuro é uma preferência independente.
+THEMES={key:_palette(key,theme.name,'dark') for key,theme in THEMES.items()}
+
+
+def get_theme(key,mode=None):
+    if mode is None:
+        from PySide6.QtWidgets import QApplication
+        application=QApplication.instance()
+        mode=application.property('checkpointAppearance') if application else 'dark'
+    theme=THEMES.get(key,THEMES[DEFAULT_THEME]) if isinstance(key,str) else THEMES[DEFAULT_THEME]
+    return _palette(theme.key,theme.name,'light') if mode=='light' else theme
+
+def surface_gradients(key,mode=None):
     """Superfícies aprovadas no Início, com Preto neutro e destaque por tema."""
-    theme=get_theme(key);c=theme.colors
-    stops={
-        'background':('#29464f','#1b2e38','#101722'),
-        'sidebar':('#2e4d58','#203440','#172130'),
-        'card':('#2b444f','#20313f','#182230'),
-        'nested':('#283f4c','#17212f'),
-    }
-    if theme.key=='black':
-        stops={name:tuple(blend(c['card'] if name in ('card','nested') else c['sidebar'] if name=='sidebar' else c['background'],c['text'],amount)
-            for amount in ((.08,.035,0) if len(values)==3 else (.06,0))) for name,values in stops.items()}
-    elif theme.key!='green':
-        stops={name:tuple(blend(value,c['accent'],.035) for value in values) for name,values in stops.items()}
+    theme=get_theme(key,mode);c=theme.colors
+    amount=.05 if theme.mode=='light' else .09
+    stops={name:(blend(c[role],c['accent'],amount),c[role]) for name,role in
+        (('background','background'),('sidebar','sidebar'),('card','card'),('nested','panel'))}
     def gradient(name,values):
         positions=(0,.48,1) if len(values)==3 else (0,1)
-        if name=='background':positions=(0,.45,1)
+        if name=='background':positions=(0,.45,1) if len(values)==3 else (0,.45)
         coordinates='x1:0,y1:0,x2:0.4,y2:1' if name=='sidebar' else 'x1:0,y1:0,x2:1,y2:1'
         return 'qlineargradient('+coordinates+','+','.join(f'stop:{position} {value}' for position,value in zip(positions,values))+')'
     return {name:gradient(name,values) for name,values in stops.items()}
 
-def stylesheet(key):
-    c=get_theme(key).colors
-    surfaces=surface_gradients(key)
+def stylesheet(key,mode='dark'):
+    c=get_theme(key,mode).colors
+    surfaces=surface_gradients(key,mode)
     from .visual_tokens import TYPE,SPACE,RADIUS
     return f"""
 * {{ font-family: 'Segoe UI'; font-size: {TYPE['body']}px; }}
 QMainWindow, QDialog {{ background: {c['background']}; color: {c['text']}; }}
 QWidget {{ color: {c['text']}; }}
 QWidget#root {{ background: {surfaces['background']}; }}
+QWidget#windowControls {{ background: {c['background']}; }}
 QWidget#sidebar {{ background: {surfaces['sidebar']}; border-right: 1px solid {blend(c['border'],c['background'],.42)}; }}
 QFrame#sidebarDivider {{ background: {c['border']}; border: none; max-height: 1px; }}
 QLabel#title, QLabel#pageTitle {{ font-size: {TYPE['title']}px; font-weight: 600; }}
@@ -205,18 +247,20 @@ QWidget#taskStatus QToolButton {{ padding: 0; border: none; background: transpar
 """
 
 
-def apply_theme(application,key):
-    theme=get_theme(key); c=theme.colors; palette=QPalette()
+def apply_theme(application,key,mode=None):
+    theme=get_theme(key,mode); c=theme.colors; palette=QPalette()
     roles={'Window':'background','WindowText':'text','Base':'input','AlternateBase':'selected',
            'Text':'text','Button':'button','ButtonText':'text','Highlight':'accent','HighlightedText':'on_accent',
            'ToolTipBase':'panel','ToolTipText':'text','PlaceholderText':'muted','Link':'accent'}
     for role,color in roles.items(): palette.setColor(getattr(QPalette.ColorRole,role),QColor(c[color]))
     for role in [QPalette.ColorRole.Text,QPalette.ColorRole.ButtonText,QPalette.ColorRole.WindowText]:
         palette.setColor(QPalette.ColorGroup.Disabled,role,QColor(c['disabled']))
-    style=stylesheet(theme.key)
+    style=stylesheet(theme.key,theme.mode)
     if application.property('checkpointTheme')==theme.key and application.styleSheet()==style and application.palette()==palette:
         return theme
-    application.setPalette(palette); application.setStyleSheet(style); application.setProperty('checkpointTheme',theme.key)
+    application.setProperty('checkpointAppearance',theme.mode)
+    application.setProperty('checkpointTheme',theme.key)
+    application.setPalette(palette); application.setStyleSheet(style)
     return theme
 
 # Compatibilidade com ferramentas e testes que importavam o tema padrão.

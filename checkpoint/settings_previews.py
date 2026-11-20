@@ -10,7 +10,8 @@ class ThemePreview(ThemeSwatch):
         super().__init__(theme,callback);self.setObjectName('themePreview')
         self.setMinimumSize(0,112);self.setMaximumSize(16777215,112);self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed)
     def paintEvent(self,event):
-        p=QPainter(self);p.setRenderHint(QPainter.Antialiasing);c=self.theme.colors
+        from .theme import get_theme
+        p=QPainter(self);p.setRenderHint(QPainter.Antialiasing);c=get_theme(self.theme.key).colors
         chosen=QApplication.instance().property('checkpointTheme')==self.theme.key
         bounds=QRectF(self.rect().adjusted(2,2,-2,-2))
         p.setPen(QPen(QColor(colors()['accent'] if chosen else colors()['border']),2 if chosen else 1));p.setBrush(QColor(c['surface']));p.drawRoundedRect(bounds,9,9)

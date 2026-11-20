@@ -32,7 +32,7 @@ class MainWindow(QMainWindow):
         super().__init__(); self.library = library; self.launcher = Launcher(library)
         from PySide6.QtWidgets import QApplication
         from .theme import apply_theme,DEFAULT_THEME
-        self.theme=apply_theme(QApplication.instance(),library.setting('appearance.theme',DEFAULT_THEME))
+        self.theme=apply_theme(QApplication.instance(),library.setting('appearance.theme',DEFAULT_THEME),library.setting('appearance.mode','dark'))
         if library.setting('appearance.theme',DEFAULT_THEME)!=self.theme.key:library.set_setting('appearance.theme',self.theme.key)
         self.setWindowTitle('Checkpoint'); self.resize(1100,740); self.setMinimumSize(1000,700)
         from .completion_queue import CompletionQueue
@@ -568,7 +568,7 @@ class MainWindow(QMainWindow):
         from .theme import apply_theme,get_theme
         key=get_theme(key).key
         self.library.set_setting('appearance.theme',key)
-        self.theme=apply_theme(QApplication.instance(),key)
+        self.theme=apply_theme(QApplication.instance(),key,self.library.setting('appearance.mode','dark'))
         from .branding import app_icon
         from .ui_components import Hero,nav_icon
         from .window_style import titlebar_theme
@@ -579,6 +579,11 @@ class MainWindow(QMainWindow):
         for hero in self.findChildren(Hero):hero.set_theme(self.theme)
         self.completion_bar.theme=self.theme;self.completion_bar.update()
         self.refresh_library()
+
+    def set_appearance(self,mode):
+        mode='light' if mode=='light' else 'dark'
+        self.library.set_setting('appearance.mode',mode)
+        self.set_theme(self.theme.key)
 
     def updates(self):
         if self.launcher.active or self.save_jobs:

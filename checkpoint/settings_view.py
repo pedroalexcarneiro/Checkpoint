@@ -41,7 +41,10 @@ def build_settings(window):
     appearance,connections,downloads,data,emulator_page,trash_page=pages
     frame,inside=card();head=QHBoxLayout();head.addWidget(text('Tema de cores','sectionTitle'));head.addStretch();window.theme_selector=QComboBox(frame);window.theme_selector.setObjectName('themeSelector')
     for key,theme in THEMES.items():window.theme_selector.addItem(theme.name,key)
-    window.theme_selector.setCurrentIndex(window.theme_selector.findData(window.theme.key));window.theme_selector.currentIndexChanged.connect(window.theme_changed);window.theme_selector.hide();inside.addLayout(head)
+    window.theme_selector.setCurrentIndex(window.theme_selector.findData(window.theme.key));window.theme_selector.currentIndexChanged.connect(window.theme_changed);window.theme_selector.hide()
+    head.addWidget(text('Modo','caption'));mode=QComboBox();mode.setObjectName('appearanceMode');mode.setAccessibleName('Modo de aparência')
+    mode.addItem('Escuro','dark');mode.addItem('Claro','light');mode.setCurrentIndex(mode.findData(window.theme.mode))
+    mode.currentIndexChanged.connect(lambda:window.set_appearance(mode.currentData()));head.addWidget(mode);inside.addLayout(head)
     from .settings_previews import ThemePreview,CoverSizeChoices
     swatches=CardGrid(300,max_columns=3);swatches.setObjectName('themePreviews')
     for key,theme in THEMES.items():
