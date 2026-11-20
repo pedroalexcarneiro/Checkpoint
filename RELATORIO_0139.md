@@ -4,13 +4,22 @@
 Plano: PLANO_0139.md. Este relatório distingue reprodução local, relato,
 documentação do provedor e homologação Windows. Não é declaração de conclusão.
 
-## Complementos após o fechamento inicial — em validação
+## Complementos — gate Linux aprovado; Windows a validar
+
+Suíte integral complementar: **764 passed in 487.00s (0:08:07), exit 0**,
+Linux/Python 3.12.14/Qt offscreen, CHECKPOINT_TEST_ROOT=/tmp. Código congelado
+em 03272d021b70c5584b424445d53aa3a18c70ac62. Registro integral:
+full-linux-complements-final em RELATORIO_0139_TESTES.md. Sem skips/xfails novos.
+Smokes de seis páginas/SQLite/cadastro e verificação de contratos aprovados.
+Nove capturas complementares com hashes em evidence/ui-0.1.39/complementos;
+revisão em DPR 1,5 e 2 também gerada em dados isolados. Windows/HSR real
+não são homologados por esses resultados; o workflow é o próximo gate.
 
 O dono relatou captura repetida no HSR, Memórias desatualizada e nomes/legenda
 sobrepostos em Estatísticas menor. Também pediu degradê como referência e
 aprovou a segunda prévia com “legal, gostei. podemos seguir”. Foram incorporados
 C1–C4 ao plano sem reescrever commits anteriores. A suíte de 752 testes abaixo
-é histórica; será repetida após esses complementos antes de publicar.
+é histórica; foi substituída como gate atual pelos 764 testes acima.
 
 C4: theme.surface_gradients/stylesheet aplica a intensidade da segunda prévia
 às superfícies principais. Destaques/paletas persistidos preservados, Preto
@@ -427,3 +436,15 @@ posteriores ao intervalo continuam no histórico Git, sem reescrever os commits.
 | 64d64de0801aadfddf2f90610a304b4b82921003 | docs: preparar 0.1.39 e registrar limites das integracoes | 3473f653140574de9f76bcc19d51114dc7cce7a229d101008395e64a2adab90a |
 | 9856afcfbde9d2b98130d127eb25fd9fb8072540 | fix: preservar cards e foco ao redimensionar carrosseis | d29bfc2e430572f75707c3e9f69837f4ac42f82003008bae1cf52e66b926a318 |
 | 8dd4c24a9aa73d716dc5c2bd7fc9f805e2a44767 | test: alinhar contratos visuais aos requisitos aprovados da 0.1.39 | c51d1dc08fee1f7fc361633bbd92cb709db96456fd3d53b82a39fd878a9ff154 |
+
+## Patches completos dos complementos
+
+Intervalo 8dd4c24a9aa73d716dc5c2bd7fc9f805e2a44767..03272d021b70c5584b424445d53aa3a18c70ac62. Gerados com git format-patch -1 <sha> --stdout; arquivos integrais em /workspace/work/evidence-0139/patches. Documentação posterior fica no histórico, sem mover os commits.
+
+| SHA | Assunto | SHA-256 do patch |
+|---|---|---|
+| d7828809e372b9d076989224fe1b38aa4c85c1f7 | docs: fechar validacao Linux e preparar lancamento autorizado 0.1.39 | ce40ca8c54c238fd866d4e680f5f3d04dfd7468c73ac40da3f37be20c17fd438 |
+| c32550e0f718d19f347295873f2a4677abc58a8b | feat: aplicar degrade aprovado nas superficies do aplicativo | 9d7e65d8a9986ef6f7d1a040dbbc91427b10a047ef5c3a09967f38cbc0cdb7c5 |
+| aad7e30274cfe4870b4f467f6f4413f2301962f9 | fix: capturar quadro atual e atualizar Memorias imediatamente | d1116861ee92dae7307dd0a947c88dfb29d9c493aaabcca1154c67c74fa5b002 |
+| 0b1378bb5fee3a2bfd39f30e056f5862505d227e | fix: compactar grafico e preservar leitura das estatisticas | 6240d79fdcb0662387a8e8ab608cfebca23960a1238fee7b42de3901cf66d5a5 |
+| 03272d021b70c5584b424445d53aa3a18c70ac62 | fix: medir legenda com as metricas concretas da fonte | f7b01663d6a9914f1168f8e1495fe5dee3c98a7325245b4668b60ccd459babb4 |

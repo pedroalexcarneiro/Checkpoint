@@ -2,6 +2,17 @@
 
 ## Rodada atual 0.1.39
 
+Complementos C1–C4 posteriores: tests/test_capture_refresh_0139.py valida quadros
+distintos, associação a dois jogos, atualização sem navegar, preservação do filtro
+e rejeição de alvo mudado. scripts/check_capture_frames.py usa duas janelas
+controladas em subprocesso: backend GDI com Qt windows quando executado em
+Windows; grab Qt offscreen em Linux, sem equivalência com HSR/DirectX real.
+tests/test_statistics_responsive_0139.py verifica nomes, tempos, ocupação do
+mapa, legenda e disposição em três tamanhos/restauração. Nenhuma asserção antiga
+foi alterada nesses complementos. Os 752 resultados abaixo antecedem C1–C4;
+a suíte integral complementar foi aprovada em 03272d0: **764 passed in 487.00s**,
+exit 0, Qt offscreen/CHECKPOINT_TEST_ROOT=/tmp. Registro integral no relatório.
+
 Base normal 9dd9c93: 700 testes Linux passaram em 557,77 s antes das mudanças.
 Reprodução final dos novos contratos na base isolada: 33 falhas em 4,12 s.
 Suíte integral final Linux: **752 passed in 577.63s (0:09:37)**, exit 0,

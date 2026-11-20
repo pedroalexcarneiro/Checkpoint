@@ -23,7 +23,18 @@ Runner Windows não equivale a homologar uso/contas/captura/UAC no PC do dono.
 
 Resultados, SHAs, run, assets e SHA-256 serão registrados após as verificações.
 
-## Gate Linux aprovado
+## Gate Linux complementar aprovado — código atual
+
+Após os relatos novos e o degradê aprovado: 764 passed in 487.00s (0:08:07),
+exit 0, código 03272d021b70c5584b424445d53aa3a18c70ac62. Nenhuma mudança de
+asserção antiga nesses complementos. Primeiro ensaio interrompido com erro
+de Mock/medição, corrigido no código, com todos os logs preservados.
+Qt offscreen/CHECKPOINT_TEST_ROOT=/tmp; smokes e contratos aprovados. Fonte,
+testes e scripts congelados; alterações seguintes apenas documentais/capturas.
+Envio da branch e workflow Windows serão registrados a seguir, sem antecipar
+publicação nem homologação HSR/DirectX/PC do dono.
+
+## Gate Linux inicial — anterior aos complementos
 
 752 passed in 577.63s (0:09:37), exit 0, Linux/Python 3.12.14/Qt offscreen,
 CHECKPOINT_TEST_ROOT=/tmp; código/testes em 8dd4c24a9aa73d716dc5c2bd7fc9f805e2a44767.

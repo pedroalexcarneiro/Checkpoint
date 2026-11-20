@@ -2,6 +2,10 @@
 
 Lançamento autorizado após as validações; publicação ainda não confirmada.
 
+- Degradê aprovado nas superfícies, preservando as cores de destaque e o Preto neutro.
+- Captura de quadro novo da área visível do jogo, com atualização imediata de Memórias.
+- Mapa de calor compacto e responsivo, nomes legíveis e legenda sem sobreposição.
+
 - Início usa a largura disponível com margens curtas, Últimas sessões reais
   (incluindo sessões distintas do mesmo jogo), cards menores, capas inteiras
   arredondadas, navegação responsiva e setas equivalentes.
@@ -23,6 +27,9 @@ Lançamento autorizado após as validações; publicação ainda não confirmada
   do texto; nomes longos de ROM e saves tradicionais com composição compacta.
 
 ## Pendências e limites
+
+- HSR/DirectX e captura em tela cheia no PC do dono ainda não foram homologados;
+  duas janelas Qt controladas não substituem essa validação.
 
 - Consulta real de preços de Switch/PlayStation/Xbox não foi comprovada na API
   atual. Filtro de plataforma não significa suporte console pronto.

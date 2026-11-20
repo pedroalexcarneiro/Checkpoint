@@ -2,6 +2,12 @@
 
 ## 0.1.39 — correções em validação
 
+- Degradê aprovado nas superfícies; temas e Preto neutro preservados.
+- Novo quadro da área cliente visível a cada captura e Memórias atualizada
+  imediatamente, preservando filtros e associação à sessão.
+- Estatísticas com mapa compacto/responsivo, legenda sem sobreposição e
+  mais espaço útil para os nomes, sem painel largo quase vazio.
+
 - Início amplo com Últimas sessões reais/compactas, navegação responsiva, capas
   inteiras/arredondadas e ofertas em linhas com miniaturas.
 - Desejos compactos, Diário consistente, Jogos concluídos por registro já existente,

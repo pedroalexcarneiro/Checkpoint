@@ -1,0 +1,158 @@
+{
+  "platform": "Linux Qt offscreen; fixtures próprias; não homologa HSR/Windows",
+  "screenshots": [
+    {
+      "file": "home-normal-1280x800.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "source": "degrade-aplicado",
+      "sha256": "86b1fca49edd101e06974462c668f249f11cd3695dc3698e6687f569aa8acb92"
+    },
+    {
+      "file": "home-maximizada.png",
+      "window_size": [
+        1920,
+        1080
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": true,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "source": "degrade-aplicado",
+      "sha256": "fe5c0abfedc7fbdd9a9a8821908c9e166964c4aa2918e8bf1d55f8bc602d6771"
+    },
+    {
+      "file": "tema-preto.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "source": "degrade-aplicado",
+      "sha256": "fee8b020c4f5120d487019e09643bdeee6780b34691ed576e59b3400254a79e1"
+    },
+    {
+      "file": "captura-primeiro-quadro.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "source": "complementos-finais",
+      "sha256": "82e46c709b70683f6f549d267d72195ea858d4025f4a6a57c432bec9dded8294"
+    },
+    {
+      "file": "captura-segundo-quadro.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "source": "complementos-finais",
+      "sha256": "7f435fd0970fb8c26021c4fa2950c09ec92c577a35bcdad1897cecc3e32edc97"
+    },
+    {
+      "file": "estatisticas-1280x800-calendario.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "source": "estatisticas-compactas",
+      "sha256": "3d179a2d9d638fe2e3f34848de829059412c3e6cc127d4ee71775b39bf6b6994"
+    },
+    {
+      "file": "estatisticas-1920x1080-calendario.png",
+      "window_size": [
+        1920,
+        1080
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "source": "estatisticas-compactas",
+      "sha256": "aa10af62d037e3726470a4522115874f37bc24a8508bcb8f4c486530b89a748c"
+    },
+    {
+      "file": "estatisticas-1000x700-calendario.png",
+      "window_size": [
+        1000,
+        700
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "source": "estatisticas-compactas",
+      "sha256": "58653cd27bdf46f59028229535e8e5af3d955c2a83ef14505cc4491bfbea5fca"
+    },
+    {
+      "file": "estatisticas-conclusoes.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true,
+      "source": "estatisticas-compactas",
+      "sha256": "910c415974bbf00b2289c740f7ffa17f8f9d1124b2ee11a82439c4a637811978"
+    }
+  ]
+}

@@ -1,11 +1,12 @@
-# Estado atual — Checkpoint 0.1.38 publicada
+# Estado atual — Checkpoint 0.1.39 em validação Windows
 
 ## 0.1.39 — rodada de correções
 
-Complementos novos em validação: captura de quadro atual e publicação imediata
+Complementos implementados: captura de quadro atual e publicação imediata
 em Memórias, Estatísticas menor sem sobreposição e degradê aprovado no Início.
-A contagem de 752 abaixo corresponde ao fechamento anterior; repetir os gates
-complementares e a suíte completa antes do lançamento autorizado.
+A contagem de 752 abaixo corresponde ao fechamento anterior. Novo gate Linux:
+764 passed in 487.00s, exit 0, código 03272d0; falta o workflow Windows antes
+de confirmar o lançamento autorizado. HSR real permanece não homologado.
 
 Implementação local na branch fix/0.1.39-polimento, da base normal 0.1.38;
 lançamento autorizado depois das verificações. Interface revisada por capturas

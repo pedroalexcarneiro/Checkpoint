@@ -2,10 +2,11 @@
 
 ## 0.1.39 — correções em validação e lançamento autorizado
 
-Complementos em execução após o fechamento inicial: quadros novos na captura,
+Complementos implementados após o fechamento inicial: quadros novos na captura,
 Memórias atualizada sem troca de aba, Estatísticas responsiva e degradê aprovado
 na segunda prévia do Início. Os 752 testes abaixo antecedem esses complementos;
-nova suíte integral e Windows ainda necessários. Detalhes C1–C4 no plano/relatório.
+Nova suíte integral: 764 passed in 487.00s, exit 0, código 03272d0. Windows
+a validar/publicar pelo workflow autorizado. Detalhes C1–C4 no plano/relatório.
 
 Branch fix/0.1.39-polimento, base normal 0.1.38 em 9dd9c93. Variante sem
 administrador preservada. Pedido inicial local; após revisar botões/aviso e ser

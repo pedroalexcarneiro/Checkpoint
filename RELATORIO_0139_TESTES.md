@@ -74,6 +74,24 @@ Os blocos abaixo contêm stdout/stderr completos dos arquivos de evidência, sem
 | approved-expectations-after | 0 | 10.818 |
 | full-linux-approved | 0 | 580.496 |
 | verification-prepublish | 0 | 0.456 |
+| gradient-approved | 0 | 18.087 |
+| capture-refresh-before | 1 | 1.033 |
+| capture-refresh-after | 0 | 1.536 |
+| statistics-responsive-before | 1 | 0.763 |
+| statistics-responsive-after | 0 | 2.764 |
+| capture-native-frames | 0 | 2.204 |
+| statistics-compact-before | 1 | 0.934 |
+| statistics-compact-after | 0 | 2.832 |
+| full-linux-complements | -15 | 235.581 |
+| save-smoke-complements | 0 | 1.185 |
+| smoke-complements | 0 | 1.285 |
+| verification-complements | 0 | 0.922 |
+| remote-complements-before | 0 | 0.406 |
+| render-complements-150 | 0 | 5.941 |
+| render-complements-200 | 0 | 6.899 |
+| activity-summary-regression | 1 | 0.507 |
+| legend-measurement-after | 0 | 17.496 |
+| full-linux-complements-final | 0 | 488.680 |
 
 ## baseline
 
@@ -7831,6 +7849,1322 @@ stdout integral — 1211 bytes; SHA-256 81188e467bbb4ecb74af25ac6919e93e0c754973
     }
   ]
 }
+````
+
+stderr integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
+
+````text
+
+````
+
+## gradient-approved
+
+```json
+{
+  "command": [
+    "/workspace/work/venv/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_themes.py",
+    "tests/test_polish_0139.py",
+    "tests/test_home_polish_0139.py",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795139670.6871746,
+  "exit_code": 0,
+  "elapsed": 18.087220907211304
+}
+```
+
+Comando:
+
+```sh
+/workspace/work/venv/bin/python -m pytest tests/test_themes.py tests/test_polish_0139.py tests/test_home_polish_0139.py -q -p no:cacheprovider
+```
+
+stdout integral — 100 bytes; SHA-256 38b80a43278283ca9db81f9f34e0e62323560dbad2a817f6cc10076060d91ff9:
+
+````text
+............................................                             [100%]
+44 passed in 17.64s
+````
+
+stderr integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
+
+````text
+
+````
+
+## capture-refresh-before
+
+```json
+{
+  "command": [
+    "/workspace/work/venv/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_capture_refresh_0139.py",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795139741.778567,
+  "exit_code": 1,
+  "elapsed": 1.0327377319335938
+}
+```
+
+Comando:
+
+```sh
+/workspace/work/venv/bin/python -m pytest tests/test_capture_refresh_0139.py -q -p no:cacheprovider
+```
+
+stdout integral — 8914 bytes; SHA-256 9f0e5404d5bba021f5e91bbb7784c1af609e413da882c44e27e66f11b954e88f:
+
+````text
+FFFFF..                                                                  [100%]
+=================================== FAILURES ===================================
+_____ test_each_capture_appears_immediately_in_visible_memories[sample0-0] _____
+
+ui = (<checkpoint.window.MainWindow(0x264117c0) at 0x7f3737cdfbc0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x26455d50) at 0x7f3737d807c0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f3737d91d90>
+tab = 0
+
+    @pytest.mark.parametrize('tab', [0, 2])
+    def test_each_capture_appears_immediately_in_visible_memories(ui, app, monkeypatch, tab):
+        window, identity = ui
+        window.launcher.active[1] = (SimpleNamespace(pid=101, poll=lambda: None), 0, identity, True)
+        class Frames:
+            color = 'red'
+            def foreground_pid(self): return 101
+            def capture(self, pid):
+                assert pid == 101
+                frame = QPixmap(80, 40); frame.fill(QColor(self.color)); return frame
+        frames = Frames()
+        monkeypatch.setattr('checkpoint.game_capture.WindowsCapture', lambda: frames)
+        window.navigate(3)
+        window.pages[3].findChild(QTabWidget, 'memoryTabs').setCurrentIndex(tab)
+        paths = []
+        try:
+            for color in ('red', 'blue'):
+                frames.color = color
+                window.capture_game_window()
+                for _ in range(5): app.processEvents()
+                assert window.current_page == 3 and window.stack.currentWidget() is window.pages[3]
+                tabs = window.pages[3].findChild(QTabWidget, 'memoryTabs')
+                assert tabs.currentIndex() == tab
+                previews = tabs.currentWidget().findChildren(ArtworkButton)
+>               assert len(previews) == len(paths)+1
+E               assert 0 == (0 + 1)
+E                +  where 0 = len([])
+E                +  and   0 = len([])
+
+tests/test_capture_refresh_0139.py:35: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+_____ test_each_capture_appears_immediately_in_visible_memories[sample0-2] _____
+
+ui = (<checkpoint.window.MainWindow(0x262eac20) at 0x7f3737814fc0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x26455d50) at 0x7f3737d807c0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f37377c39b0>
+tab = 2
+
+    @pytest.mark.parametrize('tab', [0, 2])
+    def test_each_capture_appears_immediately_in_visible_memories(ui, app, monkeypatch, tab):
+        window, identity = ui
+        window.launcher.active[1] = (SimpleNamespace(pid=101, poll=lambda: None), 0, identity, True)
+        class Frames:
+            color = 'red'
+            def foreground_pid(self): return 101
+            def capture(self, pid):
+                assert pid == 101
+                frame = QPixmap(80, 40); frame.fill(QColor(self.color)); return frame
+        frames = Frames()
+        monkeypatch.setattr('checkpoint.game_capture.WindowsCapture', lambda: frames)
+        window.navigate(3)
+        window.pages[3].findChild(QTabWidget, 'memoryTabs').setCurrentIndex(tab)
+        paths = []
+        try:
+            for color in ('red', 'blue'):
+                frames.color = color
+                window.capture_game_window()
+                for _ in range(5): app.processEvents()
+                assert window.current_page == 3 and window.stack.currentWidget() is window.pages[3]
+                tabs = window.pages[3].findChild(QTabWidget, 'memoryTabs')
+                assert tabs.currentIndex() == tab
+                previews = tabs.currentWidget().findChildren(ArtworkButton)
+>               assert len(previews) == len(paths)+1
+E               assert 0 == (0 + 1)
+E                +  where 0 = len([])
+E                +  and   0 = len([])
+
+tests/test_capture_refresh_0139.py:35: AssertionError
+_____ test_each_capture_appears_immediately_in_visible_memories[sample1-0] _____
+
+ui = (<checkpoint.window.MainWindow(0x2696ad30) at 0x7f373782a880>, 1)
+app = <PySide6.QtWidgets.QApplication(0x26455d50) at 0x7f3737d807c0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f37377c4830>
+tab = 0
+
+    @pytest.mark.parametrize('tab', [0, 2])
+    def test_each_capture_appears_immediately_in_visible_memories(ui, app, monkeypatch, tab):
+        window, identity = ui
+        window.launcher.active[1] = (SimpleNamespace(pid=101, poll=lambda: None), 0, identity, True)
+        class Frames:
+            color = 'red'
+            def foreground_pid(self): return 101
+            def capture(self, pid):
+                assert pid == 101
+                frame = QPixmap(80, 40); frame.fill(QColor(self.color)); return frame
+        frames = Frames()
+        monkeypatch.setattr('checkpoint.game_capture.WindowsCapture', lambda: frames)
+        window.navigate(3)
+        window.pages[3].findChild(QTabWidget, 'memoryTabs').setCurrentIndex(tab)
+        paths = []
+        try:
+            for color in ('red', 'blue'):
+                frames.color = color
+                window.capture_game_window()
+                for _ in range(5): app.processEvents()
+                assert window.current_page == 3 and window.stack.currentWidget() is window.pages[3]
+                tabs = window.pages[3].findChild(QTabWidget, 'memoryTabs')
+                assert tabs.currentIndex() == tab
+                previews = tabs.currentWidget().findChildren(ArtworkButton)
+>               assert len(previews) == len(paths)+1
+E               assert 0 == (0 + 1)
+E                +  where 0 = len([])
+E                +  and   0 = len([])
+
+tests/test_capture_refresh_0139.py:35: AssertionError
+_____ test_each_capture_appears_immediately_in_visible_memories[sample1-2] _____
+
+ui = (<checkpoint.window.MainWindow(0x2671e9c0) at 0x7f373db13200>, 1)
+app = <PySide6.QtWidgets.QApplication(0x26455d50) at 0x7f3737d807c0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f373dcb3800>
+tab = 2
+
+    @pytest.mark.parametrize('tab', [0, 2])
+    def test_each_capture_appears_immediately_in_visible_memories(ui, app, monkeypatch, tab):
+        window, identity = ui
+        window.launcher.active[1] = (SimpleNamespace(pid=101, poll=lambda: None), 0, identity, True)
+        class Frames:
+            color = 'red'
+            def foreground_pid(self): return 101
+            def capture(self, pid):
+                assert pid == 101
+                frame = QPixmap(80, 40); frame.fill(QColor(self.color)); return frame
+        frames = Frames()
+        monkeypatch.setattr('checkpoint.game_capture.WindowsCapture', lambda: frames)
+        window.navigate(3)
+        window.pages[3].findChild(QTabWidget, 'memoryTabs').setCurrentIndex(tab)
+        paths = []
+        try:
+            for color in ('red', 'blue'):
+                frames.color = color
+                window.capture_game_window()
+                for _ in range(5): app.processEvents()
+                assert window.current_page == 3 and window.stack.currentWidget() is window.pages[3]
+                tabs = window.pages[3].findChild(QTabWidget, 'memoryTabs')
+                assert tabs.currentIndex() == tab
+                previews = tabs.currentWidget().findChildren(ArtworkButton)
+>               assert len(previews) == len(paths)+1
+E               assert 0 == (0 + 1)
+E                +  where 0 = len([])
+E                +  and   0 = len([])
+
+tests/test_capture_refresh_0139.py:35: AssertionError
+___ test_capture_backend_reads_fresh_client_frame_and_rejects_changed_target ___
+
+app = <PySide6.QtWidgets.QApplication(0x26455d50) at 0x7f3737d807c0>
+
+    def test_capture_backend_reads_fresh_client_frame_and_rejects_changed_target(app):
+        backend = object.__new__(WindowsCapture)
+        backend.handle = 123
+        backend.foreground_pid = lambda: 42
+        backend.client_rect = lambda: (10, 20, 80, 40)
+        calls = []
+        def grab(rect):
+            calls.append(rect)
+            result = QPixmap(80, 40); result.fill(QColor('red' if len(calls) == 1 else 'blue')); return result
+        backend.grab_client = grab
+        first, second = backend.capture(42), backend.capture(42)
+>       assert len(calls) == 2
+E       assert 0 == 2
+E        +  where 0 = len([])
+
+tests/test_capture_refresh_0139.py:57: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_capture_refresh_0139.py::test_each_capture_appears_immediately_in_visible_memories[sample0-0]
+FAILED tests/test_capture_refresh_0139.py::test_each_capture_appears_immediately_in_visible_memories[sample0-2]
+FAILED tests/test_capture_refresh_0139.py::test_each_capture_appears_immediately_in_visible_memories[sample1-0]
+FAILED tests/test_capture_refresh_0139.py::test_each_capture_appears_immediately_in_visible_memories[sample1-2]
+FAILED tests/test_capture_refresh_0139.py::test_capture_backend_reads_fresh_client_frame_and_rejects_changed_target
+5 failed, 2 passed in 0.76s
+````
+
+stderr integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
+
+````text
+
+````
+
+## capture-refresh-after
+
+```json
+{
+  "command": [
+    "/workspace/work/venv/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_capture_refresh_0139.py",
+    "tests/test_capture_0135.py",
+    "tests/test_capture_0136.py",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795139790.4402013,
+  "exit_code": 0,
+  "elapsed": 1.5357887744903564
+}
+```
+
+Comando:
+
+```sh
+/workspace/work/venv/bin/python -m pytest tests/test_capture_refresh_0139.py tests/test_capture_0135.py tests/test_capture_0136.py -q -p no:cacheprovider
+```
+
+stdout integral — 99 bytes; SHA-256 cce376c77da2f6d505dcf0cdd87114b59120d77c35d284fb390a4bfa79b57f79:
+
+````text
+.................                                                        [100%]
+17 passed in 1.24s
+````
+
+stderr integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
+
+````text
+
+````
+
+## statistics-responsive-before
+
+```json
+{
+  "command": [
+    "/workspace/work/venv/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_statistics_responsive_0139.py",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795139843.9196026,
+  "exit_code": 1,
+  "elapsed": 0.7626922130584717
+}
+```
+
+Comando:
+
+```sh
+/workspace/work/venv/bin/python -m pytest tests/test_statistics_responsive_0139.py -q -p no:cacheprovider
+```
+
+stdout integral — 6644 bytes; SHA-256 c2505f20537474b0d183345d3a53537fe02060854990cee8c4fa05da82d43265:
+
+````text
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+____ test_small_statistics_keeps_titles_times_and_heatmap_readable[sample0] ____
+
+ui = (<checkpoint.window.MainWindow(0x2af5cba0) at 0x7f5aa0396dc0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x2ae35940) at 0x7f5aa03d8940>
+
+    def test_small_statistics_keeps_titles_times_and_heatmap_readable(ui, app):
+        window, identity = ui
+        titles = ('Honkai: Star Rail', 'The Legend of Zelda: Ocarina of Time 3D')
+        with window.library.sql:
+            for n, title in enumerate(titles):
+                game = window.library.save_game({'title': title, 'platform': 'PC'})
+                start = datetime.now(timezone.utc)-timedelta(hours=4+n)
+                window.library.sql.execute("INSERT INTO play_sessions(game_id,started_at,duration_seconds,state) VALUES(?,?,?,'finished')", (game, start.isoformat(), 3600+n*60))
+        window.library.set_setting('statistics.period', '3m')
+        for width in (1000, 1280, 1920, 1280):
+            window.resize(width, 800); window.navigate(4)
+            for _ in range(10): app.processEvents()
+            columns = window.pages[4].findChild(AdaptiveColumns)
+            assert columns.row.direction() == (QBoxLayout.TopToBottom if columns.width() < 1180 else QBoxLayout.LeftToRight)
+            for row in window.pages[4].findChildren(QWidget, 'statisticsGameRow'):
+                button = row.findChild(QPushButton, 'statisticsGameName')
+                label = row.findChild(QLabel, 'statisticsGameTime')
+                # Text must fit the actual Qt contents, including stylesheet padding.
+                from PySide6.QtWidgets import QStyleOptionButton, QStyle
+                option = QStyleOptionButton(); button.initStyleOption(option)
+                content = button.style().subElementRect(QStyle.SE_PushButtonContents, option, button)
+                assert button.fontMetrics().horizontalAdvance(button.text()) <= content.width()
+                assert button.text() == button.full_title
+                assert not button.geometry().intersects(label.geometry())
+                assert label.text() in ('1h00min', '1h01min') and label.font().bold()
+            chart = window.pages[4].findChild(PeriodChart)
+>           summary, legend = chart.footer_layout()
+                              ^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'PeriodChart' object has no attribute 'footer_layout'
+
+tests/test_statistics_responsive_0139.py:35: AttributeError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+____ test_small_statistics_keeps_titles_times_and_heatmap_readable[sample1] ____
+
+ui = (<checkpoint.window.MainWindow(0x2b008de0) at 0x7f5aa0503a40>, 1)
+app = <PySide6.QtWidgets.QApplication(0x2ae35940) at 0x7f5aa03d8940>
+
+    def test_small_statistics_keeps_titles_times_and_heatmap_readable(ui, app):
+        window, identity = ui
+        titles = ('Honkai: Star Rail', 'The Legend of Zelda: Ocarina of Time 3D')
+        with window.library.sql:
+            for n, title in enumerate(titles):
+                game = window.library.save_game({'title': title, 'platform': 'PC'})
+                start = datetime.now(timezone.utc)-timedelta(hours=4+n)
+                window.library.sql.execute("INSERT INTO play_sessions(game_id,started_at,duration_seconds,state) VALUES(?,?,?,'finished')", (game, start.isoformat(), 3600+n*60))
+        window.library.set_setting('statistics.period', '3m')
+        for width in (1000, 1280, 1920, 1280):
+            window.resize(width, 800); window.navigate(4)
+            for _ in range(10): app.processEvents()
+            columns = window.pages[4].findChild(AdaptiveColumns)
+            assert columns.row.direction() == (QBoxLayout.TopToBottom if columns.width() < 1180 else QBoxLayout.LeftToRight)
+            for row in window.pages[4].findChildren(QWidget, 'statisticsGameRow'):
+                button = row.findChild(QPushButton, 'statisticsGameName')
+                label = row.findChild(QLabel, 'statisticsGameTime')
+                # Text must fit the actual Qt contents, including stylesheet padding.
+                from PySide6.QtWidgets import QStyleOptionButton, QStyle
+                option = QStyleOptionButton(); button.initStyleOption(option)
+                content = button.style().subElementRect(QStyle.SE_PushButtonContents, option, button)
+                assert button.fontMetrics().horizontalAdvance(button.text()) <= content.width()
+                assert button.text() == button.full_title
+                assert not button.geometry().intersects(label.geometry())
+                assert label.text() in ('1h00min', '1h01min') and label.font().bold()
+            chart = window.pages[4].findChild(PeriodChart)
+>           summary, legend = chart.footer_layout()
+                              ^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'PeriodChart' object has no attribute 'footer_layout'
+
+tests/test_statistics_responsive_0139.py:35: AttributeError
+___________ test_heatmap_footer_never_overlaps_legend_in_narrow_view ___________
+
+app = <PySide6.QtWidgets.QApplication(0x2ae35940) at 0x7f5aa03d8940>
+
+    def test_heatmap_footer_never_overlaps_legend_in_narrow_view(app):
+        from checkpoint.theme import get_theme
+        first = datetime.now(timezone.utc).date()-timedelta(days=89)
+        values = {(first+timedelta(days=n)).isoformat(): 365999 for n in range(90)}
+        chart = PeriodChart(values, get_theme('green'))
+        chart.set_interval(first, first+timedelta(days=89)); chart.set_period('3m')
+        chart.resize(340, 200); chart.show()
+        for _ in range(6): app.processEvents()
+>       summary, legend = chart.footer_layout()
+                          ^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'PeriodChart' object has no attribute 'footer_layout'
+
+tests/test_statistics_responsive_0139.py:51: AttributeError
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+=========================== short test summary info ============================
+FAILED tests/test_statistics_responsive_0139.py::test_small_statistics_keeps_titles_times_and_heatmap_readable[sample0]
+FAILED tests/test_statistics_responsive_0139.py::test_small_statistics_keeps_titles_times_and_heatmap_readable[sample1]
+FAILED tests/test_statistics_responsive_0139.py::test_heatmap_footer_never_overlaps_legend_in_narrow_view
+3 failed in 0.52s
+````
+
+stderr integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
+
+````text
+
+````
+
+## statistics-responsive-after
+
+```json
+{
+  "command": [
+    "/workspace/work/venv/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_statistics_responsive_0139.py",
+    "tests/test_statistics_0136.py",
+    "tests/test_statistics_list_0136.py",
+    "tests/test_detail_polish_0139.py",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795139880.9626994,
+  "exit_code": 0,
+  "elapsed": 2.7637479305267334
+}
+```
+
+Comando:
+
+```sh
+/workspace/work/venv/bin/python -m pytest tests/test_statistics_responsive_0139.py tests/test_statistics_0136.py tests/test_statistics_list_0136.py tests/test_detail_polish_0139.py -q -p no:cacheprovider
+```
+
+stdout integral — 99 bytes; SHA-256 78fd67285b311c7fbafd78e2e0d3642a97a96371b2f643221061d74caa7b18e4:
+
+````text
+................                                                         [100%]
+16 passed in 2.49s
+````
+
+stderr integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
+
+````text
+
+````
+
+## capture-native-frames
+
+```json
+{
+  "command": [
+    "/workspace/work/venv/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_capture_refresh_0139.py",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795139945.5305004,
+  "exit_code": 0,
+  "elapsed": 2.2035393714904785
+}
+```
+
+Comando:
+
+```sh
+/workspace/work/venv/bin/python -m pytest tests/test_capture_refresh_0139.py -q -p no:cacheprovider
+```
+
+stdout integral — 98 bytes; SHA-256 4edead23d57c419b6af2520a77f6af6059bcce7e38079be95b8d533b90693c24:
+
+````text
+.........                                                                [100%]
+9 passed in 1.91s
+````
+
+stderr integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
+
+````text
+
+````
+
+## statistics-compact-before
+
+```json
+{
+  "command": [
+    "/workspace/work/venv/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_statistics_responsive_0139.py",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795140286.0742328,
+  "exit_code": 1,
+  "elapsed": 0.9337363243103027
+}
+```
+
+Comando:
+
+```sh
+/workspace/work/venv/bin/python -m pytest tests/test_statistics_responsive_0139.py -q -p no:cacheprovider
+```
+
+stdout integral — 6815 bytes; SHA-256 91b27acff7f910c637ccb0d32fac29ac3ad86257c86cdf0a0add7976218c2a07:
+
+````text
+FF.                                                                      [100%]
+=================================== FAILURES ===================================
+____ test_small_statistics_keeps_titles_times_and_heatmap_readable[sample0] ____
+
+ui = (<checkpoint.window.MainWindow(0x3ba51a40) at 0x7fd240339ac0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x3b6f9a90) at 0x7fd240583380>
+
+    def test_small_statistics_keeps_titles_times_and_heatmap_readable(ui, app):
+        window, identity = ui
+        titles = ('Honkai: Star Rail', 'The Legend of Zelda: Ocarina of Time 3D')
+        with window.library.sql:
+            for n, title in enumerate(titles):
+                game = window.library.save_game({'title': title, 'platform': 'PC'})
+                start = datetime.now(timezone.utc)-timedelta(hours=4+n)
+                window.library.sql.execute("INSERT INTO play_sessions(game_id,started_at,duration_seconds,state) VALUES(?,?,?,'finished')", (game, start.isoformat(), 3600+n*60))
+        window.library.set_setting('statistics.period', '3m')
+        for width in (1000, 1280, 1920, 1280):
+            window.resize(width, 800); window.navigate(4)
+            for _ in range(10): app.processEvents()
+            columns = window.pages[4].findChild(AdaptiveColumns)
+            assert columns.row.direction() == (QBoxLayout.TopToBottom if width == 1000 else QBoxLayout.LeftToRight)
+            for row in window.pages[4].findChildren(QWidget, 'statisticsGameRow'):
+                button = row.findChild(QPushButton, 'statisticsGameName')
+                label = row.findChild(QLabel, 'statisticsGameTime')
+                # Text must fit the actual Qt contents, including stylesheet padding.
+                from PySide6.QtWidgets import QStyleOptionButton, QStyle
+                option = QStyleOptionButton(); button.initStyleOption(option)
+                content = button.style().subElementRect(QStyle.SE_PushButtonContents, option, button)
+                assert button.fontMetrics().horizontalAdvance(button.text()) <= content.width()
+                assert button.text() == button.full_title
+                assert not button.geometry().intersects(label.geometry())
+                assert label.text() in ('1h00min', '1h01min') and label.font().bold()
+            chart = window.pages[4].findChild(PeriodChart)
+            summary, legend = chart.footer_layout()
+            assert not summary.intersects(legend)
+            assert chart.rect().contains(summary.toAlignedRect())
+            assert chart.rect().contains(legend.toAlignedRect())
+            assert chart.fontMetrics().horizontalAdvance('6h52min') < summary.width()
+            assert len(chart.cells) >= 89
+            occupied=max(rect.right() for rect,_,_ in chart.cells)-min(rect.left() for rect,_,_ in chart.cells)
+>           assert occupied/(chart.width()-32) >= .75
+E           assert (319.0 / (690 - 32)) >= 0.75
+E            +  where 690 = <built-in method width of PeriodChart object at 0x7fd23ff65140>()
+E            +    where <built-in method width of PeriodChart object at 0x7fd23ff65140> = <checkpoint.period_chart.PeriodChart(0x3c162740, name="periodActivityChart") at 0x7fd23ff65140>.width
+
+tests/test_statistics_responsive_0139.py:42: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+____ test_small_statistics_keeps_titles_times_and_heatmap_readable[sample1] ____
+
+ui = (<checkpoint.window.MainWindow(0x3bc37960) at 0x7fd240339640>, 1)
+app = <PySide6.QtWidgets.QApplication(0x3b6f9a90) at 0x7fd240583380>
+
+    def test_small_statistics_keeps_titles_times_and_heatmap_readable(ui, app):
+        window, identity = ui
+        titles = ('Honkai: Star Rail', 'The Legend of Zelda: Ocarina of Time 3D')
+        with window.library.sql:
+            for n, title in enumerate(titles):
+                game = window.library.save_game({'title': title, 'platform': 'PC'})
+                start = datetime.now(timezone.utc)-timedelta(hours=4+n)
+                window.library.sql.execute("INSERT INTO play_sessions(game_id,started_at,duration_seconds,state) VALUES(?,?,?,'finished')", (game, start.isoformat(), 3600+n*60))
+        window.library.set_setting('statistics.period', '3m')
+        for width in (1000, 1280, 1920, 1280):
+            window.resize(width, 800); window.navigate(4)
+            for _ in range(10): app.processEvents()
+            columns = window.pages[4].findChild(AdaptiveColumns)
+            assert columns.row.direction() == (QBoxLayout.TopToBottom if width == 1000 else QBoxLayout.LeftToRight)
+            for row in window.pages[4].findChildren(QWidget, 'statisticsGameRow'):
+                button = row.findChild(QPushButton, 'statisticsGameName')
+                label = row.findChild(QLabel, 'statisticsGameTime')
+                # Text must fit the actual Qt contents, including stylesheet padding.
+                from PySide6.QtWidgets import QStyleOptionButton, QStyle
+                option = QStyleOptionButton(); button.initStyleOption(option)
+                content = button.style().subElementRect(QStyle.SE_PushButtonContents, option, button)
+                assert button.fontMetrics().horizontalAdvance(button.text()) <= content.width()
+                assert button.text() == button.full_title
+                assert not button.geometry().intersects(label.geometry())
+                assert label.text() in ('1h00min', '1h01min') and label.font().bold()
+            chart = window.pages[4].findChild(PeriodChart)
+            summary, legend = chart.footer_layout()
+            assert not summary.intersects(legend)
+            assert chart.rect().contains(summary.toAlignedRect())
+            assert chart.rect().contains(legend.toAlignedRect())
+            assert chart.fontMetrics().horizontalAdvance('6h52min') < summary.width()
+            assert len(chart.cells) >= 89
+            occupied=max(rect.right() for rect,_,_ in chart.cells)-min(rect.left() for rect,_,_ in chart.cells)
+>           assert occupied/(chart.width()-32) >= .75
+E           assert (319.0 / (690 - 32)) >= 0.75
+E            +  where 690 = <built-in method width of PeriodChart object at 0x7fd23fe28b40>()
+E            +    where <built-in method width of PeriodChart object at 0x7fd23fe28b40> = <checkpoint.period_chart.PeriodChart(0x3c11b240, name="periodActivityChart") at 0x7fd23fe28b40>.width
+
+tests/test_statistics_responsive_0139.py:42: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_statistics_responsive_0139.py::test_small_statistics_keeps_titles_times_and_heatmap_readable[sample0]
+FAILED tests/test_statistics_responsive_0139.py::test_small_statistics_keeps_titles_times_and_heatmap_readable[sample1]
+2 failed, 1 passed in 0.60s
+````
+
+stderr integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
+
+````text
+
+````
+
+## statistics-compact-after
+
+```json
+{
+  "command": [
+    "/workspace/work/venv/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_statistics_responsive_0139.py",
+    "tests/test_statistics_0136.py",
+    "tests/test_statistics_list_0136.py",
+    "tests/test_detail_polish_0139.py",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795140306.6411934,
+  "exit_code": 0,
+  "elapsed": 2.8319525718688965
+}
+```
+
+Comando:
+
+```sh
+/workspace/work/venv/bin/python -m pytest tests/test_statistics_responsive_0139.py tests/test_statistics_0136.py tests/test_statistics_list_0136.py tests/test_detail_polish_0139.py -q -p no:cacheprovider
+```
+
+stdout integral — 99 bytes; SHA-256 3379394307a19f12b2cb0b8ccf6a144213f0c4b3c2e13b47aede4a0c9b3ea8c6:
+
+````text
+................                                                         [100%]
+16 passed in 2.56s
+````
+
+stderr integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
+
+````text
+
+````
+
+## full-linux-complements
+
+```json
+{
+  "command": [
+    "/workspace/work/venv/bin/python",
+    "-X",
+    "faulthandler",
+    "-m",
+    "pytest",
+    "tests",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795140376.296121,
+  "exit_code": -15,
+  "elapsed": 235.58102083206177
+}
+```
+
+Comando:
+
+```sh
+/workspace/work/venv/bin/python -X faulthandler -m pytest tests -q -p no:cacheprovider
+```
+
+stdout integral — 693 bytes; SHA-256 02097d8c8617bd97ec65745fb332b55be5921b4981d8458953de0940946ced28:
+
+````text
+........................................................................ [  9%]
+........................................................................ [ 18%]
+........................................................................ [ 28%]
+........................................................................ [ 37%]
+........................................................................ [ 47%]
+........................................................................ [ 56%]
+........................................................................ [ 65%]
+.........F.............................................................. [ 75%]
+.....................................................
+````
+
+stderr integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
+
+````text
+
+````
+
+## save-smoke-complements
+
+```json
+{
+  "command": [
+    "/workspace/work/venv/bin/python",
+    "-m",
+    "checkpoint.app",
+    "--save-smoke-test",
+    "--data-dir",
+    "/workspace/work/evidence-0139/save-smoke-complements-data"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795140430.8017366,
+  "exit_code": 0,
+  "elapsed": 1.1849842071533203
+}
+```
+
+Comando:
+
+```sh
+/workspace/work/venv/bin/python -m checkpoint.app --save-smoke-test --data-dir /workspace/work/evidence-0139/save-smoke-complements-data
+```
+
+stdout integral — 61 bytes; SHA-256 8890c130538d7fa1fcec658a22c44907c1c6a61300d8cf9298440208eac67e5d:
+
+````text
+Cadastro smoke: salvar, auxiliar, renderização e SQLite OK
+````
+
+stderr integral — 48 bytes; SHA-256 e0a46db3e7d086b6ed55477f9c8cc5ec4dbe4b6ef804e1372e9a4a6dc5a6b01a:
+
+````text
+Fontconfig error: No writable cache directories
+````
+
+## smoke-complements
+
+```json
+{
+  "command": [
+    "/workspace/work/venv/bin/python",
+    "-m",
+    "checkpoint.app",
+    "--smoke-test",
+    "--data-dir",
+    "/workspace/work/evidence-0139/smoke-complements-data"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795140430.8263042,
+  "exit_code": 0,
+  "elapsed": 1.2851872444152832
+}
+```
+
+Comando:
+
+```sh
+/workspace/work/venv/bin/python -m checkpoint.app --smoke-test --data-dir /workspace/work/evidence-0139/smoke-complements-data
+```
+
+stdout integral — 50 bytes; SHA-256 21079070cb6b0ffbec368584ab7b5ce39d68facddbbe2c030e21bb38c87e71c5:
+
+````text
+Checkpoint smoke: 6 pages OK; SQLite integrity=ok
+````
+
+stderr integral — 48 bytes; SHA-256 e0a46db3e7d086b6ed55477f9c8cc5ec4dbe4b6ef804e1372e9a4a6dc5a6b01a:
+
+````text
+Fontconfig error: No writable cache directories
+````
+
+## verification-complements
+
+```json
+{
+  "command": [
+    "/workspace/work/venv/bin/python",
+    "/workspace/work/evidence-0139/verify_0139.py"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795140430.8657095,
+  "exit_code": 0,
+  "elapsed": 0.9219274520874023
+}
+```
+
+Comando:
+
+```sh
+/workspace/work/venv/bin/python /workspace/work/evidence-0139/verify_0139.py
+```
+
+stdout integral — 1240 bytes; SHA-256 662b94d66f38a3eca82aaeb1e13091b1bf3a9eabfaf3b378f171928dd6c19d07:
+
+````text
+{
+  "version": "0.1.39",
+  "schema": 4,
+  "protected_bytes_equal": [
+    "tests/test_save_lifecycle.py",
+    "checkpoint/worker.py",
+    "checkpoint/enrichment.py",
+    "checkpoint/game_import.py",
+    "checkpoint/completion_queue.py",
+    "checkpoint/quick_add.py",
+    "tests/test_visual_0132.py",
+    "checkpoint/database.py",
+    "checkpoint/elevation.py",
+    "checkpoint/windows_frame.py"
+  ],
+  "ImageDialog_prefix_equal": true,
+  "workflows_unchanged": true,
+  "assets_unchanged": true,
+  "eight_palettes_equal": true,
+  "legacy_test_assertions_equal": [
+    "tests/test_complete_layout.py",
+    "tests/test_elevation_0137.py",
+    "tests/test_isolated_operations.py",
+    "tests/test_launch_0135.py",
+    "tests/test_local_rom_0137.py",
+    "tests/test_memories_0135.py",
+    "tests/test_sessions_0135.py",
+    "tests/test_ui_review_lifecycle_0136.py"
+  ],
+  "bootstrap_main_ast_equal": true,
+  "captures": [
+    {
+      "folder": "estatisticas-compactas",
+      "count": 8,
+      "dpr": [
+        1.0
+      ]
+    },
+    {
+      "folder": "degrade-aplicado",
+      "count": 13,
+      "dpr": [
+        1.0
+      ]
+    },
+    {
+      "folder": "complementos-finais",
+      "count": 15,
+      "dpr": [
+        1.0
+      ]
+    }
+  ]
+}
+````
+
+stderr integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
+
+````text
+
+````
+
+## remote-complements-before
+
+```json
+{
+  "command": [
+    "git",
+    "ls-remote",
+    "origin",
+    "refs/heads/fix/0.1.39-polimento",
+    "refs/tags/v0.1.39"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795140496.0208123,
+  "exit_code": 0,
+  "elapsed": 0.4060397148132324
+}
+```
+
+Comando:
+
+```sh
+git ls-remote origin refs/heads/fix/0.1.39-polimento refs/tags/v0.1.39
+```
+
+stdout integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
+
+````text
+
+````
+
+stderr integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
+
+````text
+
+````
+
+## render-complements-150
+
+```json
+{
+  "command": [
+    "env",
+    "QT_SCALE_FACTOR=1.5",
+    "PYTHONPATH=.",
+    "/workspace/work/venv/bin/python",
+    "scripts/render_0139_review.py",
+    "/workspace/work/evidence-0139/complementos-dpi150",
+    "--only",
+    "home,statistics,appearance",
+    "--statistics-long-titles",
+    "--screen-width",
+    "2880",
+    "--screen-height",
+    "1620"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795140514.4841657,
+  "exit_code": 0,
+  "elapsed": 5.940876245498657
+}
+```
+
+Comando:
+
+```sh
+env QT_SCALE_FACTOR=1.5 PYTHONPATH=. /workspace/work/venv/bin/python scripts/render_0139_review.py /workspace/work/evidence-0139/complementos-dpi150 --only home,statistics,appearance --statistics-long-titles --screen-width 2880 --screen-height 1620
+```
+
+stdout integral — 50 bytes; SHA-256 5cfe3c203209d762398dd26660c1e96ad96c7897e5cf0e4f620bd401b1dc7b9d:
+
+````text
+/workspace/work/evidence-0139/complementos-dpi150
+````
+
+stderr integral — 48 bytes; SHA-256 e0a46db3e7d086b6ed55477f9c8cc5ec4dbe4b6ef804e1372e9a4a6dc5a6b01a:
+
+````text
+Fontconfig error: No writable cache directories
+````
+
+## render-complements-200
+
+```json
+{
+  "command": [
+    "env",
+    "QT_SCALE_FACTOR=2",
+    "PYTHONPATH=.",
+    "/workspace/work/venv/bin/python",
+    "scripts/render_0139_review.py",
+    "/workspace/work/evidence-0139/complementos-dpi200",
+    "--only",
+    "home,statistics,appearance",
+    "--statistics-long-titles",
+    "--screen-width",
+    "3840",
+    "--screen-height",
+    "2160"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795140514.492012,
+  "exit_code": 0,
+  "elapsed": 6.899292469024658
+}
+```
+
+Comando:
+
+```sh
+env QT_SCALE_FACTOR=2 PYTHONPATH=. /workspace/work/venv/bin/python scripts/render_0139_review.py /workspace/work/evidence-0139/complementos-dpi200 --only home,statistics,appearance --statistics-long-titles --screen-width 3840 --screen-height 2160
+```
+
+stdout integral — 50 bytes; SHA-256 d44d61ea7baf4300fc6479321a33c3a3a3ebc3b8bf6c0b5598966a5a134e2015:
+
+````text
+/workspace/work/evidence-0139/complementos-dpi200
+````
+
+stderr integral — 48 bytes; SHA-256 e0a46db3e7d086b6ed55477f9c8cc5ec4dbe4b6ef804e1372e9a4a6dc5a6b01a:
+
+````text
+Fontconfig error: No writable cache directories
+````
+
+## activity-summary-regression
+
+```json
+{
+  "command": [
+    "/workspace/work/venv/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_registration_0128.py::test_activity_summary_uses_singular_day_and_brazilian_date",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795140534.2241516,
+  "exit_code": 1,
+  "elapsed": 0.5065734386444092
+}
+```
+
+Comando:
+
+```sh
+/workspace/work/venv/bin/python -m pytest tests/test_registration_0128.py::test_activity_summary_uses_singular_day_and_brazilian_date -q -p no:cacheprovider
+```
+
+stdout integral — 3548 bytes; SHA-256 858236e1d88e464c5444ccd56b9ebdf6189c4d544d7082f7fc937802e8cb02fc:
+
+````text
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________ test_activity_summary_uses_singular_day_and_brazilian_date __________
+
+app = <PySide6.QtWidgets.QApplication(0x8132e50) at 0x7f70cbdb5000>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f70cbd67440>
+
+    def test_activity_summary_uses_singular_day_and_brazilian_date(app,monkeypatch):
+        from datetime import datetime,timezone
+        from checkpoint.activity_heatmap import ActivityHeatmap
+        from checkpoint.theme import get_theme
+        day=datetime.now(timezone.utc).date();painter=Mock()
+        monkeypatch.setattr('checkpoint.activity_heatmap.QPainter',Mock(return_value=painter))
+>       chart=ActivityHeatmap({day.isoformat():3600},get_theme('green'));chart.paintEvent(None)
+                                                                         ^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_registration_0128.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <checkpoint.activity_heatmap.ActivityHeatmap(0x81406c0) at 0x7f70cbbb6580>
+event = None
+
+    def paintEvent(self,event):
+        p=QPainter(self);p.setRenderHint(QPainter.Antialiasing);c=colors();p.setFont(self.chart_font())
+        first,last=self.interval();start=first-timedelta(days=first.weekday());columns=(last-start).days//7+1
+        gap=3;cell=self.cell_size(columns);stride=cell+gap;left=max(32,(self.width()-columns*stride+32)/2);top=28
+        shades=[blend(c['panel'],c['text'],.055),blend(c['panel'],c['accent'],.24),blend(c['panel'],c['accent'],.46),blend(c['panel'],c['accent'],.72),c['accent']]
+        self.cells=[];months=set()
+        for column in range(columns):
+            monday=start+timedelta(weeks=column)
+            month=(monday.year,monday.month)
+            if month not in months:
+                months.add(month);p.setPen(QColor(c['muted']));p.drawText(QRectF(left+column*stride,4,36,18),Qt.AlignLeft,MONTHS[monday.month-1])
+            for weekday in range(7):
+                day=monday+timedelta(days=weekday)
+                if not first<=day<=last:continue
+                seconds=self.values.get(day.isoformat(),0)
+                level=0 if seconds<=0 else 1 if seconds<1800 else 2 if seconds<3600 else 3 if seconds<10800 else 4
+                rect=QRectF(left+column*stride,top+weekday*stride,cell,cell)
+                p.setPen(QPen(QColor(c['border']),.4));p.setBrush(QColor(shades[level]));p.drawRoundedRect(rect,2,2);self.cells.append((rect,day,seconds))
+        p.setPen(QColor(c['muted']))
+        for weekday,label in ((0,'Seg'),(2,'Qua'),(4,'Sex')):p.drawText(QRectF(left-32,top+weekday*stride-1,26,cell+4),Qt.AlignRight|Qt.AlignVCenter,label)
+        summary,legend=self.footer_layout()
+        p.drawText(summary,Qt.AlignVCenter,self.summary())
+>       less=p.fontMetrics().horizontalAdvance('Menos');bottom=legend.top();x=legend.left()+less+10
+                                                                              ^^^^^^^^^^^^^^^^^^
+E       TypeError: unsupported operand type(s) for +: 'float' and 'Mock'
+
+checkpoint/activity_heatmap.py:78: TypeError
+----------------------------- Captured stderr call -----------------------------
+Fontconfig error: No writable cache directories
+=========================== short test summary info ============================
+FAILED tests/test_registration_0128.py::test_activity_summary_uses_singular_day_and_brazilian_date
+1 failed in 0.24s
+````
+
+stderr integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
+
+````text
+
+````
+
+## legend-measurement-after
+
+```json
+{
+  "command": [
+    "/workspace/work/venv/bin/python",
+    "-m",
+    "pytest",
+    "tests/test_registration_0128.py::test_activity_summary_uses_singular_day_and_brazilian_date",
+    "tests/test_themes.py",
+    "tests/test_statistics_responsive_0139.py",
+    "tests/test_statistics_0136.py",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795140621.9952862,
+  "exit_code": 0,
+  "elapsed": 17.49574089050293
+}
+```
+
+Comando:
+
+```sh
+/workspace/work/venv/bin/python -m pytest tests/test_registration_0128.py::test_activity_summary_uses_singular_day_and_brazilian_date tests/test_themes.py tests/test_statistics_responsive_0139.py tests/test_statistics_0136.py -q -p no:cacheprovider
+```
+
+stdout integral — 100 bytes; SHA-256 33912046002d123159a47652bd06bb278f92bc6c75db8013fca467b7a7fc2a94:
+
+````text
+........................                                                 [100%]
+24 passed in 17.21s
+````
+
+stderr integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
+
+````text
+
+````
+
+## full-linux-complements-final
+
+```json
+{
+  "command": [
+    "/workspace/work/venv/bin/python",
+    "-X",
+    "faulthandler",
+    "-m",
+    "pytest",
+    "tests",
+    "-q",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "started": 1795140679.3703396,
+  "exit_code": 0,
+  "elapsed": 488.67976331710815
+}
+```
+
+Comando:
+
+```sh
+/workspace/work/venv/bin/python -X faulthandler -m pytest tests -q -p no:cacheprovider
+```
+
+stdout integral — 912 bytes; SHA-256 693f9a31c29be1299000c04695bf670cda4bb9277ec5822aebe37fee5d93fbbc:
+
+````text
+........................................................................ [  9%]
+........................................................................ [ 18%]
+........................................................................ [ 28%]
+........................................................................ [ 37%]
+........................................................................ [ 47%]
+........................................................................ [ 56%]
+........................................................................ [ 65%]
+........................................................................ [ 75%]
+........................................................................ [ 84%]
+........................................................................ [ 94%]
+............................................                             [100%]
+764 passed in 487.00s (0:08:07)
 ````
 
 stderr integral — 0 bytes; SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855:
