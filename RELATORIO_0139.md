@@ -59,6 +59,15 @@ antigo; o card Jogos concluídos já existia no commit ddac441. Nova captura rea
 mostra o card integrado ao tema e os testes continuam exigindo timestamp real,
 sem inferir datas do status nem modificar registros. Nenhuma correção de dados.
 
+A primeira suíte completa dos complementos encontrou falha no teste antigo de
+resumo singular: QPainter é Mock e fontMetrics retornava outro Mock. Foi
+interrompida para corrigir (processo pytest -15; wrapper 241), sem contar como
+aprovação. Reprodução isolada preservada em activity-summary-regression.
+O desenho agora usa a mesma QFontMetrics concreta usada no layout da legenda;
+nenhuma asserção antiga mudou. legend-measurement-after: 24 passed in 17.21s,
+incluindo resumo/data brasileira, nove temas e períodos responsivos. Nova suíte
+integral será executada no código congelado após esta correção.
+
 ## Gates Linux do fechamento inicial
 
 - **752 passed in 577.63s (0:09:37), exit 0**, Python 3.12.14, Qt 6.8.3

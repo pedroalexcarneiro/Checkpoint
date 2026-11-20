@@ -75,10 +75,10 @@ class ActivityHeatmap(QWidget):
         for weekday,label in ((0,'Seg'),(2,'Qua'),(4,'Sex')):p.drawText(QRectF(left-32,top+weekday*stride-1,26,cell+4),Qt.AlignRight|Qt.AlignVCenter,label)
         summary,legend=self.footer_layout()
         p.drawText(summary,Qt.AlignVCenter,self.summary())
-        less=p.fontMetrics().horizontalAdvance('Menos');bottom=legend.top();x=legend.left()+less+10
+        metrics=QFontMetrics(self.chart_font());less=metrics.horizontalAdvance('Menos');bottom=legend.top();x=legend.left()+less+10
         p.drawText(QRectF(legend.left(),bottom,less,20),Qt.AlignVCenter,'Menos')
         for index,color in enumerate(shades):p.setPen(Qt.NoPen);p.setBrush(QColor(color));p.drawRoundedRect(QRectF(x+index*14,bottom+4,10,10),2,2)
-        p.setPen(QColor(c['muted']));p.drawText(QRectF(x+76,bottom,p.fontMetrics().horizontalAdvance('Mais'),20),Qt.AlignVCenter,'Mais');p.end()
+        p.setPen(QColor(c['muted']));p.drawText(QRectF(x+76,bottom,metrics.horizontalAdvance('Mais'),20),Qt.AlignVCenter,'Mais');p.end()
     def mouseMoveEvent(self,event):
         for rect,day,seconds in self.cells:
             if rect.contains(event.position()):
