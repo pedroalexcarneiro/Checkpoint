@@ -1,0 +1,16 @@
+{
+  "backend": "windows",
+  "ordinary_startup": true,
+  "already_elevated": true,
+  "pid": 5128,
+  "hwnd": 852056,
+  "client_size": [
+    1100,
+    740
+  ],
+  "responsive": true,
+  "screenshot": "native-startup.png",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": ""
+}

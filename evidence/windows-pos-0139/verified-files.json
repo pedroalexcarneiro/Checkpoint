@@ -1,0 +1,68 @@
+{
+  "source_sha": "9a658569309ad49d4d138c226e83ef2c2f80849c",
+  "tests": {
+    "tests": 808,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "files": [
+    {
+      "file": "checkpoint-windows-ui-review/Checkpoint-0.1.39-detail-overview.png",
+      "bytes": 116636,
+      "sha256": "684ebffe996f564649d37b69546ee1129b69af5f802670d84748d90323799379"
+    },
+    {
+      "file": "checkpoint-windows-ui-review/Checkpoint-0.1.39-home.png",
+      "bytes": 106129,
+      "sha256": "299d45a2359d3ca67eb3ca553740b779397578489723ad25d9c655179a01c896"
+    },
+    {
+      "file": "checkpoint-windows-ui-review/Checkpoint-0.1.39-library.png",
+      "bytes": 140896,
+      "sha256": "0f9e442b16d4c282ebaad39ae632cdb3055e24b6ac95a65f4154feb6c5b9be8a"
+    },
+    {
+      "file": "checkpoint-windows-ui-review/Checkpoint-0.1.39-native-startup.json",
+      "bytes": 284,
+      "sha256": "ea42a4f08a4392885ab5254db3484dd7d1deb859d3115d96db02016712b77f58"
+    },
+    {
+      "file": "checkpoint-windows-ui-review/Checkpoint-0.1.39-native-startup.png",
+      "bytes": 83392,
+      "sha256": "6a9d7261ce3b286a1496af72e11321abc221a8e1a0322268b1252bbc2c905eff"
+    },
+    {
+      "file": "checkpoint-windows-ui-review/Checkpoint-0.1.39-ui-review.txt",
+      "bytes": 560,
+      "sha256": "bbbb675dc5c2135d18e46ff008adc6c4960e0a57bdd7b329bade93775197b4d8"
+    },
+    {
+      "file": "checkpoint-windows-ui-review/Checkpoint-0.1.39-ui-review.zip",
+      "bytes": 4556963,
+      "sha256": "736feb843c78f57891aff6f2180ac4b219cba930edbac31e2cfa22357213698b"
+    },
+    {
+      "file": "checkpoint-windows-ui-review/Checkpoint-0.1.39-validation.txt",
+      "bytes": 884,
+      "sha256": "188aa9d421915371b30fee425f7d9433dcc8b2ec369ce6d75a4017234d292194"
+    },
+    {
+      "file": "checkpoint-windows-ui-review/Checkpoint-0.1.39-windows-x64.zip",
+      "bytes": 84357755,
+      "sha256": "b24b3bac05b3705b368a29a4bc7ae6a88415786c318f1e12a515e51909e0b896"
+    },
+    {
+      "file": "checkpoint-windows-ui-review/Checkpoint-0.1.39-windows-x64.zip.sha256",
+      "bytes": 101,
+      "sha256": "4aabe309b600252e025cb1afd1da4aeeb3d89a911b48bbe0352556efdc5adfe4"
+    },
+    {
+      "file": "checkpoint-windows-ui-tests/pytest.xml",
+      "bytes": 106080,
+      "sha256": "15a1a3e3238771efcb3d65ed410a3e3a2f8f17566a3079747e460a1e2aaa5026"
+    }
+  ],
+  "zip_crc": "ok",
+  "sha256_sidecars": "ok"
+}

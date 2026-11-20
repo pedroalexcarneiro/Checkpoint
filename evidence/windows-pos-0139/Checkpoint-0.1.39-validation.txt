@@ -1,0 +1,12 @@
+Checkpoint 0.1.39 · Windows x64
+Commit: 9a658569309ad49d4d138c226e83ef2c2f80849c
+Python: 3.12.10
+Testes: {'tests': 808, 'failures': 0, 'errors': 0, 'skipped': 0}
+Smoke do fonte: 6 páginas; SQLite íntegro; biblioteca vazia.
+Smoke do ZIP extraído: 6 páginas; SQLite íntegro; biblioteca vazia.
+Auxiliar isolado do fonte e do ZIP extraído: resposta e schema verificados.
+Cadastro completo do fonte e do ZIP: salvar, auxiliar, imagem e SQLite verificados (fixture isolada).
+CheckpointUpdater.exe --check: saída 0.
+Inicialização normal nativa Windows do fonte e do executável extraído: HWND visível, resposta, captura, fechamento e SQLite verificados; executor já elevado, sem automatizar consentimento UAC.
+ZIP SHA-256: b24b3bac05b3705b368a29a4bc7ae6a88415786c318f1e12a515e51909e0b896
+Steam autenticada e homologação Windows 10/11 pessoal não estão cobertas.

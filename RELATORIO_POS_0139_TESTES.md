@@ -1,7 +1,7 @@
 # Checkpoint pós-0.1.39 — comandos e saídas integrais
 
 Registros atuais desta rodada. Tentativas com erro/interrupção são preservadas e não contam como aprovação.
-Qt offscreen/Linux e fixtures isoladas não homologam Windows do dono. Windows e pacote desta revisão não executados; nenhuma publicação desta rodada.
+Qt offscreen/Linux e fixtures isoladas não homologam Windows do dono. Este arquivo registra o gate Linux. Validação Windows/pacote executada posteriormente e aprovada: 808 testes; RELATORIO_WINDOWS_POS_0139.md. Nenhuma nova publicação.
 Os blocos abaixo contêm stdout/stderr completos dos arquivos de evidência, sem o corte usado nas prévias do chat.
 
 | Registro | Exit | Duração (s) |

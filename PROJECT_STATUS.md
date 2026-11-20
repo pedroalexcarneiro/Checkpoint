@@ -4,7 +4,10 @@ Revisão local em fix/pos-0139-layout, sem nova publicação: Início sem jogos
 repetidos, memórias com largura padrão/fundo transparente, nove destaques mais
 vivos e modos claro/escuro independentes, topo adaptado. Gate local concluído:
 808 testes Linux aprovados em 547,90 s em d808f76; smoke de seis páginas/SQLite
-aprovado. Windows/pacote e API autenticada desta revisão não homologados;
+aprovado. Windows UI validation 44749088810 também aprovado: 808 testes e
+pacote extraído/abertura nativa validados. Branch enviada, sem nova release/tag;
+RELATORIO_WINDOWS_POS_0139.md registra download/hashes. API autenticada e PC
+do dono não homologados;
 complemento opcional de descontos aprovado e implementado, desligado por padrão,
 conferindo identidade/preço por oferta sem alterar API/valores brutos em falhas.
 Estado do release publicado abaixo; detalhes da revisão em RELATORIO_POS_0139.md.

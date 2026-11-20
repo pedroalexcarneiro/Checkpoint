@@ -126,3 +126,13 @@ byte a byte contra d57dc56. Texto novo em UTF-8/LF. Sem push, novo workflow,
 tag, release ou pacote desta revisão; versão publicada permanece 0.1.39 anterior.
 Revisão visual final pelo dono não presumida. Consulta console, homologação
 Windows/HSR real/API autenticada e limites anteriores seguem pendentes.
+
+## Continuidade: Windows e ZIP aprovados
+
+Após o fechamento local, o dono solicitou prosseguir com Windows/ZIP. Branch
+enviada sem force; workflow existente Windows UI validation 44749088810
+aprovado, 808 testes, zero falhas/erros/skips, build e abertura nativa do
+executável extraído aprovados. Artifact baixado, SHA-256/CRC conferidos.
+Sem nova publicação/tag, preservando a 0.1.39 anterior. Detalhes e hash do
+pacote em RELATORIO_WINDOWS_POS_0139.md. Validações de conta/PC pessoal e
+consulta console continuam separadas. O fechamento local acima é histórico.

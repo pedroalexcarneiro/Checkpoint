@@ -1,0 +1,26 @@
+{
+  "head": "9a658569309ad49d4d138c226e83ef2c2f80849c",
+  "base": "d57dc56b99bb4b2e6c9403778e0134df8f3aed7d",
+  "commits": [
+    {
+      "sha": "9a658569309ad49d4d138c226e83ef2c2f80849c",
+      "title": "docs: fechar revisao local com 808 testes e capturas finais",
+      "patch_sha256": "e5a116891b9bd15abe3946e21ca656b3e0090ef881a2953c551f32e8ef7853f9"
+    },
+    {
+      "sha": "d808f76a36663bd031a230b0a0f3f08a2f3fb6cb",
+      "title": "feat: completar descontos por oferta e conferir a edicao do produto",
+      "patch_sha256": "2e542d1a94fd8993ed5926abde3923e1aa847b271e3a99f71ff3ae0b699e6a9d"
+    },
+    {
+      "sha": "f4a7139736c6b164dcdc12522b52f8c3f75eb38e",
+      "title": "feat: adaptar cores e superficies aos modos claro e escuro",
+      "patch_sha256": "1aac8dbc778a746dbd653b2bac1ee7ad3fd0b0922456eec8a0ee76a80207ed1e"
+    },
+    {
+      "sha": "7a7c7d9b9e3c2d470b9306aec465730e65bda15f",
+      "title": "fix: mostrar jogos unicos e manter memorias no tamanho padrao",
+      "patch_sha256": "3a7e246edf5865cba568e1e7a66f05d5ece6e35070d4389329d285afcf97d7ca"
+    }
+  ]
+}

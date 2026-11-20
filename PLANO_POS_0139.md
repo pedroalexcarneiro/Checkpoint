@@ -28,3 +28,8 @@ Complemento GG.deals aprovado, opcional e desligado por padrão. Gate do código
 d808f76: 808 testes Linux aprovados em 547,90 s; smoke seis páginas/SQLite ok.
 Capturas e relatórios registrados. Sem publicação; Windows/pacote, conta real,
 consulta console e aprovação visual final continuam separados desta validação.
+
+Continuidade solicitada após o fechamento: Windows/ZIP concluídos na execução
+44749088810. 808 testes Windows aprovados em 788,60 s, build/abertura nativa
+e integridade do pacote aprovados. Branch enviada sem force; sem nova release.
+RELATORIO_WINDOWS_POS_0139.md registra o resultado e os limites restantes.

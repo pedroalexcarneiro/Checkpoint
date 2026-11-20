@@ -8,7 +8,11 @@ vivas com fundos por destaque, claro/escuro e barra do topo adaptada. Implementa
 localmente; gate final em d808f76: 808 testes Linux aprovados em 547,90 s,
 smoke de seis páginas/SQLite aprovado. Relatório e capturas registrados em
 RELATORIO_POS_0139_TESTES.md e evidence/ui-pos-0139/.
-Sem push/workflow/release novo. Percentual depende de dado original da oferta;
+Após pedido de continuidade, branch enviada e workflow Windows UI validation
+44749088810 aprovado: 808 testes Windows, pacote extraído/abertura nativa ok.
+ZIP b24b3bac05b3705b368a29a4bc7ae6a88415786c318f1e12a515e51909e0b896.
+Sem nova release/tag; publicação anterior preservada. RELATORIO_WINDOWS_POS_0139.md.
+Percentual depende de dado original da oferta;
 complemento opcional GG.deals público aprovado e implementado, com validação
 por oferta/edição e opção desligada por padrão. Capa mantida após
 comparação com banner. PLANO_POS_0139.md e RELATORIO_POS_0139.md registram a revisão.
