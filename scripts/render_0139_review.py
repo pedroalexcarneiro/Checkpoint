@@ -21,6 +21,7 @@ def main():
     parser.add_argument('--only', default='home,wishes,memories,appearance,files,settings,dialogs,statistics,library')
     parser.add_argument('--screen-width',type=int,default=1920)
     parser.add_argument('--screen-height',type=int,default=1080)
+    parser.add_argument('--statistics-long-titles',action='store_true')
     args = parser.parse_args()
     root = args.output.resolve()
     root.mkdir(parents=True, exist_ok=True)
@@ -39,6 +40,8 @@ def main():
     now = datetime.now(timezone.utc)
     ids = []
     titles = ('Portal 2', 'Hades', 'Celeste', 'Metroid Fusion', 'Hollow Knight', 'Animal Well')
+    if args.statistics_long_titles:
+        titles=('Honkai: Star Rail','The Legend of Zelda: Ocarina of Time 3D',*titles[2:])
     for n, title in enumerate(titles):
         paths = {kind: artwork(root, n, title, ('#366077', '#875560', '#536d7a', '#5c7b68', '#495972', '#78694d')[n],
             kind, width, height) for kind, width, height in (('cover', 600, 900), ('banner', 1600, 450), ('logo', 620, 150))}
@@ -132,6 +135,27 @@ def main():
         tabs = window.pages[3].findChild(QWidget, 'memoryTabs')
         tabs.setCurrentIndex(1)
         capture('memorias-diario')
+    if 'live-capture' in selected:
+        from types import SimpleNamespace
+        from PySide6.QtGui import QColor,QPixmap
+        from checkpoint import game_capture
+        original=game_capture.WindowsCapture
+        class Frames:
+            color='red'
+            pid=101
+            def foreground_pid(self):return self.pid
+            def capture(self,pid):
+                assert pid==self.pid
+                pixmap=QPixmap(640,360);pixmap.fill(QColor(self.color));return pixmap
+        frames=Frames();game_capture.WindowsCapture=lambda:frames
+        window.launcher.active={1:(SimpleNamespace(pid=101,poll=lambda:None),0,ids[0],True),
+            2:(SimpleNamespace(pid=202,poll=lambda:None),0,ids[1],True)}
+        try:
+            window.resize(1280,800);window.navigate(3)
+            for name,color,pid in (('primeiro-quadro','red',101),('segundo-quadro','blue',202)):
+                frames.color=color;frames.pid=pid;window.capture_game_window();capture('captura-'+name)
+        finally:
+            game_capture.WindowsCapture=original;window.launcher.active.clear()
     if 'appearance' in selected:
         window.showNormal()
         window.resize(1280, 800)
@@ -181,6 +205,16 @@ def main():
         scroll=window.pages[4].findChildren(QWidget,'completionMetrics')[0]
         window.pages[4].layout().itemAt(0).widget().ensureWidgetVisible(scroll)
         capture('estatisticas-conclusoes')
+        from checkpoint.statistics_view import HeatmapViewport
+        for width,height in ((1000,700),(1280,800),(1920,1080)):
+            window.resize(width,height);window.navigate(4)
+            period=window.pages[4].findChild(QComboBox,'statisticsPeriod');period.setCurrentIndex(period.findData('3m'))
+            settle()
+            scroller=window.pages[4].layout().itemAt(0).widget()
+            scroller.ensureWidgetVisible(window.pages[4].findChild(HeatmapViewport),16,16)
+            capture(f'estatisticas-{width}x{height}-calendario')
+            scroller.ensureWidgetVisible(window.pages[4].findChild(QWidget,'statisticsGameRow'),16,16)
+            capture(f'estatisticas-{width}x{height}-lista')
     if 'library' in selected:
         for n in range(24):lib.save_game({'title':f'Jogo extra de teste {n}'})
         window.showNormal();window.resize(1280,800);window.navigate(1);window.view.setCurrentIndex(1)

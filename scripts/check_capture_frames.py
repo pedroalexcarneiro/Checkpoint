@@ -17,9 +17,10 @@ def main():
     backend=WindowsCapture() if sys.platform=='win32' else None
     if backend is not None:
         backend.user.SetForegroundWindow.argtypes=[backend.types.HWND]
-        if not backend.user.SetForegroundWindow(int(window.winId())):
-            raise RuntimeError('A janela controlada não recebeu o primeiro plano.')
+        backend.user.SetForegroundWindow(int(window.winId()))
         QTest.qWait(100)
+        if backend.foreground_pid()!=os.getpid() or backend.handle!=int(window.winId()):
+            raise RuntimeError('A janela controlada não recebeu o primeiro plano.')
     for name in ('red','blue'):
         window.setStyleSheet('background: '+name+';');window.repaint();QTest.qWait(100)
         if backend is not None:

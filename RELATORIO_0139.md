@@ -39,6 +39,26 @@ capture-native-frames: 9 passed in 1.91s em Linux. O teste de subprocesso usa
 janela Qt própria: em Windows executará o backend nativo e exigirá quadros
 vermelho/azul distintos; aqui usou Qt offscreen e não validou GDI/HSR.
 
+C2: reproduzidos o padding herdado no botão de nome e a disputa entre resumo
+e legenda pintados em regiões sobrepostas. statistics-responsive-before:
+3 failed; primeira correção: 16 passed in 2.49s nos testes direcionados.
+A primeira captura com o mapa centralizado em painel largo foi rejeitada pelo
+dono por excesso de vazio. A nova regressão de ocupação falhou antes: 2 failed,
+1 passed. StatisticsColumns limita a largura do painel ao calendário e dá o
+restante à lista; em largura insuficiente, empilha e ajusta o limite de célula.
+Não há altura igual forçada. Nomes usam padding zero/reticências medidas e
+tooltip completo, logos contidas em 112×48, tempos continuam 16px/negrito.
+ActivityHeatmap.footer_layout mede os textos e separa as linhas quando preciso;
+PeriodChart/HeatmapViewport acompanham a altura real. Capturas em 1000×700,
+1280×800 e 1920×1080 em /workspace/work/evidence-0139/estatisticas-compactas.
+statistics-compact-after: 16 passed in 2.56s, incluindo dois jogos/títulos longos,
+ocupação mínima, ausência de sobreposição, totais e períodos existentes.
+
+C3: o print cru “Conclusões no período / 11/2026 · 1” corresponde ao código
+antigo; o card Jogos concluídos já existia no commit ddac441. Nova captura real
+mostra o card integrado ao tema e os testes continuam exigindo timestamp real,
+sem inferir datas do status nem modificar registros. Nenhuma correção de dados.
+
 ## Gates Linux do fechamento inicial
 
 - **752 passed in 577.63s (0:09:37), exit 0**, Python 3.12.14, Qt 6.8.3

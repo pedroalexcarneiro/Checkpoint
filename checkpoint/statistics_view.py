@@ -24,6 +24,19 @@ class HeatmapViewport(SmoothScrollArea):
         if self.height()!=height:self.setFixedHeight(height)
 
 
+class StatisticsColumns(AdaptiveColumns):
+    """Mapa limitado ao espaço que usa; nomes recebem o restante da linha."""
+    def __init__(self,left,right,chart,preferred_width):
+        self.chart_frame=left;self.chart=chart;self.preferred_width=preferred_width
+        super().__init__(left,right,(0,1),breakpoint=preferred_width+550+22)
+    def resizeEvent(self,event):
+        stacked=self.width()<self.breakpoint
+        self.chart_frame.setMaximumWidth(16777215 if stacked else self.preferred_width)
+        self.chart.cell_limit=40 if stacked else 20
+        super().resizeEvent(event)
+        self.chart.fit_height();self.chart.update()
+
+
 class StatusRing(QWidget):
     """Distribuição em barras; nome mantido por compatibilidade com ferramentas."""
     def __init__(self,statuses,theme,parent=None):
@@ -80,25 +93,26 @@ def render_statistics(window,layout,selected):
     chart_frame=frame
     paired=selected in ('monthly','3m','6m') or selected=='all' and (last-first).days<180
     if not paired:layout.addWidget(chart_frame)
-    elif selected=='monthly':chart_frame.setMaximumWidth(440)
     frame,inside=card();inside.addWidget(text('Mais jogados no período','sectionTitle'))
     if not temporal['top']:inside.addWidget(text('Sem sessões neste período.','muted'))
     for game in temporal['top'][:5]:
         game_row=QWidget();game_row.setObjectName('statisticsGameRow');line=QHBoxLayout(game_row);line.setContentsMargins(0,4,0,4);line.setSpacing(16)
-        logo=QLabel();logo.setObjectName('statisticsGameLogo');logo.setFixedSize(140,48);logo.setAlignment(Qt.AlignCenter)
+        logo=QLabel();logo.setObjectName('statisticsGameLogo');logo.setFixedSize(112,48);logo.setAlignment(Qt.AlignCenter)
         stored=window.library.get(game['id'])
         from PySide6.QtGui import QPixmap
         from .list_art import list_icon
-        if not QPixmap(stored.get('logo') or '').isNull():logo.setPixmap(list_icon(stored,window.theme.colors['text']).pixmap(140,48))
-        elif not QPixmap(stored.get('cover') or '').isNull():logo.setPixmap(QPixmap(stored['cover']).scaled(132,40,Qt.KeepAspectRatio,Qt.SmoothTransformation))
+        if not QPixmap(stored.get('logo') or '').isNull():logo.setPixmap(list_icon(stored,window.theme.colors['text']).pixmap(112,48))
+        elif not QPixmap(stored.get('cover') or '').isNull():logo.setPixmap(QPixmap(stored['cover']).scaled(104,40,Qt.KeepAspectRatio,Qt.SmoothTransformation))
         else:
             from .ui_components import nav_icon
             logo.setPixmap(nav_icon('library',window.theme.colors['muted'],32).pixmap(32,32))
         line.addWidget(logo)
-        b=GameNameButton(game['title'],lambda checked=False,identity=game['id']:window.detail(identity));b.setObjectName('statisticsGameName');b.setStyleSheet('background: transparent; border: none; text-align: left; font-weight: 600;');line.addWidget(b,1)
+        b=GameNameButton(game['title'],lambda checked=False,identity=game['id']:window.detail(identity));b.setObjectName('statisticsGameName');b.setStyleSheet('background: transparent; border: none; padding: 0; text-align: left; font-weight: 600;');line.addWidget(b,1)
         value=text(format_time(game['seconds']),'muted');value.setObjectName('statisticsGameTime');value.setStyleSheet('font-size: 16px; font-weight: 600; color: '+window.theme.colors['text']+';');value.setWordWrap(False);value.setAlignment(Qt.AlignRight|Qt.AlignVCenter);line.addWidget(value);inside.addWidget(game_row)
     inside.addStretch()
-    if paired:layout.addWidget(AdaptiveColumns(chart_frame,frame,(1,1),breakpoint=780))
+    if paired:
+        preferred=400 if selected=='monthly' else min(560,max(260,80+columns*23))
+        layout.addWidget(StatisticsColumns(chart_frame,frame,chart,preferred))
     else:layout.addWidget(frame)
     from .statistics_periods import PERIODS
     frame,inside=card();frame.setObjectName('completionMetrics')

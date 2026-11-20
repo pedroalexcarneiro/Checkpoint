@@ -7,6 +7,11 @@ discreto com variação um pouco mais visível entre os extremos, em fundo/later
 cards. Destaque do tema preservado; Preto permanece neutro. Referência usada
 somente para superfícies, sem copiar indicadores/marca/textos de outro sistema.
 
+Estatísticas: o mapa em painel largo e quase vazio foi rejeitado na revisão.
+Agora o painel usa largura compacta conforme o calendário, e a lista recebe o
+restante. Quando necessário, os painéis empilham e as células se adaptam; legenda
+e resumo ficam próximos, quebrando em duas linhas sem sobreposição.
+
 Início usa largura útil após lateral e margens 24 px, painéis alinhados pelo topo
 com alturas independentes. Últimas sessões corresponde a sessões persistidas,
 repetindo jogos quando o histórico repete. Cards pequenos, arte inteira limitada,

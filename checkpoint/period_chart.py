@@ -27,8 +27,7 @@ class PeriodChart(ActivityHeatmap):
         if self.period=='monthly':
             first,last=self.interval();rows=(monthrange(first.year,first.month)[1]+first.weekday()+6)//7
             return 54+rows*(min(40,max(20,(self.width()-20)//7-6))+6)
-        first,last=self.interval();columns=(last-(first-timedelta(days=first.weekday()))).days//7+1
-        return 28+7*(self.cell_size(columns)+3)+42
+        return self.heatmap_height()
     def fit_height(self):
         height=self.desired_height()
         if self.height()!=height:self.setFixedHeight(height)
