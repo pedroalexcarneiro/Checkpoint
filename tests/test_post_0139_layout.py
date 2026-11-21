@@ -47,6 +47,8 @@ def test_memories_keep_standard_width_and_no_synthetic_dark_padding(ui, app, fol
             for card in cards:
                 assert card.width()<=320
                 preview=card.findChild(ArtworkButton)
+                from artwork_wait import wait_for_memory_artwork
+                wait_for_memory_artwork(card)
                 pixels=card.grab().toImage()
                 # A lateral da prévia deve continuar o próprio fundo do card.
                 at=preview.mapTo(card,QPoint(1,preview.height()//2))

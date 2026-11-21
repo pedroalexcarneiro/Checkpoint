@@ -1,0 +1,53 @@
+{
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "cwd": "/workspace/work/Checkpoint",
+  "platform": "Linux/Python 3.12.14",
+  "runs": [
+    {
+      "record": "memorias-regressoes",
+      "command": "/workspace/work/venv/bin/python -X faulthandler -m pytest tests/test_memories_0135.py tests/test_post_0139_layout.py tests/test_polish_0139.py tests/test_capture_refresh_0139.py -q -p no:cacheprovider",
+      "exit_code": 1,
+      "stdout": "memorias-regressoes.stdout.txt",
+      "stderr": "memorias-regressoes.stderr.txt"
+    },
+    {
+      "record": "memorias-regressoes2",
+      "command": "/workspace/work/venv/bin/python -X faulthandler -m pytest tests/test_memories_stability.py tests/test_memories_0135.py tests/test_post_0139_layout.py tests/test_polish_0139.py tests/test_capture_refresh_0139.py -q -p no:cacheprovider",
+      "exit_code": 1,
+      "stdout": "memorias-regressoes2.stdout.txt",
+      "stderr": "memorias-regressoes2.stderr.txt"
+    },
+    {
+      "record": "memorias-regressoes3",
+      "command": "/workspace/work/venv/bin/python -X faulthandler -m pytest tests/test_memories_stability.py tests/test_memories_0135.py tests/test_post_0139_layout.py tests/test_polish_0139.py tests/test_capture_refresh_0139.py -q -p no:cacheprovider",
+      "exit_code": 1,
+      "stdout": "memorias-regressoes3.stdout.txt",
+      "stderr": "memorias-regressoes3.stderr.txt"
+    },
+    {
+      "record": "memorias-regressoes4",
+      "command": "/workspace/work/venv/bin/python -X faulthandler -m pytest tests/test_memories_stability.py tests/test_memories_0135.py tests/test_post_0139_layout.py tests/test_polish_0139.py tests/test_capture_refresh_0139.py -q -p no:cacheprovider",
+      "exit_code": 0,
+      "stdout": "memorias-regressoes4.stdout.txt",
+      "stderr": "memorias-regressoes4.stderr.txt"
+    },
+    {
+      "record": "memorias-seletor",
+      "command": "/workspace/work/venv/bin/python -X faulthandler -m pytest tests/test_memories_stability.py -q -p no:cacheprovider",
+      "exit_code": 0,
+      "stdout": "memorias-seletor.stdout.txt",
+      "stderr": "memorias-seletor.stderr.txt"
+    },
+    {
+      "record": "memorias-final",
+      "command": "/workspace/work/venv/bin/python -X faulthandler -m pytest tests/test_memories_stability.py tests/test_memories_0135.py tests/test_post_0139_layout.py tests/test_polish_0139.py tests/test_capture_refresh_0139.py -q -p no:cacheprovider",
+      "exit_code": 0,
+      "stdout": "memorias-final.stdout.txt",
+      "stderr": "memorias-final.stderr.txt"
+    }
+  ]
+}

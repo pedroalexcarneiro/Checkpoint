@@ -1,0 +1,62 @@
+....FF............................................                       [100%]
+=================================== FAILURES ===================================
+_ test_memory_filters_keep_identity_and_more_columns_use_available_width[sample0] _
+
+ui = (<checkpoint.window.MainWindow(0x2aa26e40) at 0x7f9207b2cfc0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x29e465a0) at 0x7f920fe7c5c0>
+
+    def test_memory_filters_keep_identity_and_more_columns_use_available_width(ui, app):
+        window, identity = ui
+        other = window.library.save_game({'title': 'Outro jogo', 'platform': 'Nintendo 64'})
+        for index in range(60):
+            window.library.add_diary(identity if index % 2 else other, f'Nota {index}')
+        window.navigate(3)
+        browser = window.memory_browser
+        counts = []
+        for width in (1280, 1920, 1000, 1280):
+            window.resize(width, 800)
+            for _ in range(6): app.processEvents()
+            grid = browser.states[0]['grid']
+            counts.append(grid.columns)
+            right = max(card.geometry().right() for card in grid.cards)
+>           assert grid.width()-right <= grid.grid.spacing()+4
+E           assert (748 - 695) <= (24 + 4)
+E            +  where 748 = <built-in method width of MemoryGrid object at 0x7f9207b4aec0>()
+E            +    where <built-in method width of MemoryGrid object at 0x7f9207b4aec0> = <checkpoint.collection_views.MemoryGrid(0x2a9e9e10, name="memoriesGrid") at 0x7f9207b4aec0>.width
+E            +  and   24 = <built-in method spacing of PySide6.QtWidgets.QGridLayout object at 0x7f9207b39540>()
+E            +    where <built-in method spacing of PySide6.QtWidgets.QGridLayout object at 0x7f9207b39540> = <PySide6.QtWidgets.QGridLayout(0x2a9e9dc0) at 0x7f9207b39540>.spacing
+E            +      where <PySide6.QtWidgets.QGridLayout(0x2a9e9dc0) at 0x7f9207b39540> = <checkpoint.collection_views.MemoryGrid(0x2a9e9e10, name="memoriesGrid") at 0x7f9207b4aec0>.grid
+
+tests/test_memories_stability.py:99: AssertionError
+_ test_memory_filters_keep_identity_and_more_columns_use_available_width[sample1] _
+
+ui = (<checkpoint.window.MainWindow(0x2a7a44a0) at 0x7f920fa2d340>, 1)
+app = <PySide6.QtWidgets.QApplication(0x29e465a0) at 0x7f920fe7c5c0>
+
+    def test_memory_filters_keep_identity_and_more_columns_use_available_width(ui, app):
+        window, identity = ui
+        other = window.library.save_game({'title': 'Outro jogo', 'platform': 'Nintendo 64'})
+        for index in range(60):
+            window.library.add_diary(identity if index % 2 else other, f'Nota {index}')
+        window.navigate(3)
+        browser = window.memory_browser
+        counts = []
+        for width in (1280, 1920, 1000, 1280):
+            window.resize(width, 800)
+            for _ in range(6): app.processEvents()
+            grid = browser.states[0]['grid']
+            counts.append(grid.columns)
+            right = max(card.geometry().right() for card in grid.cards)
+>           assert grid.width()-right <= grid.grid.spacing()+4
+E           assert (748 - 695) <= (24 + 4)
+E            +  where 748 = <built-in method width of MemoryGrid object at 0x7f9207bb0b00>()
+E            +    where <built-in method width of MemoryGrid object at 0x7f9207bb0b00> = <checkpoint.collection_views.MemoryGrid(0x2abd66a0, name="memoriesGrid") at 0x7f9207bb0b00>.width
+E            +  and   24 = <built-in method spacing of PySide6.QtWidgets.QGridLayout object at 0x7f9207b49540>()
+E            +    where <built-in method spacing of PySide6.QtWidgets.QGridLayout object at 0x7f9207b49540> = <PySide6.QtWidgets.QGridLayout(0x2abd6650) at 0x7f9207b49540>.spacing
+E            +      where <PySide6.QtWidgets.QGridLayout(0x2abd6650) at 0x7f9207b49540> = <checkpoint.collection_views.MemoryGrid(0x2abd66a0, name="memoriesGrid") at 0x7f9207bb0b00>.grid
+
+tests/test_memories_stability.py:99: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_memories_stability.py::test_memory_filters_keep_identity_and_more_columns_use_available_width[sample0]
+FAILED tests/test_memories_stability.py::test_memory_filters_keep_identity_and_more_columns_use_available_width[sample1]
+2 failed, 48 passed in 7.25s

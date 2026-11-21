@@ -145,13 +145,14 @@ class ArtworkButton(QPushButton):
         self.background=background
         self.setAccessibleName(caption);self.setToolTip(caption);self.clicked.connect(callback)
     def paintEvent(self,event):
-        p=QPainter(self);p.setRenderHint(QPainter.Antialiasing);path=QPainterPath();path.addRoundedRect(QRectF(self.rect().adjusted(1,1,-1,-1)),RADIUS['card'],RADIUS['card']);p.setClipPath(path)
+        p=QPainter(self);p.setRenderHint(QPainter.Antialiasing);p.setRenderHint(QPainter.SmoothPixmapTransform);path=QPainterPath();path.addRoundedRect(QRectF(self.rect().adjusted(1,1,-1,-1)),RADIUS['card'],RADIUS['card']);p.setClipPath(path)
         if self.background or self.pixmap.isNull():p.fillRect(self.rect(),QColor(colors()['input']))
         if not self.pixmap.isNull():
-            pix=self.pixmap.scaled(self.size(),Qt.KeepAspectRatio,Qt.SmoothTransformation)
-            target=QRectF((self.width()-pix.width())/2,(self.height()-pix.height())/2,pix.width(),pix.height())
+            from PySide6.QtCore import QSizeF
+            size=QSizeF(self.pixmap.size()).scaled(QSizeF(self.size()),Qt.KeepAspectRatio)
+            target=QRectF((self.width()-size.width())/2,(self.height()-size.height())/2,size.width(),size.height())
             image_clip=QPainterPath();image_clip.addRoundedRect(target,RADIUS['card'],RADIUS['card']);p.setClipPath(image_clip,Qt.IntersectClip)
-            p.drawPixmap(round(target.x()),round(target.y()),pix)
+            p.drawPixmap(target,self.pixmap,QRectF(self.pixmap.rect()))
         else:p.drawPixmap(self.width()//2-12,self.height()//2-12,icon('memories',24))
         p.setClipping(False)
         if self.underMouse() or self.hasFocus():p.setPen(QPen(QColor(colors()['accent']),2));p.setBrush(Qt.NoBrush);p.drawRoundedRect(QRectF(self.rect().adjusted(1,1,-1,-1)),RADIUS['card'],RADIUS['card'])

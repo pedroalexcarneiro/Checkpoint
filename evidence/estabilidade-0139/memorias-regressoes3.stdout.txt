@@ -1,0 +1,86 @@
+....................F.....................F.......                       [100%]
+=================================== FAILURES ===================================
+___ test_memories_keep_standard_width_and_no_synthetic_dark_padding[sample0] ___
+
+ui = (<checkpoint.window.MainWindow(0x28c5abd0) at 0x7f56f67c4ec0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x278485a0) at 0x7f56f6b5c4c0>
+folder = PosixPath('/tmp/f25f0c8c235246fda67e6d816b4e7cda')
+
+    def test_memories_keep_standard_width_and_no_synthetic_dark_padding(ui, app, folder):
+        window, identity=ui
+        path=folder/'captura.png'
+        image=QImage(300,200,QImage.Format_RGB32);image.fill(QColor('#eac040'));assert image.save(str(path))
+        for n in range(2):
+            copy=folder/f'captura-{n}.png';assert image.save(str(copy))
+            window.library.add_media(identity,copy,'Imagem de teste')
+        for size in ((1280,800),(1920,1080)):
+            window.resize(*size);window.navigate(0);settle(app)
+            carousel=window.pages[0].findChild(MemoryCarousel)
+            frames=carousel.findChildren(QWidget,'homeMemoryCard')
+            assert len(frames)==2 and all(f.width()<=300 for f in frames)
+            assert all(a.geometry().right()+12<b.geometry().left() for a,b in zip(frames,frames[1:]))
+            for page in (0,3):
+                if page==3:window.navigate(3);settle(app)
+                if page==0:cards=frames
+                else:cards=window.pages[3].findChild(QWidget,'memoriesGrid').cards
+                for card in cards:
+                    assert card.width()<=320
+                    preview=card.findChild(ArtworkButton)
+                    pixels=card.grab().toImage()
+                    # A lateral da prévia deve continuar o próprio fundo do card.
+                    at=preview.mapTo(card,QPoint(1,preview.height()//2))
+                    outside=QPoint(at.x()-3,at.y())
+                    a,b=pixels.pixelColor(at),pixels.pixelColor(outside)
+>                   assert max(abs(x-y) for x,y in zip(a.getRgb()[:3],b.getRgb()[:3]))<=2
+E                   assert 20 <= 2
+E                    +  where 20 = max(<generator object test_memories_keep_standard_width_and_no_synthetic_dark_padding.<locals>.<genexpr> at 0x7f56fccc1e00>)
+
+tests/test_post_0139_layout.py:55: AssertionError
+_____ test_each_capture_appears_immediately_in_visible_memories[sample0-2] _____
+
+ui = (<checkpoint.window.MainWindow(0x28690ce0) at 0x7f56ef703280>, 1)
+app = <PySide6.QtWidgets.QApplication(0x278485a0) at 0x7f56f6b5c4c0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f56f6609be0>
+tab = 2
+
+    @pytest.mark.parametrize('tab', [0, 2])
+    def test_each_capture_appears_immediately_in_visible_memories(ui, app, monkeypatch, tab):
+        window, identity = ui
+        window.launcher.active[1] = (SimpleNamespace(pid=101, poll=lambda: None), 0, identity, True)
+        class Frames:
+            color = 'red'
+            def foreground_pid(self): return 101
+            def capture(self, pid):
+                assert pid == 101
+                frame = QPixmap(80, 40); frame.fill(QColor(self.color)); return frame
+        frames = Frames()
+        monkeypatch.setattr('checkpoint.game_capture.WindowsCapture', lambda: frames)
+        window.navigate(3)
+        window.pages[3].findChild(QTabWidget, 'memoryTabs').setCurrentIndex(tab)
+        paths = []
+        try:
+            for color in ('red', 'blue'):
+                frames.color = color
+                window.capture_game_window()
+                for _ in range(5): app.processEvents()
+                assert window.current_page == 3 and window.stack.currentWidget() is window.pages[3]
+                tabs = window.pages[3].findChild(QTabWidget, 'memoryTabs')
+                assert tabs.currentIndex() == tab
+                previews = tabs.currentWidget().findChildren(ArtworkButton)
+                assert len(previews) == len(paths)+1
+>               assert previews[0].pixmap.toImage().pixelColor(10, 10) == QColor(color)
+E               assert PySide6.QtGui.QColor() == PySide6.QtGui.QColor.fromRgbF(1.000000, 0.000000, 0.000000, 1.000000)
+E                +  where PySide6.QtGui.QColor() = <built-in method pixelColor of PySide6.QtGui.QImage object at 0x7f56ecfb5480>(10, 10)
+E                +    where <built-in method pixelColor of PySide6.QtGui.QImage object at 0x7f56ecfb5480> = <PySide6.QtGui.QImage(null) at 0x7f56ecfb5480>.pixelColor
+E                +      where <PySide6.QtGui.QImage(null) at 0x7f56ecfb5480> = <built-in method toImage of PySide6.QtGui.QPixmap object at 0x7f56ecfb77c0>()
+E                +        where <built-in method toImage of PySide6.QtGui.QPixmap object at 0x7f56ecfb77c0> = <PySide6.QtGui.QPixmap(null) at 0x7f56ecfb77c0>.toImage
+E                +          where <PySide6.QtGui.QPixmap(null) at 0x7f56ecfb77c0> = <checkpoint.memory_artwork.MemoryArtwork(0x27f199c0, name="artworkButton") at 0x7f56ed00e380>.pixmap
+E                +  and   PySide6.QtGui.QColor.fromRgbF(1.000000, 0.000000, 0.000000, 1.000000) = QColor('red')
+
+tests/test_capture_refresh_0139.py:36: AssertionError
+----------------------------- Captured stderr call -----------------------------
+QImage::pixelColor: coordinate (10,10) out of range
+=========================== short test summary info ============================
+FAILED tests/test_post_0139_layout.py::test_memories_keep_standard_width_and_no_synthetic_dark_padding[sample0]
+FAILED tests/test_capture_refresh_0139.py::test_each_capture_appears_immediately_in_visible_memories[sample0-2]
+2 failed, 48 passed in 7.67s

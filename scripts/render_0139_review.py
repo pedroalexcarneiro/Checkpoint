@@ -83,7 +83,8 @@ def main():
     def settle():
         for _ in range(12):
             app.processEvents()
-        pending = lambda: window.gallery.art_cache.pending or window.game_list.art_cache.pending
+        pending = lambda: (window.gallery.art_cache.pending or window.game_list.art_cache.pending
+                           or bool(getattr(window,'memory_art_cache',None) and window.memory_art_cache.pending))
         elapsed = 0
         while pending() and elapsed < 3000:
             QTest.qWait(5)

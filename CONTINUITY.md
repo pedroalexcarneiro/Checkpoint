@@ -1,5 +1,15 @@
 # Continuidade do Checkpoint
 
+## Rodada local de estabilidade/organização — 21/11/2026
+
+Base 0.1.39/9ecbc95, branch fix/0139-estabilidade-organizacao. Pedido novo
+autoriza somente implementação/commits locais/validação: sem push/PR/tag/release.
+Memórias agora progressivas, página/abas persistentes, miniaturas assíncronas
+limitadas e grade na largura útil. Medição 96 imagens: ~5 s antes, 0,08 s na
+primeira entrada e ~0,007 s nos retornos após; ensaio Linux isolado. Seletor
+só contém jogos com registros em Memórias. Restante em andamento no plano e
+RELATORIO_ESTABILIDADE_0139.md. Gates antigos abaixo são históricos.
+
 ## Revisão local após 0.1.39 — fix/pos-0139-layout
 
 Base d57dc56, sem alterar publicação/tag 7703d80. Pedido novo: jogos únicos no

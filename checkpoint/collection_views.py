@@ -148,7 +148,7 @@ def build_wishlist(window):
     if window.isVisible() and window.library.setting('prices.auto',True):window.price_queue.submit([game['id'] for game in rows])
 
 
-def memory_card(window,record,diary_only=False):
+def memory_card(window,record,diary_only=False,thumbnail_cache=None):
     panel,inside=card();panel.setMinimumHeight(0 if diary_only else 320)
     panel.setProperty('diaryOnly',diary_only);inside.setContentsMargins(16,16,16,16);inside.setSpacing(12)
     head=QHBoxLayout();head.setSpacing(10);head.addWidget(Badge('memories' if record['kind']=='diary' else 'play' if record['kind']=='video' else 'memories',32))
@@ -165,7 +165,14 @@ def memory_card(window,record,diary_only=False):
             content.setStyleSheet('QTextEdit#memoryTextArea { background: '+colors()['input']+'; border: none; border-radius: 12px; padding: 10px; font-size: 14px; }')
             content.setAccessibleName('Anotação de '+record['title']);inside.addWidget(content);inside.addStretch()
     else:
-        inside.addWidget(ArtworkButton(record['path'],record['caption'] or Path(record['path']).name,lambda checked=False,m=record:window.show_media(m),height=160,background=False))
+        callback=lambda checked=False,m=record:window.show_media(m)
+        caption=record['caption'] or Path(record['path']).name
+        if thumbnail_cache is None:
+            preview=ArtworkButton(record['path'],caption,callback,height=160,background=False)
+        else:
+            from .memory_artwork import MemoryArtwork
+            preview=MemoryArtwork(record['path'],caption,callback,thumbnail_cache)
+        inside.addWidget(preview)
         if record['caption']:inside.addWidget(text(record['caption'],'muted'))
         inside.addStretch()
     bottom=QHBoxLayout();bottom.addWidget(text('Diário' if record['kind']=='diary' else 'Vídeo' if record['kind']=='video' else 'Captura','caption'));bottom.addStretch();bottom.addWidget(text(relative_date(record['created_at']),'caption'));inside.addLayout(bottom)
@@ -174,12 +181,14 @@ def memory_card(window,record,diary_only=False):
 
 class MemoryGrid(CardGrid):
     def reflow(self):
-        width=min(self.target,max(1,self.width()));gap=self.grid.spacing()
-        columns=max(1,(self.width()+gap)//(self.target+gap))
+        gap=self.grid.spacing()
+        columns=max(1,(self.width()+gap)//(280+gap))
+        width=min(336,max(1,(self.width()-gap*(columns-1))//columns))
+        if len(self.cards)<columns:width=min(320,width)
         for column in range(max(columns,self.columns)):
             self.grid.setColumnStretch(column,0)
             self.grid.setColumnMinimumWidth(column,width if column<columns else 0)
-        self.grid.setAlignment(Qt.AlignTop|Qt.AlignLeft)
+        self.grid.setAlignment(Qt.AlignTop|(Qt.AlignHCenter if len(self.cards)>=columns else Qt.AlignLeft))
         while self.grid.count():self.grid.takeAt(0)
         for index,panel in enumerate(self.cards):
             panel.setFixedWidth(width);self.grid.addWidget(panel,index//columns,index%columns,Qt.AlignTop|Qt.AlignLeft)
@@ -187,20 +196,10 @@ class MemoryGrid(CardGrid):
 
 
 def build_memories(window):
-    previous=window.pages[3].findChild(QTabWidget,'memoryTabs')
-    selected_tab=previous.currentIndex() if previous is not None else 0
-    outer=window.clear_page(3)
-    records=[{**dict(row),'kind':'diary'} for row in window.library.sql.execute('SELECT d.*,g.title FROM diary_entries d JOIN games g ON g.id=d.game_id WHERE g.deleted_at IS NULL')]
-    records.extend(dict(row) for row in window.library.sql.execute('SELECT m.*,g.title FROM media_files m JOIN games g ON g.id=m.game_id WHERE g.deleted_at IS NULL'))
-    records.sort(key=lambda row:(row['created_at'],row['id']),reverse=True)
-    tabs=QTabWidget();tabs.setObjectName('memoryTabs')
-    for name,kind in [('Tudo',None),('Diário','diary'),('Capturas e vídeos','media')]:
-        page=QWidget();layout=QVBoxLayout(page);layout.setContentsMargins(0,16,0,0);inside=page_scroll(layout)
-        selected=[row for row in records if kind is None or (row['kind']=='diary')==(kind=='diary')]
-        if selected:
-            grid=MemoryGrid(320);grid.setObjectName('memoriesGrid')
-            for record in selected:grid.add_card(memory_card(window,record,diary_only=kind=='diary'))
-            inside.addWidget(grid)
-        else:inside.addWidget(empty_state('memories','Nenhuma memória','Abra um jogo, entre na aba Memórias e adicione uma captura ou anotação.',window.first_memory,'Biblioteca'))
-        inside.addStretch();tabs.addTab(page,name)
-    tabs.setCurrentIndex(selected_tab);outer.addWidget(tabs)
+    from .memory_view import MemoryBrowser
+    browser=getattr(window,'memory_browser',None)
+    if browser is None:
+        outer=window.clear_page(3)
+        browser=window.memory_browser=MemoryBrowser(window)
+        outer.addWidget(browser)
+    else:browser.refresh()

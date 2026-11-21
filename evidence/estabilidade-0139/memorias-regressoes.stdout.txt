@@ -1,0 +1,178 @@
+...................................FFFF.....                             [100%]
+=================================== FAILURES ===================================
+_____ test_each_capture_appears_immediately_in_visible_memories[sample0-0] _____
+
+ui = (<checkpoint.window.MainWindow(0x1a5200d0) at 0x7f6d280efb40>, 1)
+app = <PySide6.QtWidgets.QApplication(0x1a23ada0) at 0x7f6d2bbfe080>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6d29aea420>
+tab = 0
+
+    @pytest.mark.parametrize('tab', [0, 2])
+    def test_each_capture_appears_immediately_in_visible_memories(ui, app, monkeypatch, tab):
+        window, identity = ui
+        window.launcher.active[1] = (SimpleNamespace(pid=101, poll=lambda: None), 0, identity, True)
+        class Frames:
+            color = 'red'
+            def foreground_pid(self): return 101
+            def capture(self, pid):
+                assert pid == 101
+                frame = QPixmap(80, 40); frame.fill(QColor(self.color)); return frame
+        frames = Frames()
+        monkeypatch.setattr('checkpoint.game_capture.WindowsCapture', lambda: frames)
+        window.navigate(3)
+        window.pages[3].findChild(QTabWidget, 'memoryTabs').setCurrentIndex(tab)
+        paths = []
+        try:
+            for color in ('red', 'blue'):
+                frames.color = color
+                window.capture_game_window()
+                for _ in range(5): app.processEvents()
+                assert window.current_page == 3 and window.stack.currentWidget() is window.pages[3]
+                tabs = window.pages[3].findChild(QTabWidget, 'memoryTabs')
+                assert tabs.currentIndex() == tab
+                previews = tabs.currentWidget().findChildren(ArtworkButton)
+                assert len(previews) == len(paths)+1
+>               assert previews[0].pixmap.toImage().pixelColor(10, 10) == QColor(color)
+E               assert PySide6.QtGui.QColor() == PySide6.QtGui.QColor.fromRgbF(1.000000, 0.000000, 0.000000, 1.000000)
+E                +  where PySide6.QtGui.QColor() = <built-in method pixelColor of PySide6.QtGui.QImage object at 0x7f6d280ce580>(10, 10)
+E                +    where <built-in method pixelColor of PySide6.QtGui.QImage object at 0x7f6d280ce580> = <PySide6.QtGui.QImage(null) at 0x7f6d280ce580>.pixelColor
+E                +      where <PySide6.QtGui.QImage(null) at 0x7f6d280ce580> = <built-in method toImage of PySide6.QtGui.QPixmap object at 0x7f6d13e68700>()
+E                +        where <built-in method toImage of PySide6.QtGui.QPixmap object at 0x7f6d13e68700> = <PySide6.QtGui.QPixmap(null) at 0x7f6d13e68700>.toImage
+E                +          where <PySide6.QtGui.QPixmap(null) at 0x7f6d13e68700> = <checkpoint.memory_artwork.MemoryArtwork(0x1b37ca00, name="artworkButton") at 0x7f6d280db300>.pixmap
+E                +  and   PySide6.QtGui.QColor.fromRgbF(1.000000, 0.000000, 0.000000, 1.000000) = QColor('red')
+
+tests/test_capture_refresh_0139.py:36: AssertionError
+----------------------------- Captured stderr call -----------------------------
+QImage::pixelColor: coordinate (10,10) out of range
+_____ test_each_capture_appears_immediately_in_visible_memories[sample0-2] _____
+
+ui = (<checkpoint.window.MainWindow(0x1a63fcd0) at 0x7f6d281f2380>, 1)
+app = <PySide6.QtWidgets.QApplication(0x1a23ada0) at 0x7f6d2bbfe080>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6d13e93020>
+tab = 2
+
+    @pytest.mark.parametrize('tab', [0, 2])
+    def test_each_capture_appears_immediately_in_visible_memories(ui, app, monkeypatch, tab):
+        window, identity = ui
+        window.launcher.active[1] = (SimpleNamespace(pid=101, poll=lambda: None), 0, identity, True)
+        class Frames:
+            color = 'red'
+            def foreground_pid(self): return 101
+            def capture(self, pid):
+                assert pid == 101
+                frame = QPixmap(80, 40); frame.fill(QColor(self.color)); return frame
+        frames = Frames()
+        monkeypatch.setattr('checkpoint.game_capture.WindowsCapture', lambda: frames)
+        window.navigate(3)
+        window.pages[3].findChild(QTabWidget, 'memoryTabs').setCurrentIndex(tab)
+        paths = []
+        try:
+            for color in ('red', 'blue'):
+                frames.color = color
+                window.capture_game_window()
+                for _ in range(5): app.processEvents()
+                assert window.current_page == 3 and window.stack.currentWidget() is window.pages[3]
+                tabs = window.pages[3].findChild(QTabWidget, 'memoryTabs')
+                assert tabs.currentIndex() == tab
+                previews = tabs.currentWidget().findChildren(ArtworkButton)
+                assert len(previews) == len(paths)+1
+>               assert previews[0].pixmap.toImage().pixelColor(10, 10) == QColor(color)
+E               assert PySide6.QtGui.QColor.fromRgbF(1.000000, 0.000000, 0.000000, 1.000000) == PySide6.QtGui.QColor.fromRgbF(0.000000, 0.000000, 1.000000, 1.000000)
+E                +  where PySide6.QtGui.QColor.fromRgbF(1.000000, 0.000000, 0.000000, 1.000000) = <built-in method pixelColor of PySide6.QtGui.QImage object at 0x7f6d13e9db80>(10, 10)
+E                +    where <built-in method pixelColor of PySide6.QtGui.QImage object at 0x7f6d13e9db80> = <PySide6.QtGui.QImage(QSize(302, 151),format=QImage::Format_RGB32,depth=32,devicePixelRatio=1,bytesPerLine=1208,sizeInBytes=182408) at 0x7f6d13e9db80>.pixelColor
+E                +      where <PySide6.QtGui.QImage(QSize(302, 151),format=QImage::Format_RGB32,depth=32,devicePixelRatio=1,bytesPerLine=1208,sizeInBytes=182408) at 0x7f6d13e9db80> = <built-in method toImage of PySide6.QtGui.QPixmap object at 0x7f6d13ed00c0>()
+E                +        where <built-in method toImage of PySide6.QtGui.QPixmap object at 0x7f6d13ed00c0> = <PySide6.QtGui.QPixmap(QSize(302, 151),depth=32,devicePixelRatio=1,cacheKey=0x25c00000001) at 0x7f6d13ed00c0>.toImage
+E                +          where <PySide6.QtGui.QPixmap(QSize(302, 151),depth=32,devicePixelRatio=1,cacheKey=0x25c00000001) at 0x7f6d13ed00c0> = <checkpoint.memory_artwork.MemoryArtwork(0x1afa5ad0, name="artworkButton") at 0x7f6d13ed1680>.pixmap
+E                +  and   PySide6.QtGui.QColor.fromRgbF(0.000000, 0.000000, 1.000000, 1.000000) = QColor('blue')
+
+tests/test_capture_refresh_0139.py:36: AssertionError
+_____ test_each_capture_appears_immediately_in_visible_memories[sample1-0] _____
+
+ui = (<checkpoint.window.MainWindow(0x1ab521a0) at 0x7f6d280e47c0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x1a23ada0) at 0x7f6d2bbfe080>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6d29bb72c0>
+tab = 0
+
+    @pytest.mark.parametrize('tab', [0, 2])
+    def test_each_capture_appears_immediately_in_visible_memories(ui, app, monkeypatch, tab):
+        window, identity = ui
+        window.launcher.active[1] = (SimpleNamespace(pid=101, poll=lambda: None), 0, identity, True)
+        class Frames:
+            color = 'red'
+            def foreground_pid(self): return 101
+            def capture(self, pid):
+                assert pid == 101
+                frame = QPixmap(80, 40); frame.fill(QColor(self.color)); return frame
+        frames = Frames()
+        monkeypatch.setattr('checkpoint.game_capture.WindowsCapture', lambda: frames)
+        window.navigate(3)
+        window.pages[3].findChild(QTabWidget, 'memoryTabs').setCurrentIndex(tab)
+        paths = []
+        try:
+            for color in ('red', 'blue'):
+                frames.color = color
+                window.capture_game_window()
+                for _ in range(5): app.processEvents()
+                assert window.current_page == 3 and window.stack.currentWidget() is window.pages[3]
+                tabs = window.pages[3].findChild(QTabWidget, 'memoryTabs')
+                assert tabs.currentIndex() == tab
+                previews = tabs.currentWidget().findChildren(ArtworkButton)
+                assert len(previews) == len(paths)+1
+>               assert previews[0].pixmap.toImage().pixelColor(10, 10) == QColor(color)
+E               assert PySide6.QtGui.QColor.fromRgbF(1.000000, 0.000000, 0.000000, 1.000000) == PySide6.QtGui.QColor.fromRgbF(0.000000, 0.000000, 1.000000, 1.000000)
+E                +  where PySide6.QtGui.QColor.fromRgbF(1.000000, 0.000000, 0.000000, 1.000000) = <built-in method pixelColor of PySide6.QtGui.QImage object at 0x7f6d2b7a0840>(10, 10)
+E                +    where <built-in method pixelColor of PySide6.QtGui.QImage object at 0x7f6d2b7a0840> = <PySide6.QtGui.QImage(QSize(286, 143),format=QImage::Format_RGB32,depth=32,devicePixelRatio=1,bytesPerLine=1144,sizeInBytes=163592) at 0x7f6d2b7a0840>.pixelColor
+E                +      where <PySide6.QtGui.QImage(QSize(286, 143),format=QImage::Format_RGB32,depth=32,devicePixelRatio=1,bytesPerLine=1144,sizeInBytes=163592) at 0x7f6d2b7a0840> = <built-in method toImage of PySide6.QtGui.QPixmap object at 0x7f6d13e84900>()
+E                +        where <built-in method toImage of PySide6.QtGui.QPixmap object at 0x7f6d13e84900> = <PySide6.QtGui.QPixmap(QSize(286, 143),depth=32,devicePixelRatio=1,cacheKey=0x26900000001) at 0x7f6d13e84900>.toImage
+E                +          where <PySide6.QtGui.QPixmap(QSize(286, 143),depth=32,devicePixelRatio=1,cacheKey=0x26900000001) at 0x7f6d13e84900> = <checkpoint.memory_artwork.MemoryArtwork(0x1a633c80, name="artworkButton") at 0x7f6d13e68dc0>.pixmap
+E                +  and   PySide6.QtGui.QColor.fromRgbF(0.000000, 0.000000, 1.000000, 1.000000) = QColor('blue')
+
+tests/test_capture_refresh_0139.py:36: AssertionError
+_____ test_each_capture_appears_immediately_in_visible_memories[sample1-2] _____
+
+ui = (<checkpoint.window.MainWindow(0x1a623750) at 0x7f6d13f35ac0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x1a23ada0) at 0x7f6d2bbfe080>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f6d31bc1d90>
+tab = 2
+
+    @pytest.mark.parametrize('tab', [0, 2])
+    def test_each_capture_appears_immediately_in_visible_memories(ui, app, monkeypatch, tab):
+        window, identity = ui
+        window.launcher.active[1] = (SimpleNamespace(pid=101, poll=lambda: None), 0, identity, True)
+        class Frames:
+            color = 'red'
+            def foreground_pid(self): return 101
+            def capture(self, pid):
+                assert pid == 101
+                frame = QPixmap(80, 40); frame.fill(QColor(self.color)); return frame
+        frames = Frames()
+        monkeypatch.setattr('checkpoint.game_capture.WindowsCapture', lambda: frames)
+        window.navigate(3)
+        window.pages[3].findChild(QTabWidget, 'memoryTabs').setCurrentIndex(tab)
+        paths = []
+        try:
+            for color in ('red', 'blue'):
+                frames.color = color
+                window.capture_game_window()
+                for _ in range(5): app.processEvents()
+                assert window.current_page == 3 and window.stack.currentWidget() is window.pages[3]
+                tabs = window.pages[3].findChild(QTabWidget, 'memoryTabs')
+                assert tabs.currentIndex() == tab
+                previews = tabs.currentWidget().findChildren(ArtworkButton)
+                assert len(previews) == len(paths)+1
+>               assert previews[0].pixmap.toImage().pixelColor(10, 10) == QColor(color)
+E               assert PySide6.QtGui.QColor.fromRgbF(1.000000, 0.000000, 0.000000, 1.000000) == PySide6.QtGui.QColor.fromRgbF(0.000000, 0.000000, 1.000000, 1.000000)
+E                +  where PySide6.QtGui.QColor.fromRgbF(1.000000, 0.000000, 0.000000, 1.000000) = <built-in method pixelColor of PySide6.QtGui.QImage object at 0x7f6d2808f2c0>(10, 10)
+E                +    where <built-in method pixelColor of PySide6.QtGui.QImage object at 0x7f6d2808f2c0> = <PySide6.QtGui.QImage(QSize(286, 143),format=QImage::Format_RGB32,depth=32,devicePixelRatio=1,bytesPerLine=1144,sizeInBytes=163592) at 0x7f6d2808f2c0>.pixelColor
+E                +      where <PySide6.QtGui.QImage(QSize(286, 143),format=QImage::Format_RGB32,depth=32,devicePixelRatio=1,bytesPerLine=1144,sizeInBytes=163592) at 0x7f6d2808f2c0> = <built-in method toImage of PySide6.QtGui.QPixmap object at 0x7f6d13f2af40>()
+E                +        where <built-in method toImage of PySide6.QtGui.QPixmap object at 0x7f6d13f2af40> = <PySide6.QtGui.QPixmap(QSize(286, 143),depth=32,devicePixelRatio=1,cacheKey=0x27700000001) at 0x7f6d13f2af40>.toImage
+E                +          where <PySide6.QtGui.QPixmap(QSize(286, 143),depth=32,devicePixelRatio=1,cacheKey=0x27700000001) at 0x7f6d13f2af40> = <checkpoint.memory_artwork.MemoryArtwork(0x1ad1b9d0, name="artworkButton") at 0x7f6d29ba6c80>.pixmap
+E                +  and   PySide6.QtGui.QColor.fromRgbF(0.000000, 0.000000, 1.000000, 1.000000) = QColor('blue')
+
+tests/test_capture_refresh_0139.py:36: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_capture_refresh_0139.py::test_each_capture_appears_immediately_in_visible_memories[sample0-0]
+FAILED tests/test_capture_refresh_0139.py::test_each_capture_appears_immediately_in_visible_memories[sample0-2]
+FAILED tests/test_capture_refresh_0139.py::test_each_capture_appears_immediately_in_visible_memories[sample1-0]
+FAILED tests/test_capture_refresh_0139.py::test_each_capture_appears_immediately_in_visible_memories[sample1-2]
+4 failed, 40 passed in 5.22s

@@ -1,5 +1,13 @@
 # Arquitetura
 
+## Rodada de estabilidade 0.1.39
+
+MemoryBrowser mantém página/abas e atualiza só registros alterados. Aba ativa
+monta lotes de 24 cards; rolagem carrega mais. MemoryArtwork usa ArtworkCache
+compartilhado de 24 MiB, QImageReader redimensionado em duas threads e QPixmap
+na GUI; fechamento/navegação não redirecionam resultado a outra página. Filtros
+de jogo são derivados exclusivamente dos registros de memórias não excluídos.
+
 ## Revisão local pós-0.1.39
 
 Início agora projeta recent_games únicos por ID, sem alterar execution_history

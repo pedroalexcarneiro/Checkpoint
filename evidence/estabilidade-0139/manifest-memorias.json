@@ -1,0 +1,28 @@
+{
+  "baseline": "f0b43c0",
+  "version": "0.1.39",
+  "platform": "Linux/Python 3.12.14/Qt offscreen",
+  "fixtures": true,
+  "commands": {
+    "antes": "QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp PYTHONDONTWRITEBYTECODE=1 /workspace/work/venv/bin/python -X faulthandler -m scripts.measure_memories /workspace/work/evidence-0139-estabilidade/memorias-antes",
+    "depois": "QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp PYTHONDONTWRITEBYTECODE=1 /workspace/work/venv/bin/python -X faulthandler -m scripts.measure_memories /workspace/work/evidence-0139-estabilidade/memorias-depois"
+  },
+  "exit_codes": {
+    "antes": 0,
+    "depois": 0
+  },
+  "files": [
+    {
+      "file": "memorias-depois.json",
+      "sha256": "20b0b5d04cd03677f162c82d5394fcaab78e23873c8a7a97dc4604cb39171f6b"
+    },
+    {
+      "file": "memorias-antes.json",
+      "sha256": "df2c6418a7e808f0227c34d61e8ae2fef7b4f75eec00bc1773c168d2e6cf58df"
+    },
+    {
+      "file": "memorias-1280x800.png",
+      "sha256": "de3a789e2806fb737e3ac13516f6781cfdaf7ccbe75d7841b098ba96bfa7a17b"
+    }
+  ]
+}

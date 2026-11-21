@@ -1,5 +1,13 @@
 # Validação do Checkpoint
 
+## Estabilidade 0.1.39 — rodada local 21/11/2026
+
+52 testes direcionados de Memórias/atualização/grade passaram. Medição isolada
+com 96 imagens/8 4K: ~5 s para ~0,08 s na primeira navegação; retorno ~0,007 s.
+Pico durante ensaio ~3,9 GiB para ~127 MiB. Não homologa Windows/dados pessoais.
+Evidências integrais em evidence/estabilidade-0139; escopo restante em andamento
+no RELATORIO_ESTABILIDADE_0139.md. Contagens antigas abaixo são históricas.
+
 ## Rodada atual 0.1.39
 
 Publicação confirmada no código 7703d80, mesma árvore de aplicação/testes/scripts

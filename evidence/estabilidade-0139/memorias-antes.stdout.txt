@@ -1,0 +1,39 @@
+{
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "qt_platform": "offscreen",
+  "fixtures": true,
+  "images": 96,
+  "large_images": 8,
+  "invalid_images": 4,
+  "invalid_videos": 4,
+  "notes": 12,
+  "size": [
+    1920,
+    1080
+  ],
+  "runs": [
+    {
+      "run": 0,
+      "navigate_seconds": 4.943729341001017,
+      "first_events_seconds": 5.000535640996532,
+      "cpu_seconds": 5.001353278,
+      "max_event_gap_seconds": 4.990321719000349
+    },
+    {
+      "run": 1,
+      "navigate_seconds": 5.029148875997635,
+      "first_events_seconds": 5.084293615997012,
+      "cpu_seconds": 5.08774589,
+      "max_event_gap_seconds": 5.073996111001179
+    },
+    {
+      "run": 2,
+      "navigate_seconds": 4.507277196003997,
+      "first_events_seconds": 4.5729007800036925,
+      "cpu_seconds": 4.567528807,
+      "max_event_gap_seconds": 4.561890681005025
+    }
+  ],
+  "peak_rss_kib_linux": 4091020
+}

@@ -28,6 +28,8 @@ def test_each_capture_appears_immediately_in_visible_memories(ui, app, monkeypat
             frames.color = color
             window.capture_game_window()
             for _ in range(5): app.processEvents()
+            from artwork_wait import wait_for_memory_artwork
+            wait_for_memory_artwork(window)
             assert window.current_page == 3 and window.stack.currentWidget() is window.pages[3]
             tabs = window.pages[3].findChild(QTabWidget, 'memoryTabs')
             assert tabs.currentIndex() == tab

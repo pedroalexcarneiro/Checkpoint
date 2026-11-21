@@ -236,7 +236,9 @@ class MemoryCarousel(CardSurface):
                 words=QVBoxLayout(preview);words.setContentsMargins(10,10,10,10)
                 label=text(record['text'],'bodyText');label.setAlignment(Qt.AlignTop|Qt.AlignLeft)
                 label.setAttribute(Qt.WA_TransparentForMouseEvents);label.setMaximumHeight(136);words.addWidget(label,0,Qt.AlignTop);words.setAlignment(Qt.AlignTop)
-            else:preview=ArtworkButton(record['path'],record.get('caption') or 'Abrir captura',callback,height=160,background=False)
+            else:
+                from .memory_artwork import MemoryArtwork,memory_cache
+                preview=MemoryArtwork(record['path'],record.get('caption') or 'Abrir captura',callback,memory_cache(self.host_window))
             inside.addWidget(preview)
             title=ElidedAction(record['title'],callback);title.setObjectName('activityLink');inside.addWidget(title)
             inside.addWidget(text('Diário' if record['kind']=='diary' else 'Vídeo' if record['kind']=='video' else 'Captura','caption'))
