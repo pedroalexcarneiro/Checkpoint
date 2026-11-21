@@ -111,6 +111,10 @@ class MainWindow(QMainWindow):
             control.setCheckable(True);control.setChecked(index==self.view.currentIndex());self.header.insertWidget(3+index,control);self.view_buttons.append(control)
         self.view.currentIndexChanged.connect(self.update_view_buttons)
         self.navigate(0)
+        from .game_capture import CaptureWriter
+        self.capture_writer=CaptureWriter(self)
+        self.capture_writer.saved.connect(self.capture_saved)
+        self.capture_writer.failed.connect(self.capture_failed)
         from .global_hotkey import GlobalCaptureHotkey
         self.capture_shortcut=GlobalCaptureHotkey(self,self.capture_game_window,None)
         configured=self.library.setting('capture.shortcut','Ctrl+Shift+S')
@@ -500,13 +504,19 @@ class MainWindow(QMainWindow):
         self.library.set_setting('capture.shortcut',value)
 
     def capture_game_window(self):
-        from .game_capture import capture_game
-        path=self.guard(lambda:capture_game(self))
-        if path:
-            self.statusBar().showMessage('Captura salva em Memórias.',5000)
-            if self.stack.currentWidget()==getattr(self,'detail_page',None):self.detail(self.current_game)
-            elif self.stack.currentWidget() is self.pages[3]:self.memories()
-            elif self.stack.currentWidget() is self.pages[0]:self.home()
+        self.guard(self.capture_writer.request)
+
+    @Slot(int)
+    def capture_saved(self,game_id):
+        self.statusBar().showMessage('Captura salva em Memórias.',5000)
+        current=self.stack.currentWidget()
+        if current==getattr(self,'detail_page',None) and self.current_game==game_id:self.detail(game_id)
+        elif current is self.pages[3]:self.memories()
+        elif current is self.pages[0]:self.home()
+
+    @Slot(str)
+    def capture_failed(self,message):
+        self.statusBar().showMessage(message,5000)
 
     def delete_memory(self,record):
         if QMessageBox.question(self,'Apagar memória','Apagar esta memória de '+record['title']+'? O arquivo original será preservado.')!=QMessageBox.Yes:
@@ -945,7 +955,7 @@ class MainWindow(QMainWindow):
                 elif self.close_after_downloads:
                     self.close_after_downloads=False;QTimer.singleShot(0,self.close)
             event.ignore();return
-        if any(job.isRunning() for job in self.findChildren(Job)):
+        if self.capture_writer.busy or any(job.isRunning() for job in self.findChildren(Job)):
             if self.system_shutdown:event.ignore();return
             QMessageBox.information(self,'Operação em andamento','Aguarde a operação terminar antes de fechar o Checkpoint.');event.ignore();return
         if self.save_jobs and not self.system_shutdown:

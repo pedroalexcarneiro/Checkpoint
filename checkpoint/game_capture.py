@@ -1,7 +1,9 @@
 """Captura somente a janela em primeiro plano de uma sessão elegível."""
 import sys
+from collections import deque
 from pathlib import Path
 from uuid import uuid4
+from PySide6.QtCore import QObject,QSaveFile,QIODevice,Signal,Qt
 
 
 class WindowsCapture:
@@ -47,7 +49,7 @@ class WindowsCapture:
         return pixmap
 
 
-def capture_game(window, adapter=None):
+def capture_frame(window, adapter=None):
     sessions = list(window.launcher.active.values())
     if not sessions:
         raise ValueError('Nenhum jogo aberto pelo Checkpoint está em sessão para capturar.')
@@ -60,14 +62,82 @@ def capture_game(window, adapter=None):
     pixmap = adapter.capture(pid)
     if pixmap.isNull():
         raise ValueError('A janela do jogo não forneceu uma captura. Tente o jogo em modo janela.')
-    directory = Path(window.library.setting('captures', '') or window.library.db.path.parent / 'captures')
-    directory.mkdir(parents=True, exist_ok=True)
-    path = directory / (uuid4().hex + '.png')
-    if not pixmap.save(str(path), 'PNG'):
-        raise ValueError('Não foi possível salvar a captura.')
+    return current,pixmap.toImage()
+
+
+def save_frame(directory,image):
+    path=directory/(uuid4().hex+'.png')
     try:
-        window.library.add_media(current, path, 'Captura do jogo')
+        directory.mkdir(parents=True,exist_ok=True)
+        output=QSaveFile(str(path))
+        if not output.open(QIODevice.WriteOnly):raise OSError(output.errorString())
+        if not image.save(output,'PNG'):
+            output.cancelWriting()
+            raise OSError('Falha na codificação PNG')
+        if not output.commit():raise OSError(output.errorString())
+    except OSError as error:
+        raise ValueError('Não foi possível salvar a captura. Confira espaço e permissões da pasta.') from error
+    return path
+
+
+def capture_directory(window):
+    return Path(window.library.setting('captures','') or window.library.db.path.parent/'captures')
+
+
+def register_frame(library,game_id,path):
+    try:
+        library.add_media(game_id,path,'Captura do jogo')
     except Exception:
         path.unlink(missing_ok=True)
         raise
+
+
+def capture_game(window,adapter=None):
+    """Fluxo direto preservado para a validação isolada do backend."""
+    game_id,image=capture_frame(window,adapter)
+    path=save_frame(capture_directory(window),image)
+    register_frame(window.library,game_id,path)
     return path
+
+
+class CaptureWriter(QObject):
+    saved=Signal(int)
+    failed=Signal(str)
+
+    def __init__(self,window):
+        super().__init__(window)
+        self.window=window
+        self.waiting=deque()
+        self.job=None
+
+    @property
+    def busy(self):return self.job is not None or bool(self.waiting)
+
+    def request(self):
+        if len(self.waiting)+bool(self.job)>=4:
+            raise ValueError('Aguarde as capturas pendentes antes de tentar de novo.')
+        game_id,image=capture_frame(self.window)
+        self.waiting.append((game_id,capture_directory(self.window),image))
+        self.start_next()
+
+    def start_next(self):
+        if self.job is not None or not self.waiting:return
+        from .jobs import Job
+        game_id,directory,image=self.waiting.popleft()
+        self.job=Job(lambda:(game_id,save_frame(directory,image)),self)
+        self.job.succeeded.connect(self.register,Qt.QueuedConnection)
+        self.job.failed.connect(self.failed,Qt.QueuedConnection)
+        self.job.finished.connect(self.finish,Qt.QueuedConnection)
+        self.job.start()
+
+    def register(self,result):
+        game_id,path=result
+        try:register_frame(self.window.library,game_id,path)
+        except Exception:
+            self.failed.emit('Não foi possível registrar a captura em Memórias. Verifique o banco de dados.')
+        else:self.saved.emit(game_id)
+
+    def finish(self):
+        self.job.deleteLater()
+        self.job=None
+        self.start_next()

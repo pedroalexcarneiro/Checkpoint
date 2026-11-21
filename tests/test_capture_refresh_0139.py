@@ -1,11 +1,20 @@
 """Quadros distintos e publicação imediata, sem jogos/contas pessoais."""
 from types import SimpleNamespace
+from threading import Event
+from time import monotonic
 import pytest
 from PySide6.QtGui import QColor, QImage, QPixmap
+from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QTabWidget
 from checkpoint.design_system import ArtworkButton
 from checkpoint.game_capture import capture_game, WindowsCapture
 from test_bugs_0134 import ui, sample
+
+
+def wait_for_capture(window):
+    limit=monotonic()+5
+    while window.capture_writer.busy and monotonic()<limit:QTest.qWait(5)
+    assert not window.capture_writer.busy
 
 
 @pytest.mark.parametrize('tab', [0, 2])
@@ -27,7 +36,7 @@ def test_each_capture_appears_immediately_in_visible_memories(ui, app, monkeypat
         for color in ('red', 'blue'):
             frames.color = color
             window.capture_game_window()
-            for _ in range(5): app.processEvents()
+            wait_for_capture(window)
             from artwork_wait import wait_for_memory_artwork
             wait_for_memory_artwork(window)
             assert window.current_page == 3 and window.stack.currentWidget() is window.pages[3]
@@ -43,6 +52,39 @@ def test_each_capture_appears_immediately_in_visible_memories(ui, app, monkeypat
         assert QImage(paths[0]).pixelColor(10, 10) == QColor('red')
         assert QImage(paths[1]).pixelColor(10, 10) == QColor('blue')
     finally: window.launcher.active.clear()
+
+
+def test_capture_encoding_does_not_block_navigation_and_keeps_distinct_frames(ui,monkeypatch):
+    from checkpoint import game_capture
+    window,identity=ui
+    window.launcher.active[1]=(SimpleNamespace(pid=101,poll=lambda:None),0,identity,True)
+    entered,release=Event(),Event()
+    colors=iter(('red','blue'))
+    class Frames:
+        def foreground_pid(self):return 101
+        def capture(self,pid):
+            pixmap=QPixmap(80,40);pixmap.fill(QColor(next(colors)));return pixmap
+    monkeypatch.setattr(game_capture,'WindowsCapture',Frames)
+    save_frame=game_capture.save_frame
+    def slow_encode(directory,image):
+        entered.set()
+        if not release.wait(4):raise ValueError('Fixture de gravação excedeu tempo.')
+        return save_frame(directory,image)
+    monkeypatch.setattr(game_capture,'save_frame',slow_encode)
+    try:
+        window.capture_game_window()
+        assert entered.wait(2)
+        window.capture_game_window()
+        assert window.capture_writer.busy
+        window.navigate(3);assert window.stack.currentWidget() is window.pages[3]
+        assert not list(window.library.sql.execute('SELECT id FROM media_files'))
+        release.set()
+        wait_for_capture(window)
+        rows=list(window.library.sql.execute('SELECT game_id,path FROM media_files ORDER BY id'))
+        assert [row['game_id'] for row in rows]==[identity,identity]
+        assert [QImage(row['path']).pixelColor(10,10) for row in rows]==[QColor('red'),QColor('blue')]
+    finally:
+        release.set();wait_for_capture(window);window.launcher.active.clear()
 
 
 def test_capture_backend_reads_fresh_client_frame_and_rejects_changed_target(app):

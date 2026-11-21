@@ -152,9 +152,14 @@ def main():
         window.launcher.active={1:(SimpleNamespace(pid=101,poll=lambda:None),0,ids[0],True),
             2:(SimpleNamespace(pid=202,poll=lambda:None),0,ids[1],True)}
         try:
+            from time import monotonic
             window.resize(1280,800);window.navigate(3)
             for name,color,pid in (('primeiro-quadro','red',101),('segundo-quadro','blue',202)):
-                frames.color=color;frames.pid=pid;window.capture_game_window();capture('captura-'+name)
+                frames.color=color;frames.pid=pid;window.capture_game_window()
+                deadline=monotonic()+5
+                while window.capture_writer.busy and monotonic()<deadline:QTest.qWait(5)
+                assert not window.capture_writer.busy
+                capture('captura-'+name)
         finally:
             game_capture.WindowsCapture=original;window.launcher.active.clear()
     if 'appearance' in selected:
@@ -230,8 +235,16 @@ def main():
         window.update_custom_lists();window.select_custom_list(window.custom_lists.findData(identity))
         capture('biblioteca-lista-personalizada')
         def capture_lists():
+            from checkpoint.artwork_cache import ArtworkCache
             dialog=QApplication.activeModalWidget()
-            try:capture('biblioteca-gerenciar-listas',dialog)
+            try:
+                cache=dialog.findChild(ArtworkCache,'listPickerLogoCache')
+                dialog.grab()
+                for _ in range(600):
+                    if not cache.pending:break
+                    QTest.qWait(5)
+                assert not cache.pending
+                capture('biblioteca-gerenciar-listas',dialog)
             finally:dialog.reject()
         QTimer.singleShot(0,capture_lists)
         manage_lists(window,identity)

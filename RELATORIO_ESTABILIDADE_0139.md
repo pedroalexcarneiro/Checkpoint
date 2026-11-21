@@ -244,6 +244,21 @@ Gate local: 19 testes aprovados, exit 0. Inclui dois jogos diferentes,
 gerenciamento pelo diálogo, nomes duplicados, renderização da logo, filtro nos dois modos, dados
 preservados e reabertura da base. As duas capturas da Biblioteca usam fixtures.
 
+## Unidade 8 — Gravação de capturas em segundo plano (parte dos itens 4 e 9)
+
+A captura lê o quadro no acionamento e entrega o QImage a uma fila curta.
+A codificação e gravação atômica do PNG saem da thread da interface. Só após
+a gravação a mídia entra no banco e Memórias é atualizada na aba em exibição.
+Quadros mantêm a ordem e a identidade da sessão. Se a gravação falhar, o app
+mostra uma mensagem e não publica um card incompleto.
+
+Gate de 34 testes, exit 0, cobre quadros sucessivos vermelho/azul, atribuição
+à sessão, atualização imediata, navegação durante uma escrita bloqueada por
+fixture e regressões de captura e transferências. A aquisição GDI existente
+ainda exige primeiro plano. Captura sem foco, oclusão, UAC e controles físicos
+continuam pendentes de solução específica e validação no Windows. O teste
+Qt offscreen não comprova o comportamento no HSR ou em um emulador real.
+
 ## Commits locais já preparados
 
 - f0b43c0: plano/base confirmados e diagnóstico inicial.
@@ -256,3 +271,4 @@ preservados e reabertura da base. As duas capturas da Biblioteca usam fixtures.
 - 76e9241: perfis por formatos declarados e apresentação sem presumir PC nos fluxos alterados.
 - e28afe0: listas personalizadas da Biblioteca.
 - 9d81c72: usar somente o título nos nomes das linhas de gestão das listas.
+- c9a3a4b: logos proporcionais no gerenciador de listas.
