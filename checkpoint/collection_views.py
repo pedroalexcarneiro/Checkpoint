@@ -208,8 +208,12 @@ def memory_card(window,record,diary_only=False,thumbnail_cache=None):
 
 
 class MemoryGrid(CardGrid):
+    def __init__(self,target):
+        super().__init__(target)
+        self.grid.setHorizontalSpacing(SPACE['lg']-3)
+
     def reflow(self):
-        gap=self.grid.spacing()
+        gap=self.grid.horizontalSpacing()
         columns=max(1,(self.width()+gap)//(280+gap))
         width=min(336,max(1,(self.width()-gap*(columns-1))//columns))
         if len(self.cards)<columns:width=min(320,width)

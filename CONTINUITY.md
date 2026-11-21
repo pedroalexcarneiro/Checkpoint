@@ -1,5 +1,16 @@
 # Continuidade do Checkpoint
 
+Para retomar em uma nova conversa, leia o [relatório de continuidade](RELATORIO_CONTINUIDADE_CHECKPOINT.md).
+
+## Revisão 0.1.40 — envio autorizado em 21/11/2026
+
+O dono autorizou enviar a revisão visual ao GitHub após o relatório de
+continuidade. A borda e a porcentagem da opção de capa selecionada acompanham
+o tema ativo. Memórias preserva cinco colunas em 1920 px e reserva 12 px até
+a barra, com 21 px entre colunas. A recuperação de nomes de ROMs legadas
+ficou para uma rodada separada. O histórico abaixo registra a autorização
+local anterior e as validações de cada etapa.
+
 ## Rodada local de estabilidade/organização — 21/11/2026
 
 Base 0.1.39/9ecbc95, branch fix/0139-estabilidade-organizacao. Pedido novo

@@ -1,5 +1,6 @@
 import pytest
 from PySide6.QtCore import QPoint,Qt
+from PySide6.QtGui import QColor
 from PySide6.QtWidgets import QWidget,QSlider
 from PySide6.QtTest import QTest
 from checkpoint.settings_previews import CoverSizeChoices
@@ -19,14 +20,27 @@ def test_five_clickable_covers_have_common_base_and_active_value(ui,app,size,val
  assert all(a.height()<b.height() for a,b in zip(rectangles,rectangles[1:]))
  assert preview.active_index()==active and sum(b.isChecked() for b in preview.buttons)==1
  image=preview.grab().toImage();rect=rectangles[active]
- color=image.pixelColor(round(rect.center().x()),round(rect.top()))
- assert color.green()>color.red() and color.green()>color.blue()
+ x,y=round(rect.center().x()),round(rect.top())
+ assert QColor(w.theme.colors['accent']) in [image.pixelColor(x,row) for row in range(y-1,y+2)]
  p=preview.mapTo(card,QPoint(0,0))
  assert p.y()+preview.height()<=card.height() and p.x()+preview.width()<=card.width()
  assert all(preview.rect().contains(rect.toRect()) for rect in rectangles)
  assert w.library.setting('appearance.cover_size')==value and w.gallery.cover_percent==value
  w.navigate(1);w.navigate(5);app.processEvents()
  preview=w.pages[5].findChild(CoverSizeChoices);assert preview.percent==value
+
+
+def test_cover_selection_follows_theme_changes_without_losing_selection(ui,app):
+ w,_=ui;w.navigate(5)
+ preview=w.pages[5].findChild(CoverSizeChoices);preview.group.button(70).click()
+ for theme in ('green','pink','black'):
+  w.theme_selector.setCurrentIndex(w.theme_selector.findData(theme));app.processEvents()
+  assert w.theme.key==theme and preview.group.checkedId()==70
+  active=preview.group.button(70);rect=active.artwork_rect();image=active.grab().toImage()
+  accent=QColor(w.theme.colors['accent'])
+  x,y=round(rect.center().x()),round(rect.top())
+  assert accent in [image.pixelColor(x,row) for row in range(y-1,y+2)]
+  assert any(image.pixelColor(x,y)==accent for y in range(198,222) for x in range(image.width()))
 
 
 def test_old_percent_preserved_and_keyboard_selects(ui,app):

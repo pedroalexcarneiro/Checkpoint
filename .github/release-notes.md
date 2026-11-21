@@ -1,42 +1,18 @@
-# Checkpoint 0.1.39 — correções e polimento
+# Checkpoint 0.1.40 · Estabilidade e interface
 
-Correções da 0.1.38 e polimento da interface.
+- Memórias abre e navega com carregamento progressivo. A grade mantém as fotos inteiras, com espaço até a barra de rolagem. Os filtros mostram apenas jogos com memórias.
+- Últimas sessões e Memórias recentes deslizam lateralmente no Início. O destaque usa a arte do último jogo iniciado e as ofertas mostram capas verticais.
+- Tamanho das capas usa a cor do tema ativo na seleção. O diálogo Adicionar jogo abre em formato vertical, com prévia e resultados roláveis.
+- Downloads de ROM mostram progresso na ficha e na fila. Arquivos novos preservam nomes reconhecíveis, sujeitos à verificação e tratamento de colisão.
+- Sessões preservam tempo acompanhado por checkpoints. Finalizar solicita o fechamento da janela do jogo.
+- Captura Windows por janela, gravação em segundo plano e suporte ao botão Captura do Switch Pro via SDL3. Os avisos de rotina aparecem no canto da janela.
+- Desejos ganha filtros responsivos e complemento opcional de desconto em BRL para ofertas com identidade confirmada.
 
-- Degradê aprovado nas superfícies, preservando as cores de destaque e o Preto neutro.
-- Captura de quadro novo da área visível do jogo, com atualização imediata de Memórias.
-- Mapa de calor compacto e responsivo, nomes legíveis e legenda sem sobreposição.
+## Validação e limites
 
-- Início usa a largura disponível com margens curtas, Últimas sessões reais
-  (incluindo sessões distintas do mesmo jogo), cards menores, capas inteiras
-  arredondadas, navegação responsiva e setas equivalentes.
-- Resumo semanal adaptável e Ofertas em linhas com miniaturas arredondadas,
-  identificação, origem e preço conforme a política de lojas.
-- Desejos mais compactos e com mais colunas; ficha exclusiva e favoritos preservados.
-- Diário compacto na aba própria; na visualização mista, nota e captura têm
-  áreas de prévia equivalentes, texto íntegro e leitura acessível.
-- Jogos concluídos integrado ao filtro de Estatísticas, usando a última data
-  de marcação já gravada, sem inventar histórico ou criar datas pelo status.
-- Foco do teclado dentro das capas de Aparência; tema Preto com superfícies neutras.
-- Abas Emuladores e Lixeira: perfis existentes reutilizados e restauração
-  individual em cards com logo, nome e data real ou Data não registrada.
-- Seleção de perfil pela ficha, gerenciamento com botões agrupados e aviso
-  explícito para perfil em uso; remover configuração preserva arquivos.
-- Diálogos próprios com tema, botões em português, espaçamento e limites da tela;
-  seletores nativos e UAC mantêm o comportamento do sistema.
-- Lista da Biblioteca com espaço estável para rolagem; ícones primários na cor
-  do texto; nomes longos de ROM e saves tradicionais com composição compacta.
+- O workflow executa a suíte Windows, monta e verifica o aplicativo e o atualizador, testa o pacote extraído e produz capturas isoladas.
+- Os nomes físicos de ROMs que já existiam são preservados. A recuperação desses nomes será tratada separadamente.
+- A cobertura de preços para consoles, captura WGC em jogos reais, o desligamento no Windows físico e as integrações autenticadas ainda dependem de homologação própria.
+- Backups de saves tradicionais são locais. O fluxo de ROMs no Drive permanece de leitura e o cadastro protegido A4 mantém seu contrato.
 
-## Pendências e limites
-
-- HSR/DirectX e captura em tela cheia no PC do dono ainda não foram homologados;
-  duas janelas Qt controladas não substituem essa validação.
-
-- Consulta real de preços de Switch/PlayStation/Xbox não foi comprovada na API
-  atual. Filtro de plataforma não significa suporte console pronto.
-- Backups de saves são locais; não existe upload/sincronização implementado
-  para o Drive. A integração de ROMs usa acesso de leitura.
-- Fechar apenas a ROM com o emulador aberto continua exigindo encerramento
-  manual do registro quando necessário; não há reconhecimento de troca de ROM.
-- A4, dados, schema 4, identidades, cofre, originais e histórico preservados.
-- Testes em runner não homologam contas, emuladores, captura, consentimento UAC
-  ou uso no PC do dono. Resultados efetivos acompanham o relatório de lançamento.
+Consulte o relatório de continuidade no código-fonte para o histórico, as preferências de interface e as próximas etapas.

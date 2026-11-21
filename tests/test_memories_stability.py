@@ -2,7 +2,7 @@
 import shutil
 from threading import Event
 from time import monotonic
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QPoint, QTimer
 from PySide6.QtGui import QImage, QColor
 from PySide6.QtTest import QTest
 from checkpoint.memory_artwork import MemoryArtwork
@@ -98,12 +98,16 @@ def test_memory_filters_keep_identity_and_more_columns_use_available_width(ui, a
     for width in (1280, 1920, 1000, 1280):
         window.resize(width, 800)
         for _ in range(6): app.processEvents()
-        grid = browser.states[0]['grid']
+        state = browser.states[0]
+        grid = state['grid']
         counts.append(grid.columns)
         right = max(card.geometry().right() for card in grid.cards)
-        assert grid.width()-right <= grid.grid.spacing()+4
+        assert grid.width()-right <= grid.grid.horizontalSpacing()+4
+        viewport = state['scroll'].viewport()
+        gap = viewport.width()-grid.mapTo(viewport, QPoint(right+1, 0)).x()
+        assert gap >= 12
         assert all(250 <= card.width() <= 336 for card in grid.cards)
-    assert counts[1] > counts[0]
+    assert counts == [3, 5, 2, 3]
     browser.game_filter.setCurrentIndex(browser.game_filter.findData(other))
     assert all(card.memory_record['game_id'] == other for card in browser.states[0]['grid'].cards)
     assert window.library.setting('memories.game') == other

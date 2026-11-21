@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.40 — estabilidade e revisão de interface
+
+- Memórias com carga progressiva, filtros por registros existentes e margem até a barra de rolagem.
+- Início com carrosséis de rolagem lateral, até dez jogos distintos em Últimas sessões, banner maior e ofertas com capas.
+- Seleção de tamanho de capa segue a cor do tema. Cadastro em formato vertical e notificações breves no canto da janela.
+- Downloads de ROM com tarefa e progresso na ficha, checkpoints de sessão, fechamento solicitado ao jogo e suporte ao Switch Pro via SDL3.
+- Complemento opcional de descontos por oferta confirmada. Nomes de ROMs antigas e contratos protegidos preservados.
+
 ## 0.1.39 — correções e degradê publicados
 
 Tag 7703d80; workflow 44660106137 aprovado. 764 testes Linux e 764 Windows,

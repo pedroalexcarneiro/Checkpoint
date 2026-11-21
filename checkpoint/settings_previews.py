@@ -37,11 +37,10 @@ class CoverChoice(QAbstractButton):
         width=height*2/3
         return QRectF((self.width()-width)/2,188-height,width,height)
     def paintEvent(self,event):
-        from .theme import get_theme
-        p=QPainter(self);p.setRenderHint(QPainter.Antialiasing);c=colors();green=get_theme('green').colors['accent']
-        p.setBrush(QColor(c['panel']));p.setPen(QPen(QColor(green if self.isChecked() else c['border']),2 if self.isChecked() else 1))
+        p=QPainter(self);p.setRenderHint(QPainter.Antialiasing);c=colors()
+        p.setBrush(QColor(c['panel']));p.setPen(QPen(QColor(c['accent'] if self.isChecked() else c['border']),2 if self.isChecked() else 1))
         p.drawRoundedRect(self.artwork_rect(),6,6)
-        p.setPen(QColor(green if self.isChecked() else c['text']));p.drawText(QRectF(0,198,self.width(),24),Qt.AlignCenter,str(self.value)+'%')
+        p.setPen(QColor(c['accent'] if self.isChecked() else c['text']));p.drawText(QRectF(0,198,self.width(),24),Qt.AlignCenter,str(self.value)+'%')
         if self.hasFocus() and self.keyboard_focus:
             p.setBrush(Qt.NoBrush);p.setPen(QPen(QColor(c['secondary']),1,Qt.DashLine))
             p.drawRoundedRect(self.artwork_rect().adjusted(4,4,-4,-4),4,4)

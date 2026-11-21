@@ -1,7 +1,13 @@
-# Estado atual — Checkpoint 0.1.39 publicada
+# Estado atual — Checkpoint 0.1.40 em publicação
+
+O envio desta revisão foi autorizado após o [relatório de continuidade](RELATORIO_CONTINUIDADE_CHECKPOINT.md).
+Aparência aplica o destaque da paleta à opção de tamanho de capa selecionada.
+Memórias ganha margem de 12 px ao lado da rolagem e 21 px entre colunas. Os
+41 testes direcionados passaram. A publicação segue o workflow Windows existente.
+A recuperação de nomes de ROMs antigas ficou fora desta revisão por decisão do dono.
 
 Revisão de estabilidade/organização em andamento sobre 0.1.39/9ecbc95, somente
-local e sem publicação autorizada. Memórias: carga progressiva/reuso de página,
+local até a autorização posterior. Memórias: carga progressiva/reuso de página,
 miniaturas no pool/cache limitado, filtros só para jogos com memórias e grade
 responsiva. A revisão local em f3a0264 passou em 878 testes em Linux, incluindo
 o rodapé horizontal do diálogo Captura pelo controle.

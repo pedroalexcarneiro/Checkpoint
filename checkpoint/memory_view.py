@@ -5,6 +5,7 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QComboBox, QTab
 from .design_system import page_scroll, empty_state
 from .home_data import recent_memories
 from .memory_artwork import memory_cache
+from .visual_tokens import SPACE
 
 
 def record_key(record):
@@ -51,6 +52,7 @@ class MemoryBrowser(QWidget):
             outer = QVBoxLayout(page)
             outer.setContentsMargins(0, 16, 0, 0)
             inside = page_scroll(outer, reserve_scrollbar=True)
+            inside.setContentsMargins(0, 0, SPACE['sm'], SPACE['xs'])
             self.states.append({'kind': kind, 'layout': inside, 'scroll': inside.scroll_area,
                                 'grid': None, 'empty': None, 'signature': None, 'limit': self.batch_size})
             index = len(self.states)-1
