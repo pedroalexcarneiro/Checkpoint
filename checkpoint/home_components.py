@@ -1,4 +1,6 @@
 """Cards e navegação do Início, com ações separadas e conteúdo local."""
+from math import sqrt
+
 from PySide6.QtCore import Qt,QRectF,QSize,QSizeF
 from PySide6.QtGui import QPainter,QPainterPath,QColor,QPixmap,QLinearGradient,QRadialGradient,QTransform,QBrush,QRegion,QFont,QPen
 from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QLabel,QPushButton,QSizePolicy,QDialog,QScrollArea,QBoxLayout,QLayout
@@ -60,10 +62,10 @@ class LastPlayedBanner(QPushButton):
 
     def resizeEvent(self,event):
         super().resizeEvent(event)
-        height=round(self.width()*.15)
+        height=round(self.width()*.16)
         if not self.banner.isNull():
-            height=max(height,round(self.width()*.60*self.banner.height()/self.banner.width())+10)
-        self.setFixedHeight(max(142,min(360,height)))
+            height=max(height,round(self.width()*.65*self.banner.height()/self.banner.width())+10)
+        self.setFixedHeight(max(154,min(390,height)))
 
     def identity_width(self):
         if self.banner.isNull():return max(160,min(400,self.width()-48))
@@ -78,11 +80,12 @@ class LastPlayedBanner(QPushButton):
 
     def paint_banner(self,painter,target):
         width,height=self.banner.width(),self.banner.height()
-        blend_start=max(0,target.left()-9)
-        blend_end=target.left()+min(30,target.width()*.11)
-        # Uma pequena extensão da borda evita emenda entre o fundo e o quadro inteiro.
-        columns=((blend_start,target.left()-blend_start,0,1),
-                 (target.left(),target.width(),0,width),
+        background=QLinearGradient(0,0,target.left(),0)
+        background.setColorAt(0,QColor('#0d1119'))
+        background.setColorAt(1,self.transition_color)
+        painter.fillRect(self.rect(),background)
+        # Os pixels externos completam o contorno sem alterar a proporção da imagem.
+        columns=((target.left(),target.width(),0,width),
                  (target.right(),self.width()-target.right(),width-1,1))
         rows=((0,target.top(),0,1),
               (target.top(),target.height(),0,height),
@@ -91,26 +94,23 @@ class LastPlayedBanner(QPushButton):
             for y,tile_height,source_y,source_height in rows:
                 painter.drawPixmap(QRectF(x,y,tile_width,tile_height),self.banner,
                                    QRectF(source_x,source_y,source_width,source_height))
-        background=QLinearGradient(0,0,blend_start,0)
-        background.setColorAt(0,QColor('#0d1119'))
-        background.setColorAt(1,self.transition_color)
-        painter.fillRect(QRectF(0,0,blend_start,self.height()),background)
-        shade=QColor(self.transition_color)
-        transparent=QColor(shade);transparent.setAlpha(0)
-        base_fade=QLinearGradient(blend_start,0,blend_end,0)
-        base_fade.setColorAt(0,self.transition_color);base_fade.setColorAt(1,transparent)
-        painter.fillRect(QRectF(blend_start,0,blend_end-blend_start,self.height()),base_fade)
-        # A sombra elíptica entra mais no centro da imagem e se recolhe nos extremos.
-        radius=min(246,target.width()*.43)
-        curved_fade=QRadialGradient(0,0,1)
-        shade.setAlpha(190);curved_fade.setColorAt(0,shade)
-        curved_fade.setColorAt(.28,shade)
-        shade.setAlpha(100);curved_fade.setColorAt(.70,shade)
-        curved_fade.setColorAt(1,transparent)
-        brush=QBrush(curved_fade)
-        brush.setTransform(QTransform().translate(target.left()-20,self.height()/2)
-                           .scale(radius,self.height()*.54))
-        painter.fillRect(QRectF(blend_start,0,radius,self.height()),brush)
+        # A elipse toca a borda da arte no meio da faixa e recua no topo e na base.
+        radius_x=target.width()*.61
+        curve_depth=min(54,self.height()*.27,target.width()*.12)
+        corner_offset=sqrt(1-(1-curve_depth/radius_x)**2)
+        radius_y=self.height()/(2*corner_offset)
+        feather=min(82,target.width()*.18)
+        clear_stop=1-feather/radius_x
+        center_x=target.left()+radius_x
+        transparent=QColor(self.transition_color);transparent.setAlpha(0)
+        fade=QRadialGradient(0,0,1)
+        fade.setColorAt(clear_stop,transparent)
+        fade.setColorAt(1,self.transition_color)
+        brush=QBrush(fade)
+        brush.setTransform(QTransform().translate(center_x,self.height()/2).scale(radius_x,radius_y))
+        clear_at_corner=center_x-radius_x*sqrt(clear_stop**2-corner_offset**2)
+        blend_left=target.left()-2
+        painter.fillRect(QRectF(blend_left,0,clear_at_corner-blend_left,self.height()),brush)
 
     def paintEvent(self,event):
         from .visual_tokens import RADIUS
@@ -120,12 +120,13 @@ class LastPlayedBanner(QPushButton):
         painter.setRenderHint(QPainter.SmoothPixmapTransform)
         painter.setClipPath(contour)
         target=self.banner_target()
-        background=QLinearGradient(0,0,self.width(),0)
-        background.setColorAt(0,QColor('#0d1119'))
-        background.setColorAt(1,QColor(colors()['elevated']))
-        painter.fillRect(bounds,background)
         if not self.banner.isNull():
             self.paint_banner(painter,target)
+        else:
+            background=QLinearGradient(0,0,self.width(),0)
+            background.setColorAt(0,QColor('#0d1119'))
+            background.setColorAt(1,QColor(colors()['elevated']))
+            painter.fillRect(bounds,background)
         area=QRectF(24,16,self.identity_width(),max(20,self.play_button.y()-24))
         if not self.logo.isNull():
             size=QSizeF(self.logo.size()).scaled(area.size(),Qt.KeepAspectRatio)

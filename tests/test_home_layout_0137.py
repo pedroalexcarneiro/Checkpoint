@@ -204,16 +204,13 @@ def test_home_hero_keeps_entire_wide_and_narrow_banners(ui,app,folder):
                 for x,y,expected in ((middle.x(),target.top()+2,'yellow'),(middle.x(),target.bottom()-3,'magenta'),
                                      (target.right()-3,middle.y(),'red')):
                     assert rendered.pixelColor(round(x),round(y))==QColor(expected)
-                for y,color in ((target.top()+2,'yellow'),(middle.y(),'cyan'),(target.bottom()-3,'magenta')):
+                for y in (target.top()+2,middle.y(),target.bottom()-3):
                     before=rendered.pixelColor(round(target.left()-1),round(y)).getRgb()
                     after=rendered.pixelColor(round(target.left()+1),round(y)).getRgb()
-                    source=QColor(color).getRgb()
                     assert all(abs(a-b)<16 for a,b in zip(before,after))
-                    assert max(abs(a-b) for a,b in zip(after,source))>16
-                    assert max(abs(a-b) for a,b in zip(after,hero.transition_color.getRgb()))>10
-                x=round(target.left()+min(90,target.width()*.18))
+                x=round(target.left()+min(54,target.width()*.13))
                 center=rendered.pixelColor(x,round(middle.y())).blue()
                 for height_ratio in (.17,.83):
                     edge=rendered.pixelColor(x,round(target.top()+height_ratio*target.height())).blue()
-                    assert edge>center+18
+                    assert center>edge+18
         finally:hero.close()
