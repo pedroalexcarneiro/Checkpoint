@@ -1,0 +1,81 @@
+{
+  "platform": "Linux Qt offscreen; n\u00e3o homologa Windows",
+  "fixtures": true,
+  "screenshots": [
+    {
+      "file": "home-normal-1280x800.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true
+    },
+    {
+      "file": "home-maximizada.png",
+      "window_size": [
+        1920,
+        1080
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": true,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true
+    },
+    {
+      "file": "home-restaurada.png",
+      "window_size": [
+        1280,
+        800
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true
+    },
+    {
+      "file": "home-1920x1080.png",
+      "window_size": [
+        1920,
+        1080
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true
+    },
+    {
+      "file": "home-menor-1000x700.png",
+      "window_size": [
+        1000,
+        700
+      ],
+      "screen_size": [
+        1920,
+        1080
+      ],
+      "maximized": false,
+      "dpr": 1.0,
+      "qt_platform": "offscreen",
+      "fixtures": true
+    }
+  ]
+}

@@ -21,9 +21,12 @@ def test_home_has_reference_hero_cta_and_personal_sections(library,app):
     from datetime import datetime,timezone
     with library.sql:library.sql.execute("INSERT INTO play_sessions(game_id,started_at,state,pid) VALUES(?,?,'interrupted',123)",(identity,datetime.now(timezone.utc).isoformat()))
     window=MainWindow(library);window.show();app.processEvents()
-    from checkpoint.home_components import RecentArtwork
-    assert len(window.pages[0].findChildren(RecentArtwork))==1
-    cta=next(button for button in window.pages[0].findChildren(QPushButton) if button.text()=='Continuar jogando')
+    from checkpoint.home_components import LastPlayedBanner
+    banner=window.pages[0].findChild(LastPlayedBanner)
+    assert banner.game_id==identity
+    cta=banner.play_button
+    assert cta.text()=='Continuar'
+    assert not any(button.text()=='Ver histórico' for button in window.pages[0].findChildren(QPushButton))
     labels=[label.text() for label in window.pages[0].findChildren(QLabel)]
     assert 'Últimas sessões' in labels and 'Resumo da semana' in labels and 'Memórias recentes' in labels
     from unittest.mock import patch

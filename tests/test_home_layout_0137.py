@@ -2,7 +2,7 @@ from datetime import datetime,timedelta,timezone
 from PySide6.QtCore import Qt,QPoint
 from PySide6.QtWidgets import QWidget,QPushButton,QLabel,QComboBox
 from PySide6.QtTest import QTest
-from checkpoint.home_components import RecentArtwork,RecentGameCard,MemoryCarousel
+from checkpoint.home_components import LastPlayedBanner,RecentArtwork,RecentGameCard,MemoryCarousel
 from test_bugs_0134 import ui,sample
 
 
@@ -20,11 +20,15 @@ def test_home_actions_are_distinct_and_week_opens_correct_period(ui,app,monkeypa
     monkeypatch.setattr(w,'detail',lambda identity:calls.append(('detail',identity)))
     monkeypatch.setattr(w,'edit_game',lambda identity:calls.append(('setup',identity)))
     w.navigate(0);app.processEvents()
-    cards=w.pages[0].findChildren(RecentGameCard);assert {c.game_id for c in cards}=={i,j}
+    banner=w.pages[0].findChild(LastPlayedBanner);assert banner.game_id==j
+    cards=w.pages[0].findChildren(RecentGameCard);assert {c.game_id for c in cards}=={i}
     first=next(c for c in cards if c.game_id==i)
     QTest.mouseClick(first.findChild(RecentArtwork),Qt.LeftButton);assert calls==[('detail',i)]
     play=next(b for b in first.findChildren(QPushButton) if b.property('homeContinue'))
     play.click();assert calls==[('detail',i),('setup',i)]
+    QTest.mouseClick(banner,Qt.LeftButton);assert calls[-1]==('detail',j)
+    QTest.mouseClick(banner.play_button,Qt.LeftButton)
+    assert calls==[('detail',i),('setup',i),('detail',j),('setup',j)]
     button=next(b for b in w.pages[0].findChildren(QPushButton) if b.text()=='Ver estatísticas')
     button.click();assert w.current_page==4
     assert w.pages[4].findChild(QComboBox,'statisticsPeriod').currentData()=='weekly'
@@ -78,7 +82,7 @@ def test_three_recent_games_carousel_preserves_every_cover_edge(ui,app,folder):
     from PySide6.QtGui import QImage,QColor,QPainter
     from checkpoint.home_components import GameStrip
     w,i=ui;identities=[i]
-    for title in ('Hades','Celeste','Metroid Fusion','Portal','Metroid'):
+    for title in ('Hades','Celeste','Metroid Fusion','Portal','Metroid','Edição A','Edição B','Edição C','Edição D','Edição E','Edição F'):
         identities.append(w.library.save_game({'title':title,'platform':'PC'}))
     for n,identity in enumerate(identities):
         image=QImage(200,300,QImage.Format_RGB32);image.fill(QColor('blue'));p=QPainter(image)
@@ -91,7 +95,10 @@ def test_three_recent_games_carousel_preserves_every_cover_edge(ui,app,folder):
         w.resize(*size);w.navigate(0)
         for _ in range(8):app.processEvents()
         strip=w.pages[0].findChild(GameStrip);assert len(strip.tiles)==strip.visible_count
+        assert [game['id'] for game in strip.games]==identities[1:11]
+        assert len(list(w.library.sql.execute('SELECT id FROM play_sessions')))==len(identities)
         assert len(strip.tiles)>=2
+        assert all(first.geometry().right()+10<second.x() for first,second in zip(strip.tiles,strip.tiles[1:]))
         assert not strip.previous.isEnabled() and strip.next.isEnabled()
         for card in strip.tiles:
             art=card.findChild(RecentArtwork);target=art.image_target()
@@ -107,7 +114,7 @@ def test_three_recent_games_carousel_preserves_every_cover_edge(ui,app,folder):
             assert right.red()>right.green() and right.red()>right.blue()
         strip.setFocus();QTest.keyClick(strip,Qt.Key_Right);app.processEvents()
         assert strip.offset==1
-        assert [c.game_id for c in strip.tiles]==identities[1:1+strip.visible_count]
+        assert [c.game_id for c in strip.tiles]==identities[2:2+strip.visible_count]
         for _ in range(10):strip.next.click()
         assert not strip.next.isEnabled()
 
@@ -148,3 +155,31 @@ def test_offer_banner_uses_entire_banner_instead_of_cover(ui,app,folder):
             assert frame.pixelColor(1,y).green()>200 and frame.pixelColor(1,y).blue()>200
             assert frame.pixelColor(art.width()-2,y).red()>200 and frame.pixelColor(art.width()-2,y).green()<20
     finally:art.close()
+
+
+def test_home_hero_keeps_entire_wide_and_narrow_banners(ui,app,folder):
+    from PySide6.QtGui import QImage,QColor,QPainter
+    w,i=ui;seed_recent(w,i)
+    for n,(width,height) in enumerate(((1200,300),(640,440))):
+        image=QImage(width,height,QImage.Format_RGB32);image.fill(QColor('blue'))
+        painter=QPainter(image);painter.fillRect(0,0,width,24,QColor('yellow'))
+        painter.fillRect(0,height-24,width,24,QColor('magenta'))
+        painter.fillRect(0,24,24,height-48,QColor('cyan'))
+        painter.fillRect(width-24,24,24,height-48,QColor('red'));painter.end()
+        path=folder/f'hero-{n}.png';assert image.save(str(path))
+        game={**w.library.get(i),'banner':str(path)}
+        hero=LastPlayedBanner(w,game);hero.show()
+        try:
+            for window_width in (735,1020,1660):
+                hero.resize(window_width,hero.height())
+                for _ in range(8):app.processEvents()
+                target=hero.banner_target()
+                assert hero.rect().contains(target.toAlignedRect())
+                assert target.left()>hero.play_button.geometry().right()
+                assert abs(target.width()/target.height()-width/height)<.01
+                rendered=hero.grab().toImage()
+                middle=target.center()
+                for x,y,expected in ((middle.x(),target.top()+2,'yellow'),(middle.x(),target.bottom()-3,'magenta'),
+                                     (target.left()+2,middle.y(),'cyan'),(target.right()-3,middle.y(),'red')):
+                    assert rendered.pixelColor(round(x),round(y))==QColor(expected)
+        finally:hero.close()

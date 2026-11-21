@@ -170,6 +170,32 @@ O teste de navegação saiu do diálogo a 25%, conferiu a mesma barra na ficha,
 abriu outro jogo sem transferências e confirmou o progresso ao retornar.
 Gate de vínculo e transferência: 25 testes aprovados em 3,11 s, exit 0.
 
+## Unidade 5 — Início integrado (item 20)
+
+A imagem do dono orienta a composição. O primeiro bloco exibe o último jogo
+iniciado com PID registrado. A arte inteira fica à direita e o logo ou nome
+à esquerda, com degradê integrado e altura responsiva. Clicar na arte, logo
+ou nome abre a ficha. Continuar é uma ação independente.
+
+Últimas sessões mostra até dez outros jogos, uma entrada por jogo e a sessão
+mais recente. As capas mantêm proporção e altura máxima existente. A margem
+lateral foi reduzida de 12 para 8 px em cada card, com separação entre cards.
+As setas aparecem quando existem mais itens do que cabem. A ficha pode ser
+aberta pela capa, título ou card. O histórico completo permanece em
+Configurações > Dados e backup > Histórico de execuções.
+
+Resumo e Ofertas mantêm a coluna direita com ajuste de espaçamento. Nas ofertas,
+banners inteiros de quatro cantos arredondados substituem miniaturas verticais.
+O preço e a política de origem continuam os mesmos. Memórias recentes conserva
+o carrossel na largura total abaixo das colunas.
+
+Gate local com 68 testes aprovados, exit 0. Exercita pixels nas quatro bordas de
+duas proporções de banner, três larguras, margens sem sobreposição, limite sem
+excluir sessões, cliques independentes, controles de carrossel e ausência de arte.
+Os testes de layout refletem o novo botão e banner. A cobertura da arte inteira
+e dos quatro cantos foi preservada. Capturas Qt em 1280×800, maximizada e 1000×700
+usam fixtures. A aprovação visual do dono e a inspeção no Windows seguem pendentes.
+
 ## Commits locais já preparados
 
 - f0b43c0: plano/base confirmados e diagnóstico inicial.
@@ -177,3 +203,4 @@ Gate de vínculo e transferência: 25 testes aprovados em 3,11 s, exit 0.
 - 45208e6: checkpoints de tempo e dispensa por sessão.
 - 0732989: manter posição dos diálogos ao redimensionar.
 - 0b0734e: fila de transferências, progresso e verificação.
+- d5ddedc: mostrar o progresso da transferência na aba Arquivos da ficha.

@@ -96,6 +96,8 @@ def build_settings(window):
         row.addStretch()
         inside.addLayout(row);grid.add_card(frame)
     data.addWidget(grid)
+    from .home_components import show_execution_history
+    data.addWidget(action('Histórico de execuções',lambda:show_execution_history(window)),0,Qt.AlignLeft)
     frame,inside=card();inside.addWidget(text('Atualizações do Checkpoint','cardTitle'))
     update=action('Verificar atualizações',window.updates,True);update.setObjectName('checkUpdates');inside.addWidget(update,0,Qt.AlignLeft);data.addWidget(frame)
     extra=QWidget();inside=QVBoxLayout(extra);inside.addWidget(action('Revisar sessões interrompidas',window.recover_sessions));disclosure('Avançado',extra,data)

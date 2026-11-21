@@ -1,9 +1,9 @@
 """Cards e navegação do Início, com ações separadas e conteúdo local."""
-from PySide6.QtCore import Qt,QRectF,QSize
-from PySide6.QtGui import QPainter,QPainterPath,QColor,QPixmap
+from PySide6.QtCore import Qt,QRectF,QSize,QSizeF
+from PySide6.QtGui import QPainter,QPainterPath,QColor,QPixmap,QLinearGradient,QRegion,QFont,QPen
 from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QLabel,QPushButton,QSizePolicy,QDialog,QScrollArea,QBoxLayout,QLayout
 from .design_system import CardSurface,IconButton,SectionHeader,ArtworkButton,colors
-from .ui_components import Hero,text,action,ElidedAction
+from .ui_components import text,action,ElidedAction
 from .playtime import format_time
 from .library import display_status
 from .locale import datetime_display
@@ -24,6 +24,87 @@ def last_played_text(value):
     stamp=instant(value).astimezone();today=datetime.now().astimezone().date()
     day='hoje' if stamp.date()==today else 'ontem' if stamp.date()==today-timedelta(days=1) else stamp.strftime('%d/%m')
     return 'Última vez: '+day+', '+stamp.strftime('%H:%M')
+
+
+def continue_game(window,game):
+    if game.get('executable') or window.library.sql.execute('SELECT 1 FROM game_files WHERE game_id=?',(game['id'],)).fetchone():
+        window.start_game(game)
+    else:
+        window.edit_game(game['id'])
+
+
+class LastPlayedBanner(QPushButton):
+    """A arte conserva todo o quadro; continuar tem uma ação independente."""
+    def __init__(self,window,game):
+        super().__init__();self.game_id=game['id'];self.title=game['title']
+        self.banner=QPixmap(game.get('banner') or '')
+        self.logo=QPixmap(game.get('logo') or '')
+        self.banner_edges=()
+        if not self.banner.isNull():
+            y=self.banner.height()//2
+            self.banner_edges=tuple(self.banner.copy(x,y,1,1).toImage().pixelColor(0,0)
+                                    for x in (0,self.banner.width()-1))
+        if not self.logo.isNull() and self.logo.hasAlphaChannel():
+            bounds=QRegion(self.logo.mask()).boundingRect()
+            if not bounds.isEmpty():self.logo=self.logo.copy(bounds)
+        self.setObjectName('homeLastPlayed');self.setCursor(Qt.PointingHandCursor)
+        self.setAccessibleName('Abrir ficha de '+self.title);self.setFocusPolicy(Qt.StrongFocus)
+        self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed);self.setFixedHeight(164)
+        self.clicked.connect(lambda:window.detail(self.game_id))
+        layout=QVBoxLayout(self);layout.setContentsMargins(24,16,24,20);layout.addStretch()
+        self.play_button=action('Continuar',lambda:continue_game(window,game),True)
+        self.play_button.setProperty('homeContinue',True)
+        layout.addWidget(self.play_button,0,Qt.AlignLeft)
+
+    def resizeEvent(self,event):
+        super().resizeEvent(event)
+        self.setFixedHeight(max(142,min(240,round(self.width()*.15))))
+
+    def identity_width(self):
+        if self.banner.isNull():return max(160,min(400,self.width()-48))
+        return max(120,min(300,round(self.width()*.26)))
+
+    def banner_target(self):
+        if self.banner.isNull():return QRectF()
+        gutter=5
+        available=QSizeF(max(1,self.width()-self.identity_width()-24-gutter),self.height()-2*gutter)
+        size=QSizeF(self.banner.size()).scaled(available,Qt.KeepAspectRatio)
+        return QRectF(self.width()-gutter-size.width(),(self.height()-size.height())/2,size.width(),size.height())
+
+    def paintEvent(self,event):
+        from .visual_tokens import RADIUS
+        bounds=QRectF(self.rect()).adjusted(.5,.5,-.5,-.5)
+        radius=RADIUS['card'];contour=QPainterPath();contour.addRoundedRect(bounds,radius,radius)
+        painter=QPainter(self);painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.SmoothPixmapTransform)
+        painter.setClipPath(contour)
+        target=self.banner_target()
+        background=QLinearGradient(0,0,self.width(),0)
+        onset=target.left()/self.width() if not target.isEmpty() else 1
+        background.setColorAt(0,QColor('#0d1119'))
+        background.setColorAt(onset*.42,QColor('#131923'))
+        fallback=QColor(colors()['elevated'])
+        if self.banner_edges:
+            left,right=self.banner_edges
+            background.setColorAt(onset,left if left.alpha() else fallback)
+            background.setColorAt(1,right if right.alpha() else fallback)
+        else:background.setColorAt(1,fallback)
+        painter.fillRect(bounds,background)
+        if not self.banner.isNull():
+            painter.drawPixmap(target,self.banner,QRectF(self.banner.rect()))
+        area=QRectF(24,16,self.identity_width(),max(20,self.play_button.y()-24))
+        if not self.logo.isNull():
+            size=QSizeF(self.logo.size()).scaled(area.size(),Qt.KeepAspectRatio)
+            target=QRectF(area.x(),area.center().y()-size.height()/2,size.width(),size.height())
+            painter.drawPixmap(target,self.logo,QRectF(self.logo.rect()))
+        else:
+            font=QFont(self.font());font.setPixelSize(24 if self.width()>=600 else 18);font.setBold(True)
+            painter.setFont(font);painter.setPen(QColor('#f4f8fd'))
+            painter.drawText(area,Qt.AlignVCenter|Qt.AlignLeft|Qt.TextWordWrap,
+                             painter.fontMetrics().elidedText(self.title,Qt.ElideRight,round(area.width()*2)))
+        painter.setClipping(False)
+        painter.setPen(QPen(QColor(colors()['accent'] if self.hasFocus() else colors()['border']),1))
+        painter.drawPath(contour)
 
 
 class RecentArtwork(QPushButton):
@@ -69,37 +150,36 @@ class RecentArtwork(QPushButton):
 class RecentGameCard(CardSurface):
     def __init__(self,window,game):
         super().__init__();self.game_id=game['id'];self.session_id=game.get('session_id');self.setObjectName('recentGameCard');self.setMinimumWidth(0)
-        self.setSizePolicy(QSizePolicy.Ignored,QSizePolicy.Maximum)
-        inside=QVBoxLayout(self);inside.setContentsMargins(12,12,12,12);inside.setSpacing(10)
+        self.open_detail=lambda:window.detail(self.game_id)
+        self.setCursor(Qt.PointingHandCursor)
+        self.setSizePolicy(QSizePolicy.Preferred,QSizePolicy.Maximum)
+        inside=QVBoxLayout(self);inside.setContentsMargins(8,12,8,12);inside.setSpacing(10)
         inside.setAlignment(Qt.AlignTop)
         inside.addWidget(RecentArtwork(game,window,maximum_height=210))
-        row=QHBoxLayout();row.setSpacing(8)
-        def continue_game():
-            if game.get('executable') or window.library.sql.execute('SELECT 1 FROM game_files WHERE game_id=?',(game['id'],)).fetchone():window.start_game(game)
-            else:window.edit_game(game['id'])
-        play=action('Continuar jogando',continue_game,True);play.setProperty('homeContinue',True);play.ensurePolished()
+        play=action('Continuar',lambda:continue_game(window,game),True);play.setProperty('homeContinue',True);play.ensurePolished()
         play.setMinimumWidth(play.sizeHint().width());play.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed)
-        row.addWidget(play,1);inside.addLayout(row)
-        title_row=QHBoxLayout();title_row.setSpacing(4)
-        title=ElidedAction(game['title'],lambda:window.detail(game['id']));title.setObjectName('activityLink');title_row.addWidget(title,1)
-        title_row.addWidget(IconButton('files','Abrir ficha de '+game['title'],lambda:window.detail(game['id'])));inside.addLayout(title_row)
+        inside.addWidget(play)
+        title=ElidedAction(game['title'],self.open_detail);title.setObjectName('activityLink');inside.addWidget(title)
         inside.addWidget(SingleLineInfo(display_status(game.get('status')),'muted'))
         inside.addWidget(SingleLineInfo(last_played_text(game['last_played']),tooltip='Última vez: '+datetime_display(game['last_played'])))
         inside.addWidget(SingleLineInfo('Tempo total: '+format_time(game['seconds'])))
+
+    def mouseReleaseEvent(self,event):
+        if event.button()==Qt.LeftButton and self.rect().contains(event.position().toPoint()):
+            self.open_detail();event.accept()
+        else:super().mouseReleaseEvent(event)
 
 
 class OfferBanner(RecentArtwork):
     def __init__(self,game,window):
         super().__init__({**game,'cover':'','logo':''},window)
         self.setObjectName('homeOfferBanner')
-
-
-class OfferThumbnail(RecentArtwork):
-    def __init__(self,game,window):
-        super().__init__(game,window)
-        self.setObjectName('homeOfferThumbnail');self.setFixedSize(52,70);self.setSizePolicy(QSizePolicy.Fixed,QSizePolicy.Fixed)
+    def sizeHint(self):return QSize(136,40)
     def resizeEvent(self,event):
-        QPushButton.resizeEvent(self,event)
+        if self.pixmap.isNull():
+            QPushButton.resizeEvent(self,event)
+            self.setFixedHeight(40)
+        else:super().resizeEvent(event)
 
 
 class HomeSectionHeader(QWidget):
@@ -110,17 +190,20 @@ class HomeSectionHeader(QWidget):
         self.row.setSizeConstraint(QLayout.SetNoConstraint)
         self.title=text(title,'sectionTitle');self.title.setWordWrap(False)
         self.row.addWidget(self.title,1)
-        self.control=action(button,callback);self.control.setProperty('variant','ghost');self.row.addWidget(self.control)
+        self.control=None
+        if callback is not None:
+            self.control=action(button,callback);self.control.setProperty('variant','ghost');self.row.addWidget(self.control)
         self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
     def minimumSizeHint(self):return QSize(0,self.sizeHint().height())
     def resizeEvent(self,event):
+        super().resizeEvent(event)
+        if self.control is None:return
         required=self.title.sizeHint().width()+self.control.sizeHint().width()+self.row.spacing()
         direction=QBoxLayout.TopToBottom if self.width()<required else QBoxLayout.LeftToRight
         if self.row.direction()!=direction:
             self.row.setDirection(direction)
             self.row.setAlignment(self.control,Qt.AlignLeft if direction==QBoxLayout.TopToBottom else Qt.AlignRight)
             self.updateGeometry()
-        super().resizeEvent(event)
 
 
 class HomeOfferRow(QWidget):
@@ -128,7 +211,9 @@ class HomeOfferRow(QWidget):
         super().__init__();self.setObjectName('homeOfferRow');self.setMinimumWidth(0)
         self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
         row=QHBoxLayout(self);row.setContentsMargins(0,6,0,6);row.setSpacing(12)
-        row.addWidget(OfferThumbnail(game,window))
+        banner=OfferBanner(game,window);banner.setFixedWidth(112);banner.maximum_art_height=42
+        banner.setSizePolicy(QSizePolicy.Fixed,QSizePolicy.Fixed)
+        row.addWidget(banner,0,Qt.AlignVCenter)
         words=QVBoxLayout();words.setContentsMargins(0,0,0,0);words.setSpacing(4)
         title=ElidedAction(game['title'],lambda:window.detail(game['id']));title.setObjectName('activityLink');words.addWidget(title)
         quote=game['quote'];offer=quote.get('selected_offer',{})
@@ -156,8 +241,7 @@ class GameStrip(QWidget):
     def __init__(self,window,games,maximum=8):
         super().__init__();self.setMinimumWidth(0);self.setObjectName('recentGames')
         self.host_window=window;self.games=games;self.maximum=maximum;self.offset=0;self.setFocusPolicy(Qt.StrongFocus)
-        measure=action('Continuar jogando',lambda:None,True);measure.ensurePolished()
-        self.minimum_tile_width=measure.sizeHint().width()+24;measure.deleteLater()
+        self.minimum_tile_width=156
         self.visible_count=max(1,min(maximum,(self.width()+12)//(self.minimum_tile_width+12)))
         self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
         layout=QVBoxLayout(self);layout.setContentsMargins(0,0,0,0);layout.setSpacing(8)
@@ -178,8 +262,10 @@ class GameStrip(QWidget):
         for tile in previous.values():
             tile.hide();tile.setParent(None);tile.deleteLater()
         for tile in self.tiles:
-            tile.setMaximumWidth(self.minimum_tile_width+64);self.row.addWidget(tile,1,Qt.AlignTop)
-        if len(self.tiles)<self.visible_count:self.row.addStretch(self.visible_count-len(self.tiles))
+            tile.setFixedWidth(self.minimum_tile_width);self.row.addWidget(tile,0,Qt.AlignTop)
+        self.row.addStretch()
+        show_controls=len(self.games)>self.visible_count
+        self.previous.setVisible(show_controls);self.next.setVisible(show_controls)
         self.previous.setEnabled(self.offset>0);self.next.setEnabled(self.offset+self.visible_count<len(self.games))
         self.updateGeometry()
     def move_by(self,step):
