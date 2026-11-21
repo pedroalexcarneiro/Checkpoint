@@ -1,7 +1,7 @@
 """Início integrado com execuções, semana, ofertas e memórias locais."""
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QLabel,QSizePolicy
-from .design_system import SectionHeader,AdaptiveColumns,CardSurface,empty_state,ArtworkButton,Badge
+from .design_system import AdaptiveColumns,CardSurface,empty_state,Badge
 from .ui_components import text,action,ElidedAction
 from .home_components import GameStrip,MemoryCarousel,HomeSectionHeader,HomeOfferRow,LastPlayedBanner
 from .home_data import recent_games,week_summary,wish_offers,recent_memories
@@ -53,7 +53,7 @@ def build_home(window):
     if not offers:offer_rows.addWidget(text('Nenhuma oferta válida nos desejos.','muted'))
     inside.addWidget(offer_list)
     right_layout.addWidget(frame)
-    columns=AdaptiveColumns(left,right,(3,2),breakpoint=780)
+    columns=AdaptiveColumns(left,right,(3,2),breakpoint=0)
     left.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
     right.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
     layout.addWidget(columns)

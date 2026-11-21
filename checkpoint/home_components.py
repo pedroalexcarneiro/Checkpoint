@@ -232,9 +232,9 @@ class HomeOfferRow(QWidget):
         super().__init__();self.setObjectName('homeOfferRow');self.setMinimumWidth(0)
         self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
         row=QHBoxLayout(self);row.setContentsMargins(0,6,0,6);row.setSpacing(12)
-        banner=OfferBanner(game,window);banner.setFixedWidth(112);banner.maximum_art_height=42
-        banner.setSizePolicy(QSizePolicy.Fixed,QSizePolicy.Fixed)
-        row.addWidget(banner,0,Qt.AlignVCenter)
+        self.banner=OfferBanner(game,window);self.banner.setFixedWidth(112);self.banner.maximum_art_height=42
+        self.banner.setSizePolicy(QSizePolicy.Fixed,QSizePolicy.Fixed)
+        row.addWidget(self.banner,0,Qt.AlignVCenter)
         words=QVBoxLayout();words.setContentsMargins(0,0,0,0);words.setSpacing(4)
         title=ElidedAction(game['title'],lambda:window.detail(game['id']));title.setObjectName('activityLink');words.addWidget(title)
         quote=game['quote'];offer=quote.get('selected_offer',{})
@@ -256,6 +256,10 @@ class HomeOfferRow(QWidget):
         price.setStyleSheet('color: '+window.theme.colors['accent']+'; font-weight: 600; text-align: right;')
         prices.addWidget(price,0,Qt.AlignRight);row.addLayout(prices)
 
+    def resizeEvent(self,event):
+        super().resizeEvent(event)
+        self.banner.setFixedWidth(max(64,min(112,event.size().width()-192)))
+
 
 class GameStrip(QWidget):
     """Quantidade visível acompanha a largura mínima dos controles."""
@@ -269,8 +273,11 @@ class GameStrip(QWidget):
         if header is None:header=HomeSectionHeader('Últimas sessões',None,'');layout.addWidget(header)
         self.previous=IconButton('chevron-left','Sessões anteriores',lambda:self.move_by(-1));header.row.addWidget(self.previous)
         self.next=IconButton('chevron-right','Próximas sessões',lambda:self.move_by(1));header.row.addWidget(self.next)
-        self.body=QWidget();self.row=QHBoxLayout(self.body);self.row.setContentsMargins(0,0,0,0);self.row.setSpacing(12);layout.addWidget(self.body)
+        self.body=QWidget();self.body.setMinimumWidth(0)
+        self.row=QHBoxLayout(self.body);self.row.setSizeConstraint(QLayout.SetNoConstraint)
+        self.row.setContentsMargins(0,0,0,0);self.row.setSpacing(12);layout.addWidget(self.body)
         self.render()
+    def minimumSizeHint(self):return QSize(0,super().minimumSizeHint().height())
     def render(self):
         previous={(tile.session_id,tile.game_id):tile for tile in getattr(self,'tiles',[])}
         while self.row.count():

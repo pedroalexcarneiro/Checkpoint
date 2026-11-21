@@ -40,10 +40,12 @@ def test_home_columns_align_top_and_art_is_contained(ui,app):
         w.resize(*size);w.navigate(0)
         for _ in range(8):app.processEvents()
         page=w.pages[0];left=page.findChild(QWidget,'homeRecentSection');offers=page.findChild(QWidget,'homeWishOffers')
-        if size[0]>=1280:
-            summary=page.findChild(QWidget,'homeWeekSummary')
-            a=left.mapTo(page,left.rect().topLeft()).y();b=summary.mapTo(page,summary.rect().topLeft()).y()
-            assert abs(a-b)<=2
+        summary=page.findChild(QWidget,'homeWeekSummary')
+        left_origin=left.mapTo(page,QPoint());summary_origin=summary.mapTo(page,QPoint())
+        offers_origin=offers.mapTo(page,QPoint())
+        assert abs(left_origin.y()-summary_origin.y())<=2
+        assert left_origin.x()+left.width()<summary_origin.x()==offers_origin.x()
+        assert summary_origin.y()+summary.height()<offers_origin.y()
         for art in page.findChildren(RecentArtwork):
             if not art.pixmap.isNull():assert art.rect().contains(art.image_target().toAlignedRect())
         assert any(l.text()=='Ofertas' for l in page.findChildren(QLabel))
@@ -91,10 +93,16 @@ def test_three_recent_games_carousel_preserves_every_cover_edge(ui,app,folder):
         path=folder/f'cover-{n}.png';assert image.save(str(path))
         w.library.save_game({'title':w.library.get(identity)['title'],'cover':str(path)},identity)
         with w.library.sql:w.library.sql.execute("INSERT INTO play_sessions(game_id,started_at,state,pid) VALUES(?,?,'finished',?)",(identity,(datetime.now(timezone.utc)-timedelta(hours=n+1)).isoformat(),100+n))
-    for size in ((1280,800),(1920,1080)):
+    for size in ((1280,800),(1920,1080),(1000,700)):
         w.resize(*size);w.navigate(0)
         for _ in range(8):app.processEvents()
-        strip=w.pages[0].findChild(GameStrip);assert len(strip.tiles)==strip.visible_count
+        from PySide6.QtWidgets import QScrollArea
+        page=w.pages[0];strip=page.findChild(GameStrip);assert len(strip.tiles)==strip.visible_count
+        viewport=page.findChild(QScrollArea,'homeScroll').viewport()
+        offers=page.findChild(QWidget,'homeWishOffers')
+        assert offers.mapTo(viewport,QPoint()).x()+offers.width()<=viewport.width()
+        hero=page.findChild(LastPlayedBanner)
+        assert hero.mapTo(viewport,QPoint()).x()+hero.width()<=viewport.width()
         assert [game['id'] for game in strip.games]==identities[1:11]
         assert len(list(w.library.sql.execute('SELECT id FROM play_sessions')))==len(identities)
         assert len(strip.tiles)>=2
