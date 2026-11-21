@@ -19,18 +19,19 @@ def test_two_wishes_remain_compact_and_wide_window_adds_columns(ui, app):
         for game_id in (identity, other):
             w.library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)', (game_id,))
     columns = []
-    for size in ((1280, 800), (1920, 1080)):
+    for size in ((1000, 700), (1280, 800), (1920, 1080)):
         w.resize(*size)
         w.navigate(2)
         settle(app)
         grid = w.pages[2].findChild(WishGrid)
         columns.append(grid.columns)
         for card in grid.cards:
-            assert card.width() <= 280
+            assert card.width() <= 238
             art = card.findChild(WishLogo)
             assert art.width() == art.height()
             assert card.rect().contains(art.geometry())
-    assert columns[1] > columns[0]
+        assert w.wishlist_scroll.widget().width()<=w.wishlist_scroll.viewport().width()
+    assert columns[0]==3 and columns[2] > columns[1]
 
 
 def test_diary_only_is_compact_and_mixed_cards_align(ui, app):

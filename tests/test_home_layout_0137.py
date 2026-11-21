@@ -65,11 +65,20 @@ def test_memory_carousel_bounds_keyboard_and_no_data_changes(ui,app):
     before=[tuple(r) for r in w.library.sql.execute('SELECT * FROM diary_entries')]
     w.navigate(0);app.processEvents();carousel=w.pages[0].findChild(MemoryCarousel)
     assert not carousel.previous.isEnabled() and carousel.next.isEnabled()
-    carousel.setFocus();QTest.keyClick(carousel,Qt.Key_Right);assert carousel.offset==1
+    track=carousel.track;bar=track.horizontalScrollBar();cards=carousel.cards.copy()
+    viewport=track.viewport()
+    assert any(card.mapTo(viewport,QPoint()).x()<viewport.width()<card.mapTo(viewport,QPoint()).x()+card.width() for card in cards)
+    carousel.setFocus();QTest.keyClick(carousel,Qt.Key_Right)
+    assert track.destination()==track.stride
+    track.animation.setCurrentTime(track.animation.duration()//2)
+    assert 0<bar.value()<track.stride and carousel.cards==cards
+    track.animation.setCurrentTime(track.animation.duration())
     for _ in range(10):carousel.next.click()
+    track.animation.setCurrentTime(track.animation.duration())
     assert not carousel.next.isEnabled()
     for _ in range(10):carousel.previous.click()
-    assert carousel.offset==0 and not carousel.previous.isEnabled()
+    track.animation.setCurrentTime(track.animation.duration())
+    assert bar.value()==0 and not carousel.previous.isEnabled()
     assert [tuple(r) for r in w.library.sql.execute('SELECT * FROM diary_entries')]==before
 
 
@@ -85,8 +94,35 @@ def test_recent_memories_fill_panel_with_two_centered_standard_cards(ui,app):
     assert carousel.width()==body.width()-body.layout().contentsMargins().right()
     assert carousel.mapTo(page,QPoint()).x()==page.findChild(QWidget,'homeRecentSection').mapTo(page,QPoint()).x()
     first,last=carousel.cards
-    assert abs(first.x()-(carousel.body.width()-last.geometry().right()-1))<=1
+    assert abs(first.x()-(carousel.track.body.width()-last.geometry().right()-1))<=1
     assert not carousel.previous.isVisible() and not carousel.next.isVisible()
+
+
+def test_memory_track_keeps_vertical_wheel_and_loads_more_without_replacing_cards(ui,app):
+    from PySide6.QtCore import QPointF
+    from PySide6.QtGui import QWheelEvent
+    from checkpoint.smooth_scroll import SmoothScrollArea
+
+    window,game=ui
+    for number in range(26):window.library.add_diary(game,f'Nota {number}')
+    window.resize(1000,700);window.navigate(0)
+    for _ in range(8):app.processEvents()
+    page=window.pages[0]
+    home=page.findChild(SmoothScrollArea,'homeScroll')
+    carousel=page.findChild(MemoryCarousel)
+    track=carousel.track
+    assert len(carousel.cards)==24
+    first=carousel.cards[0]
+    home.verticalScrollBar().setValue(0)
+    for delta,scroll in ((QPoint(0,-120),home.scroll_animation),(QPoint(-120,0),track.animation)):
+        event=QWheelEvent(QPointF(10,10),QPointF(10,10),QPoint(),delta,
+                          Qt.NoButton,Qt.NoModifier,Qt.NoScrollPhase,False)
+        app.sendEvent(track.viewport(),event)
+        assert event.isAccepted() and scroll.endValue()>0
+        scroll.setCurrentTime(scroll.duration())
+    track.scroll_to(track.horizontalScrollBar().maximum(),animate=False)
+    for _ in range(8):app.processEvents()
+    assert len(carousel.cards)==26 and carousel.cards[0] is first
 
 
 def test_status_change_does_not_create_recent_card(ui,app):
@@ -113,7 +149,7 @@ def test_three_recent_games_carousel_preserves_every_cover_edge(ui,app,folder):
         w.resize(*size);w.navigate(0)
         for _ in range(8):app.processEvents()
         from PySide6.QtWidgets import QScrollArea
-        page=w.pages[0];strip=page.findChild(GameStrip);assert len(strip.tiles)==strip.visible_count
+        page=w.pages[0];strip=page.findChild(GameStrip)
         viewport=page.findChild(QScrollArea,'homeScroll').viewport()
         offers=page.findChild(QWidget,'homeWishOffers')
         assert offers.mapTo(viewport,QPoint()).x()+offers.width()<=viewport.width()
@@ -121,7 +157,11 @@ def test_three_recent_games_carousel_preserves_every_cover_edge(ui,app,folder):
         assert hero.mapTo(viewport,QPoint()).x()+hero.width()<=viewport.width()
         assert [game['id'] for game in strip.games]==identities[1:11]
         assert len(list(w.library.sql.execute('SELECT id FROM play_sessions')))==len(identities)
-        assert len(strip.tiles)>=2
+        assert [card.game_id for card in strip.tiles]==identities[1:11]
+        track=strip.track;view=track.viewport()
+        if size[0]==1000:
+            x=strip.tiles[2].mapTo(view,QPoint()).x()
+            assert x<view.width()<x+strip.tiles[2].width()
         from checkpoint.home_components import HomeSectionHeader
         header=w.pages[0].findChild(QWidget,'homeRecentSection').findChild(HomeSectionHeader)
         assert strip.previous.parentWidget() is header and strip.next.parentWidget() is header
@@ -130,6 +170,7 @@ def test_three_recent_games_carousel_preserves_every_cover_edge(ui,app,folder):
         assert all(first.geometry().right()+10<second.x() for first,second in zip(strip.tiles,strip.tiles[1:]))
         assert not strip.previous.isEnabled() and strip.next.isEnabled()
         for card in strip.tiles:
+            assert card.height()<=view.height()
             art=card.findChild(RecentArtwork);target=art.image_target()
             assert art.rect().contains(target.toAlignedRect())
             assert abs(target.width()/target.height()-2/3)<.01
@@ -141,10 +182,13 @@ def test_three_recent_games_carousel_preserves_every_cover_edge(ui,app,folder):
             assert bottom.red()>bottom.green() and bottom.blue()>bottom.green()
             assert left.blue()>left.red() and left.green()>left.red()
             assert right.red()>right.green() and right.red()>right.blue()
-        strip.setFocus();QTest.keyClick(strip,Qt.Key_Right);app.processEvents()
-        assert strip.offset==1
-        assert [c.game_id for c in strip.tiles]==identities[2:2+strip.visible_count]
+        cards=strip.tiles.copy()
+        strip.setFocus();QTest.keyClick(strip,Qt.Key_Right)
+        assert track.destination()==track.stride
+        track.animation.setCurrentTime(track.animation.duration())
+        assert strip.tiles==cards and track.horizontalScrollBar().value()==track.stride
         for _ in range(10):strip.next.click()
+        track.animation.setCurrentTime(track.animation.duration())
         assert not strip.next.isEnabled()
 
 
@@ -212,6 +256,8 @@ def test_home_hero_keeps_entire_wide_and_narrow_banners(ui,app,folder):
                 hero.resize(window_width,hero.height())
                 for _ in range(8):app.processEvents()
                 target=hero.banner_target()
+                if window_width==1660:
+                    assert hero.play_button.width()>=190 and hero.play_button.height()>=50
                 assert hero.rect().contains(target.toAlignedRect())
                 assert target.left()>hero.play_button.geometry().right()
                 assert abs(target.width()/target.height()-width/height)<.01

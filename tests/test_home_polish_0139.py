@@ -74,16 +74,19 @@ def test_session_carousel_mouse_and_keyboard_show_other_sessions(ui, app):
     w.navigate(0)
     settle(app)
     strip = w.pages[0].findChild(GameStrip)
-    before = [tile.session_id for tile in strip.tiles]
+    before = strip.tiles.copy()
+    track = strip.track
     assert strip.next.isEnabled() and not strip.previous.isEnabled()
     QTest.mouseClick(strip.next, Qt.LeftButton)
-    settle(app)
-    assert [tile.session_id for tile in strip.tiles] != before
+    track.animation.setCurrentTime(track.animation.duration())
+    assert track.horizontalScrollBar().value() > 0 and strip.tiles == before
     strip.setFocus()
     QTest.keyClick(strip, Qt.Key_Left)
-    assert strip.offset == 0
+    track.animation.setCurrentTime(track.animation.duration())
+    assert track.horizontalScrollBar().value() == 0
     for _ in range(10):
         strip.next.click()
+    track.animation.setCurrentTime(track.animation.duration())
     assert not strip.next.isEnabled()
     assert strip.previous.name == 'chevron-left' and strip.next.name == 'chevron-right'
     assert strip.previous.size() == strip.next.size()

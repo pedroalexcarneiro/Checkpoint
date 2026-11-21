@@ -97,7 +97,6 @@ def build_detail(window,game):
     if incomplete:
         about.setProperty('emptyState',True)
         about_layout.addWidget(text('Ficha incompleta. Edite os dados do jogo.','emptyDescription'))
-        about_layout.addWidget(action('Editar ficha',lambda:window.edit_game(game_id)),0,Qt.AlignLeft)
     from .description_provenance import current
     from .wiki_text import intro
     provenance=current(window.library,game)
@@ -106,8 +105,6 @@ def build_detail(window,game):
     if description:about_layout.addWidget(text(description,'bodyText'))
     else:
         about_layout.addWidget(text('Sem texto descritivo. Pesquise manualmente ou edite a ficha.','muted'))
-        about_layout.addWidget(action('Pesquisar manualmente',lambda:window.search_game_data(game_id)),0,Qt.AlignLeft)
-        if not incomplete:about_layout.addWidget(action('Editar ficha',lambda:window.edit_game(game_id)),0,Qt.AlignLeft)
     if provenance.get('source','').startswith('https://pt.wikipedia.org/'):
         from PySide6.QtGui import QDesktopServices
         from PySide6.QtCore import QUrl
@@ -137,6 +134,12 @@ def build_detail(window,game):
         about_layout.addWidget(comparison(window,game))
         if window.isVisible() and window.library.setting('prices.auto',True):window.price_queue.submit([game_id])
     about_layout.addStretch()
+    if incomplete or not description:
+        actions=QHBoxLayout()
+        actions.addStretch()
+        if not description:actions.addWidget(action('Pesquisar manualmente',lambda:window.search_game_data(game_id)))
+        actions.addWidget(action('Editar ficha',lambda:window.edit_game(game_id)))
+        about_layout.addLayout(actions)
     gallery=CardSurface();gallery.setMaximumWidth(380);gallery.setMinimumWidth(240);gallery.setObjectName('detailGallery')
     gallery_layout=QVBoxLayout(gallery);gallery_layout.setContentsMargins(*([SPACE['lg']]*4));gallery_layout.setSpacing(SPACE['md'])
     gallery_layout.addWidget(text('Galeria','sectionTitle'))
@@ -184,8 +187,10 @@ def build_detail(window,game):
         def save():
             window.library.add_diary(game_id,entry.toPlainText());entry.clear();window.detail(game_id)
         window.guard(save)
-    tools=QHBoxLayout();tools.addWidget(action('Abrir pasta de capturas',lambda:window.open_media_folder(game_id)));tools.addStretch();memories.addLayout(tools)
-    row=QHBoxLayout();row.addWidget(action('Salvar memória',save_entry,True));row.addStretch();row.addWidget(action('Adicionar captura ou vídeo',lambda:window.import_media(game_id)));memories.addLayout(row)
+    row=QHBoxLayout();row.addStretch()
+    row.addWidget(action('Abrir pasta de capturas',lambda:window.open_media_folder(game_id)))
+    row.addWidget(action('Adicionar captura ou vídeo',lambda:window.import_media(game_id)))
+    row.addWidget(action('Salvar memória',save_entry,True));memories.addLayout(row)
     from .collection_views import memory_card
     records=[{**record,'kind':'diary','title':game['title']} for record in window.library.diary(game_id)]
     records.extend({**item,'title':game['title']} for item in media);records.sort(key=lambda record:record['created_at'],reverse=True)

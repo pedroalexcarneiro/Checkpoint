@@ -30,6 +30,27 @@ def test_native_hit_regions_preserve_resize_and_caption_controls():
     assert border_hit(400,100,1280,800,8) is None
 
 
+def test_status_toast_slides_inside_window_without_expanding_status_bar(ui,app):
+    window,_=ui
+    toast=window.status_toast
+    root=window.centralWidget()
+    initial=root.size()
+    bar=window.statusBar()
+    bar.showMessage('Fechamento solicitado. Confirme na janela do jogo se ele pedir.')
+    assert toast.isVisible() and toast.x()<0
+    assert bar.currentMessage()==toast.label.text() and not bar.isVisible()
+    toast.animation.setCurrentTime(toast.animation.duration())
+    assert toast.x()==18 and toast.geometry().bottom()==root.height()-19
+    assert root.size()==initial
+    window.resize(1200,780);app.processEvents()
+    assert toast.geometry().bottom()==root.height()-19
+    bar.clearMessage()
+    toast.animation.setCurrentTime(toast.animation.duration()//2)
+    assert -toast.width()<toast.x()<18
+    toast.animation.setCurrentTime(toast.animation.duration())
+    assert toast.isHidden()
+
+
 def test_repeated_restore_keeps_current_detail_geometry_and_download(ui,app):
     from uuid import uuid4
     from checkpoint.transfers import Transfer

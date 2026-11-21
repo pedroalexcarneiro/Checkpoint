@@ -29,7 +29,7 @@ def build_home(window):
     games=window.library.owned_games();recent=recent_games(window.library,limit=11)
     if recent:layout.addWidget(LastPlayedBanner(window,recent[0]))
     left,inside=section('Últimas sessões');left.setObjectName('homeRecentSection')
-    if len(recent)>1:inside.addWidget(GameStrip(window,recent[1:],header=inside.itemAt(0).widget()))
+    if len(recent)>1:inside.addWidget(GameStrip(window,recent[1:],header=inside.itemAt(0).widget(),page_scroll=scroll))
     elif recent:inside.addWidget(text('Nenhum outro jogo iniciado.','muted'))
     elif games:inside.addWidget(empty_state('library','Nenhuma execução registrada','Escolha um jogo para começar.',lambda:window.navigate(1),'Abrir biblioteca'))
     else:inside.addWidget(empty_state('library','Biblioteca vazia','Adicione um jogo à biblioteca.',window.add_library_game,'Adicionar jogo'))
@@ -55,7 +55,7 @@ def build_home(window):
     left.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
     right.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
     layout.addWidget(columns)
-    layout.addWidget(MemoryCarousel(window,recent_memories(window.library)))
+    layout.addWidget(MemoryCarousel(window,recent_memories(window.library),page_scroll=scroll))
     from .session_tracking import pending_reviews
     interrupted=len(pending_reviews(window.library))
     if interrupted:

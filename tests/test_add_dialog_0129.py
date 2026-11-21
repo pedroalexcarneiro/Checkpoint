@@ -19,3 +19,26 @@ def test_add_dialog_has_one_internal_close_and_no_local_automation_option(librar
     dialog.apply_catalog(result);quick.show_result(result)
     assert quick.save.isEnabled() and quick.confirmed.isVisible()
     dialog.reject()
+
+
+def test_advanced_options_leave_preview_and_actions_in_order(library,app):
+    from PySide6.QtWidgets import QScrollArea
+    dialog=GameDialog(library=library)
+    dialog.resize(680,600);dialog.show()
+    quick=dialog.quick_add
+    try:
+        quick.state.setText('Resultado selecionado com ficha incompleta. Pesquise manualmente.')
+        quick.drive_manage.show();quick.manual.show()
+        scroll=dialog.findChild(QScrollArea,'addResultsScroll')
+        for expanded in (False,True,False):
+            quick.advanced.setChecked(expanded)
+            for _ in range(8):app.processEvents()
+            assert scroll.geometry().bottom()<quick.state.geometry().top()
+            assert quick.drive_manage.y()==quick.manual.y()
+            assert quick.drive_manage.geometry().right()<quick.manual.x()
+            assert quick.manual.geometry().bottom()<quick.advanced.y()
+            assert scroll.geometry().bottom()<quick.advanced.y()
+            assert quick.platform.isVisible()==expanded
+            assert quick.save.isVisible()
+    finally:
+        dialog.reject();dialog.deleteLater()

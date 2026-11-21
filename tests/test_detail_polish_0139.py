@@ -9,6 +9,27 @@ def settle(app):
         app.processEvents()
 
 
+def test_about_and_diary_actions_align_at_the_bottom_right(ui,app):
+    window,identity=ui
+    window.library.save_game({'title':'Jogo sem descrição','platform':'GBA','source':'Busca'},identity)
+    window.resize(1000,700);window.detail(identity);settle(app)
+    overview=window.detail_tabs.widget(0)
+    buttons={b.text():b for b in overview.findChildren(QPushButton)}
+    search,edit=buttons['Pesquisar manualmente'],buttons['Editar ficha']
+    assert search.y()==edit.y() and search.geometry().right()<edit.x()
+    assert edit.parentWidget().width()-edit.geometry().right()<=26
+    for caption in ('Plataforma','Origem · Busca'):
+        fact=next(label for label in overview.findChildren(QLabel) if label.text()==caption)
+        assert fact.mapTo(overview,QPoint()).y()<edit.mapTo(overview,QPoint()).y()
+    window.detail_tabs.setCurrentIndex(2);settle(app)
+    diary=window.detail_tabs.currentWidget()
+    buttons={b.text():b for b in diary.findChildren(QPushButton)}
+    folder,add,save=[buttons[name] for name in ('Abrir pasta de capturas','Adicionar captura ou vídeo','Salvar memória')]
+    assert folder.y()==add.y()==save.y()
+    assert folder.geometry().right()<add.x() and add.geometry().right()<save.x()
+    assert diary.width()-save.geometry().right()<=14
+
+
 def test_long_file_name_uses_central_width_and_keeps_full_name(ui, app):
     w, identity = ui
     filename = 'The Legend of Zelda - Ocarina of Time (USA) (Revision 1) - versão de teste.z64'

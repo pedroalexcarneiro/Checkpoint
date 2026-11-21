@@ -1,9 +1,70 @@
 from .locale import count_text
 from .icons import lucide_icon
 """Indicador compacto; nenhuma barra expansível na janela principal."""
-from PySide6.QtCore import Qt,QTimer,QRectF
+from PySide6.QtCore import QEvent,QEasingCurve,Qt,QTimer,QRectF,QVariantAnimation
 from PySide6.QtGui import QPainter,QPen,QColor
-from PySide6.QtWidgets import QWidget,QHBoxLayout,QLabel,QToolButton
+from PySide6.QtWidgets import QFrame,QStatusBar,QStyle,QStyleOption,QStylePainter,QWidget,QHBoxLayout,QLabel,QToolButton
+
+
+class OperationStatusBar(QStatusBar):
+    def paintEvent(self,event):
+        painter=QStylePainter(self)
+        option=QStyleOption()
+        option.initFrom(self)
+        painter.drawPrimitive(QStyle.PE_PanelStatusBar,option)
+        painter.end()
+
+
+class StatusToast(QFrame):
+    def __init__(self,parent):
+        super().__init__(parent)
+        self.setObjectName('statusToast')
+        self.setProperty('component','card')
+        self.setAttribute(Qt.WA_TransparentForMouseEvents)
+        self.label=QLabel()
+        self.label.setTextFormat(Qt.PlainText)
+        self.label.setWordWrap(True)
+        row=QHBoxLayout(self)
+        row.setContentsMargins(16,12,16,12)
+        row.addWidget(self.label)
+        self.progress=0.0
+        self.animation=QVariantAnimation(self)
+        self.animation.valueChanged.connect(self.reposition)
+        self.animation.finished.connect(self.finish)
+        parent.installEventFilter(self)
+        self.hide()
+
+    def set_message(self,message):
+        if not message and self.isHidden():
+            return
+        if message:
+            self.label.setText(message)
+            self.setAccessibleName(message)
+            self.setFixedWidth(max(200,min(360,self.label.fontMetrics().horizontalAdvance(message)+36)))
+            self.adjustSize()
+            self.reposition(self.progress)
+            self.show()
+            self.raise_()
+        self.animation.stop()
+        self.animation.setDuration(240 if message else 200)
+        self.animation.setEasingCurve(QEasingCurve.OutCubic if message else QEasingCurve.InCubic)
+        self.animation.setStartValue(self.progress)
+        self.animation.setEndValue(1.0 if message else 0.0)
+        self.animation.start()
+
+    def reposition(self,progress):
+        self.progress=progress
+        x=round((self.width()+18)*progress-self.width())
+        self.move(x,self.parentWidget().height()-self.height()-18)
+
+    def finish(self):
+        if self.progress==0:
+            self.hide()
+
+    def eventFilter(self,watched,event):
+        if watched is self.parentWidget() and event.type()==QEvent.Resize:
+            self.reposition(self.progress)
+        return super().eventFilter(watched,event)
 
 
 class BusyIndicator(QWidget):

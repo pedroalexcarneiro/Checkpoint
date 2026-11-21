@@ -43,7 +43,8 @@ class MainWindow(QMainWindow):
         self.completion_queue.updated.connect(self.game_completed)
         self.completion_queue.restore_requested.connect(self.offer_restore_match)
         self.completion_queue.busy_changed.connect(self.completion_busy)
-        from .task_status import TaskStatus
+        from .task_status import OperationStatusBar,StatusToast,TaskStatus
+        self.setStatusBar(OperationStatusBar(self))
         self.task_status=TaskStatus(self.theme,self.completion_queue.cancel_pending)
         self.completion_bar=self.task_status.spinner;self.completion_stop=self.task_status.stop
         self.statusBar().addPermanentWidget(self.task_status)
@@ -62,6 +63,7 @@ class MainWindow(QMainWindow):
         self.price_queue=PriceQueue(library,self);self.price_queue.updated.connect(self.prices_updated)
         self.hero_upgrade_attempted=set();self.description_upgrade_attempted=set();self.current_page = 0; self.current_game = None; self.last_deleted = None; self.save_jobs = {}
         root = QWidget(); root.setObjectName('root'); self.setCentralWidget(root)
+        self.status_toast=StatusToast(root)
         layout = QHBoxLayout(root); layout.setContentsMargins(0,0,0,0); layout.setSpacing(0)
         sidebar = QWidget(); sidebar.setObjectName('sidebar'); sidebar.setFixedWidth(198)
         nav = QVBoxLayout(sidebar); nav.setContentsMargins(10,10,10,12);nav.setSpacing(4)
@@ -671,13 +673,15 @@ class MainWindow(QMainWindow):
     @Slot(str)
     def status_message_changed(self,message):
         busy=self.completion_queue.active is not None or bool(self.completion_queue.pending) or self.download_manager.busy
-        self.statusBar().setVisible(bool(message) or busy)
+        self.statusBar().setVisible(busy)
+        self.status_toast.set_message(message)
         if message:self.status_timer.start()
+        else:self.status_timer.stop()
 
     @Slot(int)
     def completion_busy(self,count):
         self.task_status.set_count(count)
-        self.statusBar().setVisible(count>0 or self.download_manager.busy or bool(self.statusBar().currentMessage()))
+        self.statusBar().setVisible(count>0 or self.download_manager.busy)
 
     def open_downloads(self):
         self.navigate(5);self.settings_tabs.setCurrentIndex(2)
@@ -686,7 +690,7 @@ class MainWindow(QMainWindow):
         count=sum(item.active for item in self.download_manager.tasks.values())
         self.download_button.setText('Downloads ('+str(count)+')')
         self.download_button.setVisible(count>0)
-        self.statusBar().setVisible(count>0 or bool(self.statusBar().currentMessage()) or self.completion_queue.active is not None)
+        self.statusBar().setVisible(count>0 or self.completion_queue.active is not None or bool(self.completion_queue.pending))
 
     def download_completed(self,task):
         from PySide6.QtWidgets import QApplication

@@ -1,7 +1,7 @@
 """Cards e navegação do Início, com ações separadas e conteúdo local."""
 from math import sqrt
 
-from PySide6.QtCore import Qt,QRectF,QSize,QSizeF
+from PySide6.QtCore import Qt,QRectF,QSize,QSizeF,QTimer
 from PySide6.QtGui import QPainter,QPainterPath,QColor,QPixmap,QLinearGradient,QRadialGradient,QTransform,QBrush,QRegion,QFont,QPen
 from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QLabel,QPushButton,QSizePolicy,QDialog,QScrollArea,QBoxLayout,QLayout
 from .design_system import CardSurface,IconButton,SectionHeader,ArtworkButton,colors
@@ -9,6 +9,7 @@ from .ui_components import text,action,ElidedAction
 from .playtime import format_time
 from .library import display_status
 from .locale import datetime_display
+from .smooth_scroll import HorizontalCardScroll
 
 
 class SingleLineInfo(QLabel):
@@ -72,6 +73,8 @@ class LastPlayedBanner(QPushButton):
 
     def resizeEvent(self,event):
         super().resizeEvent(event)
+        self.play_button.setFixedSize(max(112,min(200,round(self.width()*.12))),
+                                      max(40,min(52,round(self.width()*.032))))
         height=round(self.width()*.16)
         if not self.banner.isNull():
             height=max(height,round(self.width()*.65*self.banner.height()/self.banner.width())+26)
@@ -304,50 +307,38 @@ class HomeOfferRow(QWidget):
 
 
 class GameStrip(QWidget):
-    """Quantidade visível acompanha a largura mínima dos controles."""
-    def __init__(self,window,games,maximum=8,*,header=None):
-        super().__init__();self.setMinimumWidth(0);self.setObjectName('recentGames')
-        self.host_window=window;self.games=games;self.maximum=maximum;self.offset=0;self.setFocusPolicy(Qt.StrongFocus)
-        self.minimum_tile_width=170
-        self.visible_count=max(1,min(maximum,(self.width()+12)//(self.minimum_tile_width+12)))
+    def __init__(self,window,games,*,header=None,page_scroll=None):
+        super().__init__()
+        self.setObjectName('recentGames')
+        self.games=games
+        self.setFocusPolicy(Qt.StrongFocus)
         self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
-        layout=QVBoxLayout(self);layout.setContentsMargins(0,0,0,0);layout.setSpacing(8)
-        if header is None:header=HomeSectionHeader('Últimas sessões',None,'');layout.addWidget(header)
-        self.previous=IconButton('chevron-left','Sessões anteriores',lambda:self.move_by(-1));header.row.addWidget(self.previous)
-        self.next=IconButton('chevron-right','Próximas sessões',lambda:self.move_by(1));header.row.addWidget(self.next)
-        self.body=QWidget();self.body.setMinimumWidth(0)
-        self.row=QHBoxLayout(self.body);self.row.setSizeConstraint(QLayout.SetNoConstraint)
-        self.row.setContentsMargins(0,0,0,0);self.row.setSpacing(12);layout.addWidget(self.body)
-        self.render()
-    def minimumSizeHint(self):return QSize(0,super().minimumSizeHint().height())
-    def render(self):
-        previous={(tile.session_id,tile.game_id):tile for tile in getattr(self,'tiles',[])}
-        while self.row.count():
-            self.row.takeAt(0)
+        layout=QVBoxLayout(self)
+        layout.setContentsMargins(0,0,0,0)
+        layout.setSpacing(8)
+        if header is None:
+            header=HomeSectionHeader('Últimas sessões',None,'')
+            layout.addWidget(header)
+        self.track=HorizontalCardScroll(170,12,page_scroll=page_scroll)
         self.tiles=[]
-        for game in self.games[self.offset:self.offset+self.visible_count]:
-            tile=previous.pop((game.get('session_id'),game['id']),None)
-            if tile is None:tile=RecentGameCard(self.host_window,game)
+        for game in games:
+            tile=RecentGameCard(window,game)
+            tile.setFixedWidth(170)
+            self.track.row.addWidget(tile,0,Qt.AlignTop)
             self.tiles.append(tile)
-        for tile in previous.values():
-            tile.hide();tile.setParent(None);tile.deleteLater()
-        for tile in self.tiles:
-            tile.setFixedWidth(self.minimum_tile_width);self.row.addWidget(tile,0,Qt.AlignTop)
-        self.row.addStretch()
-        show_controls=len(self.games)>self.visible_count
-        self.previous.setVisible(show_controls);self.next.setVisible(show_controls)
-        self.previous.setEnabled(self.offset>0);self.next.setEnabled(self.offset+self.visible_count<len(self.games))
-        self.updateGeometry()
-    def move_by(self,step):
-        self.offset=max(0,min(max(0,len(self.games)-self.visible_count),self.offset+step));self.render()
-    def resizeEvent(self,event):
-        count=max(1,min(self.maximum,(self.width()+12)//(self.minimum_tile_width+12)))
-        if count!=self.visible_count:
-            self.visible_count=count;self.offset=min(self.offset,max(0,len(self.games)-count));self.render()
-        super().resizeEvent(event)
+        layout.addWidget(self.track)
+        self.previous=IconButton('chevron-left','Sessões anteriores',lambda:self.track.step(-1))
+        self.next=IconButton('chevron-right','Próximas sessões',lambda:self.track.step(1))
+        header.row.addWidget(self.previous)
+        header.row.addWidget(self.next)
+        self.track.bind_arrows(self.previous,self.next)
+
     def keyPressEvent(self,event):
-        if event.key() in (Qt.Key_Left,Qt.Key_Right):self.move_by(-1 if event.key()==Qt.Key_Left else 1);event.accept()
-        else:super().keyPressEvent(event)
+        if event.key() in (Qt.Key_Left,Qt.Key_Right):
+            self.track.step(-1 if event.key()==Qt.Key_Left else 1)
+            event.accept()
+        else:
+            super().keyPressEvent(event)
 
 
 def open_memory(window,record):
@@ -363,28 +354,26 @@ def open_memory(window,record):
 
 
 class MemoryCarousel(CardSurface):
-    def __init__(self,window,records):
-        super().__init__();self.host_window=window;self.records=records;self.offset=0;self.visible_count=3;self.setObjectName('homeMemories')
+    def __init__(self,window,records,*,page_scroll=None):
+        super().__init__();self.host_window=window;self.records=records;self.setObjectName('homeMemories')
         self.setFocusPolicy(Qt.StrongFocus);self.setMinimumWidth(0);self.card_width=300;self.cards=[]
         layout=QVBoxLayout(self);layout.setContentsMargins(16,16,16,16);layout.setSpacing(14)
         head=QHBoxLayout();head.addWidget(text('Memórias recentes','sectionTitle'),1)
         head.addWidget(action('Ver todas',lambda:window.navigate(3)))
-        self.previous=IconButton('chevron-left','Memórias anteriores',lambda:self.move_by(-1));head.addWidget(self.previous)
-        self.next=IconButton('chevron-right','Próximas memórias',lambda:self.move_by(1));head.addWidget(self.next);layout.addLayout(head)
-        self.body=QWidget();self.body.setMinimumWidth(0);self.row=QHBoxLayout(self.body);self.row.setSizeConstraint(QLayout.SetNoConstraint);self.row.setContentsMargins(0,0,0,0);self.row.setSpacing(14);layout.addWidget(self.body)
-        self.render()
-    def minimumSizeHint(self):return QSize(0,self.sizeHint().height())
-    def render(self):
-        self.cards=[]
-        while self.row.count():
-            item=self.row.takeAt(0)
-            if item.widget():
-                widget=item.widget();widget.hide();widget.setParent(None);widget.deleteLater()
-        if not self.records:
-            self.row.addWidget(action('Adicionar memória',self.host_window.first_memory,True))
-        elif len(self.records)<=self.visible_count:
-            self.row.addStretch(1)
-        for record in self.records[self.offset:self.offset+self.visible_count]:
+        self.previous=IconButton('chevron-left','Memórias anteriores',lambda:self.track.step(-1));head.addWidget(self.previous)
+        self.next=IconButton('chevron-right','Próximas memórias',lambda:self.track.step(1));head.addWidget(self.next);layout.addLayout(head)
+        self.track=HorizontalCardScroll(self.card_width,14,center=bool(records),page_scroll=page_scroll)
+        layout.addWidget(self.track)
+        self.track.bind_arrows(self.previous,self.next)
+        if not records:
+            self.track.row.addWidget(action('Adicionar memória',window.first_memory,True))
+        self.append_cards()
+        bar=self.track.horizontalScrollBar()
+        bar.valueChanged.connect(self.load_near_end)
+        bar.rangeChanged.connect(lambda *_:QTimer.singleShot(0,self,self.load_near_end))
+
+    def append_cards(self):
+        for record in self.records[len(self.cards):len(self.cards)+24]:
             frame=CardSurface();frame.setObjectName('homeMemoryCard');frame.setSizePolicy(QSizePolicy.Fixed,QSizePolicy.Preferred)
             inside=QVBoxLayout(frame);inside.setContentsMargins(12,12,12,12);inside.setSpacing(8)
             callback=lambda checked=False,r=record:open_memory(self.host_window,r)
@@ -400,22 +389,24 @@ class MemoryCarousel(CardSurface):
             inside.addWidget(preview)
             title=ElidedAction(record['title'],callback);title.setObjectName('activityLink');inside.addWidget(title)
             inside.addWidget(text('Diário' if record['kind']=='diary' else 'Vídeo' if record['kind']=='video' else 'Captura','caption'))
-            inside.addWidget(text(datetime_display(record['created_at']),'caption'));frame.setFixedWidth(min(self.card_width,max(1,self.width()-32)));self.cards.append(frame);self.row.addWidget(frame);frame.show()
-        self.row.addStretch(1)
-        self.previous.setVisible(len(self.records)>self.visible_count)
-        self.next.setVisible(len(self.records)>self.visible_count)
-        self.previous.setEnabled(self.offset>0);self.next.setEnabled(self.offset+self.visible_count<len(self.records))
-    def move_by(self,step):
-        self.offset=max(0,min(max(0,len(self.records)-self.visible_count),self.offset+step));self.render()
+            inside.addWidget(text(datetime_display(record['created_at']),'caption'))
+            frame.setFixedWidth(self.card_width)
+            self.cards.append(frame)
+            self.track.row.addWidget(frame,0,Qt.AlignTop)
+            frame.show()
+        self.track.updateGeometry()
+
+    def load_near_end(self,*_):
+        bar=self.track.horizontalScrollBar()
+        if len(self.cards)<len(self.records) and bar.maximum()-bar.value()<=2*self.track.stride:
+            self.append_cards()
+
     def keyPressEvent(self,event):
-        if event.key() in (Qt.Key_Left,Qt.Key_Right):self.move_by(-1 if event.key()==Qt.Key_Left else 1);event.accept()
-        else:super().keyPressEvent(event)
-    def resizeEvent(self,event):
-        count=max(1,min(8,(self.width()-32+14)//(self.card_width+14)))
-        if count!=self.visible_count:
-            self.visible_count=count;self.offset=min(self.offset,max(0,len(self.records)-count));self.render()
-        for frame in self.cards:frame.setFixedWidth(min(self.card_width,max(1,self.width()-32)))
-        super().resizeEvent(event)
+        if event.key() in (Qt.Key_Left,Qt.Key_Right):
+            self.track.step(-1 if event.key()==Qt.Key_Left else 1)
+            event.accept()
+        else:
+            super().keyPressEvent(event)
 
 
 def show_execution_history(window):

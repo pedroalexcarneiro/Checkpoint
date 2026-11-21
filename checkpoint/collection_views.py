@@ -53,8 +53,8 @@ class WishGrid(CardGrid):
         from .card_layout import card_metrics
         metrics=card_metrics(self.width(),getattr(self,'cover_percent',100))
         spacing=metrics.gap;self.grid.setSpacing(spacing)
-        self.columns=max(1,(self.width()+spacing)//(240+spacing))
-        width=min(280,max(1,(self.width()-spacing*(self.columns-1))//self.columns))
+        self.columns=max(1,(self.width()+spacing)//(220+spacing))
+        width=min(238,max(1,(self.width()-spacing*(self.columns-1))//self.columns))
         art_width=max(1,width-2*SPACE['md']);art_height=art_width;compact=width<200
         while self.grid.count():self.grid.takeAt(0)
         self.grid.setAlignment(Qt.AlignTop|Qt.AlignLeft)
@@ -96,7 +96,8 @@ def build_wishlist(window):
     from .locale import count_text
     top=QHBoxLayout();top.addWidget(text(count_text(len(rows),'jogo'),'muted'));top.addStretch();top.addWidget(action('+ Adicionar desejo',window.add_game,True));inside.addLayout(top)
     from .wish_platforms import options,selected
-    filters=QHBoxLayout();filters.setSpacing(12);platform=QComboBox();platform.setObjectName('wishlistPlatform');platform.setAccessibleName('Plataforma dos desejos')
+    filters=QHBoxLayout();filters.setSpacing(10);platform=QComboBox();platform.setObjectName('wishlistPlatform');platform.setAccessibleName('Plataforma dos desejos')
+    platform.setMaximumWidth(118)
     choices=options(rows)
     for caption,key in choices:platform.addItem(caption,key)
     saved=window.library.setting('wishlist.platform_filter','all')
@@ -111,6 +112,7 @@ def build_wishlist(window):
     selected_order=window.library.setting('wishlist.order','name')
     if selected_order not in ('name','price','discount'):selected_order='name';window.library.set_setting('wishlist.order',selected_order)
     order=QComboBox();order.setObjectName('wishlistOrder');order.addItem('Alfabeticamente','name');order.addItem('Menor preço','price');order.addItem('Maior desconto','discount');order.setCurrentIndex(max(0,order.findData(selected_order)))
+    order.setMaximumWidth(174)
     from .price_view import attribution_link
     filters.addWidget(attribution_link())
     def change_order(index):
