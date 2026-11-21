@@ -12,13 +12,28 @@ def main():
     if not paths:
         raise RuntimeError('Nenhum teste encontrado.')
 
+    batches = []
+    batch = []
+    for path in paths:
+        # Este módulo testa encerramento de janelas e processos de propósito.
+        # Mantenha o QApplication dos demais testes fora desse ciclo de vida.
+        if path.name == 'test_isolated_operations.py':
+            if batch:
+                batches.append(batch)
+                batch = []
+            batches.append([path])
+        else:
+            batch.append(path)
+            if len(batch) == 30:
+                batches.append(batch)
+                batch = []
+    if batch:
+        batches.append(batch)
+
     result = ET.Element('testsuites')
     failed = False
-    batch_size = 30
     with TemporaryDirectory(prefix='checkpoint-windows-tests-') as temporary:
-        for start in range(0, len(paths), batch_size):
-            batch = paths[start:start + batch_size]
-            number = start // batch_size + 1
+        for number, batch in enumerate(batches, 1):
             report = Path(temporary) / f'pytest-{number}.xml'
             print(f'Testes Windows — lote {number} ({len(batch)} arquivos)', flush=True)
             command = [sys.executable, '-X', 'faulthandler', '-m', 'pytest', '-q',
