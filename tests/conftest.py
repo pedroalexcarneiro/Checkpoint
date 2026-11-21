@@ -39,10 +39,25 @@ def app():
 def pytest_runtest_protocol(item, nextitem):
     if not item.nodeid.startswith('tests/test_labels_0137.py::test_not_started_label'):
         return (yield)
+    import gc
     import sys
+    from PySide6.QtCore import qInstallMessageHandler
+
+    def qt_message(level, context, message):
+        os.write(2, f"Qt {level}: {message}\n".encode('utf-8', errors='replace'))
+
+    previous = qInstallMessageHandler(qt_message)
+
+    def collect(phase, info):
+        os.write(2, f"GC {phase}: {info['generation']}\n".encode())
+
+    gc.callbacks.append(collect)
     filenames = {'test_bugs_0134.py', 'test_labels_0137.py', 'window.py', 'home_view.py',
                  'detail_view.py', 'design_system.py', 'global_hotkey.py',
-                 'controller_capture.py', 'library.py', 'transfers.py'}
+                 'controller_capture.py', 'library.py', 'transfers.py',
+                 'task_status.py', 'window_controls.py', 'windows_frame.py',
+                 'home_components.py', 'smooth_scroll.py', 'window_style.py', 'media_index.py',
+                 'price_queue.py', 'jobs.py', 'cover_grid.py'}
 
     def trace(frame, event, arg):
         filename = frame.f_code.co_filename.rsplit('\\', 1)[-1]
@@ -57,3 +72,5 @@ def pytest_runtest_protocol(item, nextitem):
         return (yield)
     finally:
         sys.settrace(None)
+        gc.callbacks.remove(collect)
+        qInstallMessageHandler(previous)
