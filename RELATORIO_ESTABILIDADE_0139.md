@@ -409,10 +409,33 @@ SQLite, exit 0. Nenhum pacote ou publicação foi criado nesta rodada.
 
 O dono confirmou que o Switch Pro funcionou. O vídeo de 11:01 mostra a
 faixa do último jogo com pouco espaço ocupado pela arte e as miniaturas
-de ofertas reduzidas. A altura do banner agora busca 60% da largura da
+de ofertas reduzidas. A altura do banner agora busca 65% da largura da
 faixa para artes panorâmicas, preservando todo o quadro e limitando a
 altura para arquivos de proporção mais estreita. Últimas sessões tem
 setas alinhadas ao título e cards de 170 px, com arte de até 230 px.
+O teste de renderização conferiu pixels distintos nos quatro cantos de
+três proporções de arte ao redimensionar, maximizar e restaurar a janela,
+tanto em Qt no Linux quanto com o backend Qt para Windows em Wine.
+As capturas com dados de teste mostram a janela em 1000×700, 1280×800
+e maximizada em 1920×1080.
+
+O ponto de quebra de 780 px do conteúdo colocava Resumo da semana e
+Ofertas abaixo das sessões na menor janela do app. A partir de `8d21ecf`,
+a coluna direita permanece ao lado de Últimas sessões, alinhada no topo.
+O carrossel recalcula a quantidade visível sem impor a largura dos cards
+ao restante do Início, e a miniatura da oferta diminui na coluna compacta.
+O teste cobre os dois painéis e o banner antes do limite da área visível,
+sem rolagem horizontal. A janela de 1000×700 mostra dois jogos por vez.
+
+A composição de `2c73ae8` usa um degradê contínuo desde o fundo à
+esquerda até a entrada da arte. A opacidade da arte sobe a partir de uma
+curva elíptica, primeiro no meio e depois no topo e na base. A faixa é
+mais alta e a pintura conserva toda a imagem em sua proporção original.
+Portal 2 foi conferido em três tamanhos com a arte oficial da Steam. O
+teste de pixels conferiu a continuidade da transição e as bordas, e o
+teste com Qt para Windows em Wine conferiu a coluna direita e o banner
+ao reduzir, maximizar e restaurar em três proporções de arte.
+[Arte oficial de Portal 2](https://cdn.akamai.steamstatic.com/steam/apps/620/library_hero.jpg)
 
 Minimizar usa o comando Win32 no quadro integrado. A área clicável dos
 botões usa coordenadas da área cliente. Em Wine, os testes de hit-test
@@ -443,15 +466,74 @@ legada. A reindexação ao voltar ao app lê o catálogo de mídias em conexão
 SQLite de leitura na thread de trabalho. A causa da demora vista pelo
 dono ainda precisa de confirmação com a biblioteca real.
 
+A build Windows x64 do commit `2c73ae8` abriu com o backend Qt para
+Windows em Wine a partir do ZIP extraído. O smoke test percorreu seis
+páginas e confirmou a integridade do SQLite. O ZIP tem 80.101.033 bytes e
+passou pela verificação CRC de 882 arquivos. O SHA-256 do ZIP é
+`82c5c2863c98583599766c8d68e3d4a3a80607e7cb07f27c594170b7e2693178`.
+Os 100 testes focados passaram em 19,32 s, e a suíte completa em `97a2207`
+passou com 889 testes em 603,52 s. A suíte de `8d21ecf` passou com 889
+testes em 607,72 s. A execução seguinte em `1ca3d40` foi interrompida por
+falta de espaço no disco durante a extração do ZIP. Cópias de trabalho
+foram removidas e a validação foi repetida com o degradê curvo.
+Os 41 testes focados do contorno curvo e do ajuste de altura passaram
+em 8,38 s.
+O teste de responsividade de Memórias perdia pulsos do temporizador na
+janela fixa de 40 ms sob carga. A revisão do teste aguarda três pulsos
+após a entrada do trabalho e confirma que a decodificação continua
+bloqueada, com prazo de um segundo para os pulsos. A rodada de 49 testes
+de Início e Memórias passou em 16,95 s.
+
+### Reteste solicitado após o ZIP de 2c73ae8
+
+No Início, a faixa ganhou 16 px de folga para a arte em proporções
+panorâmicas e o espaço mínimo da logo em relação ao botão passou de
+8 para 20 px. O resumo semanal perdeu o botão Ver estatísticas, que
+ocupava uma segunda linha na janela estreita. Os cards de Memórias
+recentes mantêm 300 px. O painel ocupa toda a largura útil e centraliza
+os cards quando cabem todos, conforme o ajuste de `e3742f9`. A Biblioteca
+mantém abas e filtros alinhados à esquerda
+nas duas linhas compactas. Criar lista e Gerenciar listas ficaram sem
+reticências. Os três botões do seletor de origem da ROM ficam na mesma
+linha.
+
+Em Estatísticas, o gráfico interno repassa a rolagem vertical à página.
+Os testes enviaram eventos de roda sobre o gráfico em todos os sete
+períodos na janela de 1000×700.
+
+No Windows, a janela principal passou a usar a barra de título do sistema,
+com a cor do tema quando o DWM oferece esse recurso. A área cliente pede
+repintura após a transição. Em Wine, uma barra nativa passou por três
+ciclos de maximizar/restaurar e um de minimizar/restaurar. A corrupção
+vista pelo dono precisa ser conferida no desktop Windows real.
+
+O botão Finalizar aparece enquanto o processo iniciado pelo Checkpoint
+está em sessão. No Windows, envia WM_CLOSE à única janela principal
+identificada para aquele processo. O app aguarda a saída antes de
+encerrar a sessão e iniciar o backup automático. Se o launcher repassar
+o jogo a outro processo, o fechamento continua pela janela do jogo.
+Em Wine, a janela de teste recebeu WM_CLOSE e saiu normalmente antes de
+o registro passar a concluído. O conjunto focado em `b775755` passou com
+139 testes em 20,56 s. A suíte completa de `b775755` passou com 897
+testes em 613,82 s. A revisão final `e3742f9`, que retomou a largura do
+painel de memórias, passou em 51 testes focados de Início e Memórias e
+repetiu com sucesso os 139 testes das áreas alteradas em 33,49 s.
+
+O ZIP Windows x64 de `e3742f9` foi extraído e abriu no backend Qt para Windows em
+Wine. O smoke test percorreu seis páginas e validou a integridade do
+SQLite. Os 882 arquivos passaram pela verificação de CRC. A cópia
+baixada pelo link temporário teve o mesmo SHA-256 do pacote de
+80.107.189 bytes. O SHA-256 é
+`2725e89ede70995c73744717681976ea8e99775c2c28c60756365d0005e6d062`.
+
 - **6B.** O teste Qt local passou, e a captura do dono permanece a evidência
   do defeito gráfico. A reprodução em desktop Windows com o caminho de
   minimizar/restaurar e, se possível, duas telas/DPI diferentes ainda é
   necessária. A correção do diálogo do item 6A está validada separadamente.
-- **9.** Windows Graphics Capture oferece seleção de uma janela por HWND.
-  A biblioteca candidata windows-capture 2.0.1 tem wheel Windows AMD64 e
-  dependências NumPy/OpenCV. Validar alvo, oclusão, conteúdo, segurança na
-  falha, versão do Windows e empacotamento exige execução nativa. O backend
-  de primeiro plano existente permanece; a gravação de PNG já saiu da GUI.
+- **9.** O app usa Windows Graphics Capture para selecionar uma janela por
+  HWND. O pacote inclui a extensão AMD64. Falta confirmar a aquisição do
+  quadro com o jogo encoberto no Windows do dono, inclusive nos modos de
+  exibição que ele usa.
   [API de captura por HWND](https://learn.microsoft.com/en-us/windows/win32/api/windows.graphics.capture.interop/nf-windows-graphics-capture-interop-igraphicscaptureiteminterop-createforwindow)
 - **14.** A opção de mover a ROM local continua pendente. O perfil atual
   descreve execução por argumentos/extensões, sem contrato sobre onde o

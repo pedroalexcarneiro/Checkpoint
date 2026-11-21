@@ -8,6 +8,12 @@ o rodapé horizontal do diálogo Captura pelo controle.
 O suporte SDL3 ao botão dedicado do Switch Pro foi implementado localmente.
 O dono confirmou funcionamento por Bluetooth. Após o teste, foram ajustados
 o Início, Desejos, minimizar, captura por janela e a aparência escura.
+No Início, a janela de 1000×700 mantém Resumo da semana e Ofertas na
+coluna à direita. O banner mantém a arte inteira e usa o degradê do fundo
+até a entrada da imagem, com uma transição curva.
+O botão Finalizar solicita o fechamento da janela do jogo iniciado pelo
+Checkpoint. O app salva a sessão após a saída do processo. A moldura
+nativa e o fechamento do jogo de teste foram conferidos em Wine.
 PLANO_ESTABILIDADE_0139.md e RELATORIO_ESTABILIDADE_0139.md registram andamento.
 
 Revisão local em fix/pos-0139-layout, sem nova publicação: Início sem jogos
