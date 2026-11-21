@@ -210,5 +210,10 @@ def test_home_hero_keeps_entire_wide_and_narrow_banners(ui,app,folder):
                     source=QColor(color).getRgb()
                     assert all(abs(a-b)<16 for a,b in zip(before,after))
                     assert max(abs(a-b) for a,b in zip(after,source))>16
-                    assert max(abs(a-b) for a,b in zip(after,hero.transition_color.getRgb()))>16
+                    assert max(abs(a-b) for a,b in zip(after,hero.transition_color.getRgb()))>10
+                x=round(target.left()+min(90,target.width()*.18))
+                center=rendered.pixelColor(x,round(middle.y())).blue()
+                for height_ratio in (.17,.83):
+                    edge=rendered.pixelColor(x,round(target.top()+height_ratio*target.height())).blue()
+                    assert edge>center+18
         finally:hero.close()

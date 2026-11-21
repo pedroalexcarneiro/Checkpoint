@@ -1,6 +1,6 @@
 """Cards e navegação do Início, com ações separadas e conteúdo local."""
 from PySide6.QtCore import Qt,QRectF,QSize,QSizeF
-from PySide6.QtGui import QPainter,QPainterPath,QColor,QPixmap,QLinearGradient,QRegion,QFont,QPen
+from PySide6.QtGui import QPainter,QPainterPath,QColor,QPixmap,QLinearGradient,QRadialGradient,QTransform,QBrush,QRegion,QFont,QPen
 from PySide6.QtWidgets import QWidget,QVBoxLayout,QHBoxLayout,QLabel,QPushButton,QSizePolicy,QDialog,QScrollArea,QBoxLayout,QLayout
 from .design_system import CardSurface,IconButton,SectionHeader,ArtworkButton,colors
 from .ui_components import text,action,ElidedAction
@@ -78,8 +78,8 @@ class LastPlayedBanner(QPushButton):
 
     def paint_banner(self,painter,target):
         width,height=self.banner.width(),self.banner.height()
-        blend_start=max(0,target.left()-12)
-        blend_end=target.left()+min(44,target.width()*.12)
+        blend_start=max(0,target.left()-9)
+        blend_end=target.left()+min(30,target.width()*.11)
         # Uma pequena extensão da borda evita emenda entre o fundo e o quadro inteiro.
         columns=((blend_start,target.left()-blend_start,0,1),
                  (target.left(),target.width(),0,width),
@@ -95,10 +95,22 @@ class LastPlayedBanner(QPushButton):
         background.setColorAt(0,QColor('#0d1119'))
         background.setColorAt(1,self.transition_color)
         painter.fillRect(QRectF(0,0,blend_start,self.height()),background)
-        transparent=QColor(self.transition_color);transparent.setAlpha(0)
-        fade=QLinearGradient(blend_start,0,blend_end,0)
-        fade.setColorAt(0,self.transition_color);fade.setColorAt(1,transparent)
-        painter.fillRect(QRectF(blend_start,0,blend_end-blend_start,self.height()),fade)
+        shade=QColor(self.transition_color)
+        transparent=QColor(shade);transparent.setAlpha(0)
+        base_fade=QLinearGradient(blend_start,0,blend_end,0)
+        base_fade.setColorAt(0,self.transition_color);base_fade.setColorAt(1,transparent)
+        painter.fillRect(QRectF(blend_start,0,blend_end-blend_start,self.height()),base_fade)
+        # A sombra elíptica entra mais no centro da imagem e se recolhe nos extremos.
+        radius=min(246,target.width()*.43)
+        curved_fade=QRadialGradient(0,0,1)
+        shade.setAlpha(190);curved_fade.setColorAt(0,shade)
+        curved_fade.setColorAt(.28,shade)
+        shade.setAlpha(100);curved_fade.setColorAt(.70,shade)
+        curved_fade.setColorAt(1,transparent)
+        brush=QBrush(curved_fade)
+        brush.setTransform(QTransform().translate(target.left()-20,self.height()/2)
+                           .scale(radius,self.height()*.54))
+        painter.fillRect(QRectF(blend_start,0,radius,self.height()),brush)
 
     def paintEvent(self,event):
         from .visual_tokens import RADIUS
