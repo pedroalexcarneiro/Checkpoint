@@ -329,7 +329,7 @@ o app tem acesso apenas ao que for efetivamente exposto ao XInput.
 [Documentação XInputGetState](https://learn.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetstate)
 [Botões digitais XINPUT_GAMEPAD](https://learn.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_gamepad)
 
-Gate de 44 aprovados, exit 0, cobre folha de configuração, escolha de botão,
+Gate de 44 aprovados, exit 0, cobre diálogo de configuração, escolha de botão,
 captura de combinação, reconexão simulada, segundo dispositivo, fonte e
 espaçamento. Captura Qt com um dispositivo simulado. Validação física no
 Windows pendente.
@@ -351,6 +351,17 @@ exit 0, incluindo identidade, preço e regra de oficiais por padrão.
 índice e o caminho anterior permaneçam os mesmos. Se mudarem durante a
 transferência, a cópia verificada é preservada sem ficar disponível como
 a revisão nova. Gate de 50 aprovados, exit 0.
+
+## Suíte integral após corrigir as regressões
+
+Em 747fdcb, a suíte integral local passou com **872 testes em 590,08 s**,
+exit 0. A execução usou Linux, Qt offscreen e banco de teste isolado, com
+`QT_QPA_PLATFORM=offscreen CHECKPOINT_TEST_ROOT=/tmp PYTHONDONTWRITEBYTECODE=1
+/workspace/work/venv/bin/python -X faulthandler -m pytest tests -q -p no:cacheprovider`.
+Stdout e stderr integrais em evidence/estabilidade-0139/suite-integral-revisao.*.txt.
+Os conjuntos direcionados da unidade 10 passaram após a suíte ter sido iniciada.
+Smoke isolado no código com a unidade 10 confirmou seis páginas e integridade
+SQLite, exit 0. Nenhum pacote ou publicação foi criado nesta rodada.
 
 ## Pendências técnicas desta rodada
 
@@ -394,3 +405,9 @@ a revisão nova. Gate de 50 aprovados, exit 0.
 - 5e63960: codificar e gravar capturas em segundo plano.
 - bd92ddf: organização e indexação de arquivos nas pastas de Memórias.
 - 747fdcb: preservar cadastro do gerenciador Drive e corrigir falhas da suíte inicial.
+- ea238d1: seleção XInput, invalidação de consulta após falha e revisão concorrente do Drive.
+
+SHA-256 da suíte integral revisada:
+
+- stdout `8996d9a45ffcd904136efc506bb420e40bfc2d15f3be3c4f9978198111915c3d`
+- stderr `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
