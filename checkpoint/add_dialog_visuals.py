@@ -8,7 +8,7 @@ def style_add_dialog(dialog):
     quick=dialog.quick_add
     screen_height=dialog.screen().availableGeometry().height()
     dialog.setMinimumSize(680,min(700,screen_height))
-    dialog.resize(760,min(740,screen_height))
+    dialog.resize(680,min(840,screen_height))
     dialog.layout().setContentsMargins(22,SPACE['lg'],22,SPACE['lg']);dialog.layout().setSpacing(SPACE['sm'])
     quick.query.setFixedHeight(48)
     quick.sources.setExpanding(True);quick.sources.setDrawBase(False)

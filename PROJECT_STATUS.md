@@ -18,8 +18,9 @@ No Início, as faixas de sessões e memórias deslizam pelo viewport. Em
 Últimas sessões, aparecem até dez jogos distintos além do banner. Em
 Desejos, cabem três cards na janela de 1000×700 com margem até a barra de
 rolagem. Os botões de Sobre o jogo e Diário de jogo ficam em linhas à direita.
-No cadastro, a prévia da seleção ficou mais alta e tem rolagem própria junto
-aos resultados. As ações relacionadas
+No cadastro, o diálogo abre em formato vertical quando há espaço na tela.
+A prévia da seleção ficou mais alta e tem rolagem própria junto aos resultados.
+As ações relacionadas
 ao resultado ficam na mesma linha. Avisos temporários da janela principal
 deslizam no canto inferior esquerdo.
 O aviso ao finalizar pede confirmação na tela do jogo. Downloads de ROM

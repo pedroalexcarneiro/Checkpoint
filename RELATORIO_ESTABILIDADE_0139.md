@@ -578,9 +578,9 @@ offscreen.
 - Últimas sessões mantém a rolagem lateral e mostra até dez jogos distintos,
   além do destaque do banner. A ordem e o limite foram verificados com
   treze jogos e uma sessão repetida do jogo em destaque.
-- A prévia de Adicionar jogo mede 172 px de altura. A altura inicial do
-  diálogo é de até 740 px, conforme a área disponível. Em Desejos, há 12 px
-  de margem entre os cards e a barra de rolagem na janela de 1000×700.
+- A prévia de Adicionar jogo mede 172 px de altura. O diálogo passou a abrir
+  com 680×840 px, limitados pela altura disponível. Em Desejos, há 12 px de
+  margem entre os cards e a barra de rolagem na janela de 1000×700.
 - Os avisos temporários incluem Confirme na tela do jogo, ROM baixada e
   Captura salva. Falhas de transferência preservam a mensagem do serviço.
 - 102 testes direcionados passaram em Linux. O ZIP Windows x64 passou na
@@ -589,6 +589,10 @@ offscreen.
   física continua pendente de teste.
 - `Checkpoint-teste-Windows-x64.zip` (80.108.523 bytes), SHA-256
   `e6d7021aede1e88922004fa2bc8878afc77cf0e17a056f232d2dbcfe0ee50504`.
+- A revisão com o cadastro vertical passou em 60 testes de interface e
+  repetiu as validações de integridade, extração, abertura e smoke no Wine.
+  `Checkpoint-teste-cadastro-vertical-Windows-x64.zip` (80.108.793 bytes),
+  SHA-256 `4dbad63a178a45fca33f23e2957e8ac5cc15f2d75d256b5754b0e0ee2c637562`.
 
 ## Commits locais já preparados
 

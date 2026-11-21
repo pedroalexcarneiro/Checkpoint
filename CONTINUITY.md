@@ -29,7 +29,8 @@ as ações ficam agrupadas à direita. O botão do banner cresce em janelas larg
 Em Adicionar jogo, a prévia ganha uma área rolável e as ações ficam juntas
 acima de Opções avançadas. As mensagens temporárias entram e saem por
 uma caixa no canto inferior esquerdo da janela principal.
-A prévia da seleção e o diálogo de cadastro ganharam altura.
+A prévia da seleção e o diálogo de cadastro ganharam altura. O diálogo abre
+com 680×840 px quando há espaço vertical na tela.
 Os avisos de rotina usam frases curtas, como Confirme na tela do jogo,
 ROM baixada e Captura salva. Falhas de transferência mostram o motivo.
 As Ofertas do Início voltaram a mostrar capas verticais. Os filtros de
