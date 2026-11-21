@@ -3,8 +3,8 @@
 Revisão de estabilidade/organização em andamento sobre 0.1.39/9ecbc95, somente
 local e sem publicação autorizada. Memórias: carga progressiva/reuso de página,
 miniaturas no pool/cache limitado, filtros só para jogos com memórias e grade
-responsiva. A revisão local em 747fdcb passou em 872 testes. O diálogo Captura
-pelo controle recebeu um rodapé horizontal, validado nos testes do diálogo.
+responsiva. A revisão local em f3a0264 passou em 878 testes em Linux, incluindo
+o rodapé horizontal do diálogo Captura pelo controle.
 PLANO_ESTABILIDADE_0139.md e RELATORIO_ESTABILIDADE_0139.md registram andamento.
 
 Revisão local em fix/pos-0139-layout, sem nova publicação: Início sem jogos

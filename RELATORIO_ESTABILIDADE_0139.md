@@ -341,6 +341,7 @@ mesma posição vertical e altura, contenção no diálogo e gravação de coman
 Foram quatro testes aprovados em Linux/Qt offscreen. A captura atualizada
 está em evidence/estabilidade-0139/captura-controle.png e usa dispositivo
 simulado.
+A suíte integral de f3a0264 passou com 878 testes em 596,23 s, exit 0.
 
 **Item 19.** Consultas públicas em BRL, sem chave, registram as ofertas de
 Cyberpunk 2077, Hades, Hades II e God of War Ragnarök para PC. Para God of War
