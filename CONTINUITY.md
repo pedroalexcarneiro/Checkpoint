@@ -7,8 +7,10 @@ autoriza somente implementação/commits locais/validação: sem push/PR/tag/rel
 Memórias agora progressivas, página/abas persistentes, miniaturas assíncronas
 limitadas e grade na largura útil. Medição 96 imagens: ~5 s antes, 0,08 s na
 primeira entrada e ~0,007 s nos retornos após; ensaio Linux isolado. Seletor
-só contém jogos com registros em Memórias. Restante em andamento no plano e
-RELATORIO_ESTABILIDADE_0139.md. Gates antigos abaixo são históricos.
+só contém jogos com registros em Memórias. O diálogo Captura pelo controle
+agora alinha Desativar, Gravar comando, Cancelar e Salvar no mesmo rodapé.
+Restante em andamento no plano e no RELATORIO_ESTABILIDADE_0139.md.
+Gates antigos abaixo são históricos.
 
 ## Revisão local após 0.1.39 — fix/pos-0139-layout
 

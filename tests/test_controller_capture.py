@@ -51,6 +51,10 @@ def test_controller_dialog_learns_and_persists_pressed_buttons(ui,app):
             assert command.font()==device.font()
             assert command.geometry().top()-device.geometry().bottom()>=12
             assert command.x()==device.x() and command.height()==device.height()
+            footer=[buttons[name].geometry() for name in ('Desativar','Gravar comando','Cancelar','Salvar')]
+            assert len({(button.y(),button.height()) for button in footer})==1
+            assert all(left.right()<right.left() for left,right in zip(footer,footer[1:]))
+            assert all(dialog.rect().contains(button) for button in footer)
             command.setCurrentIndex(command.findData(0x1000))
             assert command.currentText()=='A' and buttons['Salvar'].isEnabled()
             buttons['Gravar comando'].click()

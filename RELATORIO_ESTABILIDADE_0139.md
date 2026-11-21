@@ -334,6 +334,14 @@ captura de combinação, reconexão simulada, segundo dispositivo, fonte e
 espaçamento. Captura Qt com um dispositivo simulado. Validação física no
 Windows pendente.
 
+Ajuste visual posterior pedido pelo dono: Desativar e Gravar comando ficam
+juntos à esquerda, com Cancelar e Salvar à direita na mesma linha. O rodapé
+tem 8 px de espaçamento entre botões vizinhos. O teste verifica ordem,
+mesma posição vertical e altura, contenção no diálogo e gravação de comando.
+Foram quatro testes aprovados em Linux/Qt offscreen. A captura atualizada
+está em evidence/estabilidade-0139/captura-controle.png e usa dispositivo
+simulado.
+
 **Item 19.** Consultas públicas em BRL, sem chave, registram as ofertas de
 Cyberpunk 2077, Hades, Hades II e God of War Ragnarök para PC. Para God of War
 a oferta oficial trouxe R$ 249,90 original e R$ 142,30 atual, diferença de

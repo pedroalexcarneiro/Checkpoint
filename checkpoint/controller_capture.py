@@ -1,6 +1,6 @@
 """Atalho de captura para botões digitais expostos pelo XInput."""
 import sys
-from PySide6.QtCore import QObject,QTimer,Qt
+from PySide6.QtCore import QObject,QTimer
 
 
 BUTTONS={0x0001:'↑',0x0002:'↓',0x0004:'←',0x0008:'→',0x0010:'Menu',0x0020:'Visão',
@@ -102,7 +102,7 @@ def configure_controller(controller):
             painter.drawPixmap(self.width()-25,(self.height()-18)//2,arrow)
 
     dialog=prepare_dialog(QDialog(controller.window))
-    dialog.setWindowTitle('Captura pelo controle');dialog.resize(520,354)
+    dialog.setWindowTitle('Captura pelo controle');dialog.resize(520,310)
     layout=QVBoxLayout(dialog)
     dialog_heading(layout,'Captura pelo controle',name='memories')
     inputs=QGridLayout();inputs.setHorizontalSpacing(16);inputs.setVerticalSpacing(0)
@@ -174,9 +174,11 @@ def configure_controller(controller):
         controller.window.library.set_setting(PREFERENCE,{})
         dialog.accept()
 
-    learn_button=action('Gravar comando',learn);layout.addWidget(learn_button,0,Qt.AlignLeft)
     layout.addStretch()
-    buttons=QHBoxLayout();buttons.addWidget(action('Desativar',disable));buttons.addStretch()
+    buttons=QHBoxLayout();buttons.setSpacing(8)
+    buttons.addWidget(action('Desativar',disable))
+    learn_button=action('Gravar comando',learn);buttons.addWidget(learn_button)
+    buttons.addStretch()
     buttons.addWidget(action('Cancelar',dialog.reject))
     save_button=action('Salvar',save,True);save_button.setEnabled(bool(command.currentData()));buttons.addWidget(save_button);layout.addLayout(buttons)
     command.currentIndexChanged.connect(lambda:save_button.setEnabled(bool(command.currentData()) and not learning))
