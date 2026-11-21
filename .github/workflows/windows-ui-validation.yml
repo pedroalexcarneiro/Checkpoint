@@ -51,8 +51,8 @@ jobs:
         shell: pwsh
         run: |
           $env:CHECKPOINT_TEST_ROOT = Join-Path $env:RUNNER_TEMP 'checkpoint-ui-tests'
-          python -X faulthandler -m pytest tests -q -p no:cacheprovider --junitxml=.ci-results/pytest.xml
-          if ($LASTEXITCODE -ne 0) { throw 'Testes Windows falharam.' }
+          python -X faulthandler -m pytest tests -vv -s -p no:cacheprovider --junitxml=.ci-results/pytest.xml
+          if ($LASTEXITCODE -ne 0) { throw "Pytest terminou com código $LASTEXITCODE." }
       - name: Build desktop with bundled brand assets
         shell: pwsh
         run: ./scripts/build.ps1 -Python (Get-Command python).Source
