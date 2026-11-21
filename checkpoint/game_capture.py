@@ -80,8 +80,9 @@ def save_frame(directory,image):
     return path
 
 
-def capture_directory(window):
-    return Path(window.library.setting('captures','') or window.library.db.path.parent/'captures')
+def capture_directory(window,game_id):
+    from .media_folders import managed_folder
+    return managed_folder(window.library,game_id)
 
 
 def register_frame(library,game_id,path):
@@ -95,7 +96,7 @@ def register_frame(library,game_id,path):
 def capture_game(window,adapter=None):
     """Fluxo direto preservado para a validação isolada do backend."""
     game_id,image=capture_frame(window,adapter)
-    path=save_frame(capture_directory(window),image)
+    path=save_frame(capture_directory(window,game_id),image)
     register_frame(window.library,game_id,path)
     return path
 
@@ -117,7 +118,7 @@ class CaptureWriter(QObject):
         if len(self.waiting)+bool(self.job)>=4:
             raise ValueError('Aguarde as capturas pendentes antes de tentar de novo.')
         game_id,image=capture_frame(self.window)
-        self.waiting.append((game_id,capture_directory(self.window),image))
+        self.waiting.append((game_id,capture_directory(self.window,game_id),image))
         self.start_next()
 
     def start_next(self):

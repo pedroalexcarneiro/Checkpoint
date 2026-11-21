@@ -115,6 +115,9 @@ class MainWindow(QMainWindow):
         self.capture_writer=CaptureWriter(self)
         self.capture_writer.saved.connect(self.capture_saved)
         self.capture_writer.failed.connect(self.capture_failed)
+        from .media_index import MediaFolderIndex
+        self.media_index=MediaFolderIndex(self.library,self)
+        self.media_index.changed.connect(self.managed_media_changed)
         from .global_hotkey import GlobalCaptureHotkey
         self.capture_shortcut=GlobalCaptureHotkey(self,self.capture_game_window,None)
         configured=self.library.setting('capture.shortcut','Ctrl+Shift+S')
@@ -486,6 +489,16 @@ class MainWindow(QMainWindow):
             caption,ok = QInputDialog.getText(self,'Legenda','Descrição da captura:')
             if ok: self.guard(lambda:self.library.add_media(game_id,path,caption)); self.detail(game_id)
 
+    def open_media_folder(self,game_id):
+        from .media_folders import managed_folder
+        def open_folder():
+            path=managed_folder(self.library,game_id)
+            try:path.mkdir(parents=True,exist_ok=True)
+            except OSError as error:raise ValueError('Não foi possível abrir a pasta de capturas. Confira as permissões.') from error
+            self.media_index.request()
+            QDesktopServices.openUrl(QUrl.fromLocalFile(str(path.resolve())))
+        self.guard(open_folder)
+
     def show_media(self,media):
         if not Path(media['path']).is_file():
             QMessageBox.warning(self,'Mídia indisponível','O arquivo foi movido ou removido.'); return
@@ -508,11 +521,20 @@ class MainWindow(QMainWindow):
 
     @Slot(int)
     def capture_saved(self,game_id):
+        self.media_index.request()
         self.statusBar().showMessage('Captura salva em Memórias.',5000)
         current=self.stack.currentWidget()
         if current==getattr(self,'detail_page',None) and self.current_game==game_id:self.detail(game_id)
         elif current is self.pages[3]:self.memories()
         elif current is self.pages[0]:self.home()
+
+    @Slot(object)
+    def managed_media_changed(self,game_ids):
+        current=self.stack.currentWidget()
+        if current is self.pages[3]:self.memories()
+        elif current is self.pages[0]:self.home()
+        elif current==getattr(self,'detail_page',None) and (not game_ids or self.current_game in game_ids):
+            self.detail(self.current_game)
 
     @Slot(str)
     def capture_failed(self,message):
@@ -522,6 +544,7 @@ class MainWindow(QMainWindow):
         if QMessageBox.question(self,'Apagar memória','Apagar esta memória de '+record['title']+'? O arquivo original será preservado.')!=QMessageBox.Yes:
             return
         table='diary_entries' if record['kind']=='diary' else 'media_files'
+        if table=='media_files':self.media_index.ignore_deleted(record['path'])
         with self.library.sql:
             self.library.sql.execute(f'DELETE FROM {table} WHERE id=? AND game_id=?',(record['id'],record['game_id']))
         if self.stack.currentWidget()==getattr(self,'detail_page',None):
@@ -838,7 +861,10 @@ class MainWindow(QMainWindow):
 
     def choose_directory(self,key):
         path = QFileDialog.getExistingDirectory(self,'Selecionar pasta')
-        if path: self.library.set_setting(key,path); self.navigate(5)
+        if path:
+            self.library.set_setting(key,path)
+            if key=='captures':self.media_index.request()
+            self.navigate(5)
 
     def backup_database(self):
         path,_ = QFileDialog.getSaveFileName(self,'Backup do banco','checkpoint-backup.sqlite','SQLite (*.sqlite)')
@@ -963,6 +989,6 @@ class MainWindow(QMainWindow):
         if self.launcher.active and not self.system_shutdown:
             if QMessageBox.question(self,'Sessões ativas','Fechar o Checkpoint? O jogo continuará aberto. O tempo acompanhado será salvo; o período com o Checkpoint fechado não será contado.')!=QMessageBox.Yes:
                 event.ignore(); return
-        self.capture_shortcut.close();self.price_queue.stop();self.timer.stop();self.status_timer.stop();self.download_manager.timer.stop();self.launcher.interrupt(reason='shutdown' if self.system_shutdown else 'closed');event.accept()
+        self.capture_shortcut.close();self.media_index.stop();self.price_queue.stop();self.timer.stop();self.status_timer.stop();self.download_manager.timer.stop();self.launcher.interrupt(reason='shutdown' if self.system_shutdown else 'closed');event.accept()
 
 from .dialog_style import AppMessages as QMessageBox, AppInputs as QInputDialog

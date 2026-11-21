@@ -130,6 +130,10 @@ Estado: causa de recentralização corrigida localmente. Transição real entre
 monitores/DPI e flicker do vídeo ainda não homologados. Corrupção da janela
 principal ao minimizar/restaurar (6B) permanece separada e não reproduzida;
 a correção do modal não é apresentada como solução desse outro defeito.
+A captura enviada novamente durante a revisão mostra simultaneamente a barra
+nativa branca e a barra personalizada, áreas pretas/brancas e partes deslocadas
+da ficha de Super Smash Bros. Ultimate. A causa ainda não foi confirmada.
+A reprodução precisa do desktop real após minimizar/restaurar.
 
 ## Unidade 4 — Downloads da ficha e do gerenciador (itens 5 e 15)
 
@@ -259,6 +263,30 @@ ainda exige primeiro plano. Captura sem foco, oclusão, UAC e controles físicos
 continuam pendentes de solução específica e validação no Windows. O teste
 Qt offscreen não comprova o comportamento no HSR ou em um emulador real.
 
+## Unidade 9 — Pastas de Memórias (item 11)
+
+A ficha oferece Abrir pasta de capturas. Capturas novas passam para pasta
+com ID estável e título sanitizado. Jogos homônimos têm pastas distintas,
+e renomear o jogo preserva a associação. Arquivos legados e vínculos já
+cadastrados permanecem nos locais originais; não houve reorganização.
+
+O índice varre apenas pastas registradas, em trabalho fora da GUI. Observa
+mudanças pelo sistema de arquivos e revarre ao ativar o app. Para importar,
+verifica estabilidade do tamanho e data entre duas leituras e rejeita
+extensões ou conteúdo inválidos. No Windows há também conferência de
+compartilhamento do arquivo contra gravação concorrente, ainda sem teste
+nativo. Vídeos têm verificação básica do contêiner. A reprodução depende
+dos codecs do computador. A data do arquivo é usada ao indexar pela primeira
+vez. Arquivo removido externamente mantém seu registro e o card informa a
+ausência. Remover um card pela interface não apaga o original e a varredura
+não o importa novamente.
+
+Gate local: 28 testes aprovados, exit 0. Inclui observação real do diretório
+no Qt, dois jogos homônimos, arquivo em alteração, formato inválido, data
+preservada, atualização da página visível, remoção física e reindexação.
+FFmpeg gerou quatro clipes sintéticos (.mp4, .mov, .mkv e .avi) reconhecidos
+pelo índice. Falta validar a proteção contra escrita no Windows.
+
 ## Commits locais já preparados
 
 - f0b43c0: plano/base confirmados e diagnóstico inicial.
@@ -272,3 +300,4 @@ Qt offscreen não comprova o comportamento no HSR ou em um emulador real.
 - e28afe0: listas personalizadas da Biblioteca.
 - 9d81c72: usar somente o título nos nomes das linhas de gestão das listas.
 - c9a3a4b: logos proporcionais no gerenciador de listas.
+- 5e63960: codificar e gravar capturas em segundo plano.

@@ -182,6 +182,7 @@ def build_detail(window,game):
         def save():
             window.library.add_diary(game_id,entry.toPlainText());entry.clear();window.detail(game_id)
         window.guard(save)
+    tools=QHBoxLayout();tools.addWidget(action('Abrir pasta de capturas',lambda:window.open_media_folder(game_id)));tools.addStretch();memories.addLayout(tools)
     row=QHBoxLayout();row.addWidget(action('Salvar memória',save_entry,True));row.addStretch();row.addWidget(action('Adicionar captura ou vídeo',lambda:window.import_media(game_id)));memories.addLayout(row)
     from .collection_views import memory_card
     records=[{**record,'kind':'diary','title':game['title']} for record in window.library.diary(game_id)]

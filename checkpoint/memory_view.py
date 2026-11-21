@@ -68,6 +68,9 @@ class MemoryBrowser(QWidget):
 
     def refresh(self):
         records = recent_memories(self.host.library)
+        index=getattr(self.host,'media_index',None)
+        if index and index.missing:
+            records=[{**row,'missing':True} if row.get('path') in index.missing else row for row in records]
         signature = tuple(tuple(sorted(row.items())) for row in records)
         if signature == self.signature:
             self.populate(self.tabs.currentIndex())

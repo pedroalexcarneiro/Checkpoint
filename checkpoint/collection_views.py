@@ -164,6 +164,8 @@ def memory_card(window,record,diary_only=False,thumbnail_cache=None):
             content.setPlainText(record['text']);content.setFixedHeight(160)
             content.setStyleSheet('QTextEdit#memoryTextArea { background: '+colors()['input']+'; border: none; border-radius: 12px; padding: 10px; font-size: 14px; }')
             content.setAccessibleName('Anotação de '+record['title']);inside.addWidget(content);inside.addStretch()
+    elif record.get('missing'):
+        inside.addWidget(text('Arquivo movido ou removido.','muted'));inside.addStretch()
     else:
         callback=lambda checked=False,m=record:window.show_media(m)
         caption=record['caption'] or Path(record['path']).name
