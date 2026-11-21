@@ -369,6 +369,11 @@ interface com dispositivo simulado. USB, Bluetooth, compatibilidade com
 Steam Input e a abertura do executável Windows ainda exigem teste nativo.
 [Botão MISC1 da SDL3](https://wiki.libsdl.org/SDL3/SDL_GamepadButton)
 
+A execução integral iniciada antes do ajuste para usar Captura com outro
+botão segurado passou com 882 testes em 587,76 s, exit 0. Os 38 testes
+direcionados, incluindo essa combinação, passaram no código final
+`bee43a8`. O smoke isolado confirmou seis páginas e integridade SQLite.
+
 **Item 19.** Consultas públicas em BRL, sem chave, registram as ofertas de
 Cyberpunk 2077, Hades, Hades II e God of War Ragnarök para PC. Para God of War
 a oferta oficial trouxe R$ 249,90 original e R$ 142,30 atual, diferença de
