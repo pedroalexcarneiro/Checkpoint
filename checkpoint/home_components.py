@@ -39,11 +39,13 @@ class LastPlayedBanner(QPushButton):
         super().__init__();self.game_id=game['id'];self.title=game['title']
         self.banner=QPixmap(game.get('banner') or '')
         self.logo=QPixmap(game.get('logo') or '')
-        self.banner_edges=()
+        self.transition_color=QColor('#131923')
         if not self.banner.isNull():
-            y=self.banner.height()//2
-            self.banner_edges=tuple(self.banner.copy(x,y,1,1).toImage().pixelColor(0,0)
-                                    for x in (0,self.banner.width()-1))
+            edge=self.banner.copy(0,0,max(1,self.banner.width()//12),self.banner.height())
+            tone=edge.scaled(1,1,Qt.IgnoreAspectRatio,Qt.SmoothTransformation).toImage().pixelColor(0,0)
+            if tone.alpha():
+                self.transition_color=tone.darker(220)
+                self.transition_color.setAlpha(255)
         if not self.logo.isNull() and self.logo.hasAlphaChannel():
             bounds=QRegion(self.logo.mask()).boundingRect()
             if not bounds.isEmpty():self.logo=self.logo.copy(bounds)
@@ -74,6 +76,30 @@ class LastPlayedBanner(QPushButton):
         size=QSizeF(self.banner.size()).scaled(available,Qt.KeepAspectRatio)
         return QRectF(self.width()-gutter-size.width(),(self.height()-size.height())/2,size.width(),size.height())
 
+    def paint_banner(self,painter,target):
+        width,height=self.banner.width(),self.banner.height()
+        blend_start=max(0,target.left()-12)
+        blend_end=target.left()+min(44,target.width()*.12)
+        # Uma pequena extensão da borda evita emenda entre o fundo e o quadro inteiro.
+        columns=((blend_start,target.left()-blend_start,0,1),
+                 (target.left(),target.width(),0,width),
+                 (target.right(),self.width()-target.right(),width-1,1))
+        rows=((0,target.top(),0,1),
+              (target.top(),target.height(),0,height),
+              (target.bottom(),self.height()-target.bottom(),height-1,1))
+        for x,tile_width,source_x,source_width in columns:
+            for y,tile_height,source_y,source_height in rows:
+                painter.drawPixmap(QRectF(x,y,tile_width,tile_height),self.banner,
+                                   QRectF(source_x,source_y,source_width,source_height))
+        background=QLinearGradient(0,0,blend_start,0)
+        background.setColorAt(0,QColor('#0d1119'))
+        background.setColorAt(1,self.transition_color)
+        painter.fillRect(QRectF(0,0,blend_start,self.height()),background)
+        transparent=QColor(self.transition_color);transparent.setAlpha(0)
+        fade=QLinearGradient(blend_start,0,blend_end,0)
+        fade.setColorAt(0,self.transition_color);fade.setColorAt(1,transparent)
+        painter.fillRect(QRectF(blend_start,0,blend_end-blend_start,self.height()),fade)
+
     def paintEvent(self,event):
         from .visual_tokens import RADIUS
         bounds=QRectF(self.rect()).adjusted(.5,.5,-.5,-.5)
@@ -83,18 +109,11 @@ class LastPlayedBanner(QPushButton):
         painter.setClipPath(contour)
         target=self.banner_target()
         background=QLinearGradient(0,0,self.width(),0)
-        onset=target.left()/self.width() if not target.isEmpty() else 1
         background.setColorAt(0,QColor('#0d1119'))
-        background.setColorAt(onset*.42,QColor('#131923'))
-        fallback=QColor(colors()['elevated'])
-        if self.banner_edges:
-            left,right=self.banner_edges
-            background.setColorAt(onset,left if left.alpha() else fallback)
-            background.setColorAt(1,right if right.alpha() else fallback)
-        else:background.setColorAt(1,fallback)
+        background.setColorAt(1,QColor(colors()['elevated']))
         painter.fillRect(bounds,background)
         if not self.banner.isNull():
-            painter.drawPixmap(target,self.banner,QRectF(self.banner.rect()))
+            self.paint_banner(painter,target)
         area=QRectF(24,16,self.identity_width(),max(20,self.play_button.y()-24))
         if not self.logo.isNull():
             size=QSizeF(self.logo.size()).scaled(area.size(),Qt.KeepAspectRatio)
