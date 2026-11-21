@@ -39,7 +39,9 @@ def build_detail(window,game):
     files=[dict(r) for r in window.library.sql.execute('SELECT * FROM game_files WHERE game_id=? ORDER BY original_name',(game_id,))]
     available=[f for f in files if f['available']]
     if owned:
-        if game['executable'] or available:bar.addWidget(action('Jogar',lambda:window.start_game(game),True))
+        session=window.launcher.active_session(game_id)
+        if session is not None:bar.addWidget(action('Finalizar',lambda:window.close_game_session(session,game_id),True))
+        elif game['executable'] or available:bar.addWidget(action('Jogar',lambda:window.start_game(game),True))
         else:bar.addWidget(action('Configurar execução',lambda:window.configure_execution(game_id)))
     seconds=window.library.sql.execute("SELECT COALESCE(SUM(duration_seconds),0) FROM play_sessions WHERE game_id=? AND state='finished'",(game_id,)).fetchone()[0]
     if owned:

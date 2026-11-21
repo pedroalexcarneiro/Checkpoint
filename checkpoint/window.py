@@ -3,7 +3,7 @@ from .locale import count_text
 import json
 import logging
 from pathlib import Path
-from PySide6.QtCore import Qt,QSize,QTimer,QUrl,Slot
+from PySide6.QtCore import QEvent,Qt,QSize,QTimer,QUrl,Slot
 from PySide6.QtGui import QPixmap,QIcon,QDesktopServices
 from PySide6.QtWidgets import (QMainWindow,QWidget,QHBoxLayout,QVBoxLayout,QLabel,QPushButton,
     QLineEdit,QComboBox,QListWidget,QListWidgetItem,QAbstractItemView,QTableWidget,QTableWidgetItem,
@@ -101,8 +101,8 @@ class MainWindow(QMainWindow):
         self.search.addAction(nav_icon('search',self.theme.colors['muted']),QLineEdit.LeadingPosition)
         self.header.insertWidget(2,self.search);self.header.setSpacing(12)
         self.search.returnPressed.connect(self.search_library)
-        self.library_filters.removeWidget(self.platform);self.library_options.insertWidget(1,self.platform)
-        self.library_options.insertWidget(2,self.custom_lists)
+        self.library_filters.removeWidget(self.platform);self.library_options.insertWidget(0,self.platform)
+        self.library_options.insertWidget(1,self.custom_lists)
         self.platform.setObjectName('libraryPlatform');self.sort.setObjectName('librarySort');self.platform.setFixedWidth(165);self.sort.setFixedWidth(200)
         from .design_system import IconButton
         self.view_buttons=[]
@@ -126,10 +126,12 @@ class MainWindow(QMainWindow):
         self.controller_capture=ControllerCapture(self)
         self.timer = QTimer(self); self.timer.timeout.connect(self.poll_sessions); self.timer.start(1000)
         self.statusBar().setSizeGripEnabled(False);self.statusBar().showMessage('');self.statusBar().hide()
-        from .window_controls import WindowControls
-        from .windows_frame import IntegratedFrame
-        self.window_controls=WindowControls(self);self.setMenuWidget(self.window_controls)
-        self.integrated_frame=IntegratedFrame(self,self.window_controls)
+        self.native_caption=QApplication.platformName()=='windows'
+        if not self.native_caption:
+            from .window_controls import WindowControls
+            from .windows_frame import IntegratedFrame
+            self.window_controls=WindowControls(self);self.setMenuWidget(self.window_controls)
+            self.integrated_frame=IntegratedFrame(self,self.window_controls)
 
     def update_view_buttons(self,index):
         for i,control in enumerate(self.view_buttons):control.setChecked(i==index)
@@ -151,8 +153,18 @@ class MainWindow(QMainWindow):
     def showEvent(self,event):
         super().showEvent(event)
         from .window_style import titlebar_theme
-        titlebar_theme(self,True)
+        titlebar_theme(self,True,self.theme.colors['background'])
         if hasattr(self,'integrated_frame'):self.integrated_frame.apply()
+
+    def changeEvent(self,event):
+        super().changeEvent(event)
+        if event.type()==QEvent.WindowStateChange and getattr(self,'native_caption',False):
+            QTimer.singleShot(0,self,self.refresh_restored_window)
+
+    def refresh_restored_window(self):
+        if self.isVisible() and not self.isMinimized():
+            self.centralWidget().update()
+            self.update()
 
     def nativeEvent(self,event_type,message):
         events=getattr(self,'session_events',None)
@@ -232,7 +244,7 @@ class MainWindow(QMainWindow):
             if combo is self.platform:filters.addWidget(combo)
             else:extra_layout.addWidget(combo)
         layout.addLayout(filters)
-        options = QHBoxLayout();self.library_options=options; self.count = label('','muted'); options.addWidget(self.count); options.addStretch()
+        options = QHBoxLayout();options.setContentsMargins(0,0,0,0);self.library_options=options; self.count = label('','muted'); options.addWidget(self.count)
         self.favorites = QCheckBox('Favoritos',self.pages[1]); self.favorites.toggled.connect(self.refresh_library);self.favorites.hide()
         from .ui_components import nav_icon
         filter_button=QPushButton();filter_button.setIcon(nav_icon('filter',self.theme.colors['muted']));filter_button.setFixedSize(32,32);filter_button.setToolTip('Mais filtros');filter_button.setAccessibleName('Mais filtros');filter_button.setCheckable(True);filter_button.toggled.connect(self.extra_filters.setVisible);options.addWidget(filter_button)
@@ -279,8 +291,8 @@ class MainWindow(QMainWindow):
         self.custom_lists.clear();self.custom_lists.addItem('Todos os jogos',None)
         for identity,row in sorted(records.items(),key=lambda entry:entry[1]['name'].casefold()):
             self.custom_lists.addItem(row['name'],identity)
-        self.custom_lists.addItem('Criar lista…','create')
-        self.custom_lists.addItem('Gerenciar listas…','manage')
+        self.custom_lists.addItem('Criar lista','create')
+        self.custom_lists.addItem('Gerenciar listas','manage')
         if self.library_list_id not in records:self.library_list_id=None
         self.custom_lists.setCurrentIndex(max(0,self.custom_lists.findData(self.library_list_id)))
 
@@ -706,7 +718,7 @@ class MainWindow(QMainWindow):
         from .branding import app_icon
         from .ui_components import Hero,nav_icon
         from .window_style import titlebar_theme
-        titlebar_theme(self,True)
+        titlebar_theme(self,True,self.theme.colors['background'])
         self.refresh_profile()
         self.brand.set_theme(self.theme);self.setWindowIcon(app_icon(self.theme));QApplication.instance().setWindowIcon(self.windowIcon())
         for item,name in zip(self.nav_buttons,self.nav_names):item.setIcon(nav_icon(name,self.theme.colors['muted']))
@@ -756,7 +768,8 @@ class MainWindow(QMainWindow):
                 if ok:return self.launch_rom(game['id'],candidates[names.index(choice)])
                 return
             QMessageBox.information(self,'ROM indisponível','Baixe a ROM vinculada na aba Arquivos antes de jogar.'); return
-        self.guard(lambda:self.launcher.start(game))
+        if self.guard(lambda:self.launcher.start(game)) is not None:
+            self.refresh_execution_action(game['id'])
 
     def launch_rom(self,game_id,file):
         if game_id in self.save_jobs:
@@ -794,6 +807,23 @@ class MainWindow(QMainWindow):
                 self.library.sql.execute('UPDATE rom_versions SET profile_id=? WHERE file_id=?',(profile['id'],file['id']))
             self.detail(game_id)
         self.guard(launch)
+
+    def refresh_execution_action(self,game_id):
+        if self.current_game==game_id and self.stack.currentWidget()==getattr(self,'detail_page',None):
+            self.detail(game_id)
+        elif self.current_page==0:
+            self.home()
+
+    def close_game_session(self,session,game_id):
+        try:
+            requested=self.launcher.request_close(session,game_id)
+        except (OSError,ValueError) as error:
+            self.statusBar().showMessage(str(error))
+            return
+        if requested:
+            self.statusBar().showMessage('Fechamento solicitado. Confirme na janela do jogo se ele pedir.')
+        else:
+            self.poll_sessions()
 
     def end_session(self,session,game_id):
         if session in self.launcher.active:
@@ -960,7 +990,7 @@ class MainWindow(QMainWindow):
             return
         for game_id in finished:
             self.statusBar().showMessage('Sessão encerrada e tempo salvo.'); self.auto_backup(game_id)
-            if self.current_game==game_id and self.stack.currentWidget()==getattr(self,'detail_page',None):self.detail(game_id)
+            self.refresh_execution_action(game_id)
 
     def closeEvent(self,event):
         from .jobs import Job

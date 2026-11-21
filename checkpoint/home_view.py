@@ -34,9 +34,7 @@ def build_home(window):
     elif games:inside.addWidget(empty_state('library','Nenhuma execução registrada','Escolha um jogo para começar.',lambda:window.navigate(1),'Abrir biblioteca'))
     else:inside.addWidget(empty_state('library','Biblioteca vazia','Adicione um jogo à biblioteca.',window.add_library_game,'Adicionar jogo'))
     right=QWidget();right.setMinimumWidth(0);right_layout=QVBoxLayout(right);right_layout.setContentsMargins(0,0,0,0);right_layout.setSpacing(16)
-    def open_week():
-        window.library.set_setting('statistics.period','weekly');window.navigate(4)
-    frame,inside=section('Resumo da semana',open_week,'Ver estatísticas');frame.setObjectName('homeWeekSummary')
+    frame,inside=section('Resumo da semana');frame.setObjectName('homeWeekSummary')
     inside.setSpacing(18)
     summary=week_summary(window.library)
     for icon,title,value in [('clock','Tempo jogado',format_time(summary['seconds'])),('calendar','Sessões',str(summary['sessions'])),('library','Jogos iniciados',str(summary['started_games']))]:
@@ -57,7 +55,10 @@ def build_home(window):
     left.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
     right.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
     layout.addWidget(columns)
-    layout.addWidget(MemoryCarousel(window,recent_memories(window.library)))
+    memories=QHBoxLayout()
+    memories.addWidget(MemoryCarousel(window,recent_memories(window.library)),1)
+    memories.addStretch()
+    layout.addLayout(memories)
     from .session_tracking import pending_reviews
     interrupted=len(pending_reviews(window.library))
     if interrupted:

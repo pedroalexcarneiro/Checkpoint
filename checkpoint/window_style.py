@@ -2,15 +2,20 @@
 import sys
 
 
-def titlebar_theme(window,dark):
+def titlebar_theme(window,dark,caption_color=None):
     if sys.platform!='win32':return False
     try:
         import ctypes
         value=ctypes.c_int(bool(dark))
         function=ctypes.windll.dwmapi.DwmSetWindowAttribute
         function.argtypes=[ctypes.c_void_p,ctypes.c_uint,ctypes.c_void_p,ctypes.c_uint]
+        handle=int(window.winId())
+        if caption_color:
+            color=int(caption_color[1:],16)
+            caption=ctypes.c_uint((color>>16)|(color&0xff00)|((color&0xff)<<16))
+            function(handle,35,ctypes.byref(caption),ctypes.sizeof(caption))
         for attribute in (20,19):
-            if function(int(window.winId()),attribute,ctypes.byref(value),ctypes.sizeof(value))==0:return True
+            if function(handle,attribute,ctypes.byref(value),ctypes.sizeof(value))==0:return True
     except (OSError,AttributeError):pass
     return False
 

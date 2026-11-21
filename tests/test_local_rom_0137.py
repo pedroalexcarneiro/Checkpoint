@@ -114,3 +114,17 @@ def test_local_confirm_button_persists_only_after_click(library,local_rom,app):
     QTest.mouseClick(dialog.confirm,Qt.LeftButton);app.processEvents()
     assert dialog.result()==dialog.DialogCode.Accepted
     assert library.sql.execute('SELECT local_path FROM game_files WHERE game_id=?',(game,)).fetchone()[0]==str(path)
+def test_rom_source_actions_are_on_one_row(app,library):
+    from PySide6.QtWidgets import QPushButton
+    from checkpoint.local_rom_dialog import RomSourceDialog
+    game=library.save_game({'title':'Pokémon FireRed Version'})
+    dialog=RomSourceDialog(library,game)
+    dialog.show();app.processEvents()
+    try:
+        names=('Escolher ROM local','Vincular ROM do Drive','Cancelar')
+        buttons={button.text():button for button in dialog.findChildren(QPushButton)}
+        local,drive,cancel=[buttons[name] for name in names]
+        assert local.y()==drive.y()==cancel.y()
+        assert local.geometry().right()<drive.x()<drive.geometry().right()<cancel.x()
+        assert cancel.geometry().right()<dialog.width()
+    finally:dialog.close();dialog.deleteLater()

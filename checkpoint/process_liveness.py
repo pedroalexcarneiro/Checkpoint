@@ -38,3 +38,46 @@ def current_owner():
 def owner_alive(owner):
     return (isinstance(owner,dict) and type(owner.get('pid')) is int
             and bool(owner.get('token')) and process_token(owner['pid'])==owner['token'])
+
+
+def request_game_close(process):
+    """Pede o fechamento do processo iniciado pela sessão, sem forçar no Windows."""
+    if process.poll() is not None:
+        return False
+    if sys.platform!='win32':
+        try:
+            process.terminate()
+        except ProcessLookupError:
+            return False
+        return True
+
+    import ctypes as c
+    from ctypes import wintypes as w
+    user=c.WinDLL('user32',use_last_error=True)
+    enumerator=c.WINFUNCTYPE(w.BOOL,w.HWND,w.LPARAM)
+    user.EnumWindows.argtypes=[enumerator,w.LPARAM]
+    user.GetWindowThreadProcessId.argtypes=[w.HWND,c.POINTER(w.DWORD)]
+    user.IsWindowVisible.argtypes=[w.HWND]
+    user.GetWindow.argtypes=[w.HWND,w.UINT];user.GetWindow.restype=w.HWND
+    user.PostMessageW.argtypes=[w.HWND,w.UINT,w.WPARAM,w.LPARAM]
+
+    def window_pid(hwnd):
+        pid=w.DWORD()
+        user.GetWindowThreadProcessId(hwnd,c.byref(pid))
+        return pid.value
+
+    matches=[]
+    @enumerator
+    def visit(hwnd,_):
+        if user.IsWindowVisible(hwnd) and not user.GetWindow(hwnd,4) and window_pid(hwnd)==process.pid:
+            matches.append(hwnd)
+        return True
+
+    user.EnumWindows(visit,0)
+    if process.poll() is not None:
+        return False
+    if len(matches)!=1 or window_pid(matches[0])!=process.pid:
+        raise ValueError('Não encontrei uma única janela do jogo iniciada nesta sessão. Feche pela janela do jogo.')
+    if not user.PostMessageW(matches[0],0x10,0,0):  # WM_CLOSE
+        raise ValueError('O Windows recusou o pedido de fechamento. Feche pela janela do jogo.')
+    return True

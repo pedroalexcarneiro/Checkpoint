@@ -9,6 +9,20 @@ from checkpoint.library_lists import LibraryLists
 from test_bugs_0134 import ui,sample
 
 
+def test_compact_library_keeps_tabs_and_filters_aligned(ui,app):
+    from PySide6.QtCore import QPoint
+    from checkpoint.ui_components import ResponsiveToolbar
+    window,_=ui
+    window.resize(1000,700);window.navigate(1)
+    for _ in range(8):app.processEvents()
+    toolbar=window.pages[1].findChild(ResponsiveToolbar)
+    assert window.library_tabs.width()==window.library_tabs.sizeHint().width()
+    assert window.library_tabs.x()==window.platform.mapTo(toolbar,QPoint()).x()
+    assert window.library_tabs.geometry().bottom()<window.platform.mapTo(toolbar,QPoint()).y()
+    for key,name in (('create','Criar lista'),('manage','Gerenciar listas')):
+        assert window.custom_lists.itemText(window.custom_lists.findData(key))==name
+
+
 def test_list_filters_combine_in_both_views_and_persist(ui,folder):
     window,first=ui
     lib=window.library

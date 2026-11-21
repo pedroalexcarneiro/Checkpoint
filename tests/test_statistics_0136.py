@@ -62,6 +62,32 @@ def test_equivalent_metrics_and_period_selector(ui,app):
                     assert c.rect().contains(label.geometry())
 
 
+def test_vertical_wheel_over_chart_scrolls_page_for_each_period(ui,app):
+    from PySide6.QtCore import QPoint,QPointF,Qt
+    from PySide6.QtGui import QWheelEvent
+    from PySide6.QtTest import QTest
+    from checkpoint.smooth_scroll import SmoothScrollArea
+    from checkpoint.statistics_view import HeatmapViewport
+    window,_=ui
+    window.resize(1000,700);window.navigate(4)
+    page=window.pages[4]
+    outer=page.findChild(SmoothScrollArea,'statisticsScroll')
+    selector=page.findChild(QComboBox,'statisticsPeriod')
+    for index in range(selector.count()):
+        selector.setCurrentIndex(index)
+        for _ in range(5):app.processEvents()
+        chart=page.findChild(HeatmapViewport)
+        assert outer.verticalScrollBar().maximum()>0
+        outer.verticalScrollBar().setValue(0)
+        point=QPoint(28,28)
+        event=QWheelEvent(QPointF(point),QPointF(chart.viewport().mapToGlobal(point)),
+                          QPoint(),QPoint(0,-120),Qt.NoButton,Qt.NoModifier,Qt.NoScrollPhase,False)
+        app.sendEvent(chart.viewport(),event)
+        QTest.qWait(210)
+        assert outer.verticalScrollBar().value()>0,selector.currentData()
+        assert selector.currentIndex()==index
+
+
 def test_fall_dst_is_25_hours_and_year_boundary(library):
     i=library.save_game({'title':'Hades II'});zone=ZoneInfo('America/New_York')
     start=datetime(2026,11,1,4,tzinfo=timezone.utc);session(library,i,start,25*3600)

@@ -261,14 +261,18 @@ class ResponsiveToolbar(QWidget):
         from PySide6.QtWidgets import QBoxLayout,QLayout
         self.left=left;self.right=right;self.row=QBoxLayout(QBoxLayout.LeftToRight,self)
         self.row.setContentsMargins(0,0,0,0);self.row.setSpacing(10);self.row.setSizeConstraint(QLayout.SetNoConstraint)
-        self.row.addWidget(left);self.row.addStretch();self.row.addWidget(right)
+        self.row.addWidget(left,0,Qt.AlignLeft);self.row.addStretch();self.row.addWidget(right,0,Qt.AlignRight)
         self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed)
     def minimumSizeHint(self):return QSize(0,self.sizeHint().height())
     def resizeEvent(self,event):
         from PySide6.QtWidgets import QBoxLayout
         width=self.left.sizeHint().width()+self.right.sizeHint().width()+20
         direction=QBoxLayout.LeftToRight if self.width()>=width else QBoxLayout.TopToBottom
-        if self.row.direction()!=direction:self.row.setDirection(direction);self.updateGeometry()
+        if self.row.direction()!=direction:
+            self.row.setDirection(direction)
+            self.row.setStretch(1,1 if direction==QBoxLayout.LeftToRight else 0)
+            self.row.setAlignment(self.right,Qt.AlignRight if direction==QBoxLayout.LeftToRight else Qt.AlignLeft)
+            self.updateGeometry()
         super().resizeEvent(event)
 
 

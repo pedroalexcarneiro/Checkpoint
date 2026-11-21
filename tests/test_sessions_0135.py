@@ -22,3 +22,40 @@ def test_rom_session_finishes_after_real_process_exit(app,library,folder,monkeyp
   assert not w.launcher.active
   assert library.sql.execute('SELECT state FROM play_sessions WHERE id=?',(session,)).fetchone()[0]=='finished'
  finally:w.close();w.deleteLater()
+
+
+def test_play_button_closes_only_its_tracked_session_and_saves_after_exit(app,library,folder,monkeypatch):
+    from PySide6.QtWidgets import QPushButton
+    from checkpoint.home_components import LastPlayedBanner
+    library.set_setting('artwork.auto',False);library.set_setting('prices.auto',False)
+    game=library.save_game({'title':'Jogo de teste','executable':sys.executable})
+    stop=folder/'close-request'
+    child='from pathlib import Path; import sys, time\nwhile not Path(sys.argv[1]).exists(): time.sleep(.02)'
+    window=MainWindow(library)
+    monkeypatch.setattr(window.launcher,'start',lambda selected:window.launcher.start_command(
+        selected['id'],[sys.executable,'-c',child,str(stop)],True))
+    requests=[]
+    def request(process):
+        requests.append(process.pid)
+        stop.touch()
+        return True
+    monkeypatch.setattr('checkpoint.process_liveness.request_game_close',request)
+    def button(title):
+        return next(b for b in window.detail_page.findChildren(QPushButton) if b.text()==title)
+    try:
+        window.detail(game);button('Jogar').click()
+        session=window.launcher.active_session(game)
+        process=window.launcher.active[session][0]
+        assert not window.launcher.request_close(session+1,game)
+        window.navigate(0)
+        assert window.pages[0].findChild(LastPlayedBanner).play_button.text()=='Finalizar'
+        window.detail(game);button('Finalizar').click()
+        assert requests==[process.pid]
+        assert library.sql.execute('SELECT state FROM play_sessions WHERE id=?',(session,)).fetchone()[0]=='active'
+        process.wait(timeout=5);window.poll_sessions();assert button('Jogar')
+        assert library.sql.execute('SELECT state FROM play_sessions WHERE id=?',(session,)).fetchone()[0]=='finished'
+    finally:
+        stop.touch()
+        if window.launcher.active:
+            window.launcher.active[session][0].wait(timeout=5);window.poll_sessions()
+        window.close();window.deleteLater()

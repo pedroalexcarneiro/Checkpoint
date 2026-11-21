@@ -1,6 +1,6 @@
 from datetime import datetime,timedelta,timezone
 from PySide6.QtCore import Qt,QPoint
-from PySide6.QtWidgets import QWidget,QPushButton,QLabel,QComboBox
+from PySide6.QtWidgets import QWidget,QPushButton,QLabel
 from PySide6.QtTest import QTest
 from checkpoint.home_components import LastPlayedBanner,RecentArtwork,RecentGameCard,MemoryCarousel
 from test_bugs_0134 import ui,sample
@@ -15,7 +15,7 @@ def seed_recent(w,i):
     return j
 
 
-def test_home_actions_are_distinct_and_week_opens_correct_period(ui,app,monkeypatch):
+def test_home_actions_are_distinct_and_week_summary_has_no_second_heading_line(ui,app,monkeypatch):
     w,i=ui;j=seed_recent(w,i);calls=[]
     monkeypatch.setattr(w,'detail',lambda identity:calls.append(('detail',identity)))
     monkeypatch.setattr(w,'edit_game',lambda identity:calls.append(('setup',identity)))
@@ -29,9 +29,9 @@ def test_home_actions_are_distinct_and_week_opens_correct_period(ui,app,monkeypa
     QTest.mouseClick(banner,Qt.LeftButton);assert calls[-1]==('detail',j)
     QTest.mouseClick(banner.play_button,Qt.LeftButton)
     assert calls==[('detail',i),('setup',i),('detail',j),('setup',j)]
-    button=next(b for b in w.pages[0].findChildren(QPushButton) if b.text()=='Ver estatísticas')
-    button.click();assert w.current_page==4
-    assert w.pages[4].findChild(QComboBox,'statisticsPeriod').currentData()=='weekly'
+    summary=w.pages[0].findChild(QWidget,'homeWeekSummary')
+    assert not summary.findChildren(QPushButton)
+    w.nav_buttons[4].click();assert w.current_page==4
 
 
 def test_home_columns_align_top_and_art_is_contained(ui,app):
@@ -71,6 +71,18 @@ def test_memory_carousel_bounds_keyboard_and_no_data_changes(ui,app):
     for _ in range(10):carousel.previous.click()
     assert carousel.offset==0 and not carousel.previous.isEnabled()
     assert [tuple(r) for r in w.library.sql.execute('SELECT * FROM diary_entries')]==before
+
+
+def test_recent_memories_fit_two_standard_cards(ui,app):
+    w,game=ui
+    for note in ('Primeira nota','Segunda nota'):w.library.add_diary(game,note)
+    w.resize(1280,800);w.navigate(0)
+    for _ in range(8):app.processEvents()
+    page=w.pages[0];carousel=page.findChild(MemoryCarousel)
+    assert [card.width() for card in carousel.cards]==[300,300]
+    assert carousel.width()==646
+    assert carousel.mapTo(page,QPoint()).x()==page.findChild(QWidget,'homeRecentSection').mapTo(page,QPoint()).x()
+    assert not carousel.previous.isVisible() and not carousel.next.isVisible()
 
 
 def test_status_change_does_not_create_recent_card(ui,app):

@@ -14,8 +14,11 @@ class Launcher:
         from .session_tracking import SessionTracker
         self.tracking = SessionTracker(library, self.clock, self.timestamp)
 
+    def active_session(self,game_id):
+        return next((session for session,item in self.active.items() if item[2]==game_id),None)
+
     def start(self, game):
-        if any(item[2] == game['id'] for item in self.active.values()):
+        if self.active_session(game['id']) is not None:
             raise ValueError('Este jogo já possui uma sessão ativa.')
         executable = Path(game['executable']).resolve()
         if not game['executable'] or not executable.is_file():
@@ -23,7 +26,7 @@ class Launcher:
         return self.start_command(game['id'],[str(executable)],True)
 
     def start_command(self,game_id,command,monitor_process=False):
-        if any(item[2] == game_id for item in self.active.values()):
+        if self.active_session(game_id) is not None:
             raise ValueError('Este jogo já possui uma sessão ativa.')
         if not self.library.get(game_id): raise ValueError('Jogo não encontrado.')
         command = [str(Path(command[0]).resolve()),*command[1:]]
@@ -37,6 +40,15 @@ class Launcher:
         self.tracking.started(session,game_id,stamp,anchor)
         self.checkpoint(force=True,reason='started')
         return session
+
+    def request_close(self,session,game_id):
+        if session is None or self.active_session(game_id)!=session:
+            return False
+        process, _, _, monitor=self.active[session]
+        if not monitor:
+            raise ValueError('Esta sessão só registra o tempo. Feche o jogo pela janela dele.')
+        from .process_liveness import request_game_close
+        return request_game_close(process)
 
     def poll(self):
         finished = []

@@ -3,7 +3,7 @@ from .locale import count_text
 """Painel de estatísticas com números e gráficos derivados da biblioteca real."""
 from PySide6.QtCore import Qt,QRectF,QPointF
 from PySide6.QtGui import QPainter,QPen,QColor,QFont,QPainterPath,QLinearGradient
-from PySide6.QtWidgets import QWidget,QScrollArea,QVBoxLayout,QHBoxLayout,QGridLayout,QComboBox,QProgressBar,QPushButton,QLabel
+from PySide6.QtWidgets import QWidget,QScrollArea,QVBoxLayout,QHBoxLayout,QGridLayout,QComboBox,QProgressBar,QPushButton,QLabel,QLayout
 from .ui_components import text,card,action
 from .theme import blend
 from .design_system import AdaptiveColumns,colors as current_colors,Badge,CardGrid
@@ -12,16 +12,27 @@ from .design_system import AdaptiveColumns,colors as current_colors,Badge,CardGr
 from .period_chart import PeriodChart as TimeChart
 
 
-class HeatmapViewport(SmoothScrollArea):
-    def __init__(self,chart):
+class HeatmapViewport(QScrollArea):
+    def __init__(self,chart,page_scroll):
         super().__init__();self.setObjectName('heatmapViewport');self.setFrameShape(self.Shape.NoFrame)
+        self.page_scroll=page_scroll
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff);self.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded);self.setWidgetResizable(True);self.setWidget(chart)
         chart.height_changed.connect(self.fit_height);self.horizontalScrollBar().rangeChanged.connect(self.fit_height)
         self.setFixedHeight(chart.sizeHint().height())
+    def wheelEvent(self,event):
+        if event.modifiers() & Qt.ShiftModifier or abs(event.angleDelta().x())>abs(event.angleDelta().y()) or abs(event.pixelDelta().x())>abs(event.pixelDelta().y()):
+            return super().wheelEvent(event)
+        self.page_scroll.wheelEvent(event)
     def fit_height(self,*args):
         extra=self.horizontalScrollBar().sizeHint().height() if self.horizontalScrollBar().maximum()>0 else 0
         height=self.widget().height()+extra+2*self.frameWidth()
         if self.height()!=height:self.setFixedHeight(height)
+
+
+class PeriodSelector(QComboBox):
+    def __init__(self,page_scroll):
+        super().__init__();self.page_scroll=page_scroll
+    def wheelEvent(self,event):self.page_scroll.wheelEvent(event)
 
 
 class StatisticsColumns(AdaptiveColumns):
@@ -74,7 +85,7 @@ def metric(title,value,subtitle=''):
     return frame
 
 
-def render_statistics(window,layout,selected):
+def render_statistics(window,layout,selected,page_scroll):
     from .playtime import collection_times,format_time
     from .statistics_periods import period_stats
     stats=window.library.stats(display_timezone='local');temporal=period_stats(window.library,selected)
@@ -89,7 +100,7 @@ def render_statistics(window,layout,selected):
     from datetime import timedelta
     first,last=temporal['dates'];columns=(last-(first-timedelta(days=first.weekday()))).days//7+1
     chart.setMinimumWidth(max(340,36+columns*6) if selected not in ('daily','weekly','monthly') else 340)
-    scroller=HeatmapViewport(chart);inside.addWidget(scroller)
+    scroller=HeatmapViewport(chart,page_scroll);inside.addWidget(scroller)
     chart_frame=frame
     paired=selected in ('monthly','3m','6m') or selected=='all' and (last-first).days<180
     if not paired:layout.addWidget(chart_frame)
@@ -140,16 +151,19 @@ def render_statistics(window,layout,selected):
 
 def build_statistics(window):
     from .statistics_periods import PERIODS
-    outer=window.clear_page(4);scroll=SmoothScrollArea();scroll.setWidgetResizable(True);body=QWidget();layout=QVBoxLayout(body);layout.setContentsMargins(0,0,8,0);layout.setSpacing(20)
-    header=QHBoxLayout();header.addWidget(text('Período','cardTitle'));header.addStretch();period=QComboBox();period.setObjectName('statisticsPeriod')
+    outer=window.clear_page(4);scroll=SmoothScrollArea();scroll.setObjectName('statisticsScroll');scroll.setWidgetResizable(True);body=QWidget();layout=QVBoxLayout(body);layout.setContentsMargins(0,0,8,0);layout.setSpacing(20)
+    layout.setSizeConstraint(QLayout.SetMinimumSize)
+    header=QHBoxLayout();header.addWidget(text('Período','cardTitle'));header.addStretch();period=PeriodSelector(scroll);period.setObjectName('statisticsPeriod')
     for name,key in PERIODS:period.addItem(name,key)
     selected=window.library.setting('statistics.period','12m')
     period.setCurrentIndex(max(0,period.findData(selected)));header.addWidget(period);layout.addLayout(header)
     content=QWidget();inside=QVBoxLayout(content);inside.setContentsMargins(0,0,0,0);inside.setSpacing(20);layout.addWidget(content)
     def render():
+        scroll.scroll_animation.stop()
         while inside.count():
             item=inside.takeAt(0)
             if item.widget():
                 widget=item.widget();widget.hide();widget.setParent(None);widget.deleteLater()
-        key=period.currentData();window.library.set_setting('statistics.period',key);render_statistics(window,inside,key)
+        key=period.currentData();window.library.set_setting('statistics.period',key);render_statistics(window,inside,key,scroll)
+        inside.activate();content.updateGeometry();layout.activate()
     period.currentIndexChanged.connect(render);render();scroll.setWidget(body);outer.addWidget(scroll)

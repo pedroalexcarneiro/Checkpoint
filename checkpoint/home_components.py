@@ -35,6 +35,17 @@ def continue_game(window,game):
         window.edit_game(game['id'])
 
 
+def home_play_action(window,game):
+    game_id=game['id']
+    session=window.launcher.active_session(game_id)
+    if session is not None:
+        control=action('Finalizar',lambda:window.close_game_session(session,game_id),True)
+    else:
+        control=action('Continuar',lambda:continue_game(window,game),True)
+    control.setProperty('homeContinue',True)
+    return control
+
+
 class LastPlayedBanner(QPushButton):
     """A arte conserva todo o quadro; continuar tem uma ação independente."""
     def __init__(self,window,game):
@@ -56,16 +67,15 @@ class LastPlayedBanner(QPushButton):
         self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed);self.setFixedHeight(164)
         self.clicked.connect(lambda:window.detail(self.game_id))
         layout=QVBoxLayout(self);layout.setContentsMargins(24,16,24,20);layout.addStretch()
-        self.play_button=action('Continuar',lambda:continue_game(window,game),True)
-        self.play_button.setProperty('homeContinue',True)
+        self.play_button=home_play_action(window,game)
         layout.addWidget(self.play_button,0,Qt.AlignLeft)
 
     def resizeEvent(self,event):
         super().resizeEvent(event)
         height=round(self.width()*.16)
         if not self.banner.isNull():
-            height=max(height,round(self.width()*.65*self.banner.height()/self.banner.width())+10)
-        self.setFixedHeight(max(154,min(390,height)))
+            height=max(height,round(self.width()*.65*self.banner.height()/self.banner.width())+26)
+        self.setFixedHeight(max(180,min(406,height)))
 
     def identity_width(self):
         if self.banner.isNull():return max(160,min(400,self.width()-48))
@@ -127,7 +137,7 @@ class LastPlayedBanner(QPushButton):
             background.setColorAt(0,QColor('#0d1119'))
             background.setColorAt(1,QColor(colors()['elevated']))
             painter.fillRect(bounds,background)
-        area=QRectF(24,16,self.identity_width(),max(20,self.play_button.y()-24))
+        area=QRectF(24,16,self.identity_width(),max(20,self.play_button.y()-36))
         if not self.logo.isNull():
             size=QSizeF(self.logo.size()).scaled(area.size(),Qt.KeepAspectRatio)
             target=QRectF(area.x(),area.center().y()-size.height()/2,size.width(),size.height())
@@ -191,7 +201,7 @@ class RecentGameCard(CardSurface):
         inside=QVBoxLayout(self);inside.setContentsMargins(8,12,8,12);inside.setSpacing(10)
         inside.setAlignment(Qt.AlignTop)
         inside.addWidget(RecentArtwork(game,window,maximum_height=230))
-        play=action('Continuar',lambda:continue_game(window,game),True);play.setProperty('homeContinue',True);play.ensurePolished()
+        play=home_play_action(window,game);play.ensurePolished()
         play.setMinimumWidth(play.sizeHint().width());play.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed)
         inside.addWidget(play)
         title=ElidedAction(game['title'],self.open_detail);title.setObjectName('activityLink');inside.addWidget(title)
@@ -356,6 +366,9 @@ class MemoryCarousel(CardSurface):
     def __init__(self,window,records):
         super().__init__();self.host_window=window;self.records=records;self.offset=0;self.visible_count=3;self.setObjectName('homeMemories')
         self.setFocusPolicy(Qt.StrongFocus);self.setMinimumWidth(0);self.card_width=300;self.cards=[]
+        if self.records:
+            count=min(8,len(self.records))
+            self.setMaximumWidth(32+count*self.card_width+(count-1)*14)
         layout=QVBoxLayout(self);layout.setContentsMargins(16,16,16,16);layout.setSpacing(14)
         head=QHBoxLayout();head.addWidget(text('Memórias recentes','sectionTitle'),1)
         head.addWidget(action('Ver todas',lambda:window.navigate(3)))
@@ -390,6 +403,8 @@ class MemoryCarousel(CardSurface):
             inside.addWidget(text('Diário' if record['kind']=='diary' else 'Vídeo' if record['kind']=='video' else 'Captura','caption'))
             inside.addWidget(text(datetime_display(record['created_at']),'caption'));frame.setFixedWidth(min(self.card_width,max(1,self.width()-32)));self.cards.append(frame);self.row.addWidget(frame);frame.show()
         self.row.addStretch()
+        self.previous.setVisible(len(self.records)>self.visible_count)
+        self.next.setVisible(len(self.records)>self.visible_count)
         self.previous.setEnabled(self.offset>0);self.next.setEnabled(self.offset+self.visible_count<len(self.records))
     def move_by(self,step):
         self.offset=max(0,min(max(0,len(self.records)-self.visible_count),self.offset+step));self.render()

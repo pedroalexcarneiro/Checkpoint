@@ -2,6 +2,7 @@
 import sys
 import logging
 from PySide6.QtCore import Qt,QPoint
+from PySide6.QtGui import QGuiApplication
 from .window_controls import border_hit
 
 
@@ -49,7 +50,7 @@ class WindowsFrameApi:
 class IntegratedFrame:
     def __init__(self,window,bar):
         self.window=window;self.bar=bar;self.applied=False;self.failed=False;self.api=None;self.original_flags=window.windowFlags()
-        if sys.platform=='win32':
+        if sys.platform=='win32' and QGuiApplication.platformName()=='windows':
             try:self.api=WindowsFrameApi()
             except (OSError,AttributeError):self.failed=True
         window.setWindowFlag(Qt.FramelessWindowHint,True)

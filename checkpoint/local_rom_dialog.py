@@ -94,10 +94,14 @@ class RomSourceDialog(QDialog):
         super().__init__(parent);self.library=library;self.game_id=game_id;self.outcome=None
         from .dialog_style import prepare_dialog
         prepare_dialog(self)
-        self.setWindowTitle('Vincular ROM');self.resize(460,210)
+        self.setWindowTitle('Vincular ROM');self.resize(540,158)
         layout=QVBoxLayout(self);layout.setContentsMargins(24,24,24,24);layout.setSpacing(12)
         layout.addWidget(text(library.get(game_id)['title'],'sectionTitle'))
-        layout.addWidget(action('Escolher ROM local',self.local,True));layout.addWidget(action('Vincular ROM do Drive',self.drive));layout.addWidget(action('Cancelar',self.reject))
+        row=QHBoxLayout();row.setSpacing(10)
+        row.addWidget(action('Escolher ROM local',self.local,True))
+        row.addWidget(action('Vincular ROM do Drive',self.drive))
+        row.addStretch();row.addWidget(action('Cancelar',self.reject))
+        layout.addLayout(row)
     def local(self):
         dialog=LocalRomDialog(self.library,self.game_id,self.parentWidget());dialog.choose_file()
         if dialog.file and dialog.exec()==QDialog.Accepted:
