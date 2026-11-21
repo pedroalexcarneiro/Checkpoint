@@ -32,3 +32,24 @@ def test_rom_launch_monitors_emulator_exit(ui,folder,monkeypatch,title):
  commands=[];monkeypatch.setattr(w.launcher,'start_command',lambda *args:commands.append(args))
  w.launch_rom(i,dict(w.library.sql.execute('SELECT * FROM game_files WHERE id=?',(file,)).fetchone()))
  assert commands[0][2] is True
+
+
+def test_main_play_asks_which_compatible_version_when_there_are_two(ui,folder,monkeypatch):
+ w,i=ui
+ w.library.save_game({'title':'Aventura', 'platform':'Nintendo Switch'},i)
+ with w.library.sql:
+  emulator=w.library.sql.execute('INSERT INTO emulators(name,executable) VALUES(?,?)',('Teste',sys.executable)).lastrowid
+  w.library.sql.execute('INSERT INTO emulator_profiles(emulator_id,platform,extensions) VALUES(?,?,?)',(emulator,'Switch',' xci, NSP'))
+  for name in ('Aventura.nsp','Aventura.xci','Aventura.zip'):
+   path=folder/name;path.write_bytes(b'fixture')
+   w.library.sql.execute('INSERT INTO game_files(game_id,original_name,platform,local_path,available) VALUES(?,?,?,?,1)',(i,name,'Nintendo Switch',str(path)))
+ calls=[]
+ monkeypatch.setattr(w,'launch_rom',lambda game,file:calls.append(file['original_name']))
+ monkeypatch.setattr('checkpoint.dialog_style.AppInputs.getItem',lambda *args:('',False))
+ w.start_game(w.library.get(i));assert not calls
+ def choose(*args):
+  choices=args[3]
+  assert len(choices)==2 and choices[0].endswith('Aventura.nsp · Nintendo Switch')
+  return choices[1],True
+ monkeypatch.setattr('checkpoint.dialog_style.AppInputs.getItem',choose)
+ w.start_game(w.library.get(i));assert calls==['Aventura.xci']

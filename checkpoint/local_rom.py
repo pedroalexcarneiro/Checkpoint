@@ -8,23 +8,32 @@ from .integrations.drive import PLATFORMS,rom_identity,normalize_rom_name
 
 
 def canonical_platform(value):
-    value=(value or '').strip();return PLATFORMS.get(value.casefold(),value)
+    value=(value or '').strip()
+    return 'PC' if value.casefold()=='pc' else PLATFORMS.get(value.casefold(),value)
 
 
-def extension_set(value):
+def extension_set(value,*,strict=False):
     result=set()
     for part in (value or '').split(','):
-        part='.'+part.strip().lower().lstrip('*.')
-        if re.fullmatch(r'\.[a-z0-9]+',part):result.add(part)
+        part=part.strip().lower()
+        if not part:continue
+        if not strict and part.startswith('*.'):part=part[1:]
+        if not re.fullmatch(r'\.?[a-z0-9]+',part):
+            if strict:raise ValueError(f'Extensão inválida: {part}. Informe somente as extensões separadas por vírgula.')
+            continue
+        result.add('.'+part.lstrip('.'))
     return result
 
 
 def compatible_profiles(library,platform,extension):
+    platform=canonical_platform(platform).casefold()
+    requested=extension_set(extension)
+    if not platform or len(requested)!=1:return []
     rows=[]
     for stored in library.sql.execute('SELECT p.*,e.name,e.executable FROM emulator_profiles p JOIN emulators e ON e.id=p.emulator_id ORDER BY e.name,p.id'):
         row=dict(stored)
-        if canonical_platform(row['platform']).casefold()!=canonical_platform(platform).casefold():continue
-        if extension.lower() not in extension_set(row['extensions']):continue
+        if canonical_platform(row['platform']).casefold()!=platform:continue
+        if not requested.issubset(extension_set(row['extensions'])):continue
         try:args=json.loads(row['arguments_json'])
         except (ValueError,TypeError):continue
         if not isinstance(args,list) or not all(isinstance(a,str) for a in args) or not any('{rom}' in a for a in args):continue
@@ -43,6 +52,8 @@ def validate_path(path):
     except (OSError,RuntimeError) as error:
         raise ValueError('Não foi possível ler a ROM. Localize um arquivo existente e acessível.') from None
     title,inferred=rom_identity(source.name)
+    if not inferred and source.suffix.lower() in ('.n64','.z64','.v64'):
+        inferred='Nintendo 64'
     return {'local_path':str(source),'original_name':source.name,'extension':source.suffix.lower(),
             'platform':inferred,'size':stamp.st_size,'mtime_ns':stamp.st_mtime_ns,
             'modified_at':datetime.fromtimestamp(stamp.st_mtime,timezone.utc).isoformat()}

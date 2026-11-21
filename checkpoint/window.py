@@ -260,12 +260,22 @@ class MainWindow(QMainWindow):
 
     def refresh_library(self,*args):
         if not hasattr(self,'gallery'): return
+        from .local_rom import canonical_platform
+        owned=self.library.owned_games()
         for combo,key,caption in [(self.platform,'platform','Todas'),(self.genre,'genre','Todos os gêneros')]:
-            selected = combo.currentData(); values = sorted({value.strip() for g in self.library.owned_games() for value in (g[key].split(',') if key=='genre' else [g[key]]) if value.strip()})
+            selected=combo.currentData()
+            if key=='platform':
+                values={canonical_platform(game['platform']) for game in owned}
+            else:
+                values={value.strip() for game in owned for value in game['genre'].split(',') if value.strip()}
             combo.blockSignals(True); combo.clear(); combo.addItem(caption,'')
-            for value in values: combo.addItem(value,value)
+            for value in sorted(values-{''},key=str.casefold):combo.addItem(value,value)
+            if key=='platform' and '' in values:combo.addItem('Não identificada',None)
             index = combo.findData(selected); combo.setCurrentIndex(max(0,index)); combo.blockSignals(False)
-        games = self.library.owned_games(self.search.text(),self.platform.currentData(),self.genre.currentData(),self.status.currentData(),self.favorites.isChecked(),self.sort.currentData())
+        games = self.library.owned_games(self.search.text(),'',self.genre.currentData(),self.status.currentData(),self.favorites.isChecked(),self.sort.currentData())
+        if self.platform.currentIndex()>0:
+            selected=self.platform.currentData() or ''
+            games=[game for game in games if canonical_platform(game['platform'])==selected]
         from .card_layout import cover_size,nearest_cover_choice
         self.gallery.theme=self.theme;self.gallery.set_cover_size(nearest_cover_choice(cover_size(self.library)))
         self.count.setText(count_text(len(games),'jogo'))
@@ -300,7 +310,7 @@ class MainWindow(QMainWindow):
 
     def update_library_empty(self):
         owned=self.library.owned_games();tab=self.library_tabs.currentIndex()
-        extra=bool(self.search.text().strip() or self.platform.currentData() or self.genre.currentData() or self.status.currentText()!=({2:'Jogando',3:'Concluído'}.get(tab,'Todos os status')))
+        extra=bool(self.search.text().strip() or self.platform.currentIndex()>0 or self.genre.currentData() or self.status.currentText()!=({2:'Jogando',3:'Concluído'}.get(tab,'Todos os status')))
         if not owned:title='Biblioteca vazia';caption='Adicionar jogo';callback=self.add_library_game
         elif extra:title='Nenhum resultado para esta busca';caption='Limpar filtros';callback=self.clear_library_filters
         elif tab in (1,2,3):
@@ -656,8 +666,19 @@ class MainWindow(QMainWindow):
         files=[dict(row) for row in self.library.sql.execute(
             'SELECT * FROM game_files WHERE game_id=? ORDER BY available DESC,id',(game['id'],))]
         if files:
-            if files[0]['available'] or not files[0]['drive_id']:
-                return self.launch_rom(game['id'],files[0])
+            candidates=[file for file in files if file['available'] or not file['drive_id']]
+            if len(candidates)>1:
+                from .local_rom import compatible_profiles
+                compatible=[file for file in candidates if compatible_profiles(self.library,file['platform'],
+                                                                     Path(file['local_path'] or '').suffix)]
+                candidates=compatible or candidates
+            if len(candidates)==1:return self.launch_rom(game['id'],candidates[0])
+            if candidates:
+                names=[f"{n}. {file['original_name']} · {file['platform'] or 'Plataforma não identificada'}"
+                       for n,file in enumerate(candidates,1)]
+                choice,ok=QInputDialog.getItem(self,'Executar versão','Escolha a ROM:',names,0,False)
+                if ok:return self.launch_rom(game['id'],candidates[names.index(choice)])
+                return
             QMessageBox.information(self,'ROM indisponível','Baixe a ROM vinculada na aba Arquivos antes de jogar.'); return
         self.guard(lambda:self.launcher.start(game))
 
@@ -676,11 +697,7 @@ class MainWindow(QMainWindow):
             return
         problem=identity_problem(self.library.get(game_id),file)
         if problem:QMessageBox.warning(self,'Confira a edição',problem);return
-        if not file.get('drive_id'):
-            profiles=compatible_profiles(self.library,file['platform'],file['extension'])
-        else:
-            profiles=[dict(r) for r in self.library.sql.execute('SELECT p.*,e.name,e.executable FROM emulator_profiles p JOIN emulators e ON e.id=p.emulator_id')]
-            profiles=[p for p in profiles if p['platform']==file['platform'] and (not p['extensions'].strip() or file['extension'].casefold() in [e.strip().casefold() for e in p['extensions'].split(',')])]
+        profiles=compatible_profiles(self.library,file['platform'],file['extension'])
         if not profiles:
             if QMessageBox.question(self,'Emuladores','Nenhum perfil compatível. Configurar plataforma e extensões?')==QMessageBox.Yes:self.emulators()
             return
@@ -688,6 +705,8 @@ class MainWindow(QMainWindow):
         profile=next((p for p in profiles if saved and p['id']==saved[0]),None)
         if profile is None:
             names=[p['name'] for p in profiles]
+            if len(set(names))!=len(names):
+                names=[f"{n}. {p['name']} · {p['extensions']}" for n,p in enumerate(profiles,1)]
             choice,ok=QInputDialog.getItem(self,'Executar versão','Escolha o perfil:',names,0,False)
             if not ok:return
             profile=profiles[names.index(choice)]

@@ -43,18 +43,22 @@ class EmulatorProfiles(QWidget):
         self.arguments.setText('["{rom}"]')
     def save(self):
         try:
+            from .local_rom import canonical_platform,extension_set
             args=json.loads(self.arguments.text())
-            if not self.name.text().strip() or not self.platform.text().strip(): raise ValueError('Nome e plataforma são obrigatórios.')
+            platform=canonical_platform(self.platform.text())
+            extensions=', '.join(sorted(extension_set(self.extensions.text(),strict=True)))
+            if not self.name.text().strip() or not platform: raise ValueError('Nome e plataforma são obrigatórios.')
+            if not extensions:raise ValueError('Informe as extensões aceitas por este perfil.')
             if not Path(self.executable.text()).is_file(): raise ValueError('Executável não encontrado.')
             if not isinstance(args,list) or not all(isinstance(a,str) for a in args) or not any('{rom}' in a for a in args): raise ValueError('Informe uma lista JSON de argumentos contendo {rom}.')
             with self.library.sql:
                 if self.selected_id:
                     row=next(r for r in self.rows if r['id']==self.selected_id)
                     self.library.sql.execute('UPDATE emulators SET name=?,executable=? WHERE id=?',(self.name.text().strip(),self.executable.text(),row['emulator_id']))
-                    self.library.sql.execute('UPDATE emulator_profiles SET platform=?,arguments_json=?,extensions=? WHERE id=?',(self.platform.text().strip(),json.dumps(args),self.extensions.text(),self.selected_id))
+                    self.library.sql.execute('UPDATE emulator_profiles SET platform=?,arguments_json=?,extensions=? WHERE id=?',(platform,json.dumps(args),extensions,self.selected_id))
                 else:
                     emulator=self.library.sql.execute('INSERT INTO emulators(name,executable) VALUES(?,?)',(self.name.text().strip(),self.executable.text())).lastrowid
-                    self.library.sql.execute('INSERT INTO emulator_profiles(emulator_id,platform,arguments_json,extensions) VALUES(?,?,?,?)',(emulator,self.platform.text().strip(),json.dumps(args),self.extensions.text()))
+                    self.library.sql.execute('INSERT INTO emulator_profiles(emulator_id,platform,arguments_json,extensions) VALUES(?,?,?,?)',(emulator,platform,json.dumps(args),extensions))
             self.refresh(); self.reset()
         except (ValueError,TypeError) as error: QMessageBox.warning(self,'Perfil inválido',str(error))
 

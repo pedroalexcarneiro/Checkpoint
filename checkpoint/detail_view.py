@@ -115,12 +115,15 @@ def build_detail(window,game):
     if game['notes']:about_layout.addWidget(text('Suas observações','cardTitle'));about_layout.addWidget(text(game['notes'],'muted'))
     media=[dict(r) for r in window.library.sql.execute('SELECT * FROM media_files WHERE game_id=? ORDER BY id DESC',(game_id,))]
     images=[m for m in media if m['kind']=='image'][:2]
-    fields=[('Desenvolvedora',game['developer']),('Plataforma',game['platform']),('Gênero',game['genre']),('Lançamento',date_display(game['release_date']))]
+    from .local_rom import canonical_platform
+    platform=canonical_platform(game['platform'])
+    fields=[('Desenvolvedora',game['developer']),('Plataforma',platform or 'Não identificada'),('Gênero',game['genre']),('Lançamento',date_display(game['release_date']))]
     facts=QGridLayout();facts.setHorizontalSpacing(36);facts.setVerticalSpacing(16)
     for index,(caption,value) in enumerate((pair for pair in fields if pair[1])):
         item=QWidget();row=QHBoxLayout(item);row.setContentsMargins(0,0,0,0);row.setSpacing(10);row.addWidget(Badge('platform' if caption=='Plataforma' else 'settings' if caption=='Desenvolvedora' else 'clock' if caption=='Lançamento' else 'library',30))
         words=QVBoxLayout();words.setSpacing(3);words.addWidget(text(caption,'caption'));words.addWidget(text(value));row.addLayout(words,1);facts.addWidget(item,index//2,index%2)
     about_layout.addLayout(facts)
+    if not platform:about_layout.addWidget(action('Definir plataforma',lambda:window.edit_game(game_id)),0,Qt.AlignLeft)
     extra=QWidget();extra_layout=QVBoxLayout(extra);extra_layout.setContentsMargins(0,4,0,0)
     other=[('Publicadora',game['publisher']),('Origem','' if wikipedia else display_source(window.library,game)),('Categoria',game['category']),('Sua nota',str(game['rating'])+'/10' if game['rating'] is not None else '')]
     for caption,value in other:

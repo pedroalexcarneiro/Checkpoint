@@ -13,6 +13,60 @@ def add_profile(lib, name, platform='CHIP-8'):
             (emulator,platform,json.dumps(['{rom}']),'.ch8' if platform=='CHIP-8' else '.z64')).lastrowid
 
 
+def test_profiles_normalize_extensions_and_reject_invalid_before_writing(library,app,monkeypatch):
+    from checkpoint.emulator_dialog import EmulatorProfiles
+    from checkpoint.local_rom import compatible_profiles
+    messages=[]
+    monkeypatch.setattr('checkpoint.dialog_style.AppMessages.warning',lambda *args:messages.append(args[-1]))
+    editor=EmulatorProfiles(library)
+    editor.name.setText('Emulador de teste');editor.platform.setText('Switch');editor.executable.setText(sys.executable)
+    editor.extensions.setText(' NSP, .XCI, nsp, ./teste ')
+    editor.save()
+    assert 'Extensão inválida' in messages[-1]
+    assert library.sql.execute('SELECT count(*) FROM emulators').fetchone()[0]==0
+    editor.extensions.setText(' NSP, .XCI, nsp, ');editor.save()
+    row=library.sql.execute('SELECT * FROM emulator_profiles').fetchone()
+    assert (row['platform'],row['extensions'])==('Nintendo Switch','.nsp, .xci')
+    for extension in ('.NSP','xci'):
+        assert [profile['id'] for profile in compatible_profiles(library,'Switch',extension)]==[row['id']]
+    assert not compatible_profiles(library,'Switch','.zip')
+    assert not compatible_profiles(library,'','.nsp')
+    editor.close()
+
+
+def test_metadata_platform_aliases_and_unknown_are_visible_without_rewriting_legacy(ui,app,folder):
+    from types import SimpleNamespace
+    from PySide6.QtCore import Qt
+    from PySide6.QtWidgets import QLabel
+    from checkpoint.local_rom import validate_path
+    from checkpoint.metadata_dialog import MetadataDialog
+    window,legacy=ui
+    saved=window.library.get(legacy)
+    for entered,expected in (('', ''),('N64','Nintendo 64'),('pc','PC'),('Switch','Nintendo Switch')):
+        dialog=MetadataDialog(window.library)
+        assert not dialog.platform.text()
+        dialog.platform.setText(entered)
+        result=SimpleNamespace(provider='rawg',external_id='fixture-'+entered,title=f'Teste {entered or "sem plataforma"}',
+                               description='',release_date='',genres=[])
+        dialog.save_result(result)
+        game=dialog.imported_id
+        assert window.library.get(game)['platform']==expected
+        window.refresh_library()
+        index=window.platform.findText(expected or 'Não identificada')
+        assert index>0
+        window.platform.setCurrentIndex(index)
+        assert game in [window.game_list.item(n).data(Qt.UserRole) for n in range(window.game_list.count())]
+        if not expected:
+            window.detail(game)
+            assert any(label.text()=='Não identificada' for label in window.detail_page.findChildren(QLabel))
+            assert any(button.text()=='Definir plataforma' for button in window.detail_page.findChildren(QPushButton))
+    assert window.library.get(legacy)==saved
+    rom=folder/'Jogo acentuado.Z64';rom.write_bytes(b'exemplo')
+    assert validate_path(rom)['platform']=='Nintendo 64'
+    archive=folder/'Desconhecido.zip';archive.write_bytes(b'exemplo')
+    assert not validate_path(archive)['platform']
+
+
 def test_profile_edit_keeps_id_and_remove_preserves_files_and_used_profile(ui, app, folder, monkeypatch):
     from checkpoint.emulator_dialog import EmulatorProfiles
     w, identity = ui

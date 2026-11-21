@@ -196,6 +196,37 @@ Os testes de layout refletem o novo botão e banner. A cobertura da arte inteira
 e dos quatro cantos foi preservada. Capturas Qt em 1280×800, maximizada e 1000×700
 usam fixtures. A aprovação visual do dono e a inspeção no Windows seguem pendentes.
 
+## Unidade 6 — Plataforma explícita e extensões (itens 16 e 17)
+
+O diálogo manual de Metadados iniciava o campo com PC e também gravava PC
+quando o campo era limpo. Agora importa a seleção explícita, preservando
+vazio como desconhecido. A ficha exibe Não identificada e oferece Definir
+plataforma. O filtro da Biblioteca agrupa aliases reconhecidos e permite
+selecionar os não identificados, sem reescrever os registros. ROMs locais
+.n64, .z64 e .v64 são reconhecidas como Nintendo 64. Formatos compartilhados
+como .zip continuam exigindo escolha de plataforma.
+
+O mesmo critério de perfis orienta o vínculo local, a configuração e o
+lançamento de ROMs disponíveis, inclusive as baixadas. O editor normaliza
+extensões válidas, remove duplicadas e rejeita entradas inválidas antes de
+gravar. Perfis antigos continuam armazenados como estavam. Perfis sem
+extensões precisam declarar formatos compatíveis antes de executar. Com
+mais de uma ROM compatível, Jogar abre uma seleção explícita.
+
+Gate local: 107 testes aprovados, exit 0, incluindo as regressões protegidas
+da sequência A4 e testes de dados legados, Nintendo 64, Switch, PC,
+desconhecido, arquivamento não inferido e seleção entre duas ROMs.
+
+Limite de contrato: em checkpoint/dialogs.py, GameDialog.__init__ inicializa
+Plataforma com PC para novo cadastro manual. Em checkpoint/quick_add.py, o
+tratamento de resultado de catálogo pode preencher PC quando o resultado
+suporta várias plataformas. Esses pontos continuam protegidos. Proposta
+para autorização específica: inicializar vazio na entrada manual e só
+pré-selecionar uma plataforma quando o catálogo identificar uma única
+possibilidade; tornar a escolha explícita quando houver várias.
+GameDialog.load_drive_file, cadastro de ROM pelo Drive e suas asserções
+ficam fora dessa proposta. O default da tabela é legado e foi mantido.
+
 ## Commits locais já preparados
 
 - f0b43c0: plano/base confirmados e diagnóstico inicial.
@@ -204,3 +235,4 @@ usam fixtures. A aprovação visual do dono e a inspeção no Windows seguem pen
 - 0732989: manter posição dos diálogos ao redimensionar.
 - 0b0734e: fila de transferências, progresso e verificação.
 - d5ddedc: mostrar o progresso da transferência na aba Arquivos da ficha.
+- c0b56e4: destacar o último jogo iniciado no Início e manter histórico acessível.

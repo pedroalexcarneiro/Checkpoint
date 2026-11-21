@@ -19,7 +19,7 @@ class MetadataDialog(QDialog):
         self.query = QLineEdit(); self.query.setPlaceholderText('Nome do jogo'); layout.addWidget(self.query)
         self.search_button = QPushButton('Pesquisar'); self.search_button.clicked.connect(self.search); layout.addWidget(self.search_button)
         self.list = QListWidget(); layout.addWidget(self.list)
-        self.platform = QLineEdit('PC'); self.platform.setPlaceholderText('Plataforma da sua cópia'); layout.addWidget(self.platform)
+        self.platform = QLineEdit(); self.platform.setPlaceholderText('Plataforma da sua cópia'); layout.addWidget(self.platform)
         self.state = QLabel('Requer chave RAWG nas configurações.'); self.state.setWordWrap(True); layout.addWidget(self.state)
         self.import_button = QPushButton('Importar resultado selecionado'); self.import_button.clicked.connect(self.import_selected); layout.addWidget(self.import_button)
 
@@ -65,10 +65,11 @@ class MetadataDialog(QDialog):
         if existing:
             self.state.setText('Este resultado já está cadastrado, inclusive se estiver na lixeira.'); return
         try:
+            from .local_rom import canonical_platform
             with self.library.sql:
                 # save_game usa uma transação própria; inserção do identificador deve permanecer atômica.
                 cursor = self.library.sql.execute('INSERT INTO games(title,description,release_date,genre,platform,source) VALUES(?,?,?,?,?,?)',
-                    (result.title,result.description,result.release_date,', '.join(result.genres),self.platform.text().strip() or 'PC','RAWG'))
+                    (result.title,result.description,result.release_date,', '.join(result.genres),canonical_platform(self.platform.text()),'RAWG'))
                 game_id = cursor.lastrowid
                 self.library.sql.execute('INSERT INTO external_identifiers VALUES(?,?,?)',(game_id,result.provider,result.external_id))
             self.imported_id = game_id; self.accept()
