@@ -5,6 +5,8 @@ local e sem publicação autorizada. Memórias: carga progressiva/reuso de pági
 miniaturas no pool/cache limitado, filtros só para jogos com memórias e grade
 responsiva. A revisão local em f3a0264 passou em 878 testes em Linux, incluindo
 o rodapé horizontal do diálogo Captura pelo controle.
+O suporte SDL3 ao botão dedicado do Switch Pro foi implementado localmente.
+A leitura do dispositivo físico no Windows segue pendente de validação.
 PLANO_ESTABILIDADE_0139.md e RELATORIO_ESTABILIDADE_0139.md registram andamento.
 
 Revisão local em fix/pos-0139-layout, sem nova publicação: Início sem jogos

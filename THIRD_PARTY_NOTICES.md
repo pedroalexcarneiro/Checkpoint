@@ -11,6 +11,8 @@ O ambiente/pacote utiliza componentes com licenças próprias, entre eles:
 - keyring: MIT — https://github.com/jaraco/keyring
 - cryptography: Apache 2.0 ou BSD — https://cryptography.io/en/latest/faq/#what-license-is-cryptography-released-under
 - requests: Apache 2.0 — https://requests.readthedocs.io/en/latest/community/faq/
+- SDL 3.4.20 para Windows x64, com licença zlib. A DLL oficial e seu aviso
+  estão em `checkpoint/assets/sdl3`. [Release oficial](https://github.com/libsdl-org/SDL/releases/tag/release-3.4.20)
 
 Esta lista é um inventário inicial, não substitui os textos integrais nem uma análise de conformidade. `requirements-tested.txt` identifica as versões diretas e transitivas do ambiente usado. Antes de distribuição pública, conferir os componentes efetivamente empacotados, incluir seus textos/avisos, cumprir as obrigações de redistribuição aplicáveis e revisar direitos das artes/APIs. O executável de desenvolvimento não é uma distribuição pública assinada.
 

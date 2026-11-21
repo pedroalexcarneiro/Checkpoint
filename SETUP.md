@@ -21,6 +21,11 @@ python -m venv .venv
 
 O build gera Checkpoint e seu auxiliar de atualização. Publicação é uma ação separada; esta revisão não publica releases. Use os scripts de validação somente com pastas de teste novas.
 
+O build inclui a DLL SDL3 para leitura do Switch Pro e seu aviso de licença.
+Em **Configurações > Aparência > Configurar controle**, selecione **Switch Pro**
+e o comando **Captura**. O menu também oferece a gravação de combinações.
+Controles XInput continuam disponíveis no mesmo seletor.
+
 ## Dados e recuperação
 
 Padrão: `%LOCALAPPDATA%\Checkpoint`, banco `checkpoint.sqlite`, schema 4. `--data-dir CAMINHO` seleciona outra pasta e não consulta a pasta padrão. Mantenha dados fora da instalação.

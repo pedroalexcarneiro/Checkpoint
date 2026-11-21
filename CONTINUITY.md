@@ -9,6 +9,8 @@ limitadas e grade na largura útil. Medição 96 imagens: ~5 s antes, 0,08 s na
 primeira entrada e ~0,007 s nos retornos após; ensaio Linux isolado. Seletor
 só contém jogos com registros em Memórias. O diálogo Captura pelo controle
 agora alinha Desativar, Gravar comando, Cancelar e Salvar no mesmo rodapé.
+O seletor aceita Switch Pro via SDL3, com o botão dedicado Captura. O teste
+físico no Windows por USB e Bluetooth continua pendente.
 Restante em andamento no plano e no RELATORIO_ESTABILIDADE_0139.md.
 Gates antigos abaixo são históricos.
 

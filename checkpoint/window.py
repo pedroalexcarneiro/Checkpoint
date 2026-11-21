@@ -991,6 +991,6 @@ class MainWindow(QMainWindow):
         if self.launcher.active and not self.system_shutdown:
             if QMessageBox.question(self,'Sessões ativas','Fechar o Checkpoint? O jogo continuará aberto. O tempo acompanhado será salvo; o período com o Checkpoint fechado não será contado.')!=QMessageBox.Yes:
                 event.ignore(); return
-        self.capture_shortcut.close();self.controller_capture.timer.stop();self.media_index.stop();self.price_queue.stop();self.timer.stop();self.status_timer.stop();self.download_manager.timer.stop();self.launcher.interrupt(reason='shutdown' if self.system_shutdown else 'closed');event.accept()
+        self.capture_shortcut.close();self.controller_capture.close();self.media_index.stop();self.price_queue.stop();self.timer.stop();self.status_timer.stop();self.download_manager.timer.stop();self.launcher.interrupt(reason='shutdown' if self.system_shutdown else 'closed');event.accept()
 
 from .dialog_style import AppMessages as QMessageBox, AppInputs as QInputDialog

@@ -343,6 +343,32 @@ está em evidence/estabilidade-0139/captura-controle.png e usa dispositivo
 simulado.
 A suíte integral de f3a0264 passou com 878 testes em 596,23 s, exit 0.
 
+**Complemento do item 10.** O mesmo diálogo lista dispositivos XInput e
+Switch Pro reconhecidos pela SDL3. O botão digital dedicado aparece como
+Captura e pode acionar o serviço existente mesmo com outro botão segurado.
+A combinação é disparada uma vez por acionamento, com soltura exigida após
+reconexão. A preferência do Switch Pro usa uma identidade derivada do
+número de série ou caminho da interface. Controles que só fornecem um
+caminho podem exigir nova seleção ao trocar de porta ou de transporte.
+Preferências XInput continuam no formato anterior.
+
+A DLL SDL 3.4.20 x64 e a licença acompanham o wheel e são encontradas pelo
+coletor de dados do PyInstaller usado pelo build Windows. A DLL foi extraída
+do ZIP oficial cujo SHA-256 é
+`368bed8b24e44ad9ea372990814f2343fcfb9e468abb7f8f4a3bc146c7304752`.
+O SHA-256 da DLL empacotada é
+`66844f10251cc1c10619ed5d8e4e3224f564900ee6d69ba87d63de782addae40`.
+[Release oficial da SDL](https://github.com/libsdl-org/SDL/releases/tag/release-3.4.20)
+
+O teste local com a SDL3 compilada em Linux e um dispositivo virtual
+observou as máscaras 0, 1024, 1024 e 0 ao pressionar, manter e soltar
+`MISC1`, além de remover o dispositivo ao desconectar. O Qt foi validado
+com entradas controladas para gravação, persistência e reconexão. A
+captura `evidence/estabilidade-0139/captura-switch-pro.png` apresenta essa
+interface com dispositivo simulado. USB, Bluetooth, compatibilidade com
+Steam Input e a abertura do executável Windows ainda exigem teste nativo.
+[Botão MISC1 da SDL3](https://wiki.libsdl.org/SDL3/SDL_GamepadButton)
+
 **Item 19.** Consultas públicas em BRL, sem chave, registram as ofertas de
 Cyberpunk 2077, Hades, Hades II e God of War Ragnarök para PC. Para God of War
 a oferta oficial trouxe R$ 249,90 original e R$ 142,30 atual, diferença de

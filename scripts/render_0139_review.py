@@ -225,17 +225,28 @@ def main():
         for n in range(24):lib.save_game({'title':f'Jogo extra de teste {n}'})
         window.showNormal();window.resize(1280,800);window.navigate(1);window.view.setCurrentIndex(1)
         capture('biblioteca-lista-rolagem')
-    if 'controller' in selected:
+    if 'controller' in selected or 'switch-controller' in selected:
         from checkpoint.controller_capture import PREFERENCE
         from PySide6.QtCore import QTimer
         from types import SimpleNamespace
         controller=window.controller_capture
         controller.backend=SimpleNamespace(buttons=lambda slot:0 if slot==1 else None)
-        lib.set_setting(PREFERENCE,{'slot':1,'buttons':0x1100});controller.load()
+        if 'switch-controller' in selected:
+            from checkpoint.switch_controller import CAPTURE_MASK,SwitchDevice
+            identity='switch:'+'a'*64
+            controller.switch_backend=SimpleNamespace(
+                devices=lambda:{identity:SwitchDevice('Switch Pro · USB',1,0)},close=lambda:None)
+            controller.switch_injected=True
+            preference={'device':identity,'buttons':CAPTURE_MASK}
+            capture_name='captura-switch-pro'
+        else:
+            preference={'slot':1,'buttons':0x1100}
+            capture_name='captura-controle'
+        lib.set_setting(PREFERENCE,preference);controller.load()
         window.navigate(5);window.settings_tabs.setCurrentIndex(0)
         def capture_controller():
             dialog=QApplication.activeModalWidget()
-            try:capture('captura-controle',dialog)
+            try:capture(capture_name,dialog)
             finally:dialog.reject()
         QTimer.singleShot(0,capture_controller)
         controller.configure()
