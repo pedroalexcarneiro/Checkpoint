@@ -20,11 +20,12 @@ def test_slow_decode_does_not_block_navigation_or_events(ui, app, folder, monkey
         destination = folder/f'captura-{index}.png'
         shutil.copyfile(path, destination)
         window.library.add_media(identity, destination)
-    entered, release = Event(), Event()
+    entered, release, decode_resumed = Event(), Event(), Event()
     original = artwork_cache._read_image
     def slow(*args):
         entered.set()
         release.wait(5)
+        decode_resumed.set()
         return original(*args)
     monkeypatch.setattr(artwork_cache, '_read_image', slow)
     pulses = []
@@ -41,8 +42,12 @@ def test_slow_decode_does_not_block_navigation_or_events(ui, app, folder, monkey
             if entered.is_set(): break
             QTest.qWait(5)
         assert entered.is_set()
-        QTest.qWait(40)
+        pulses.clear()
+        deadline = monotonic()+1
+        while len(pulses) < 3 and monotonic() < deadline:
+            QTest.qWait(10)
         assert len(pulses) >= 3
+        assert not decode_resumed.is_set()
         assert len(browser.states[0]['grid'].cards) == 24
         assert 0 < len(browser.cache.pending) <= 24
         window.navigate(1)
