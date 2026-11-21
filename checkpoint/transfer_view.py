@@ -112,20 +112,35 @@ class TransferCard(CardSurface):
 
 
 class TransferList(QWidget):
-    def __init__(self,manager,parent=None):
+    def __init__(self,manager,parent=None,*,game_id=None,file_ids=()):
         super().__init__(parent);self.manager=manager;self.cards={};self.setObjectName('transferList')
+        self.game_id=game_id;self.file_ids=frozenset(file_ids)
         self.layout_box=QVBoxLayout(self);self.layout_box.setContentsMargins(0,0,0,0);self.layout_box.setSpacing(12)
         self.empty=text('Nenhuma transferência. Escolha uma ROM do Drive para baixar.','muted');self.layout_box.addWidget(self.empty)
-        for task in manager.tasks.values():self.update_task(task)
+        self.update_task()
         manager.updated.connect(self.update_task)
 
-    def update_task(self,task):
-        if task.id not in self.cards:
-            card=TransferCard(self.manager,task,self);self.cards[task.id]=card;self.layout_box.insertWidget(0,card)
+    def update_task(self,changed=None):
+        if self.game_id is not None and changed is not None:
+            if changed.game_id!=self.game_id and changed.file_id not in self.file_ids:return
         tasks=list(self.manager.tasks.values())
+        if self.game_id is not None:
+            latest={}
+            for task in tasks:
+                if task.game_id!=self.game_id and task.file_id not in self.file_ids:continue
+                previous=latest.get(task.file_id)
+                if previous is None or task.active or not previous.active:latest[task.file_id]=task
+            tasks=list(reversed(latest.values()))
         rank=lambda value:0 if value.status in ('running','cancelling') else 1 if value.status=='queued' else 2
-        desired=[value.id for value in sorted(tasks,key=rank) if value.id in self.cards]
+        tasks.sort(key=rank)
+        desired=[task.id for task in tasks]
         if desired!=getattr(self,'display_order',[]):
             self.display_order=desired
-            for index,identity in enumerate(desired):self.layout_box.insertWidget(index,self.cards[identity])
-        self.empty.setVisible(not self.cards)
+            for identity in self.cards.keys()-set(desired):
+                card=self.cards.pop(identity)
+                self.layout_box.removeWidget(card);card.hide();card.deleteLater()
+            for index,task in enumerate(tasks):
+                if task.id not in self.cards:self.cards[task.id]=TransferCard(self.manager,task,self)
+                self.layout_box.insertWidget(index,self.cards[task.id])
+        self.empty.setVisible(self.game_id is None and not self.cards)
+        self.setVisible(self.game_id is None or bool(self.cards))

@@ -51,6 +51,7 @@ def test_close_monitor_keeps_task_and_app_navigation_available(ui,app,monkeypatc
     title=window.library.get(game)['title']
     window.library.save_game({'title':title,'platform':'Nintendo Switch'},game)
     file_id=record(window.library,'background-fixture',title+'.nsp')
+    other=window.library.save_game({'title':'Outro jogo','platform':'Nintendo Switch'})
     entered,release=Event(),Event()
     def work(database,file_id,game_id,**options):
         context=TransferProgress(options['progress_path'],options['cancel_path'],options['owner'])
@@ -62,6 +63,10 @@ def test_close_monitor_keeps_task_and_app_navigation_available(ui,app,monkeypatc
                         'metadata_state':'not_started','errors':[],'message':'Cancelado em teste controlado.'}
         return {'download_state':'downloaded','link_state':'linked','metadata_state':'completed','errors':[],'message':'Concluído em fixture.'}
     monkeypatch.setattr('checkpoint.rom_link_dialog.run_link',work)
+    from checkpoint.transfer_view import TransferList
+    window.detail(game);window.detail_tabs.setCurrentIndex(3)
+    detail_panel=window.detail_page.findChild(TransferList,'gameTransfers')
+    assert detail_panel.isHidden()
     dialog=window.link_drive_rom(game)
     try:
         assert not dialog.isModal()
@@ -70,13 +75,21 @@ def test_close_monitor_keeps_task_and_app_navigation_available(ui,app,monkeypatc
         wait_for(entered.is_set)
         duplicate=window.download_manager.start(file_id,game,mode='link')
         assert duplicate is task
+        wait_for(lambda:task.progress.get('received')==25)
+        assert dialog.progress_card.bar.value()==25
+        assert detail_panel.cards[task.id].bar.value()==25
         dialog.reject()
+        assert detail_panel.cards[task.id].bar.value()==25
+        window.detail(other);window.detail_tabs.setCurrentIndex(3)
+        other_panel=window.detail_page.findChild(TransferList,'gameTransfers')
+        assert other_panel.isHidden() and not other_panel.cards
+        window.detail(game);window.detail_tabs.setCurrentIndex(3)
+        assert window.detail_page.findChild(TransferList,'gameTransfers').cards[task.id].bar.value()==25
         window.navigate(3)
         QTest.qWait(30)
         assert window.current_page==3 and window.download_manager.busy
         window.open_downloads()
         wait_for(lambda:task.progress.get('received')==25)
-        from checkpoint.transfer_view import TransferList
         panel=window.pages[5].findChild(TransferList)
         assert panel.cards[task.id].bar.value()==25
         window.download_manager.cancel(task.id)

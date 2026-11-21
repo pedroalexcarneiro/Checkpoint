@@ -188,6 +188,10 @@ def build_detail(window,game):
         for record in records:grid.add_card(memory_card(window,record))
         memories.addWidget(grid)
     technical.addWidget(text('Arquivos e versões','sectionTitle'))
+    if owned:
+        from .transfer_view import TransferList
+        transfers=TransferList(window.download_manager,game_id=game_id,file_ids=(file['id'] for file in files))
+        transfers.setObjectName('gameTransfers');technical.addWidget(transfers)
     if not files:
         source,source_layout=card();source_layout.addWidget(text('Nenhuma ROM associada','cardTitle'));choices=QHBoxLayout()
         choices.addWidget(action('Escolher ROM local',lambda:window.choose_local_rom(game_id),True));choices.addWidget(action('Vincular ROM do Drive',lambda:window.link_drive_rom(game_id)));choices.addStretch();source_layout.addLayout(choices);technical.addWidget(source)

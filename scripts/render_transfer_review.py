@@ -24,8 +24,9 @@ def main():
     library.set_setting('artwork.auto',False);library.set_setting('prices.auto',False)
     library.set_setting('appearance.theme','red');library.set_setting('downloads',str(root/'ROMs'))
     (root/'ROMs').mkdir()
+    game_id=library.save_game({'title':'Jardim de Névoa','platform':'Nintendo Switch'})
     window=MainWindow(library)
-    task=Transfer(uuid4().hex,1,1,'Jardim de Névoa.nsp','Jardim de Névoa',mode='link',status='running',
+    task=Transfer(uuid4().hex,1,game_id,'Jardim de Névoa.nsp','Jardim de Névoa',mode='link',status='running',
         progress={'stage':'downloading','received':650*1024**2,'total':2*1024**3,
                   'bytes_per_second':8.4*1024**2,'eta_seconds':None,'transfer_state':'running',
                   'verification_state':'not_started','partial_path':str(root/'ROMs'/'Jardim.partial')})
@@ -40,6 +41,12 @@ def main():
         path=root/f'downloads-{width}x{height}.png';assert window.grab().save(str(path))
         manifest.append({'file':path.name,'window_size':[width,height],'dpr':window.devicePixelRatioF(),
                          'fixtures':True,'progress_simulated':True,'qt_platform':app.platformName()})
+    window.resize(1280,800)
+    window.detail(game_id);window.detail_tabs.setCurrentIndex(3)
+    app.processEvents()
+    path=root/'progresso-ficha-1280x800.png';assert window.grab().save(str(path))
+    manifest.append({'file':path.name,'window_size':[1280,800],'dpr':window.devicePixelRatioF(),
+                     'fixtures':True,'progress_simulated':True,'qt_platform':app.platformName()})
     (root/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8')
     window.download_manager.tasks.clear();window.close();window.deleteLater();app.processEvents();db.close()
     print(root)

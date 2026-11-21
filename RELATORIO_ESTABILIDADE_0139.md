@@ -157,9 +157,23 @@ pode chegar ao próprio timeout antes de ceder. Parciais são preservados para
 diagnóstico; a retomada automática de parciais não foi implementada. Não houve
 Drive autenticado nem teste Windows com o ambiente pessoal.
 
+### Acompanhamento na ficha
+
+O complemento pedido com a imagem da ficha mostra o mesmo cartão de progresso
+na aba Arquivos, acima dos vínculos existentes. A ficha acompanha a tarefa
+após fechar o diálogo e ao reabrir a página. O painel mostra apenas tarefas
+associadas ao jogo ou aos arquivos já vinculados à ficha. A fila global segue
+em Configurações > Downloads.
+
+A captura progresso-ficha-1280x800.png é da interface Qt com bytes simulados.
+O teste de navegação saiu do diálogo a 25%, conferiu a mesma barra na ficha,
+abriu outro jogo sem transferências e confirmou o progresso ao retornar.
+Gate de vínculo e transferência: 25 testes aprovados em 3,11 s, exit 0.
+
 ## Commits locais já preparados
 
 - f0b43c0: plano/base confirmados e diagnóstico inicial.
 - e161dd5: Memórias progressivas/filtros/grade/medição.
 - 45208e6: checkpoints de tempo e dispensa por sessão.
 - 0732989: manter posição dos diálogos ao redimensionar.
+- 0b0734e: fila de transferências, progresso e verificação.
