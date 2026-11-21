@@ -1,0 +1,58 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+______ test_resize_and_reopen_preserve_explicit_dialog_position[sample0] _______
+
+ui = (<checkpoint.window.MainWindow(0xa94bad0) at 0x7f1997d2fac0>, 1)
+app = <PySide6.QtWidgets.QApplication(0xa878b50) at 0x7f1997e7c140>
+
+    def test_resize_and_reopen_preserve_explicit_dialog_position(ui, app):
+        window, identity = ui
+        dialog = prepare_dialog(QDialog(window))
+        dialog.resize(420, 280)
+        dialog.show()
+        for _ in range(5): app.processEvents()
+        try:
+            dialog.move(40, 60)
+            chosen = QPoint(dialog.pos())
+            for width, height in [(460, 310), (430, 290), (500, 340)]:
+                dialog.resize(width, height)
+                for _ in range(5): app.processEvents()
+>               assert dialog.pos() == chosen
+E               assert PySide6.QtCore.QPoint(269, 244) == PySide6.QtCore.QPoint(40, 60)
+E                +  where PySide6.QtCore.QPoint(269, 244) = <built-in method pos of PySide6.QtWidgets.QDialog object at 0x7f1997911400>()
+E                +    where <built-in method pos of PySide6.QtWidgets.QDialog object at 0x7f1997911400> = <PySide6.QtWidgets.QDialog(0xab2cf80) at 0x7f1997911400>.pos
+
+tests/test_dialog_position_stability.py:20: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support propagateSizeHints()
+______ test_resize_and_reopen_preserve_explicit_dialog_position[sample1] _______
+
+ui = (<checkpoint.window.MainWindow(0xafea800) at 0x7f1997cb9400>, 1)
+app = <PySide6.QtWidgets.QApplication(0xa878b50) at 0x7f1997e7c140>
+
+    def test_resize_and_reopen_preserve_explicit_dialog_position(ui, app):
+        window, identity = ui
+        dialog = prepare_dialog(QDialog(window))
+        dialog.resize(420, 280)
+        dialog.show()
+        for _ in range(5): app.processEvents()
+        try:
+            dialog.move(40, 60)
+            chosen = QPoint(dialog.pos())
+            for width, height in [(460, 310), (430, 290), (500, 340)]:
+                dialog.resize(width, height)
+                for _ in range(5): app.processEvents()
+>               assert dialog.pos() == chosen
+E               assert PySide6.QtCore.QPoint(324, 244) == PySide6.QtCore.QPoint(40, 60)
+E                +  where PySide6.QtCore.QPoint(324, 244) = <built-in method pos of PySide6.QtWidgets.QDialog object at 0x7f1997963d80>()
+E                +    where <built-in method pos of PySide6.QtWidgets.QDialog object at 0x7f1997963d80> = <PySide6.QtWidgets.QDialog(0xae48e70) at 0x7f1997963d80>.pos
+
+tests/test_dialog_position_stability.py:20: AssertionError
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support propagateSizeHints()
+=========================== short test summary info ============================
+FAILED tests/test_dialog_position_stability.py::test_resize_and_reopen_preserve_explicit_dialog_position[sample0]
+FAILED tests/test_dialog_position_stability.py::test_resize_and_reopen_preserve_explicit_dialog_position[sample1]
+2 failed in 0.39s

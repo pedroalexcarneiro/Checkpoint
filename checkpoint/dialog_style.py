@@ -17,7 +17,12 @@ class DialogPresentation(QObject):
         if event.type() == QEvent.Show and isinstance(obj, QDialog):
             self.present(obj)
         elif event.type()==QEvent.Resize and isinstance(obj,QDialog) and obj.isVisible():
-            self.fit_and_center(obj)
+            self.fit_and_center(obj,center=False)
+        elif event.type()==QEvent.Paint and isinstance(obj,QDialog) and not getattr(self,'paint_fitted',False):
+            # QMessageBox/QInputDialog podem ajustar a geometria depois de Show.
+            # Limitar só a primeira apresentação, sem recentralizar ao mover/DPI.
+            self.paint_fitted=True
+            self.fit_and_center(obj,center=False,fit_position=True)
         return False
 
     def present(self, dialog):
@@ -37,36 +42,41 @@ class DialogPresentation(QObject):
                 button=dialog.button(standard)
                 if button:button.setText(label)
         if dialog.layout():dialog.layout().activate()
-        self.fit_and_center(dialog)
+        self.fit_and_center(dialog,center=not getattr(self,'positioned',False))
+        self.positioned=True
         if dialog.windowHandle():
             from .window_style import titlebar_theme
             titlebar_theme(dialog, True)
 
-    def fit_and_center(self,dialog):
+    def fit_and_center(self,dialog,center=True,fit_position=False):
         if getattr(self,'positioning',False):return
         self.positioning=True
-        try:self._fit_and_center(dialog)
+        try:self._fit_and_center(dialog,center,fit_position)
         finally:self.positioning=False
 
-    def _fit_and_center(self,dialog):
+    def _fit_and_center(self,dialog,center,fit_position):
         parent = dialog.parentWidget()
-        if parent:
+        if parent and center:
             host = parent.window()
             if not host.windowIcon().isNull():
                 dialog.setWindowIcon(host.windowIcon())
             screen = host.screen()
-            center = host.mapToGlobal(host.rect().center())
+            center_point = host.mapToGlobal(host.rect().center())
         else:
             screen = dialog.screen()
-            center = screen.availableGeometry().center()
+            center_point = screen.availableGeometry().center()
         area = screen.availableGeometry().adjusted(16, 16, -16, -16)
         dialog.setMaximumSize(area.size())
         width = min(dialog.width(), area.width())
         height = min(dialog.height(), area.height())
         dialog.resize(width, height)
-        x = max(area.left(), min(area.right()-dialog.width()+1, center.x()-dialog.width()//2))
-        y = max(area.top(), min(area.bottom()-dialog.height()+1, center.y()-dialog.height()//2))
-        dialog.move(x, y)
+        if center or fit_position:
+            frame=dialog.frameGeometry()
+            wanted_x=center_point.x()-frame.width()//2 if center else dialog.pos().x()
+            wanted_y=center_point.y()-frame.height()//2 if center else dialog.pos().y()
+            x = max(area.left(), min(area.right()-frame.width()+1, wanted_x))
+            y = max(area.top(), min(area.bottom()-frame.height()+1, wanted_y))
+            dialog.move(x, y)
 
 
 def prepare_dialog(dialog):

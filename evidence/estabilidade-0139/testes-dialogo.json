@@ -1,0 +1,39 @@
+{
+  "cwd": "/workspace/work/Checkpoint",
+  "platform": "Linux/Qt offscreen",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "runs": [
+    {
+      "record": "dialogo-antes",
+      "command": "/workspace/work/venv/bin/python -X faulthandler -m pytest tests/test_dialog_position_stability.py -q -p no:cacheprovider",
+      "exit_code": 1,
+      "stdout": "dialogo-antes.stdout.txt",
+      "stderr": "dialogo-antes.stderr.txt"
+    },
+    {
+      "record": "dialogo-depois",
+      "command": "/workspace/work/venv/bin/python -X faulthandler -m pytest tests/test_dialog_position_stability.py tests/test_dialog_polish_0139.py -q -p no:cacheprovider",
+      "exit_code": 1,
+      "stdout": "dialogo-depois.stdout.txt",
+      "stderr": "dialogo-depois.stderr.txt"
+    },
+    {
+      "record": "dialogo-final",
+      "command": "/workspace/work/venv/bin/python -X faulthandler -m pytest tests/test_dialog_position_stability.py tests/test_dialog_polish_0139.py -q -p no:cacheprovider",
+      "exit_code": 1,
+      "stdout": "dialogo-final.stdout.txt",
+      "stderr": "dialogo-final.stderr.txt"
+    },
+    {
+      "record": "dialogo-gate",
+      "command": "/workspace/work/venv/bin/python -X faulthandler -m pytest tests/test_dialog_position_stability.py tests/test_dialog_polish_0139.py -q -p no:cacheprovider",
+      "exit_code": 0,
+      "stdout": "dialogo-gate.stdout.txt",
+      "stderr": "dialogo-gate.stderr.txt"
+    }
+  ]
+}

@@ -2,6 +2,10 @@
 
 ## Rodada de estabilidade 0.1.39
 
+Diálogos centralizam só na primeira apresentação. Resize limita tamanho pela
+tela atual e preserva posição; o ajuste final inicial de QMessageBox é limitado
+uma vez no primeiro Paint. Sem timer, mudança de flags ou repetição de move.
+
 SessionTracker persiste prefixos e intervalos em play_sessions/settings a cada
 10 s; recuperação valida identidade e soma, sem contar offline. Energia nativa
 é isolada em SessionEvents. Estatísticas usam os intervalos comprovados, com

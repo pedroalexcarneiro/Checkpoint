@@ -1,0 +1,27 @@
+...F.......                                                              [100%]
+=================================== FAILURES ===================================
+__ test_standard_question_theme_portuguese_default_and_cancellation[sample1] ___
+
+ui = (<checkpoint.window.MainWindow(0x3da7d780) at 0x7fa8863c1700>, 1)
+
+    def test_standard_question_theme_portuguese_default_and_cancellation(ui):
+        w,_=ui
+        result,captured=observe_modal(w,lambda:AppMessages.question(w,'Remover registro','Confirmar ação de teste?'))
+        assert result==QMessageBox.No
+        assert set(captured['buttons'])=={'Sim','Não'}
+        assert captured['default']=='Não' and captured['prepared']
+>       assert captured['screen'].contains(captured['geometry'])
+E       assert False
+E        +  where False = <built-in method contains of PySide6.QtCore.QRect object at 0x7fa88c4b1f80>(PySide6.QtCore.QRect(550, 352, 264, 132))
+E        +    where <built-in method contains of PySide6.QtCore.QRect object at 0x7fa88c4b1f80> = PySide6.QtCore.QRect(0, 0, 800, 800).contains
+
+tests/test_dialog_polish_0139.py:40: AssertionError
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+=========================== short test summary info ============================
+FAILED tests/test_dialog_polish_0139.py::test_standard_question_theme_portuguese_default_and_cancellation[sample1]
+1 failed, 10 passed in 1.07s

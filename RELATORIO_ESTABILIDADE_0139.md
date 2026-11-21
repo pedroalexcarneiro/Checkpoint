@@ -111,3 +111,28 @@ processo controlados nos casos novos; regressões existentes incluem processo re
 Estado: lógica/integração local implementadas; eventos de energia e desligamento
 Windows real ainda não homologados. Código novo não promete gravação após queda
 abrupta nem suporte a salvar progresso do jogo.
+
+## Unidade 3 — Posição do diálogo (parte de 6A)
+
+Reprodução Qt real: mover QDialog preparado para 40/60 e redimensionar altera
+indevidamente sua posição. Duas reproduções por fixture falharam na base.
+DialogPresentation centralizava em todo Resize, sempre pela tela do pai.
+Agora centraliza apenas na apresentação inicial e usa a tela atual para limitar
+o tamanho, sem mover em Resize. Uma verificação no primeiro Paint limita a
+geometria inicial final de QMessageBox/QInputDialog, que o Qt ainda ajusta após
+Show. Não há timer nem repintura periódica; mover/reabrir mantém a posição.
+
+Tentativas intermediárias preservadas: uma mensagem inicial excedia a borda da
+tela virtual após o ajuste interno do Qt. Gate com teste de geometria anterior
+inalterado: 11 passed in 1.05s, exit 0. Protegidos/ImageDialog intactos.
+
+Estado: causa de recentralização corrigida localmente. Transição real entre
+monitores/DPI e flicker do vídeo ainda não homologados. Corrupção da janela
+principal ao minimizar/restaurar (6B) permanece separada e não reproduzida;
+a correção do modal não é apresentada como solução desse outro defeito.
+
+## Commits locais já preparados
+
+- f0b43c0: plano/base confirmados e diagnóstico inicial.
+- e161dd5: Memórias progressivas/filtros/grade/medição.
+- 45208e6: checkpoints de tempo e dispensa por sessão.
