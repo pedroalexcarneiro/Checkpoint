@@ -66,3 +66,48 @@ Nenhum protegido alterado. Captura de fixture 1280×800 em evidence/estabilidade
 Estado: desempenho/grade implementados e testados localmente; pastas/indexação
 (11), processamento de captura (4/9) e validação Windows desta rodada ainda
 pendentes. Não há homologação pessoal nem layout declarado aprovado.
+
+## Unidade 2 — Sessões e dispensa (7/8)
+
+Reprodução do Launcher da base e161dd5, relógio controlado: após 15 s ativos,
+SQLite ainda contém zero segundos; interrupt também deixa zero/interrompida.
+Registro completo em sessoes-base-repro.json. Isso reproduz ausência de tempo
+persistido, sem alegar desligamento real do Windows ou medição do PC pessoal.
+
+SessionTracker grava a cada 10 s e força checkpoint no fechamento/consulta de
+desligamento/suspensão. Retomada abre novo intervalo sem somar a pausa; calendário
+e totais usam somente intervalos comprovados, mantendo uma única sessão. Lacuna
+sem amostra superior a 30 s não é presumida jogo: fica registrada em sessions.gap.
+Isso não encerra jogo nem detecta troca/fechamento só de ROM. Crash recupera o
+último prefixo comprovado uma vez; instante offline não é somado. Precisão em
+queda abrupta é limitada ao último checkpoint bem-sucedido (~10 s mais atrasos).
+
+Fechamento normal salva até o encerramento do acompanhamento e não mata o jogo.
+WM_QUERYENDSESSION só salva; WM_ENDSESSION confirmado finaliza sem confirmação
+ou rede. Cancelar desligamento não encerra sessão. Mensagens de energia tratam
+suspensão/hibernação e retomada. Eventos nativos foram implementados, não ensaiados
+em Windows nesta rodada. Checkpoint é melhor esforço, não salvamento interno do jogo.
+
+Falhas de escrita preservam amostra para retry. Checkpoint usa espera SQLite
+limitada a 25 ms e restaura o timeout anterior, evitando travar GUI sob escritor
+concorrente. Encerramento detectado fica congelado durante retry, sem somar tempo
+após sair o processo. Metadados inválidos não impedem abrir nem inventam duração.
+
+Revisão: cancelar/X/Escape (resultado não confirmado do diálogo) persiste
+sessions.review_dismissed.<id>, sem mudar duração/registro. Aviso no Início ignora
+só aquela sessão; ação manual das Configurações inclui dispensadas. Confirmar
+continua idempotente. Página atual remove o aviso após revisão.
+
+Esquema 4 preservado: usa duration_seconds/ended_at existentes e preferências
+versionadas por sessão, com identidade/início/fim/soma validados; nenhum banco
+recriado nem registro legado reidentificado. Sessão antiga sem checkpoint segue
+interrompida para revisão. Asserções antigas/protegidos intactos.
+
+Gate direcionado: 41 testes aprovados (duração no stdout integral), exit 0. Testes cobrem
+crash/reabertura repetida, duas revisões independentes, revisão manual posterior,
+suspensão atravessando dia, desligamento cancelado/confirmado, erro de disco,
+lock SQLite real, retry após fim do processo e checkpoint inválido. Relógio e
+processo controlados nos casos novos; regressões existentes incluem processo real.
+Estado: lógica/integração local implementadas; eventos de energia e desligamento
+Windows real ainda não homologados. Código novo não promete gravação após queda
+abrupta nem suporte a salvar progresso do jogo.

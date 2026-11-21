@@ -55,8 +55,9 @@ def build_home(window):
     right.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
     layout.addWidget(columns)
     layout.addWidget(MemoryCarousel(window,recent_memories(window.library)))
-    interrupted=window.library.sql.execute("SELECT count(*) FROM play_sessions WHERE state='interrupted'").fetchone()[0]
+    from .session_tracking import pending_reviews
+    interrupted=len(pending_reviews(window.library))
     if interrupted:
         from .locale import count_text
-        layout.addWidget(action(count_text(interrupted,'sessão para revisar','sessões para revisar'),window.recover_sessions))
+        layout.addWidget(action(count_text(interrupted,'sessão para revisar','sessões para revisar'),lambda:window.recover_sessions(automatic=True)))
     layout.addStretch();scroll.setWidget(body);outer.addWidget(scroll)

@@ -30,6 +30,8 @@ def button(text,callback,primary=False):
 class MainWindow(QMainWindow):
     def __init__(self,library):
         super().__init__(); self.library = library; self.launcher = Launcher(library)
+        from .session_events import SessionEvents
+        self.session_events=SessionEvents(self.launcher)
         from PySide6.QtWidgets import QApplication
         from .theme import apply_theme,DEFAULT_THEME
         self.theme=apply_theme(QApplication.instance(),library.setting('appearance.theme',DEFAULT_THEME),library.setting('appearance.mode','dark'))
@@ -134,6 +136,8 @@ class MainWindow(QMainWindow):
         if hasattr(self,'integrated_frame'):self.integrated_frame.apply()
 
     def nativeEvent(self,event_type,message):
+        events=getattr(self,'session_events',None)
+        if events is not None:events.native(message)
         frame=getattr(self,'integrated_frame',None)
         if frame is not None:
             handled,result=frame.handle(message)
@@ -766,12 +770,17 @@ class MainWindow(QMainWindow):
     def restore_game(self,game_id):
         self.library.restore(game_id); self.navigate(5)
 
-    def recover_sessions(self):
-        rows = self.library.sql.execute("SELECT s.*,g.title FROM play_sessions s JOIN games g ON g.id=s.game_id WHERE s.state='interrupted'").fetchall()
-        if not rows: QMessageBox.information(self,'Sessões','Não há sessões interrompidas.'); return
+    def recover_sessions(self,automatic=False):
+        from .session_tracking import pending_reviews
+        rows=pending_reviews(self.library,include_dismissed=not automatic)
+        if not rows:
+            if not automatic:QMessageBox.information(self,'Sessões','Não há sessões interrompidas.')
+            return
         for row in rows:
-            minutes,ok = QInputDialog.getInt(self,'Recuperar sessão',row['title']+'\nInforme os minutos efetivamente jogados (0 para descartar):',0,0,100000)
+            minutes,ok = QInputDialog.getInt(self,'Recuperar sessão',row['title']+'\nDuração efetivamente jogada (minutos):',0,0,100000)
             if ok: self.launcher.resolve(row['id'],minutes*60)
+            else:self.library.set_setting(f'sessions.review_dismissed.{row["id"]}',True)
+        if self.stack.currentWidget() is self.pages[0]:self.home()
 
     def auto_backup(self,game_id):
         if self.library.setting('auto_save_'+str(game_id),False): self.game_backup(game_id)
@@ -803,7 +812,12 @@ class MainWindow(QMainWindow):
         if QMessageBox.question(self,'Restaurar saves',message)==QMessageBox.Yes: self.game_backup(game_id,backup['id'])
 
     def poll_sessions(self):
-        for game_id in self.launcher.poll():
+        try:finished=self.launcher.poll()
+        except Exception:
+            logging.exception('Não foi possível salvar o checkpoint das sessões.')
+            self.statusBar().showMessage('Não foi possível salvar o tempo. Verifique espaço e permissões.')
+            return
+        for game_id in finished:
             self.statusBar().showMessage('Sessão encerrada e tempo salvo.'); self.auto_backup(game_id)
             if self.current_game==game_id and self.stack.currentWidget()==getattr(self,'detail_page',None):self.detail(game_id)
 
@@ -814,7 +828,7 @@ class MainWindow(QMainWindow):
         if self.save_jobs:
             QMessageBox.information(self,'Saves','Aguarde a operação de saves terminar antes de fechar.'); event.ignore(); return
         if self.launcher.active:
-            if QMessageBox.question(self,'Sessões ativas','Fechar o Checkpoint? O jogo continuará aberto e a sessão precisará de revisão manual.')!=QMessageBox.Yes:
+            if QMessageBox.question(self,'Sessões ativas','Fechar o Checkpoint? O jogo continuará aberto. O tempo acompanhado será salvo; o período com o Checkpoint fechado não será contado.')!=QMessageBox.Yes:
                 event.ignore(); return
         self.capture_shortcut.close();self.price_queue.stop();self.timer.stop();self.status_timer.stop();self.launcher.interrupt();event.accept()
 

@@ -130,19 +130,21 @@ class Library:
         weekly, monthly, top = defaultdict(int), defaultdict(int), defaultdict(int)
         # O contrato padrão é UTC; a interface solicita o fuso local sem alterar registros.
         daily = defaultdict(float)
+        from .session_tracking import observed_spans,checkpoint_index
+        checkpoints=checkpoint_index(self)
         for row in rows:
             top[(row['game_id'],row['title'])] += row['duration_seconds']
-            try: start = datetime.fromisoformat(row['started_at'].replace('Z','+00:00'))
-            except ValueError: continue
-            if start.tzinfo is None: start = start.replace(tzinfo=timezone.utc)
-            start = start.astimezone(None if display_timezone=='local' else display_timezone)
-            remaining = row['duration_seconds']
-            while remaining > 0:
-                midnight = (start+timedelta(days=1)).replace(hour=0,minute=0,second=0,microsecond=0)
-                if display_timezone=='local':midnight=midnight.replace(tzinfo=None).astimezone()
-                portion = min(remaining,midnight.timestamp()-start.timestamp())
-                daily[start.date()] += portion
-                remaining -= portion; start = midnight
+            for stamp,remaining in observed_spans(self,row,checkpoints):
+                try: start = datetime.fromisoformat(stamp.replace('Z','+00:00'))
+                except ValueError: continue
+                if start.tzinfo is None: start = start.replace(tzinfo=timezone.utc)
+                start = start.astimezone(None if display_timezone=='local' else display_timezone)
+                while remaining > 0:
+                    midnight = (start+timedelta(days=1)).replace(hour=0,minute=0,second=0,microsecond=0)
+                    if display_timezone=='local':midnight=midnight.replace(tzinfo=None).astimezone()
+                    portion = min(remaining,midnight.timestamp()-start.timestamp())
+                    daily[start.date()] += portion
+                    remaining -= portion; start = midnight
         for day,seconds in daily.items():
             monday = day-timedelta(days=day.weekday())
             weekly[monday.isoformat()] += seconds

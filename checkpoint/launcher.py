@@ -6,11 +6,13 @@ from pathlib import Path
 from .library import now
 
 class Launcher:
-    def __init__(self, library):
+    def __init__(self, library, *, clock=None, timestamp=None):
         self.library = library
         self.active = {}
-        with library.sql:
-            library.sql.execute("UPDATE play_sessions SET state='interrupted' WHERE state='active'")
+        self.clock = clock or time.monotonic
+        self.timestamp = timestamp or now
+        from .session_tracking import SessionTracker
+        self.tracking = SessionTracker(library, self.clock, self.timestamp)
 
     def start(self, game):
         if any(item[2] == game['id'] for item in self.active.values()):
@@ -26,10 +28,14 @@ class Launcher:
         if not self.library.get(game_id): raise ValueError('Jogo não encontrado.')
         command = [str(Path(command[0]).resolve()),*command[1:]]
         process = subprocess.Popen(command,cwd=str(Path(command[0]).parent),shell=False)
+        stamp = self.timestamp()
         with self.library.sql:
             session = self.library.sql.execute('INSERT INTO play_sessions(game_id,started_at,pid) VALUES(?,?,?)',
-                                               (game_id,now(),process.pid)).lastrowid
-        self.active[session] = (process,time.monotonic(),game_id,monitor_process)
+                                               (game_id,stamp,process.pid)).lastrowid
+        anchor = self.clock()
+        self.active[session] = (process,anchor,game_id,monitor_process)
+        self.tracking.started(session,game_id,stamp,anchor)
+        self.checkpoint(force=True,reason='started')
         return session
 
     def poll(self):
@@ -38,20 +44,31 @@ class Launcher:
             if monitor and process.poll() is not None:
                 self.finish(session)
                 finished.append(game_id)
+        self.checkpoint()
         return finished
 
-    def finish(self, session):
-        process, started, game_id, monitor = self.active.pop(session)
-        duration = max(0,int(time.monotonic()-started))
-        with self.library.sql:
-            self.library.sql.execute("UPDATE play_sessions SET ended_at=?,duration_seconds=?,state='finished' WHERE id=?",
-                                     (now(),duration,session))
+    def finish(self, session, *, reason='finished'):
+        process, started, game_id, monitor = self.active[session]
+        sample=self.tracking.samples.get(session)
+        try:
+            self.tracking.checkpoint(self.active,force=True,reason=reason,only={session},terminal={session})
+        finally:
+            if sample is not None:
+                sample['ended']=True
+                sample.setdefault('stopped_at',self.timestamp())
+        self.active.pop(session)
+        self.tracking.samples.pop(session,None)
 
-    def interrupt(self):
-        with self.library.sql:
-            for session in self.active:
-                self.library.sql.execute("UPDATE play_sessions SET state='interrupted' WHERE id=?",(session,))
-        self.active.clear()
+    def checkpoint(self, *, force=False, reason='heartbeat'):
+        self.tracking.checkpoint(self.active,force=force,reason=reason)
+
+    def interrupt(self, *, reason='closed'):
+        for session in list(self.active):
+            self.finish(session,reason=reason)
+
+    def suspend(self):self.tracking.suspend(self.active)
+
+    def resume(self):self.tracking.resume(self.active)
 
     def resolve(self, session_id, seconds):
         if not isinstance(seconds,int) or seconds < 0:

@@ -35,6 +35,8 @@ def instant(value):
 
 
 def day_hours(library,now=None,zone='local'):
+    from .session_tracking import observed_spans,checkpoint_index
+    checkpoints=checkpoint_index(library)
     start,end=period_bounds('daily',now,zone)
     tomorrow=attach(datetime.combine(local(start,zone).date()+timedelta(days=1),time.min),zone).astimezone(timezone.utc)
     rows=[];cursor=start
@@ -46,31 +48,37 @@ def day_hours(library,now=None,zone='local'):
     owned={g['id'] for g in library.owned_games()}
     for session in library.sql.execute("SELECT * FROM play_sessions WHERE state='finished' AND duration_seconds>0"):
         if session['game_id'] not in owned:continue
-        try:a=instant(session['started_at'])
-        except (ValueError,TypeError):continue
-        b=min(a+timedelta(seconds=session['duration_seconds']),end)
-        for row in rows:
-            row['seconds']+=max(0,(min(b,row['end'])-max(a,row['start'])).total_seconds())
+        for stamp,seconds in observed_spans(library,session,checkpoints):
+            try:a=instant(stamp)
+            except (ValueError,TypeError):continue
+            b=min(a+timedelta(seconds=seconds),end)
+            for row in rows:
+                row['seconds']+=max(0,(min(b,row['end'])-max(a,row['start'])).total_seconds())
     return rows
 
 
 def period_stats(library,period='12m',now=None,zone='local'):
+    from .session_tracking import observed_spans,checkpoint_index
+    checkpoints=checkpoint_index(library)
     start,end=period_bounds(period,now,zone);owned={g['id']:g for g in library.owned_games()}
     daily=defaultdict(float);top=defaultdict(float);durations=[];completions=defaultdict(int)
     for row in library.sql.execute("SELECT * FROM play_sessions WHERE state='finished' AND duration_seconds>0"):
         if row['game_id'] not in owned:continue
-        try:a=instant(row['started_at'])
-        except (ValueError,TypeError):continue
-        b=min(a+timedelta(seconds=row['duration_seconds']),end)
-        if start is not None:a=max(a,start)
-        if a>=b:continue
-        seconds=(b-a).total_seconds();durations.append(seconds);top[row['game_id']]+=seconds
-        while a<b:
-            current=local(a,zone)
-            midnight=attach(datetime.combine(current.date()+timedelta(days=1),time.min),zone).astimezone(timezone.utc)
-            stop=min(b,midnight);portion=(stop-a).total_seconds()
-            if portion<=0:raise ValueError('Não foi possível calcular o limite de dia neste fuso.')
-            daily[current.date().isoformat()]+=portion;a=stop
+        contribution=0
+        for stamp,duration in observed_spans(library,row,checkpoints):
+            try:a=instant(stamp)
+            except (ValueError,TypeError):continue
+            b=min(a+timedelta(seconds=duration),end)
+            if start is not None:a=max(a,start)
+            if a>=b:continue
+            seconds=(b-a).total_seconds();contribution+=seconds;top[row['game_id']]+=seconds
+            while a<b:
+                current=local(a,zone)
+                midnight=attach(datetime.combine(current.date()+timedelta(days=1),time.min),zone).astimezone(timezone.utc)
+                stop=min(b,midnight);portion=(stop-a).total_seconds()
+                if portion<=0:raise ValueError('Não foi possível calcular o limite de dia neste fuso.')
+                daily[current.date().isoformat()]+=portion;a=stop
+        if contribution:durations.append(contribution)
     for game in owned.values():
         if not game['completed_at']:continue
         try:stamp=instant(game['completed_at'])

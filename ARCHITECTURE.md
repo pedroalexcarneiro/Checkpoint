@@ -2,6 +2,11 @@
 
 ## Rodada de estabilidade 0.1.39
 
+SessionTracker persiste prefixos e intervalos em play_sessions/settings a cada
+10 s; recuperação valida identidade e soma, sem contar offline. Energia nativa
+é isolada em SessionEvents. Estatísticas usam os intervalos comprovados, com
+pré-leitura dos checkpoints para não criar consultas por sessão. Sem schema novo.
+
 MemoryBrowser mantém página/abas e atualiza só registros alterados. Aba ativa
 monta lotes de 24 cards; rolagem carrega mais. MemoryArtwork usa ArtworkCache
 compartilhado de 24 MiB, QImageReader redimensionado em duas threads e QPixmap

@@ -1,0 +1,23 @@
+{
+  "base": "e161dd5",
+  "fixture": true,
+  "elapsed_by_controlled_monotonic": 15,
+  "active": {
+    "id": 1,
+    "game_id": 1,
+    "started_at": "2026-11-21T03:58:27.319879+00:00",
+    "ended_at": null,
+    "duration_seconds": 0,
+    "state": "active",
+    "pid": 812
+  },
+  "after_close": {
+    "id": 1,
+    "game_id": 1,
+    "started_at": "2026-11-21T03:58:27.319879+00:00",
+    "ended_at": null,
+    "duration_seconds": 0,
+    "state": "interrupted",
+    "pid": 812
+  }
+}

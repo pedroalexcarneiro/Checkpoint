@@ -1,0 +1,60 @@
+{
+  "platform": "Linux/Python 3.12.14",
+  "cwd": "/workspace/work/Checkpoint",
+  "environment": {
+    "QT_QPA_PLATFORM": "offscreen",
+    "CHECKPOINT_TEST_ROOT": "/tmp",
+    "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "runs": [
+    {
+      "record": "sessoes-antes",
+      "command": "/workspace/work/venv/bin/python -X faulthandler -m pytest tests/test_session_stability.py -q -p no:cacheprovider",
+      "exit_code": 1,
+      "stdout": "sessoes-antes.stdout.txt",
+      "stderr": "sessoes-antes.stderr.txt"
+    },
+    {
+      "record": "sessoes-depois",
+      "command": "/workspace/work/venv/bin/python -X faulthandler -m pytest tests/test_session_stability.py tests/test_services.py tests/test_sessions_0135.py tests/test_statistics_0136.py tests/test_home_data_0137.py tests/test_time_0135.py -q -p no:cacheprovider",
+      "exit_code": 0,
+      "stdout": "sessoes-depois.stdout.txt",
+      "stderr": "sessoes-depois.stderr.txt"
+    },
+    {
+      "record": "sessoes-final",
+      "command": "/workspace/work/venv/bin/python -X faulthandler -m pytest tests/test_session_stability.py tests/test_services.py tests/test_sessions_0135.py tests/test_statistics_0136.py tests/test_home_data_0137.py tests/test_time_0135.py tests/test_window_controls_0137.py -q -p no:cacheprovider",
+      "exit_code": 0,
+      "stdout": "sessoes-final.stdout.txt",
+      "stderr": "sessoes-final.stderr.txt"
+    },
+    {
+      "record": "sessoes-final2",
+      "command": "/workspace/work/venv/bin/python -X faulthandler -m pytest tests/test_session_stability.py tests/test_services.py tests/test_sessions_0135.py tests/test_statistics_0136.py tests/test_home_data_0137.py tests/test_time_0135.py tests/test_window_controls_0137.py -q -p no:cacheprovider",
+      "exit_code": 0,
+      "stdout": "sessoes-final2.stdout.txt",
+      "stderr": "sessoes-final2.stderr.txt"
+    },
+    {
+      "record": "sessoes-final3",
+      "command": "/workspace/work/venv/bin/python -X faulthandler -m pytest tests/test_session_stability.py tests/test_services.py tests/test_sessions_0135.py tests/test_statistics_0136.py tests/test_home_data_0137.py tests/test_time_0135.py tests/test_window_controls_0137.py -q -p no:cacheprovider",
+      "exit_code": 0,
+      "stdout": "sessoes-final3.stdout.txt",
+      "stderr": "sessoes-final3.stderr.txt"
+    },
+    {
+      "record": "sessoes-final4",
+      "command": "/workspace/work/venv/bin/python -X faulthandler -m pytest tests/test_session_stability.py tests/test_services.py tests/test_sessions_0135.py tests/test_statistics_0136.py tests/test_home_data_0137.py tests/test_time_0135.py tests/test_window_controls_0137.py -q -p no:cacheprovider",
+      "exit_code": 0,
+      "stdout": "sessoes-final4.stdout.txt",
+      "stderr": "sessoes-final4.stderr.txt"
+    },
+    {
+      "record": "sessoes-gate",
+      "command": "/workspace/work/venv/bin/python -X faulthandler -m pytest tests/test_session_stability.py tests/test_services.py tests/test_sessions_0135.py tests/test_statistics_0136.py tests/test_home_data_0137.py tests/test_time_0135.py tests/test_window_controls_0137.py -q -p no:cacheprovider",
+      "exit_code": 0,
+      "stdout": "sessoes-gate.stdout.txt",
+      "stderr": "sessoes-gate.stderr.txt"
+    }
+  ]
+}

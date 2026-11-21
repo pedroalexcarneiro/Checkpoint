@@ -1,0 +1,157 @@
+FFFFFFF                                                                  [100%]
+=================================== FAILURES ===================================
+________________ test_crash_recovers_only_persisted_prefix_once ________________
+
+library = <checkpoint.library.Library object at 0x7fdcb4e71af0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fdcb4e71b80>
+
+    def test_crash_recovers_only_persisted_prefix_once(library, monkeypatch):
+>       launcher, clock, game, session, process = tracked(library, monkeypatch)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_session_stability.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+library = <checkpoint.library.Library object at 0x7fdcb4e71af0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fdcb4e71b80>
+
+    def tracked(library, monkeypatch):
+        clock = Clock()
+        process = SimpleNamespace(pid=812, poll=lambda: None)
+        monkeypatch.setattr('checkpoint.launcher.subprocess.Popen', lambda *a, **k: process)
+        game = library.save_game({'title': 'Jogo acompanhado', 'platform': 'PC'})
+>       launcher = Launcher(library, clock=clock.monotonic, timestamp=clock.timestamp)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Launcher.__init__() got an unexpected keyword argument 'clock'
+
+tests/test_session_stability.py:28: TypeError
+_________ test_graceful_close_saves_last_seconds_without_killing_game __________
+
+library = <checkpoint.library.Library object at 0x7fdcb4e71580>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fdcb4e71250>
+
+    def test_graceful_close_saves_last_seconds_without_killing_game(library, monkeypatch):
+>       launcher, clock, game, session, process = tracked(library, monkeypatch)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_session_stability.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+library = <checkpoint.library.Library object at 0x7fdcb4e71580>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fdcb4e71250>
+
+    def tracked(library, monkeypatch):
+        clock = Clock()
+        process = SimpleNamespace(pid=812, poll=lambda: None)
+        monkeypatch.setattr('checkpoint.launcher.subprocess.Popen', lambda *a, **k: process)
+        game = library.save_game({'title': 'Jogo acompanhado', 'platform': 'PC'})
+>       launcher = Launcher(library, clock=clock.monotonic, timestamp=clock.timestamp)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Launcher.__init__() got an unexpected keyword argument 'clock'
+
+tests/test_session_stability.py:28: TypeError
+________________ test_sleep_is_excluded_from_total_and_calendar ________________
+
+library = <checkpoint.library.Library object at 0x7fdcb4e70200>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fdcb4e727b0>
+
+    def test_sleep_is_excluded_from_total_and_calendar(library, monkeypatch):
+>       launcher, clock, game, session, process = tracked(library, monkeypatch)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_session_stability.py:67: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+library = <checkpoint.library.Library object at 0x7fdcb4e70200>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fdcb4e727b0>
+
+    def tracked(library, monkeypatch):
+        clock = Clock()
+        process = SimpleNamespace(pid=812, poll=lambda: None)
+        monkeypatch.setattr('checkpoint.launcher.subprocess.Popen', lambda *a, **k: process)
+        game = library.save_game({'title': 'Jogo acompanhado', 'platform': 'PC'})
+>       launcher = Launcher(library, clock=clock.monotonic, timestamp=clock.timestamp)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Launcher.__init__() got an unexpected keyword argument 'clock'
+
+tests/test_session_stability.py:28: TypeError
+______________ test_large_unsampled_gap_is_not_assumed_to_be_play ______________
+
+library = <checkpoint.library.Library object at 0x7fdcb4e73200>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fdcb4e73290>
+
+    def test_large_unsampled_gap_is_not_assumed_to_be_play(library, monkeypatch):
+>       launcher, clock, game, session, process = tracked(library, monkeypatch)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_session_stability.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+library = <checkpoint.library.Library object at 0x7fdcb4e73200>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fdcb4e73290>
+
+    def tracked(library, monkeypatch):
+        clock = Clock()
+        process = SimpleNamespace(pid=812, poll=lambda: None)
+        monkeypatch.setattr('checkpoint.launcher.subprocess.Popen', lambda *a, **k: process)
+        game = library.save_game({'title': 'Jogo acompanhado', 'platform': 'PC'})
+>       launcher = Launcher(library, clock=clock.monotonic, timestamp=clock.timestamp)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Launcher.__init__() got an unexpected keyword argument 'clock'
+
+tests/test_session_stability.py:28: TypeError
+_________ test_shutdown_query_does_not_finish_if_shutdown_is_cancelled _________
+
+library = <checkpoint.library.Library object at 0x7fdcb4e73cb0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fdcb4e73d40>
+
+    def test_shutdown_query_does_not_finish_if_shutdown_is_cancelled(library, monkeypatch):
+>       from checkpoint.session_events import SessionEvents
+E       ModuleNotFoundError: No module named 'checkpoint.session_events'
+
+tests/test_session_stability.py:93: ModuleNotFoundError
+_ test_dismissal_is_per_session_persistent_and_manual_review_still_works[sample0] _
+
+ui = (<checkpoint.window.MainWindow(0x14bcc5b0) at 0x7fdcb4bb5d80>, 1)
+app = <PySide6.QtWidgets.QApplication(0x14d3c6f0) at 0x7fdcb4dddb40>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fdcb4e7b710>
+
+    def test_dismissal_is_per_session_persistent_and_manual_review_still_works(ui, app, monkeypatch):
+        window, game = ui
+        with window.library.sql:
+            first = window.library.sql.execute("INSERT INTO play_sessions(game_id,started_at,state) VALUES(?,'2026-11-21T10:00:00+00:00','interrupted')", (game,)).lastrowid
+            second = window.library.sql.execute("INSERT INTO play_sessions(game_id,started_at,state) VALUES(?,'2026-11-21T11:00:00+00:00','interrupted')", (game,)).lastrowid
+        answers = iter([(0, False), (3, True)])
+        monkeypatch.setattr('checkpoint.dialog_style.AppInputs.getInt', lambda *a, **k: next(answers))
+>       window.recover_sessions(automatic=True)
+E       TypeError: MainWindow.recover_sessions() got an unexpected keyword argument 'automatic'
+
+tests/test_session_stability.py:114: TypeError
+---------------------------- Captured stderr setup -----------------------------
+Fontconfig error: No writable cache directories
+_ test_dismissal_is_per_session_persistent_and_manual_review_still_works[sample1] _
+
+ui = (<checkpoint.window.MainWindow(0x14ba2e20) at 0x7fdcb4bb5cc0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x14d3c6f0) at 0x7fdcb4dddb40>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fdcb4e7bfe0>
+
+    def test_dismissal_is_per_session_persistent_and_manual_review_still_works(ui, app, monkeypatch):
+        window, game = ui
+        with window.library.sql:
+            first = window.library.sql.execute("INSERT INTO play_sessions(game_id,started_at,state) VALUES(?,'2026-11-21T10:00:00+00:00','interrupted')", (game,)).lastrowid
+            second = window.library.sql.execute("INSERT INTO play_sessions(game_id,started_at,state) VALUES(?,'2026-11-21T11:00:00+00:00','interrupted')", (game,)).lastrowid
+        answers = iter([(0, False), (3, True)])
+        monkeypatch.setattr('checkpoint.dialog_style.AppInputs.getInt', lambda *a, **k: next(answers))
+>       window.recover_sessions(automatic=True)
+E       TypeError: MainWindow.recover_sessions() got an unexpected keyword argument 'automatic'
+
+tests/test_session_stability.py:114: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_session_stability.py::test_crash_recovers_only_persisted_prefix_once
+FAILED tests/test_session_stability.py::test_graceful_close_saves_last_seconds_without_killing_game
+FAILED tests/test_session_stability.py::test_sleep_is_excluded_from_total_and_calendar
+FAILED tests/test_session_stability.py::test_large_unsampled_gap_is_not_assumed_to_be_play
+FAILED tests/test_session_stability.py::test_shutdown_query_does_not_finish_if_shutdown_is_cancelled
+FAILED tests/test_session_stability.py::test_dismissal_is_per_session_persistent_and_manual_review_still_works[sample0]
+FAILED tests/test_session_stability.py::test_dismissal_is_per_session_persistent_and_manual_review_still_works[sample1]
+7 failed in 0.47s
