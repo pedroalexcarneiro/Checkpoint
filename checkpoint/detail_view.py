@@ -194,7 +194,8 @@ def build_detail(window,game):
     technical.addWidget(text('Arquivos e versões','sectionTitle'))
     if owned:
         from .transfer_view import TransferList
-        transfers=TransferList(window.download_manager,game_id=game_id,file_ids=(file['id'] for file in files))
+        transfers=TransferList(window.download_manager,technical.parentWidget(),game_id=game_id,
+                               file_ids=(file['id'] for file in files))
         transfers.setObjectName('gameTransfers');technical.addWidget(transfers)
     if not files:
         source,source_layout=card();source_layout.addWidget(text('Nenhuma ROM associada','cardTitle'));choices=QHBoxLayout()

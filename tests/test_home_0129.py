@@ -1,7 +1,6 @@
 from checkpoint.home_view import in_progress,GameStrip
 from checkpoint.window import MainWindow
-from checkpoint.ui_components import Hero
-from checkpoint.home_components import RecentArtwork,RecentGameCard
+from checkpoint.home_components import LastPlayedBanner,RecentArtwork
 from PySide6.QtWidgets import QTabBar
 
 def test_home_only_in_progress_and_latest_session_hero(library,app):
@@ -15,11 +14,11 @@ def test_home_only_in_progress_and_latest_session_hero(library,app):
     window=MainWindow(library);window.resize(1280,800);window.show()
     for _ in range(4):app.processEvents()
     page=window.pages[0]
-    assert page.findChildren(RecentArtwork)[0].game['id']==recent
-    assert len(page.findChildren(RecentArtwork))==2
+    assert page.findChild(LastPlayedBanner).game_id==recent
+    assert [art.game['id'] for art in page.findChildren(RecentArtwork)]==[old]
     assert not page.findChildren(QTabBar)
     strip=page.findChild(GameStrip)
-    assert {t.game_id for t in strip.tiles}=={recent,old}
+    assert {t.game_id for t in strip.tiles}=={old}
     assert window.width()==1280
     assert strip.width()>0 and strip.height()>0
     window.close()
@@ -27,13 +26,13 @@ def test_home_only_in_progress_and_latest_session_hero(library,app):
 def test_home_without_started_games_has_no_invented_hero(library,app):
     library.save_game({'title':'A começar'})
     window=MainWindow(library)
+    assert not window.pages[0].findChildren(LastPlayedBanner)
     assert not window.pages[0].findChildren(RecentArtwork)
     assert not window.pages[0].findChildren(GameStrip)
     window.close()
 
 
 def test_home_hero_button_remains_inside_banner_after_resizing(library,app):
-    from PySide6.QtWidgets import QPushButton
     library.save_game({'title':'Jogo atual','status':'Jogando','description':'Descrição curta. '*50})
     from datetime import datetime,timezone
     with library.sql:
@@ -42,8 +41,7 @@ def test_home_hero_button_remains_inside_banner_after_resizing(library,app):
     for width,height in ((1280,800),(1920,1080),(1280,800)):
         window.resize(width,height)
         for _ in range(5):app.processEvents()
-        card=window.pages[0].findChild(RecentGameCard);art=card.findChild(RecentArtwork)
-        button=next(b for b in card.findChildren(QPushButton) if b.property('homeContinue'))
-        assert card.rect().contains(button.geometry())
-        assert button.geometry().top()>art.geometry().bottom()
+        banner=window.pages[0].findChild(LastPlayedBanner)
+        assert banner.rect().contains(banner.play_button.geometry())
+        assert banner.play_button.text()=='Continuar'
     window.close()

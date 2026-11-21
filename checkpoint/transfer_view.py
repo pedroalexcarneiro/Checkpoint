@@ -143,4 +143,4 @@ class TransferList(QWidget):
                 if task.id not in self.cards:self.cards[task.id]=TransferCard(self.manager,task,self)
                 self.layout_box.insertWidget(index,self.cards[task.id])
         self.empty.setVisible(self.game_id is None and not self.cards)
-        self.setVisible(self.game_id is None or bool(self.cards))
+        if self.game_id is not None:self.setVisible(bool(self.cards))

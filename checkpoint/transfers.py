@@ -86,7 +86,7 @@ class TransferManager(QObject):
 
     def start(self,file_id,game_id=None,*,mode='download',directory=None,worker=None):
         if self.closing:raise ValueError('O Checkpoint está aguardando o cancelamento para fechar.')
-        if mode not in ('download','link'):raise ValueError('Origem de transferência inválida.')
+        if mode not in ('download','link','import'):raise ValueError('Origem de transferência inválida.')
         row=self.library.sql.execute('SELECT * FROM game_files WHERE id=?',(file_id,)).fetchone()
         if not row or not row['drive_id']:raise ValueError('Escolha um arquivo do Drive.')
         if mode=='link' and (not game_id or not self.library.get(game_id) or not self.library.is_owned(game_id)):
@@ -96,7 +96,7 @@ class TransferManager(QObject):
         for existing in self.tasks.values():
             if not existing.active:continue
             if existing.file_id==file_id:
-                if mode=='download' or (existing.mode=='link' and existing.game_id==game_id):return existing
+                if mode=='download' or (existing.mode==mode and existing.game_id==game_id):return existing
                 raise ValueError('Este arquivo já está sendo baixado. Aguarde concluir antes de vincular.')
             if mode=='link' and existing.mode=='link' and existing.game_id==game_id:
                 raise ValueError('Este jogo já tem uma transferência. Aguarde ou cancele antes de substituir.')
@@ -129,6 +129,7 @@ class TransferManager(QObject):
                 work=partial(task.worker or run_link,self.library.db.path,task.file_id,task.game_id,**options)
             else:
                 from .rom_link_worker import run_download
+                if task.mode=='import':options['import_after']=True
                 work=partial(task.worker or run_download,self.library.db.path,task.file_id,directory=task.directory,**options)
             task.status='running';self.current=task.id
             task.job=Job(work,self)

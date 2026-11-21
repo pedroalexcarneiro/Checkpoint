@@ -12,11 +12,11 @@ def run_link(database,file_id,game_id=None,*,progress_path=None,cancel_path=None
                         progress_path=progress_path,cancel_path=cancel_path,owner=owner)
 
 
-def run_download(database,file_id,*,directory=None,progress_path=None,cancel_path=None,owner=None):
+def run_download(database,file_id,*,directory=None,progress_path=None,cancel_path=None,owner=None,import_after=False):
     def command(request):
         return [sys.executable,'--rom-link-request',str(request)] if getattr(sys,'frozen',False) else [sys.executable,'-m','checkpoint.rom_link_worker',str(request)]
     return run_isolated('rom_download',database,command_factory=command,file_id=file_id,directory=directory,
-                        progress_path=progress_path,cancel_path=cancel_path,owner=owner)
+                        progress_path=progress_path,cancel_path=cancel_path,owner=owner,import_after=import_after)
 
 
 def execute(request):

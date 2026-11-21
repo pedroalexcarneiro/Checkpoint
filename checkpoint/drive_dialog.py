@@ -161,8 +161,8 @@ class DriveDialog(QDialog):
         if not directory:
             QMessageBox.information(self,'Downloads','Configure a pasta de downloads primeiro.'); return
         from .transfers import manager_for
-        manager=manager_for(self.library,self.parentWidget())
-        try:manager.start(file['id'],directory=directory)
+        self.download_manager=manager_for(self.library,self.parentWidget())
+        try:self.download_manager.start(file['id'],directory=directory,mode='import')
         except ValueError as error:
             QMessageBox.warning(self,'Downloads',str(error));return
         self.accept()

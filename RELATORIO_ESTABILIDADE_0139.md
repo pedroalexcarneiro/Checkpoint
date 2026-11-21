@@ -287,6 +287,33 @@ preservada, atualização da página visível, remoção física e reindexação
 FFmpeg gerou quatro clipes sintéticos (.mp4, .mov, .mkv e .avi) reconhecidos
 pelo índice. Falta validar a proteção contra escrita no Windows.
 
+## Suíte integral inicial e correções
+
+A primeira suíte integral em Linux/Qt offscreen retornou 854 aprovados e 13
+falhas em 557,16 s, exit 1. Os logs completos foram preservados. Sete casos
+referiam-se à composição anterior do Início. As asserções foram atualizadas
+para exigir o novo destaque, deduplicação, ausência de descrição e preservação
+do histórico e totais, conforme item 20. Os testes de foco das capas e limites
+do cabeçalho foram repetidos também na base e corrigidos no código de produção.
+O painel de downloads era mostrado durante a montagem, antes de receber pai,
+e podia alterar foco. O cabeçalho de Memórias recuperou o limite anterior e
+permanece à esquerda da grade larga. Gate visual/transferências: 50 aprovados.
+Nenhuma asserção de foco ou limite foi removida.
+
+O botão antigo de download no gerenciador Drive cadastrava a ROM quando ainda
+não vinculada e continuava pela tentativa de obter arte. A fila preserva esse
+comportamento com a transferência verificada primeiro, o mesmo cadastro
+isolado em sequência e a importação de arte como etapa independente. A janela
+do gerenciador agora pode fechar enquanto a tarefa roda, conforme item 5.
+Gate de 49 aprovados valida download real com cliente de fixture, queda
+intencional do processo de arte, arquivo e cadastro preservados. A4 e arquivos
+protegidos permanecem intactos.
+
+O teste do item 6B repete minimizar/restaurar e maximizar/restaurar na ficha
+com transferência simulada, verificando geometria, página e barra. Gate de
+7 aprovados no Qt offscreen. O resultado não reproduz a composição do desktop
+Windows, diferentes monitores ou DPI. O defeito permanece aberto.
+
 ## Commits locais já preparados
 
 - f0b43c0: plano/base confirmados e diagnóstico inicial.
@@ -301,3 +328,4 @@ pelo índice. Falta validar a proteção contra escrita no Windows.
 - 9d81c72: usar somente o título nos nomes das linhas de gestão das listas.
 - c9a3a4b: logos proporcionais no gerenciador de listas.
 - 5e63960: codificar e gravar capturas em segundo plano.
+- bd92ddf: organização e indexação de arquivos nas pastas de Memórias.

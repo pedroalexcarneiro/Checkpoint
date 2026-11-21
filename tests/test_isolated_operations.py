@@ -75,20 +75,34 @@ def test_drive_ui_survives_art_child_failure_after_real_transfer(library,folder,
     def isolated(operation,path,**arguments):
         assert threading.get_ident()!=main
         called.append(operation)
-        script=DOWNLOAD_SCRIPT if operation=='download' else 'import os; os._exit(139)'
+        arguments.pop('command_factory',None)
+        script=DOWNLOAD_SCRIPT.replace('def download(self,file_id,target):','def download(self,file_id,target,**kwargs):')
+        script=script.replace('raise SystemExit(execute_request(Path(sys.argv[1])))','''
+from checkpoint.rom_link_worker import execute
+import checkpoint.worker as worker
+run=worker.run_isolated
+def crash_enrichment(operation,path,**arguments):
+ assert operation=="enrich"
+ return run(operation,path,command_factory=lambda request:[sys.executable,"-c","import os; os._exit(139)"],**arguments)
+worker.run_isolated=crash_enrichment
+raise SystemExit(execute(Path(sys.argv[1])))
+''')
         return original(operation,path,command_factory=command(script),**arguments)
-    monkeypatch.setattr(worker,'run_isolated',isolated)
+    monkeypatch.setattr('checkpoint.rom_link_worker.run_isolated',isolated)
     dialog=DriveDialog(library)
     dialog.list.setCurrentRow(0)
     dialog.show()
     dialog.download()
-    dialog.close()  # A live worker must prevent destruction of its QThread.
-    assert dialog.isVisible()
+    manager=dialog.download_manager
+    assert not dialog.isVisible() and manager.busy
     deadline=time.monotonic()+15
-    while dialog.jobs and time.monotonic()<deadline:QTest.qWait(10)
-    assert not dialog.jobs
-    assert called==['download','enrich']
-    assert 'continua aberto' in dialog.state.text()
+    while manager.busy and time.monotonic()<deadline:QTest.qWait(10)
+    assert not manager.busy
+    assert called==['rom_download']
+    task=next(iter(manager.tasks.values()))
+    assert task.status=='partial'
+    assert task.outcome['link_state']=='linked'
+    assert 'continua aberto' in task.outcome['message']
     row=library.sql.execute('SELECT * FROM game_files WHERE id=?',(identity,)).fetchone()
     assert row['available']==1 and Path(row['local_path']).read_bytes()==TRANSFER
     assert library.get(row['game_id'])

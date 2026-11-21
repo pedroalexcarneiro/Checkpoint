@@ -1,0 +1,321 @@
+........................................................................ [  8%]
+.................................................FF..................... [ 16%]
+........................................................................ [ 24%]
+........................................................................ [ 33%]
+.F.F.........FF......................................................F.. [ 41%]
+..................................F..................................... [ 49%]
+........................................................................ [ 58%]
+...FF...........FF...................................................... [ 66%]
+........................................................................ [ 74%]
+........................................................................ [ 83%]
+.............................................F.......................... [ 91%]
+........................................................................ [ 99%]
+...                                                                      [100%]
+=================================== FAILURES ===================================
+___________ test_old_percent_preserved_and_keyboard_selects[sample0] ___________
+
+ui = (<checkpoint.window.MainWindow(0x31410b60) at 0x7f992a1867c0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x2a26f830) at 0x7f992b0b07c0>
+
+    def test_old_percent_preserved_and_keyboard_selects(ui,app):
+     w,i=ui;w.library.set_setting('appearance.cover_size',87);w.navigate(5);app.processEvents()
+     preview=w.pages[5].findChild(CoverSizeChoices)
+     assert preview.percent==90 and w.library.setting('appearance.cover_size')==87
+     current=preview.group.button(90);current.setFocus();QTest.keyClick(current,Qt.Key_Right);app.processEvents()
+>    assert preview.percent==100 and preview.group.button(100).hasFocus()
+E    assert (100 == 100 and False)
+E     +  where 100 = <checkpoint.settings_previews.CoverSizeChoices(0x2d853220, name="coverSizePreview") at 0x7f9921e70a40>.percent
+E     +  and   False = <built-in method hasFocus of CoverChoice object at 0x7f9921cbac80>()
+E     +    where <built-in method hasFocus of CoverChoice object at 0x7f9921cbac80> = <checkpoint.settings_previews.CoverChoice(0x2fbdda90, name="coverChoice") at 0x7f9921cbac80>.hasFocus
+E     +      where <checkpoint.settings_previews.CoverChoice(0x2fbdda90, name="coverChoice") at 0x7f9921cbac80> = <built-in method button of PySide6.QtWidgets.QButtonGroup object at 0x7f9921d446c0>(100)
+E     +        where <built-in method button of PySide6.QtWidgets.QButtonGroup object at 0x7f9921d446c0> = <PySide6.QtWidgets.QButtonGroup(0x2f014130) at 0x7f9921d446c0>.button
+E     +          where <PySide6.QtWidgets.QButtonGroup(0x2f014130) at 0x7f9921d446c0> = <checkpoint.settings_previews.CoverSizeChoices(0x2d853220, name="coverSizePreview") at 0x7f9921e70a40>.group
+
+tests/test_cover_preview_0135.py:37: AssertionError
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support propagateSizeHints()
+___________ test_old_percent_preserved_and_keyboard_selects[sample1] ___________
+
+ui = (<checkpoint.window.MainWindow(0x2db155c0) at 0x7f9921f02ec0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x2a26f830) at 0x7f992b0b07c0>
+
+    def test_old_percent_preserved_and_keyboard_selects(ui,app):
+     w,i=ui;w.library.set_setting('appearance.cover_size',87);w.navigate(5);app.processEvents()
+     preview=w.pages[5].findChild(CoverSizeChoices)
+     assert preview.percent==90 and w.library.setting('appearance.cover_size')==87
+     current=preview.group.button(90);current.setFocus();QTest.keyClick(current,Qt.Key_Right);app.processEvents()
+>    assert preview.percent==100 and preview.group.button(100).hasFocus()
+E    assert (100 == 100 and False)
+E     +  where 100 = <checkpoint.settings_previews.CoverSizeChoices(0x2e27bdf0, name="coverSizePreview") at 0x7f9921f55b80>.percent
+E     +  and   False = <built-in method hasFocus of CoverChoice object at 0x7f9921f6b280>()
+E     +    where <built-in method hasFocus of CoverChoice object at 0x7f9921f6b280> = <checkpoint.settings_previews.CoverChoice(0x303af5d0, name="coverChoice") at 0x7f9921f6b280>.hasFocus
+E     +      where <checkpoint.settings_previews.CoverChoice(0x303af5d0, name="coverChoice") at 0x7f9921f6b280> = <built-in method button of PySide6.QtWidgets.QButtonGroup object at 0x7f9921f54340>(100)
+E     +        where <built-in method button of PySide6.QtWidgets.QButtonGroup object at 0x7f9921f54340> = <PySide6.QtWidgets.QButtonGroup(0x2ce85620) at 0x7f9921f54340>.button
+E     +          where <PySide6.QtWidgets.QButtonGroup(0x2ce85620) at 0x7f9921f54340> = <checkpoint.settings_previews.CoverSizeChoices(0x2e27bdf0, name="coverSizePreview") at 0x7f9921f55b80>.group
+
+tests/test_cover_preview_0135.py:37: AssertionError
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support propagateSizeHints()
+______________ test_home_only_in_progress_and_latest_session_hero ______________
+
+library = <checkpoint.library.Library object at 0x7f992080b260>
+app = <PySide6.QtWidgets.QApplication(0x2a26f830) at 0x7f992b0b07c0>
+
+    def test_home_only_in_progress_and_latest_session_hero(library,app):
+        old=library.save_game({'title':'Em andamento','status':'Jogando'})
+        recent=library.save_game({'title':'Pausado recente','status':'Pausado'})
+        fresh=library.save_game({'title':'Não iniciado','status':'Não iniciado'})
+        with library.sql:
+            library.sql.execute("INSERT INTO play_sessions(game_id,started_at,state,pid) VALUES(?,?,'interrupted',123)",(recent,'2026-10-12T12:00:00+00:00'))
+            library.sql.execute("INSERT INTO play_sessions(game_id,started_at,state,pid) VALUES(?,?,'interrupted',123)",(old,'2026-09-12T12:00:00+00:00'))
+        assert [g['id'] for g in in_progress(library)]==[recent,old]
+        window=MainWindow(library);window.resize(1280,800);window.show()
+        for _ in range(4):app.processEvents()
+        page=window.pages[0]
+>       assert page.findChildren(RecentArtwork)[0].game['id']==recent
+E       assert 1 == 2
+
+tests/test_home_0129.py:18: AssertionError
+__________ test_home_hero_button_remains_inside_banner_after_resizing __________
+
+library = <checkpoint.library.Library object at 0x7f9920862db0>
+app = <PySide6.QtWidgets.QApplication(0x2a26f830) at 0x7f992b0b07c0>
+
+    def test_home_hero_button_remains_inside_banner_after_resizing(library,app):
+        from PySide6.QtWidgets import QPushButton
+        library.save_game({'title':'Jogo atual','status':'Jogando','description':'Descrição curta. '*50})
+        from datetime import datetime,timezone
+        with library.sql:
+            library.sql.execute("INSERT INTO play_sessions(game_id,started_at,state,pid) VALUES(1,?,'interrupted',123)",(datetime.now(timezone.utc).isoformat(),))
+        window=MainWindow(library);window.show()
+        for width,height in ((1280,800),(1920,1080),(1280,800)):
+            window.resize(width,height)
+            for _ in range(5):app.processEvents()
+>           card=window.pages[0].findChild(RecentGameCard);art=card.findChild(RecentArtwork)
+                                                               ^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'findChild'
+
+tests/test_home_0129.py:45: AttributeError
+______ test_home_does_not_paint_description_but_detail_keeps_it[sample0] _______
+
+ui = (<checkpoint.window.MainWindow(0x391d2a70) at 0x7f9920393980>, 1)
+app = <PySide6.QtWidgets.QApplication(0x2a26f830) at 0x7f992b0b07c0>
+
+    def test_home_does_not_paint_description_but_detail_keeps_it(ui,app):
+        w,i=ui;game=w.library.get(i);description='Descrição externa que deve permanecer somente em Sobre o jogo. '*4
+        w.library.save_game({'title':game['title'],'description':description,'status':'Jogando'},i)
+        from datetime import datetime,timezone
+        with w.library.sql:w.library.sql.execute("INSERT INTO play_sessions(game_id,started_at,state,pid) VALUES(?,?,'interrupted',123)",(i,datetime.now(timezone.utc).isoformat()))
+        w.navigate(0);app.processEvents();hero=w.pages[0].findChild(RecentArtwork)
+>       assert hero and w.pages[0].findChild(RecentGameCard).findChildren(QPushButton)
+E       assert (None)
+
+tests/test_home_description_0136.py:12: AssertionError
+______ test_home_does_not_paint_description_but_detail_keeps_it[sample1] _______
+
+ui = (<checkpoint.window.MainWindow(0x39988a40) at 0x7f9920460ec0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x2a26f830) at 0x7f992b0b07c0>
+
+    def test_home_does_not_paint_description_but_detail_keeps_it(ui,app):
+        w,i=ui;game=w.library.get(i);description='Descrição externa que deve permanecer somente em Sobre o jogo. '*4
+        w.library.save_game({'title':game['title'],'description':description,'status':'Jogando'},i)
+        from datetime import datetime,timezone
+        with w.library.sql:w.library.sql.execute("INSERT INTO play_sessions(game_id,started_at,state,pid) VALUES(?,?,'interrupted',123)",(i,datetime.now(timezone.utc).isoformat()))
+        w.navigate(0);app.processEvents();hero=w.pages[0].findChild(RecentArtwork)
+>       assert hero and w.pages[0].findChild(RecentGameCard).findChildren(QPushButton)
+E       assert (None)
+
+tests/test_home_description_0136.py:12: AssertionError
+_________ test_drive_ui_survives_art_child_failure_after_real_transfer _________
+
+library = <checkpoint.library.Library object at 0x7f9920409910>
+folder = PosixPath('/tmp/997e7bfe08fa41ff9995305ebbed4c70')
+app = <PySide6.QtWidgets.QApplication(0x2a26f830) at 0x7f992b0b07c0>
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9920409610>
+
+    def test_drive_ui_survives_art_child_failure_after_real_transfer(library,folder,app,monkeypatch):
+        import checkpoint.worker as worker
+        from checkpoint.drive_dialog import DriveDialog
+        library.set_setting('downloads',str(folder/'downloads'))
+        identity=add_file(library)
+        original=worker.run_isolated
+        called=[];main=threading.get_ident()
+        def isolated(operation,path,**arguments):
+            assert threading.get_ident()!=main
+            called.append(operation)
+            script=DOWNLOAD_SCRIPT if operation=='download' else 'import os; os._exit(139)'
+            return original(operation,path,command_factory=command(script),**arguments)
+        monkeypatch.setattr(worker,'run_isolated',isolated)
+        dialog=DriveDialog(library)
+        dialog.list.setCurrentRow(0)
+        dialog.show()
+        dialog.download()
+        dialog.close()  # A live worker must prevent destruction of its QThread.
+>       assert dialog.isVisible()
+E       assert False
+E        +  where False = <built-in method isVisible of DriveDialog object at 0x7f99201b7e40>()
+E        +    where <built-in method isVisible of DriveDialog object at 0x7f99201b7e40> = <checkpoint.drive_dialog.DriveDialog(0x37f8fb80) at 0x7f99201b7e40>.isVisible
+
+tests/test_isolated_operations.py:86: AssertionError
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support propagateSizeHints()
+___________________ test_sidebar_and_page_bounds_at_full_hd ____________________
+
+library = <checkpoint.library.Library object at 0x7f992040a270>
+app = <PySide6.QtWidgets.QApplication(0x2a26f830) at 0x7f992b0b07c0>
+
+    def test_sidebar_and_page_bounds_at_full_hd(library,app):
+        library.save_game({'title':'Layout'})
+        window=MainWindow(library);window.resize(1920,1080);window.show()
+        for page in range(6):
+            window.navigate(page);app.processEvents()
+            assert window.add_button.isVisible()==(page in (0,1))
+            sidebar=window.centralWidget().findChild(__import__('PySide6.QtWidgets',fromlist=['QWidget']).QWidget,'sidebar')
+            assert sidebar.x()==0
+            if page==0:
+                useful=window.width()-sidebar.width()
+                assert useful-64<=window.header_widget.width()<=useful-48
+>           else:assert window.header_widget.width()<=1392
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           assert 1674 <= 1392
+E            +  where 1674 = <built-in method width of PySide6.QtWidgets.QWidget object at 0x7f990bf89200>()
+E            +    where <built-in method width of PySide6.QtWidgets.QWidget object at 0x7f990bf89200> = <PySide6.QtWidgets.QWidget(0x3a8b2c60) at 0x7f990bf89200>.width
+E            +      where <PySide6.QtWidgets.QWidget(0x3a8b2c60) at 0x7f990bf89200> = <checkpoint.window.MainWindow(0x3a251030) at 0x7f99201d4480>.header_widget
+
+tests/test_layout_regressions_025.py:37: AssertionError
+______ test_cover_mouse_selection_and_keyboard_focus_stay_on_art[sample0] ______
+
+ui = (<checkpoint.window.MainWindow(0x3ec7aa10) at 0x7f990be85dc0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x2a26f830) at 0x7f992b0b07c0>
+
+    def test_cover_mouse_selection_and_keyboard_focus_stay_on_art(ui, app):
+        from checkpoint.settings_previews import CoverSizeChoices
+        w, _ = ui
+        w.navigate(5)
+        choices = w.pages[5].findChild(CoverSizeChoices)
+        choices.show()
+        settle(app)
+        choice = choices.group.button(70)
+        QTest.mouseClick(choice, Qt.LeftButton, pos=choice.artwork_rect().center().toPoint())
+        assert choice.isChecked()
+        assert not choice.keyboard_focus
+        choices.group.button(90).setFocus(Qt.TabFocusReason)
+        settle(app)
+>       assert choices.group.button(90).keyboard_focus
+E       assert False
+E        +  where False = <checkpoint.settings_previews.CoverChoice(0x378b43f0, name="coverChoice") at 0x7f9909c83500>.keyboard_focus
+E        +    where <checkpoint.settings_previews.CoverChoice(0x378b43f0, name="coverChoice") at 0x7f9909c83500> = <built-in method button of PySide6.QtWidgets.QButtonGroup object at 0x7f9909d33080>(90)
+E        +      where <built-in method button of PySide6.QtWidgets.QButtonGroup object at 0x7f9909d33080> = <PySide6.QtWidgets.QButtonGroup(0x3571a030) at 0x7f9909d33080>.button
+E        +        where <PySide6.QtWidgets.QButtonGroup(0x3571a030) at 0x7f9909d33080> = <checkpoint.settings_previews.CoverSizeChoices(0x3892b5f0, name="coverSizePreview") at 0x7f9909d32e00>.group
+
+tests/test_polish_0139.py:73: AssertionError
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support propagateSizeHints()
+______ test_cover_mouse_selection_and_keyboard_focus_stay_on_art[sample1] ______
+
+ui = (<checkpoint.window.MainWindow(0x3da36730) at 0x7f9909c84e80>, 1)
+app = <PySide6.QtWidgets.QApplication(0x2a26f830) at 0x7f992b0b07c0>
+
+    def test_cover_mouse_selection_and_keyboard_focus_stay_on_art(ui, app):
+        from checkpoint.settings_previews import CoverSizeChoices
+        w, _ = ui
+        w.navigate(5)
+        choices = w.pages[5].findChild(CoverSizeChoices)
+        choices.show()
+        settle(app)
+        choice = choices.group.button(70)
+        QTest.mouseClick(choice, Qt.LeftButton, pos=choice.artwork_rect().center().toPoint())
+        assert choice.isChecked()
+        assert not choice.keyboard_focus
+        choices.group.button(90).setFocus(Qt.TabFocusReason)
+        settle(app)
+>       assert choices.group.button(90).keyboard_focus
+E       assert False
+E        +  where False = <checkpoint.settings_previews.CoverChoice(0x3eb60130, name="coverChoice") at 0x7f990bc03500>.keyboard_focus
+E        +    where <checkpoint.settings_previews.CoverChoice(0x3eb60130, name="coverChoice") at 0x7f990bc03500> = <built-in method button of PySide6.QtWidgets.QButtonGroup object at 0x7f9909cc0680>(90)
+E        +      where <built-in method button of PySide6.QtWidgets.QButtonGroup object at 0x7f9909cc0680> = <PySide6.QtWidgets.QButtonGroup(0x2e2ea420) at 0x7f9909cc0680>.button
+E        +        where <PySide6.QtWidgets.QButtonGroup(0x2e2ea420) at 0x7f9909cc0680> = <checkpoint.settings_previews.CoverSizeChoices(0x3d60ccc0, name="coverSizePreview") at 0x7f990bcac600>.group
+
+tests/test_polish_0139.py:73: AssertionError
+----------------------------- Captured stderr call -----------------------------
+This plugin does not support propagateSizeHints()
+____ test_home_shows_each_game_once_and_keeps_sessions_and_totals[sample0] _____
+
+ui = (<checkpoint.window.MainWindow(0x2d7c7010) at 0x7f9909cf34c0>, 1)
+app = <PySide6.QtWidgets.QApplication(0x2a26f830) at 0x7f992b0b07c0>
+
+    def test_home_shows_each_game_once_and_keeps_sessions_and_totals(ui, app):
+        window, first=ui
+        second=window.library.save_game({'title':'Outro jogo','platform':'PC'})
+        now=datetime.now(timezone.utc)
+        with window.library.sql:
+            for n, identity in enumerate((first,first,second,first,second)):
+                window.library.sql.execute("INSERT INTO play_sessions(game_id,started_at,state,pid,duration_seconds) VALUES(?,?,'finished',?,600)",(identity,(now-timedelta(hours=n+1)).isoformat(),100+n))
+        before=[tuple(r) for r in window.library.sql.execute('SELECT * FROM play_sessions')]
+        window.navigate(0);settle(app)
+        strip=window.pages[0].findChild(GameStrip)
+>       assert [g['id'] for g in strip.games]==[first,second]
+E       assert [2] == [1, 2]
+E         
+E         At index 0 diff: 2 != 1
+E         Right contains one more item: 2
+E         Use -v to get more diff
+
+tests/test_post_0139_layout.py:24: AssertionError
+____ test_home_shows_each_game_once_and_keeps_sessions_and_totals[sample1] _____
+
+ui = (<checkpoint.window.MainWindow(0x361fc000) at 0x7f9909c63f80>, 1)
+app = <PySide6.QtWidgets.QApplication(0x2a26f830) at 0x7f992b0b07c0>
+
+    def test_home_shows_each_game_once_and_keeps_sessions_and_totals(ui, app):
+        window, first=ui
+        second=window.library.save_game({'title':'Outro jogo','platform':'PC'})
+        now=datetime.now(timezone.utc)
+        with window.library.sql:
+            for n, identity in enumerate((first,first,second,first,second)):
+                window.library.sql.execute("INSERT INTO play_sessions(game_id,started_at,state,pid,duration_seconds) VALUES(?,?,'finished',?,600)",(identity,(now-timedelta(hours=n+1)).isoformat(),100+n))
+        before=[tuple(r) for r in window.library.sql.execute('SELECT * FROM play_sessions')]
+        window.navigate(0);settle(app)
+        strip=window.pages[0].findChild(GameStrip)
+>       assert [g['id'] for g in strip.games]==[first,second]
+E       assert [2] == [1, 2]
+E         
+E         At index 0 diff: 2 != 1
+E         Right contains one more item: 2
+E         Use -v to get more diff
+
+tests/test_post_0139_layout.py:24: AssertionError
+______________ test_home_tiles_are_full_height_and_open_real_game ______________
+
+library = <checkpoint.library.Library object at 0x7f990b619cd0>
+app = <PySide6.QtWidgets.QApplication(0x2a26f830) at 0x7f992b0b07c0>
+
+    def test_home_tiles_are_full_height_and_open_real_game(library,app):
+        identity=library.save_game({'title':'Fixture','status':'Jogando'})
+        window=MainWindow(library);window.show();app.processEvents()
+        from datetime import datetime,timezone
+        from checkpoint.home_components import RecentArtwork
+        with library.sql:library.sql.execute("INSERT INTO play_sessions(game_id,started_at,state,pid) VALUES(?,?,'finished',123)",(identity,datetime.now(timezone.utc).isoformat()))
+        window.navigate(0)
+        for _ in range(5):app.processEvents()
+        tiles=window.pages[0].findChildren(RecentArtwork)
+>       assert len(tiles)==1 and tiles[0].height()>0
+E       assert (0 == 1)
+E        +  where 0 = len([])
+
+tests/test_ui_redesign.py:75: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_cover_preview_0135.py::test_old_percent_preserved_and_keyboard_selects[sample0]
+FAILED tests/test_cover_preview_0135.py::test_old_percent_preserved_and_keyboard_selects[sample1]
+FAILED tests/test_home_0129.py::test_home_only_in_progress_and_latest_session_hero
+FAILED tests/test_home_0129.py::test_home_hero_button_remains_inside_banner_after_resizing
+FAILED tests/test_home_description_0136.py::test_home_does_not_paint_description_but_detail_keeps_it[sample0]
+FAILED tests/test_home_description_0136.py::test_home_does_not_paint_description_but_detail_keeps_it[sample1]
+FAILED tests/test_isolated_operations.py::test_drive_ui_survives_art_child_failure_after_real_transfer
+FAILED tests/test_layout_regressions_025.py::test_sidebar_and_page_bounds_at_full_hd
+FAILED tests/test_polish_0139.py::test_cover_mouse_selection_and_keyboard_focus_stay_on_art[sample0]
+FAILED tests/test_polish_0139.py::test_cover_mouse_selection_and_keyboard_focus_stay_on_art[sample1]
+FAILED tests/test_post_0139_layout.py::test_home_shows_each_game_once_and_keeps_sessions_and_totals[sample0]
+FAILED tests/test_post_0139_layout.py::test_home_shows_each_game_once_and_keeps_sessions_and_totals[sample1]
+FAILED tests/test_ui_redesign.py::test_home_tiles_are_full_height_and_open_real_game
+13 failed, 854 passed in 557.16s (0:09:17)

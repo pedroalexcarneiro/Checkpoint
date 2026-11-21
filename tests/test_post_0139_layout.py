@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 from PySide6.QtCore import QPoint
 from PySide6.QtGui import QImage, QColor
 from PySide6.QtWidgets import QWidget
-from checkpoint.home_components import GameStrip, MemoryCarousel
+from checkpoint.home_components import GameStrip, LastPlayedBanner, MemoryCarousel
 from checkpoint.design_system import ArtworkButton
 from test_bugs_0134 import ui, sample
 
@@ -21,9 +21,12 @@ def test_home_shows_each_game_once_and_keeps_sessions_and_totals(ui, app):
     before=[tuple(r) for r in window.library.sql.execute('SELECT * FROM play_sessions')]
     window.navigate(0);settle(app)
     strip=window.pages[0].findChild(GameStrip)
-    assert [g['id'] for g in strip.games]==[first,second]
-    assert [g['seconds'] for g in strip.games]==[1800,1200]
-    assert strip.games[0]['last_played']==(now-timedelta(hours=1)).isoformat()
+    assert window.pages[0].findChild(LastPlayedBanner).game_id==first
+    assert [g['id'] for g in strip.games]==[second]
+    assert [g['seconds'] for g in strip.games]==[1200]
+    assert strip.games[0]['last_played']==(now-timedelta(hours=3)).isoformat()
+    from checkpoint.playtime import total_seconds
+    assert total_seconds(window.library,first)==1800
     assert [tuple(r) for r in window.library.sql.execute('SELECT * FROM play_sessions')]==before
 
 

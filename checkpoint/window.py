@@ -188,8 +188,8 @@ class MainWindow(QMainWindow):
     def navigate(self,index):
         self.detail_notice=None
         self.host.parentWidget().setMaximumWidth(16777215 if index in (0,3,5) else 1440)
-        self.header_widget.setMaximumWidth(16777215 if index in (0,3) else 1440-2*SPACE['lg'])
-        self.host.setAlignment(self.header_widget,Qt.AlignLeft if index==5 else Qt.Alignment())
+        self.header_widget.setMaximumWidth(16777215 if index==0 else 1440-2*SPACE['lg'])
+        self.host.setAlignment(self.header_widget,Qt.AlignLeft if index in (3,5) else Qt.Alignment())
         self.current_page = index; self.current_game = None;self.header_widget.show()
         for i,b in enumerate(self.nav_buttons): b.setChecked(i==index)
         self.heading.show();self.heading.setText(PAGES[index]);self.add_button.setText('+ Adicionar jogo');self.add_button.setVisible(index in (0,1));self.search.setVisible(index in (0,1))

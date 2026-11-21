@@ -1,4 +1,4 @@
-"""Transferir/verificar um arquivo sem cadastrar jogo ou buscar metadados."""
+"""Transferência verificada, com cadastro posterior no fluxo do gerenciador Drive."""
 from pathlib import Path
 import sqlite3
 from .transfer_progress import TransferProgress,TransferCancelled
@@ -29,15 +29,17 @@ def download_file(library,file_id,context,*,client=None,directory=None):
     return DriveScanner(library,client).download(file_id,destination,progress=context.report,cancel=context.cancelled)
 
 
-def download_only(library,file_id,*,directory=None,progress_path=None,cancel_path=None,owner=None,client=None):
+def download_only(library,file_id,*,directory=None,progress_path=None,cancel_path=None,owner=None,client=None,import_after=False):
     context=TransferProgress(progress_path,cancel_path,owner)
     try:
         path=download_file(library,file_id,context,client=client,directory=directory)
-        context.report({'stage':'completed','download_state':'downloaded','local_path':str(path)})
-        return {'file_id':file_id,'game_id':None,'errors':[],'download_state':'downloaded',
+        result={'file_id':file_id,'game_id':None,'errors':[],'download_state':'downloaded',
                 'link_state':'not_requested','metadata_state':'not_requested','local_path':str(path),
                 'transfer_state':context.snapshot.get('transfer_state','completed'),'verification_state':'completed','registration_state':'completed',
                 'message':'Download concluído e arquivo verificado.'}
+        if import_after:return import_download(library,result,context)
+        context.report({'stage':'completed','download_state':'downloaded','local_path':str(path)})
+        return result
     except TransferCancelled:
         partial=context.snapshot.get('partial_path')
         message='Download cancelado.'+(' Parcial preservado.' if partial and Path(partial).is_file() else '')
@@ -62,3 +64,35 @@ def download_only(library,file_id,*,directory=None,progress_path=None,cancel_pat
         return {'file_id':file_id,'game_id':None,'errors':[message],'download_state':'failed',
                 'link_state':'not_requested','metadata_state':'not_requested','message':message,
                 'transfer_state':transfer,'verification_state':verification,'registration_state':'failed' if stage=='registering' else 'not_started'}
+
+
+def import_download(library,result,context):
+    from .game_import import save_import,atomic
+    from .integrations.drive import normalize_rom_name
+    from .worker import run_isolated
+
+    try:
+        context.check()
+        context.report({'stage':'linking','download_state':'downloaded','link_state':'running'})
+        with atomic(library.sql):
+            row=library.sql.execute('SELECT * FROM game_files WHERE id=?',(result['file_id'],)).fetchone()
+            if not row:raise ValueError('Não foi possível localizar a ROM no índice.')
+            game_id=row['game_id'] or save_import(library,{'title':normalize_rom_name(row['original_name']),
+                'platform':row['platform'] or '','source':'Google Drive'},row['id'])
+        result.update(game_id=game_id,link_state='linked',metadata_state='pending')
+        context.check()
+        context.report({'stage':'metadata','link_state':'linked','metadata_state':'running'})
+        message=run_isolated('enrich',library.db.path,game_id=game_id)
+        result.update(metadata_state='completed',message='ROM baixada e adicionada à biblioteca. '+str(message))
+    except TransferCancelled:
+        result.update(cancelled=True,message='Operação cancelada. O arquivo verificado foi preservado.')
+        if result['link_state']=='linked':result['metadata_state']='cancelled'
+        else:result['link_state']='not_completed'
+    except (IntegrationError,ValueError,OSError,sqlite3.Error) as error:
+        message=str(error) if isinstance(error,(ValueError,IntegrationError)) else 'Não foi possível concluir a associação.'
+        result['errors']=[message]
+        result['message']='O arquivo verificado foi preservado. '+message
+        if result['link_state']!='linked':result['link_state']='not_completed'
+    stage='cancelled' if result.get('cancelled') else 'completed' if not result['errors'] else 'metadata_pending'
+    context.report({'stage':stage,**result})
+    return result

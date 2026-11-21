@@ -67,11 +67,11 @@ def test_home_tiles_are_full_height_and_open_real_game(library,app):
     identity=library.save_game({'title':'Fixture','status':'Jogando'})
     window=MainWindow(library);window.show();app.processEvents()
     from datetime import datetime,timezone
-    from checkpoint.home_components import RecentArtwork
+    from checkpoint.home_components import LastPlayedBanner
     with library.sql:library.sql.execute("INSERT INTO play_sessions(game_id,started_at,state,pid) VALUES(?,?,'finished',123)",(identity,datetime.now(timezone.utc).isoformat()))
     window.navigate(0)
     for _ in range(5):app.processEvents()
-    tiles=window.pages[0].findChildren(RecentArtwork)
+    tiles=window.pages[0].findChildren(LastPlayedBanner)
     assert len(tiles)==1 and tiles[0].height()>0
     tiles[0].click();assert window.current_game==identity
     window.close()
