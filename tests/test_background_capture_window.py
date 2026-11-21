@@ -45,7 +45,7 @@ def test_background_target_resolves_one_window_and_refuses_ambiguity():
         capture.capture_target([one,two])
 
 
-def test_window_frame_is_read_off_gui_and_saved_without_success_banner(ui,app,monkeypatch):
+def test_window_frame_is_read_off_gui_and_announced_after_saving(ui,app,monkeypatch):
     window,game_id=ui
     window.launcher.active[1]=(SimpleNamespace(pid=101,poll=lambda:None),0,game_id,True)
     window.navigate(3)
@@ -63,7 +63,8 @@ def test_window_frame_is_read_off_gui_and_saved_without_success_banner(ui,app,mo
     monkeypatch.setattr('checkpoint.game_capture.WindowsCapture',Capture)
     try:
         window.capture_game_window();wait_for_capture(window)
-        assert not window.statusBar().currentMessage()
+        assert window.status_toast.label.text()=='Captura salva'
+        assert not window.statusBar().isVisible()
         row=window.library.sql.execute('SELECT * FROM media_files').fetchone()
         assert row['game_id']==game_id
         assert QImage(row['path']).pixelColor(2,2)==QColor('#993011')

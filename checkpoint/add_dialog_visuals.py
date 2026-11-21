@@ -7,12 +7,12 @@ from .visual_tokens import SPACE,HEIGHT
 def style_add_dialog(dialog):
     quick=dialog.quick_add
     screen_height=dialog.screen().availableGeometry().height()
-    dialog.setMinimumSize(680,min(660,screen_height))
-    dialog.resize(760,min(700,screen_height))
+    dialog.setMinimumSize(680,min(700,screen_height))
+    dialog.resize(760,min(740,screen_height))
     dialog.layout().setContentsMargins(22,SPACE['lg'],22,SPACE['lg']);dialog.layout().setSpacing(SPACE['sm'])
     quick.query.setFixedHeight(48)
     quick.sources.setExpanding(True);quick.sources.setDrawBase(False)
-    quick.preview.setFixedHeight(148);quick.preview.layout().setContentsMargins(*([SPACE['md']]*4))
+    quick.preview.setFixedHeight(172);quick.preview.layout().setContentsMargins(*([SPACE['md']]*4))
     quick.art.setFixedSize(80,112)
     quick.results.setMinimumHeight(200);quick.results.setMaximumHeight(216)
     quick.state.setWordWrap(True)

@@ -25,11 +25,16 @@ ajustados na mesma rodada.
 setas e pelo teclado. O viewport mostra parte do próximo card quando há
 espaço na borda. Desejos usa cards mais compactos. Na ficha e no Diário,
 as ações ficam agrupadas à direita. O botão do banner cresce em janelas largas.
+Últimas sessões mostra até dez jogos distintos além do destaque no banner.
 Em Adicionar jogo, a prévia ganha uma área rolável e as ações ficam juntas
 acima de Opções avançadas. As mensagens temporárias entram e saem por
 uma caixa no canto inferior esquerdo da janela principal.
+A prévia da seleção e o diálogo de cadastro ganharam altura.
+Os avisos de rotina usam frases curtas, como Confirme na tela do jogo,
+ROM baixada e Captura salva. Falhas de transferência mostram o motivo.
 As Ofertas do Início voltaram a mostrar capas verticais. Os filtros de
 Desejos mostram setas e cabem na largura útil da janela menor.
+Há uma margem de 12 px entre a grade de Desejos e a área da barra de rolagem.
 Os resultados e o limite da validação por Wine estão no relatório.
 Restante em andamento no plano e no RELATORIO_ESTABILIDADE_0139.md.
 Gates antigos abaixo são históricos.

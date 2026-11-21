@@ -8,6 +8,8 @@ from .home_data import recent_games,week_summary,wish_offers,recent_memories
 from .playtime import format_time,total_seconds
 from .smooth_scroll import SmoothScrollArea
 
+RECENT_GAME_LIMIT = 10
+
 
 def in_progress(library):
     """Consulta de status mantida para consumidores; não é histórico de execução."""
@@ -26,7 +28,8 @@ def section(title,callback=None,button='Ver tudo'):
 def build_home(window):
     outer=window.clear_page(0);scroll=SmoothScrollArea();scroll.setObjectName('homeScroll');scroll.setWidgetResizable(True)
     body=QWidget();layout=QVBoxLayout(body);layout.setContentsMargins(0,0,8,0);layout.setSpacing(20)
-    games=window.library.owned_games();recent=recent_games(window.library,limit=11)
+    games=window.library.owned_games()
+    recent=recent_games(window.library,limit=RECENT_GAME_LIMIT + 1)  # Inclui o destaque.
     if recent:layout.addWidget(LastPlayedBanner(window,recent[0]))
     left,inside=section('Últimas sessões');left.setObjectName('homeRecentSection')
     if len(recent)>1:inside.addWidget(GameStrip(window,recent[1:],header=inside.itemAt(0).widget(),page_scroll=scroll))

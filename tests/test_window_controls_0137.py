@@ -36,7 +36,7 @@ def test_status_toast_slides_inside_window_without_expanding_status_bar(ui,app):
     root=window.centralWidget()
     initial=root.size()
     bar=window.statusBar()
-    bar.showMessage('Fechamento solicitado. Confirme na janela do jogo se ele pedir.')
+    bar.showMessage('Confirme na tela do jogo')
     assert toast.isVisible() and toast.x()<0
     assert bar.currentMessage()==toast.label.text() and not bar.isVisible()
     toast.animation.setCurrentTime(toast.animation.duration())

@@ -51,6 +51,7 @@ def test_play_button_closes_only_its_tracked_session_and_saves_after_exit(app,li
         assert window.pages[0].findChild(LastPlayedBanner).play_button.text()=='Finalizar'
         window.detail(game);button('Finalizar').click()
         assert requests==[process.pid]
+        assert window.status_toast.label.text()=='Confirme na tela do jogo'
         assert library.sql.execute('SELECT state FROM play_sessions WHERE id=?',(session,)).fetchone()[0]=='active'
         process.wait(timeout=5);window.poll_sessions();assert button('Jogar')
         assert library.sql.execute('SELECT state FROM play_sessions WHERE id=?',(session,)).fetchone()[0]=='finished'

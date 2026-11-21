@@ -92,6 +92,23 @@ def test_session_carousel_mouse_and_keyboard_show_other_sessions(ui, app):
     assert strip.previous.size() == strip.next.size()
 
 
+def test_recent_game_strip_keeps_at_most_ten_distinct_games_besides_banner(ui, app):
+    w, featured = ui
+    now = datetime.now(timezone.utc)
+    games = [featured]
+    for index in range(12):
+        games.append(w.library.save_game({'title': f'Jogo recente {index}', 'platform': 'PC'}))
+    with w.library.sql:
+        for index, game in enumerate([featured, *games]):
+            w.library.sql.execute(
+                "INSERT INTO play_sessions(game_id,started_at,state,pid) VALUES(?,?,'finished',?)",
+                (game, (now-timedelta(minutes=index+1)).isoformat(), 200+index))
+    w.navigate(0)
+    settle(app)
+    strip = w.pages[0].findChild(GameStrip)
+    assert [tile.game_id for tile in strip.tiles] == games[1:11]
+
+
 def test_recent_art_has_rounded_transparent_corners_without_losing_edges(ui, app, folder):
     from PySide6.QtGui import QImage, QColor
     w, identity = ui

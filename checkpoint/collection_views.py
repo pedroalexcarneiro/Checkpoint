@@ -97,6 +97,7 @@ def build_wishlist(window):
     old=getattr(window,'wishlist_scroll',None)
     position=old.verticalScrollBar().value() if old else 0
     outer=window.clear_page(2);inside=page_scroll(outer,reserve_scrollbar=True);window.wishlist_scroll=inside.scroll_area
+    inside.setContentsMargins(0,0,SPACE['sm'],SPACE['xs'])
     scroll=window.wishlist_scroll
     bar=scroll.verticalScrollBar()
     restored=False

@@ -32,7 +32,7 @@ def test_two_wishes_remain_compact_and_wide_window_adds_columns(ui, app):
             assert art.width() == art.height()
             assert card.rect().contains(art.geometry())
             viewport=w.wishlist_scroll.viewport()
-            assert card.mapTo(viewport,card.rect().topRight()).x()<viewport.width()
+            assert viewport.width()-1-card.mapTo(viewport,card.rect().topRight()).x()>=12
         assert w.wishlist_scroll.widget().width()<=w.wishlist_scroll.viewport().width()
     assert columns[0]==3 and columns[2] > columns[1]
     from checkpoint.collection_views import WishFilterCombo

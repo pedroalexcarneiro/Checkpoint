@@ -490,7 +490,7 @@ class MainWindow(QMainWindow):
     def remove_game(self,game_id):
         if QMessageBox.question(self,'Remover jogo','Mover este jogo para a lixeira? Arquivos e saves serão preservados.')==QMessageBox.Yes:
             self.library.delete(game_id); self.last_deleted = game_id; self.navigate(1)
-            self.statusBar().showMessage('Jogo removido. Restaure pela lixeira em Configurações.')
+            self.statusBar().showMessage('Jogo movido para a lixeira')
 
     def achievement(self,game_id):
         text,ok = QInputDialog.getText(self,'Conquista pessoal','Nome do marco alcançado:')
@@ -543,6 +543,7 @@ class MainWindow(QMainWindow):
         if current==getattr(self,'detail_page',None) and self.current_game==game_id:self.detail(game_id)
         elif current is self.pages[3]:self.memories()
         elif current is self.pages[0]:self.home()
+        self.statusBar().showMessage('Captura salva')
 
     @Slot(object)
     def managed_media_changed(self,game_ids):
@@ -585,7 +586,7 @@ class MainWindow(QMainWindow):
         with self.library.sql:
             self.library.sql.execute('INSERT INTO settings VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value',(f'collection.unowned.{game_id}','false' if owned else 'true'))
             self.library.sql.execute('INSERT OR IGNORE INTO wishlist(game_id,target_cents) VALUES(?,0)',(game_id,))
-        self.statusBar().showMessage('Jogo adicionado à lista de desejos.')
+        self.statusBar().showMessage('Jogo adicionado aos desejos')
         self.refresh_library()
         if self.current_game==game_id:self.detail(game_id)
         elif self.current_page==2:self.wishlist()
@@ -694,7 +695,11 @@ class MainWindow(QMainWindow):
 
     def download_completed(self,task):
         from PySide6.QtWidgets import QApplication
-        self.statusBar().showMessage(task.outcome.get('message','Transferência encerrada.'))
+        if task.status=='completed' and not task.outcome.get('errors'):
+            message='ROM baixada'
+        else:
+            message=task.outcome.get('message','Transferência encerrada')
+        self.statusBar().showMessage(message)
         QApplication.alert(self)
         self.refresh_library()
         row=self.library.sql.execute('SELECT game_id FROM game_files WHERE id=?',(task.file_id,)).fetchone()
@@ -825,7 +830,7 @@ class MainWindow(QMainWindow):
             self.statusBar().showMessage(str(error))
             return
         if requested:
-            self.statusBar().showMessage('Fechamento solicitado. Confirme na janela do jogo se ele pedir.')
+            self.statusBar().showMessage('Confirme na tela do jogo')
         else:
             self.poll_sessions()
 
@@ -911,7 +916,7 @@ class MainWindow(QMainWindow):
         def save():
             from .save_profiles import SaveProfiles
             SaveProfiles(self.library).configure(game_id,source,[p.strip() for p in patterns.split(',') if p.strip()])
-            self.statusBar().showMessage('Configuração de saves salva para este jogo.')
+            self.statusBar().showMessage('Configuração de saves salva')
         self.guard(save)
 
     def backup_saves(self):
@@ -976,7 +981,7 @@ class MainWindow(QMainWindow):
         self.statusBar().showMessage('Processando saves em segundo plano…'); job.start()
 
     def save_operation_done(self,game_id,backup_id):
-        self.statusBar().showMessage('Backup salvo.' if backup_id is None else 'Saves restaurados. A versão anterior foi preservada.')
+        self.statusBar().showMessage('Backup salvo' if backup_id is None else 'Saves restaurados')
         if self.current_game==game_id: self.detail(game_id)
 
     def release_save_job(self,game_id):
@@ -993,7 +998,7 @@ class MainWindow(QMainWindow):
             self.statusBar().showMessage('Não foi possível salvar o tempo. Verifique espaço e permissões.')
             return
         for game_id in finished:
-            self.statusBar().showMessage('Sessão encerrada e tempo salvo.'); self.auto_backup(game_id)
+            self.statusBar().showMessage('Sessão salva'); self.auto_backup(game_id)
             self.refresh_execution_action(game_id)
 
     def closeEvent(self,event):

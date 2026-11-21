@@ -573,6 +573,23 @@ offscreen.
   acompanha o processo. Uma futura integração precisa comprovar identificadores
   de conteúdo, compatibilidade, lista instalada e resultado por etapa.
 
+## Ajustes do pacote de teste Windows x64
+
+- Últimas sessões mantém a rolagem lateral e mostra até dez jogos distintos,
+  além do destaque do banner. A ordem e o limite foram verificados com
+  treze jogos e uma sessão repetida do jogo em destaque.
+- A prévia de Adicionar jogo mede 172 px de altura. A altura inicial do
+  diálogo é de até 740 px, conforme a área disponível. Em Desejos, há 12 px
+  de margem entre os cards e a barra de rolagem na janela de 1000×700.
+- Os avisos temporários incluem Confirme na tela do jogo, ROM baixada e
+  Captura salva. Falhas de transferência preservam a mensagem do serviço.
+- 102 testes direcionados passaram em Linux. O ZIP Windows x64 passou na
+  conferência das 882 entradas, extração, abertura e smoke test de seis
+  telas com SQLite, no Wine. O comportamento em uma instalação Windows
+  física continua pendente de teste.
+- `Checkpoint-teste-Windows-x64.zip` (80.108.523 bytes), SHA-256
+  `e6d7021aede1e88922004fa2bc8878afc77cf0e17a056f232d2dbcfe0ee50504`.
+
 ## Commits locais já preparados
 
 - f0b43c0: plano/base confirmados e diagnóstico inicial.

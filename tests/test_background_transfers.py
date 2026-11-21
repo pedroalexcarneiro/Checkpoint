@@ -17,6 +17,20 @@ def wait_for(predicate,seconds=8):
     assert predicate(),'A operação não finalizou dentro do limite de teste'
 
 
+def test_download_toast_is_short_on_success_and_keeps_failure_reason(ui):
+    from checkpoint.transfers import Transfer
+    window,game_id=ui
+    task=Transfer('a'*32,1,game_id,'Arquivo.nsp','Jogo',status='completed',
+                  outcome={'message':'Download concluído e arquivo verificado.'})
+    window.download_completed(task)
+    assert window.status_toast.label.text()=='ROM baixada'
+    assert not window.statusBar().isVisible()
+    task.status='failed'
+    task.outcome={'message':'Pasta de destino sem espaço.'}
+    window.download_completed(task)
+    assert window.status_toast.label.text()=='Pasta de destino sem espaço.'
+
+
 def record(library,identity,name,data=b'fixture ROM',game=None):
     scanner=DriveScanner(library,None)
     scanner.record({'id':identity,'name':name,'size':str(len(data)),
