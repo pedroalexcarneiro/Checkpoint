@@ -55,7 +55,9 @@ def test_new_list_manager_saves_checked_games_and_rejects_duplicate(ui,app):
         name.setText('Fins de semana')
         for i in range(games.count()):
             item=games.item(i)
-            if item.data(Qt.UserRole)==second:item.setCheckState(Qt.Checked)
+            if item.data(Qt.UserRole)==second:
+                assert item.text()=='Jogo B'
+                item.setCheckState(Qt.Checked)
         save.click()
         identity=dialog.findChild(QComboBox).currentData()
         assert LibraryLists(lib).all()[identity]['games']==[second]

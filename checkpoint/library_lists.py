@@ -56,8 +56,8 @@ def manage_lists(window,selected=None,*,create=False):
     games=QListWidget();games.setAccessibleName('Jogos da lista');layout.addWidget(games,1)
     status=text('','muted');layout.addWidget(status)
     for game in window.library.owned_games():
-        suffix=' · '+game['platform'] if game['platform'] else ''
-        item=QListWidgetItem(game['title']+suffix);item.setData(Qt.UserRole,game['id'])
+        item=QListWidgetItem(game['title']);item.setData(Qt.UserRole,game['id'])
+        if game['platform']:item.setToolTip(game['platform'])
         item.setFlags(item.flags()|Qt.ItemIsUserCheckable);item.setCheckState(Qt.Unchecked)
         games.addItem(item)
     last_selection=selected

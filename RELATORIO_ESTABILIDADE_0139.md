@@ -231,7 +231,9 @@ ficam fora dessa proposta. O default da tabela é legado e foi mantido.
 
 O seletor combina listas lógicas com busca, plataforma, favoritos, ordenação,
 formato de lista e grade. Criar lista e Gerenciar listas abrem o mesmo editor,
-onde é possível renomear e marcar jogos. Cada lista tem ID estável e guarda
+onde é possível renomear e marcar jogos. Por pedido do dono, cada linha exibe
+somente o título. A plataforma pode ser consultada ao passar o mouse. Cada
+lista tem ID estável e guarda
 apenas IDs de jogos. Jogos podem estar em mais de uma lista. O último filtro
 selecionado é salvo. Excluir a lista ou desmarcar um jogo não altera arquivos,
 cadastros, sessões, notas ou saves. Ações de estado vazio abrem a gestão da
@@ -251,3 +253,4 @@ preservados e reabertura da base. As duas capturas da Biblioteca usam fixtures.
 - d5ddedc: mostrar o progresso da transferência na aba Arquivos da ficha.
 - c0b56e4: destacar o último jogo iniciado no Início e manter histórico acessível.
 - 76e9241: perfis por formatos declarados e apresentação sem presumir PC nos fluxos alterados.
+- e28afe0: listas personalizadas da Biblioteca.
