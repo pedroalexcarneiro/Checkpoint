@@ -137,19 +137,8 @@ class MediaFolderIndex(QObject):
         else:self.timer.start(120)
 
     def scan(self):
-        folders=known_folders(self.library)
-        if not folders:
-            watched=self.watcher.directories()
-            if watched:self.watcher.removePaths(watched)
-            self.waiting={};self.rejected={}
-            return
-        records=set();indexed={}
-        for row in self.library.sql.execute('SELECT path FROM media_files'):
-            path=row['path']
-            records.add(path)
-            indexed.setdefault(Path(path).parent,set()).add(path)
-        ignored=self.library.setting(IGNORED,[])
-        self.job=Job(lambda:scan_folders(folders,records,indexed,set(ignored),self.waiting,self.rejected),self)
+        database=self.library.db.path
+        self.job=Job(lambda:scan_library(database,self.waiting,self.rejected),self)
         self.job.succeeded.connect(self.accept,Qt.QueuedConnection)
         self.job.finished.connect(self.finished,Qt.QueuedConnection)
         self.job.start()
@@ -207,3 +196,22 @@ class MediaFolderIndex(QObject):
         self.timer.stop()
         paths=self.watcher.directories()
         if paths:self.watcher.removePaths(paths)
+
+
+def scan_library(database,waiting,rejected):
+    from contextlib import closing
+    from types import SimpleNamespace
+    from .library import Library
+
+    with closing(sqlite3.connect(database.absolute().as_uri()+'?mode=ro',uri=True,timeout=.25)) as sql:
+        sql.row_factory=sqlite3.Row
+        library=Library(SimpleNamespace(path=database,connection=sql))
+        folders=known_folders(library)
+        records=set();indexed={}
+        if folders:
+            for row in sql.execute('SELECT path FROM media_files'):
+                path=row['path']
+                records.add(path)
+                indexed.setdefault(Path(path).parent,set()).add(path)
+        ignored=set(library.setting(IGNORED,[]))
+    return scan_folders(folders,records,indexed,ignored,waiting,rejected)

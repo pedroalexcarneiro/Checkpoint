@@ -42,12 +42,18 @@ class WindowControls(QWidget):
     def __init__(self,window):
         super().__init__(window);self.host=window;self.drag=None;self.setObjectName('windowControls');self.setFixedHeight(32)
         row=QHBoxLayout(self);row.setContentsMargins(0,0,0,0);row.setSpacing(0);row.addStretch()
-        self.minimize=WindowButton('minimize',lambda:window.showMinimized(),self)
+        self.minimize=WindowButton('minimize',self.minimize_window,self)
         self.maximize=WindowButton('maximize',self.toggle_maximized,self)
         self.close_button=WindowButton('close',lambda:window.close(),self)
         self.minimize.setAccessibleName('Minimizar');self.minimize.setToolTip('Minimizar');self.close_button.setAccessibleName('Fechar');self.close_button.setToolTip('Fechar')
         for control in (self.minimize,self.maximize,self.close_button):row.addWidget(control)
         self.sync_state();window.installEventFilter(self)
+    def minimize_window(self):
+        frame=getattr(self.host,'integrated_frame',None)
+        if frame and frame.api is not None and frame.applied and not frame.failed:
+            frame.api.minimize(int(self.host.winId()))
+        else:
+            self.host.showMinimized()
     def sync_state(self):
         value=self.host.isMaximized();self.maximize.restored=value
         name='Restaurar' if value else 'Maximizar';self.maximize.setAccessibleName(name);self.maximize.setToolTip(name);self.maximize.update()

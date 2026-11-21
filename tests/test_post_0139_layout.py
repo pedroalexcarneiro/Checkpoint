@@ -63,8 +63,8 @@ def test_memories_keep_standard_width_and_no_synthetic_dark_padding(ui, app, fol
 def test_memory_cards_stay_visible_and_separate_after_resizing(ui,app):
     window,identity=ui
     for n in range(8):window.library.add_diary(identity,f'Nota {n}')
-    for mode in ('dark','light'):
-        window.set_theme('black');window.set_appearance(mode);window.navigate(0)
+    for color in ('black','purple'):
+        window.set_theme(color);window.navigate(0)
         for width in (1280,1920,1000,1280):
             window.resize(width,800);settle(app)
             assert window.width()==width

@@ -107,7 +107,7 @@ def build_wishlist(window):
     rows=selected(rows,platform.currentData());top.itemAt(0).widget().setText(count_text(len(rows),'jogo'))
     inside.addLayout(filters)
     from .card_layout import cover_size
-    from .prices import wishlist_order
+    from .prices import set_offer_details,wishlist_order
     selected_order=window.library.setting('wishlist.order','name')
     if selected_order not in ('name','price','discount'):selected_order='name';window.library.set_setting('wishlist.order',selected_order)
     order=QComboBox();order.setObjectName('wishlistOrder');order.addItem('Alfabeticamente','name');order.addItem('Menor preço','price');order.addItem('Maior desconto','discount');order.setCurrentIndex(max(0,order.findData(selected_order)))
@@ -120,6 +120,13 @@ def build_wishlist(window):
     def include_keyshops(value):
         window.library.set_setting('prices.include_keyshops',value);window.wishlist()
     keyshops.toggled.connect(include_keyshops);filters.insertWidget(2,keyshops);filters.addStretch()
+    discounts=QCheckBox('Completar descontos')
+    discounts.setObjectName('wishlistOfferDetails')
+    discounts.setChecked(window.library.setting('prices.offer_details',False))
+    def complete_discounts(value):
+        set_offer_details(window.library,value)
+        if value:window.price_queue.submit([game['id'] for game in rows])
+    discounts.toggled.connect(complete_discounts);filters.insertWidget(3,discounts)
     if not rows:
         def clear_platform():window.library.set_setting('wishlist.platform_filter','all');window.wishlist()
         inside.addWidget(empty_state('wish','Nenhum desejo nesta plataforma','Escolha outra plataforma ou limpe o filtro.',clear_platform,'Todas'));inside.addStretch();return

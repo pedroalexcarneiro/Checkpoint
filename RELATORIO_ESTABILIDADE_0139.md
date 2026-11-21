@@ -405,6 +405,44 @@ SQLite, exit 0. Nenhum pacote ou publicação foi criado nesta rodada.
 
 ## Pendências técnicas desta rodada
 
+### Ajustes após o teste Bluetooth
+
+O dono confirmou que o Switch Pro funcionou. O vídeo de 11:01 mostra a
+faixa do último jogo com pouco espaço ocupado pela arte e as miniaturas
+de ofertas reduzidas. A altura do banner agora busca 60% da largura da
+faixa para artes panorâmicas, preservando todo o quadro e limitando a
+altura para arquivos de proporção mais estreita. Últimas sessões tem
+setas alinhadas ao título e cards de 170 px, com arte de até 230 px.
+
+Minimizar usa o comando Win32 no quadro integrado. A área clicável dos
+botões usa coordenadas da área cliente. Em Wine, os testes de hit-test
+e minimização passaram tanto em janela normal quanto maximizada.
+
+A captura usa Windows Graphics Capture pelo HWND validado da sessão,
+mesmo com outra janela em primeiro plano quando existe um único alvo.
+Recusa alvos minimizados ou ambíguos. Leitura do frame e escrita do PNG
+rodam na thread de trabalho. O sucesso aparece em Memórias, sem faixa
+inferior; as falhas deixam o restante da interface disponível. O binário
+windows-capture 2.0.1 vem do wheel oficial, SHA-256
+`209c2318e2168802b9afd1005e99499639e8835e71a1e188a3ddc77c7ccc3f04`.
+Wine carregou a extensão e recusou a inicialização da fila DispatcherQueue
+do WGC. A aquisição com jogo encoberto precisa ser verificada no Windows
+real. Testes locais cobrem seleção, leitura e gravação com quadros
+controlados.
+
+Desejos oferece Completar descontos para renovar a consulta optativa.
+A mesma oferta oficial da edição PC de God of War Ragnarök retornou
+R$ 142,30 e preço original de R$ 249,90 na consulta pública da rodada.
+A miniatura de ofertas no Início prefere a arte oficial da Steam quando
+o banner veio do catálogo Steam ou está ausente, sem substituir arte
+escolhida na ficha. A imagem oficial consultada mostra Kratos e Atreus.
+[Arte oficial da Steam](https://cdn.akamai.steamstatic.com/steam/apps/2322010/header.jpg)
+
+O modo claro foi removido do app, inclusive quando havia preferência
+legada. A reindexação ao voltar ao app lê o catálogo de mídias em conexão
+SQLite de leitura na thread de trabalho. A causa da demora vista pelo
+dono ainda precisa de confirmação com a biblioteca real.
+
 - **6B.** O teste Qt local passou, e a captura do dono permanece a evidência
   do defeito gráfico. A reprodução em desktop Windows com o caminho de
   minimizar/restaurar e, se possível, duas telas/DPI diferentes ainda é

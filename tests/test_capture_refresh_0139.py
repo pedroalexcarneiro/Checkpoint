@@ -113,13 +113,9 @@ def test_capture_failure_keeps_visible_memories_and_existing_media(ui, monkeypat
     window.launcher.active[1] = (SimpleNamespace(pid=101, poll=lambda: None), 0, identity, True)
     def failed(): raise ValueError('Janela indisponível')
     monkeypatch.setattr('checkpoint.game_capture.WindowsCapture', failed)
-    # O guard real retorna None ao informar o erro; preserve esse contrato.
-    def guard(callback):
-        with pytest.raises(ValueError): callback()
-        return None
-    monkeypatch.setattr(window, 'guard', guard)
     try:
         window.capture_game_window()
+        assert window.statusBar().currentMessage()=='Janela indisponível'
         assert window.pages[3] is before
         assert window.library.sql.execute('SELECT count(*) FROM media_files').fetchone()[0] == 0
     finally: window.launcher.active.clear()

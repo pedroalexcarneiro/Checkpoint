@@ -23,6 +23,7 @@ class PriceQueue(QObject):
     def start_next(self):
         if self.active or not self.pending:return
         identity=self.pending.popleft();job=Job(partial(run_isolated,'prices',self.library.db.path,game_id=identity),self);self.active=job;job.setProperty('gameId',identity)
+        job.setProperty('configVersion',self.library.setting('prices.config_version',0))
         job.succeeded.connect(self.completed);job.failed.connect(self.failed);job.finished.connect(self.finished);job.start()
     @Slot(object)
     def completed(self,result):self.updated.emit(self.active.property('gameId'))
@@ -30,9 +31,12 @@ class PriceQueue(QObject):
     def failed(self,message):
         from .library import now
         from .prices import snapshot
-        identity=self.active.property('gameId');previous=snapshot(self.library,identity);previous.update({'config_version':self.library.setting('prices.config_version',0),'attempted_at':now(),'state':'unavailable','message':'A consulta de preços não foi concluída.'});self.library.set_setting(f'prices.ggdeals.{identity}',previous);self.updated.emit(identity)
+        identity=self.active.property('gameId');previous=snapshot(self.library,identity);previous.update({'config_version':self.active.property('configVersion'),'attempted_at':now(),'state':'unavailable','message':'A consulta de preços não foi concluída.'});self.library.set_setting(f'prices.ggdeals.{identity}',previous);self.updated.emit(identity)
     @Slot()
     def finished(self):
+        identity=self.active.property('gameId')
+        if self.active.property('configVersion')!=self.library.setting('prices.config_version',0) and needs_update(self.library,identity):
+            if identity not in self.pending:self.pending.append(identity)
         self.active.deleteLater();self.active=None
         if self.pending:self.timer.start(6500)
     def stop(self):self.pending.clear();self.timer.stop()

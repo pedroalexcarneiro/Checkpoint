@@ -58,7 +58,10 @@ class LastPlayedBanner(QPushButton):
 
     def resizeEvent(self,event):
         super().resizeEvent(event)
-        self.setFixedHeight(max(142,min(240,round(self.width()*.15))))
+        height=round(self.width()*.15)
+        if not self.banner.isNull():
+            height=max(height,round(self.width()*.60*self.banner.height()/self.banner.width())+10)
+        self.setFixedHeight(max(142,min(360,height)))
 
     def identity_width(self):
         if self.banner.isNull():return max(160,min(400,self.width()-48))
@@ -155,7 +158,7 @@ class RecentGameCard(CardSurface):
         self.setSizePolicy(QSizePolicy.Preferred,QSizePolicy.Maximum)
         inside=QVBoxLayout(self);inside.setContentsMargins(8,12,8,12);inside.setSpacing(10)
         inside.setAlignment(Qt.AlignTop)
-        inside.addWidget(RecentArtwork(game,window,maximum_height=210))
+        inside.addWidget(RecentArtwork(game,window,maximum_height=230))
         play=action('Continuar',lambda:continue_game(window,game),True);play.setProperty('homeContinue',True);play.ensurePolished()
         play.setMinimumWidth(play.sizeHint().width());play.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Fixed)
         inside.addWidget(play)
@@ -174,6 +177,24 @@ class OfferBanner(RecentArtwork):
     def __init__(self,game,window):
         super().__init__({**game,'cover':'','logo':''},window)
         self.setObjectName('homeOfferBanner')
+        self.steam_identity=None
+        if window.isVisible() and window.library.setting('artwork.auto',True):
+            from .offer_art import OfferArt,steam_header_identity
+            self.steam_identity=steam_header_identity(window.library,game)
+            if self.steam_identity:
+                if not hasattr(window,'offer_art'):
+                    window.offer_art=OfferArt(window.library.db.path.parent,window)
+                window.offer_art.available.connect(self.header_available)
+                cached=window.offer_art.request(self.steam_identity)
+                if cached:self.header_available(self.steam_identity,cached)
+
+    def header_available(self,identity,path):
+        if identity!=self.steam_identity:return
+        pixmap=QPixmap(path)
+        if pixmap.isNull():return
+        self.pixmap=pixmap
+        self.setFixedHeight(min(42,max(1,round(self.width()*pixmap.height()/pixmap.width()))))
+        self.update()
     def sizeHint(self):return QSize(136,40)
     def resizeEvent(self,event):
         if self.pixmap.isNull():
@@ -238,16 +259,16 @@ class HomeOfferRow(QWidget):
 
 class GameStrip(QWidget):
     """Quantidade visível acompanha a largura mínima dos controles."""
-    def __init__(self,window,games,maximum=8):
+    def __init__(self,window,games,maximum=8,*,header=None):
         super().__init__();self.setMinimumWidth(0);self.setObjectName('recentGames')
         self.host_window=window;self.games=games;self.maximum=maximum;self.offset=0;self.setFocusPolicy(Qt.StrongFocus)
-        self.minimum_tile_width=156
+        self.minimum_tile_width=170
         self.visible_count=max(1,min(maximum,(self.width()+12)//(self.minimum_tile_width+12)))
         self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
         layout=QVBoxLayout(self);layout.setContentsMargins(0,0,0,0);layout.setSpacing(8)
-        controls=QHBoxLayout();controls.addStretch()
-        self.previous=IconButton('chevron-left','Sessões anteriores',lambda:self.move_by(-1));controls.addWidget(self.previous)
-        self.next=IconButton('chevron-right','Próximas sessões',lambda:self.move_by(1));controls.addWidget(self.next);layout.addLayout(controls)
+        if header is None:header=HomeSectionHeader('Últimas sessões',None,'');layout.addWidget(header)
+        self.previous=IconButton('chevron-left','Sessões anteriores',lambda:self.move_by(-1));header.row.addWidget(self.previous)
+        self.next=IconButton('chevron-right','Próximas sessões',lambda:self.move_by(1));header.row.addWidget(self.next)
         self.body=QWidget();self.row=QHBoxLayout(self.body);self.row.setContentsMargins(0,0,0,0);self.row.setSpacing(12);layout.addWidget(self.body)
         self.render()
     def render(self):

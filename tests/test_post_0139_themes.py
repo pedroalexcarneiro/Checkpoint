@@ -21,17 +21,19 @@ def test_all_appearance_modes_keep_text_contrast(key,mode):
     assert QColor(c['background']).lightnessF()>.85 if mode=='light' else QColor(c['background']).lightnessF()<.2
 
 
-def test_mode_is_independent_of_color_and_survives_reopening(app,library):
+def test_app_ignores_legacy_light_mode_and_keeps_selected_color(app,library):
+    library.set_setting('appearance.mode','light')
+    apply_theme(app,'green','light')
     window=MainWindow(library);window.navigate(5)
     control=window.pages[5].findChild(QComboBox,'appearanceMode')
-    assert control is not None
-    control.setCurrentIndex(control.findData('light'));window.set_theme('purple')
-    assert window.theme.mode=='light' and window.theme.key=='purple'
+    assert control is None
+    window.set_theme('purple')
+    assert window.theme.mode=='dark' and window.theme.key=='purple'
     assert library.setting('appearance.mode')=='light'
     window.close()
     db=Database(library.db.path);reopened=MainWindow(Library(db))
     try:
-        assert reopened.theme.mode=='light' and reopened.theme.key=='purple'
-        assert app.property('checkpointAppearance')=='light'
+        assert reopened.theme.mode=='dark' and reopened.theme.key=='purple'
+        assert app.property('checkpointAppearance')=='dark'
     finally:
         reopened.close();db.close();apply_theme(app,'green','dark')

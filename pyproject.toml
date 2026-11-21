@@ -18,3 +18,4 @@ include = ["checkpoint*"]
 
 [tool.setuptools.package-data]
 checkpoint = ["assets/services/*", "assets/lucide/*.svg", "assets/sdl3/*"]
+"checkpoint._capture_native" = ["windows_capture.pyd", "LICENSE.txt"]

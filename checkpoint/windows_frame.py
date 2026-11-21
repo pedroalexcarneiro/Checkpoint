@@ -14,7 +14,8 @@ class WindowsFrameApi:
         self.get_style.argtypes=[w.HWND,ctypes.c_int];self.get_style.restype=ctypes.c_ssize_t
         self.set_style.argtypes=[w.HWND,ctypes.c_int,ctypes.c_ssize_t];self.set_style.restype=ctypes.c_ssize_t
         self.user.SetWindowPos.argtypes=[w.HWND,w.HWND,ctypes.c_int,ctypes.c_int,ctypes.c_int,ctypes.c_int,w.UINT]
-        self.user.GetWindowRect.argtypes=[w.HWND,ctypes.POINTER(w.RECT)]
+        self.user.ScreenToClient.argtypes=[w.HWND,ctypes.POINTER(w.POINT)]
+        self.user.ShowWindow.argtypes=[w.HWND,ctypes.c_int]
         self.user.MonitorFromWindow.argtypes=[w.HWND,w.DWORD];self.user.MonitorFromWindow.restype=w.HANDLE
     def apply(self,handle):
         c=self.c;w=self.w;style=self.get_style(handle,-16)
@@ -25,10 +26,12 @@ class WindowsFrameApi:
         margins=Margins(1,1,1,1);self.dwm.DwmExtendFrameIntoClientArea.argtypes=[w.HWND,c.POINTER(Margins)]
         if self.dwm.DwmExtendFrameIntoClientArea(handle,c.byref(margins))!=0:raise OSError('Moldura nativa indisponível.')
         if not self.user.SetWindowPos(handle,None,0,0,0,0,0x27):raise c.WinError(c.get_last_error())
-    def window_rect(self,handle):
-        rect=self.w.RECT()
-        if not self.user.GetWindowRect(handle,self.c.byref(rect)):raise self.c.WinError(self.c.get_last_error())
-        return rect
+    def client_point(self,handle,x,y):
+        point=self.w.POINT(x,y)
+        if not self.user.ScreenToClient(handle,self.c.byref(point)):raise self.c.WinError(self.c.get_last_error())
+        return point
+    def minimize(self,handle):
+        self.user.ShowWindow(handle,6)  # SW_MINIMIZE
     def monitor(self,handle):
         c=self.c;w=self.w
         class Monitor(c.Structure):_fields_=[('size',w.DWORD),('screen',w.RECT),('work',w.RECT),('flags',w.DWORD)]
@@ -79,15 +82,17 @@ class IntegratedFrame:
                 limits.maximum_track.x=max(limits.maximum_track.x,limits.maximum.x);limits.maximum_track.y=max(limits.maximum_track.y,limits.maximum.y)
                 return True,0
             if msg.message==0x84:
-                frame=self.api.window_rect(handle);ratio=self.window.devicePixelRatioF()
-                x=(c.c_short(msg.lParam&0xffff).value-frame.left)/ratio;y=(c.c_short((msg.lParam>>16)&0xffff).value-frame.top)/ratio
-                if not self.window.isMaximized():
-                    edge=border_hit(x,y,self.window.width(),self.window.height(),8)
-                    if edge is not None:return True,edge
+                physical=self.api.client_point(handle,c.c_short(msg.lParam&0xffff).value,
+                                               c.c_short((msg.lParam>>16)&0xffff).value)
+                ratio=self.window.devicePixelRatioF()
+                x=physical.x/ratio;y=physical.y/ratio
                 point=QPoint(round(x),round(y))
                 for button in (self.bar.minimize,self.bar.maximize,self.bar.close_button):
                     location=button.mapTo(self.window,QPoint())
                     if button.rect().translated(location).contains(point):return True,9 if button is self.bar.maximize else 1
+                if not self.window.isMaximized():
+                    edge=border_hit(x,y,self.window.width(),self.window.height(),8)
+                    if edge is not None:return True,edge
                 if self.bar.rect().translated(self.bar.mapTo(self.window,QPoint())).contains(point):return True,2
             return self.api.dwm_message(handle,msg.message,msg.wParam,msg.lParam)
         except (OSError,ValueError,TypeError,AttributeError,OverflowError):return False,0

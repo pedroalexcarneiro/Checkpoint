@@ -106,6 +106,24 @@ def test_wish_detail_displays_confirmed_percentage_and_explains_missing_data(ui,
     assert selected_quote(window.library,identity)['lowest']==6000
 
 
+def test_wishlist_opt_in_queues_refresh_and_displays_same_offer_discount(ui,monkeypatch):
+    window,_=ui
+    library=window.library
+    identity,api,public,_,_=configured(library,monkeypatch,'God of War Ragnarök')
+    api['retail']=public['retail']=14_230
+    public['offers'][0].update(cents=14_230,original=24_990)
+    library.set_setting('prices.offer_details',False)
+    with library.sql:library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)',(identity,))
+    refresh_prices(library,identity)
+    monkeypatch.setattr(window.price_queue,'submit',lambda ids:[refresh_prices(library,game_id) for game_id in ids])
+    window.navigate(2)
+    assert not window.pages[2].findChildren(QLabel,'priceDiscount')
+    window.pages[2].findChild(QCheckBox,'wishlistOfferDetails').setChecked(True)
+    window.wishlist()
+    assert any(label.text()=='-43%' for label in window.pages[2].findChildren(QLabel,'priceDiscount'))
+    assert selected_quote(library,identity)['historical']==1000
+
+
 @pytest.mark.parametrize('slug',['portal-2','hades'])
 def test_public_parser_reads_base_price_and_excludes_foreign_products(slug):
     from checkpoint.integrations.ggdeals import parse_prices

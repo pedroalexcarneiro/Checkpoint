@@ -13,6 +13,9 @@ O ambiente/pacote utiliza componentes com licenças próprias, entre eles:
 - requests: Apache 2.0 — https://requests.readthedocs.io/en/latest/community/faq/
 - SDL 3.4.20 para Windows x64, com licença zlib. A DLL oficial e seu aviso
   estão em `checkpoint/assets/sdl3`. [Release oficial](https://github.com/libsdl-org/SDL/releases/tag/release-3.4.20)
+- Extensão nativa do windows-capture 2.0.1 para Windows x64, com licença MIT.
+  O binário e o aviso estão em `checkpoint/_capture_native`.
+  [Distribuição oficial](https://pypi.org/project/windows-capture/2.0.1/)
 
 Esta lista é um inventário inicial, não substitui os textos integrais nem uma análise de conformidade. `requirements-tested.txt` identifica as versões diretas e transitivas do ambiente usado. Antes de distribuição pública, conferir os componentes efetivamente empacotados, incluir seus textos/avisos, cumprir as obrigações de redistribuição aplicáveis e revisar direitos das artes/APIs. O executável de desenvolvimento não é uma distribuição pública assinada.
 

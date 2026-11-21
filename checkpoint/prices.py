@@ -90,6 +90,12 @@ def default_provider(library):
     raise IntegrationError('Configure a API GG.deals ou ative a consulta pela página pública em Conexões.')
 
 
+def set_offer_details(library,enabled):
+    if library.setting('prices.offer_details',False)!=enabled:
+        library.set_setting('prices.offer_details',enabled)
+        invalidate_prices(library)
+
+
 def refresh_prices(library,game_id,provider=None):
     from .integrations.ggdeals import GgDealsProvider
     game=library.get(game_id)

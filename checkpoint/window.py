@@ -35,7 +35,7 @@ class MainWindow(QMainWindow):
         self.session_events=SessionEvents(self.launcher,self.system_shutdown_requested)
         from PySide6.QtWidgets import QApplication
         from .theme import apply_theme,DEFAULT_THEME
-        self.theme=apply_theme(QApplication.instance(),library.setting('appearance.theme',DEFAULT_THEME),library.setting('appearance.mode','dark'))
+        self.theme=apply_theme(QApplication.instance(),library.setting('appearance.theme',DEFAULT_THEME),'dark')
         if library.setting('appearance.theme',DEFAULT_THEME)!=self.theme.key:library.set_setting('appearance.theme',self.theme.key)
         self.setWindowTitle('Checkpoint'); self.resize(1100,740); self.setMinimumSize(1000,700)
         from .completion_queue import CompletionQueue
@@ -519,12 +519,12 @@ class MainWindow(QMainWindow):
         self.library.set_setting('capture.shortcut',value)
 
     def capture_game_window(self):
-        self.guard(self.capture_writer.request)
+        try:self.capture_writer.request()
+        except ValueError as error:self.capture_failed(str(error))
 
     @Slot(int)
     def capture_saved(self,game_id):
         self.media_index.request()
-        self.statusBar().showMessage('Captura salva em Memórias.',5000)
         current=self.stack.currentWidget()
         if current==getattr(self,'detail_page',None) and self.current_game==game_id:self.detail(game_id)
         elif current is self.pages[3]:self.memories()
@@ -702,7 +702,7 @@ class MainWindow(QMainWindow):
         from .theme import apply_theme,get_theme
         key=get_theme(key).key
         self.library.set_setting('appearance.theme',key)
-        self.theme=apply_theme(QApplication.instance(),key,self.library.setting('appearance.mode','dark'))
+        self.theme=apply_theme(QApplication.instance(),key,'dark')
         from .branding import app_icon
         from .ui_components import Hero,nav_icon
         from .window_style import titlebar_theme
@@ -713,11 +713,6 @@ class MainWindow(QMainWindow):
         for hero in self.findChildren(Hero):hero.set_theme(self.theme)
         self.completion_bar.theme=self.theme;self.completion_bar.update()
         self.refresh_library()
-
-    def set_appearance(self,mode):
-        mode='light' if mode=='light' else 'dark'
-        self.library.set_setting('appearance.mode',mode)
-        self.set_theme(self.theme.key)
 
     def updates(self):
         if self.launcher.active or self.save_jobs:

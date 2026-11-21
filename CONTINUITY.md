@@ -11,6 +11,9 @@ só contém jogos com registros em Memórias. O diálogo Captura pelo controle
 agora alinha Desativar, Gravar comando, Cancelar e Salvar no mesmo rodapé.
 O seletor aceita Switch Pro via SDL3, com o botão dedicado Captura. O teste
 físico no Windows por USB e Bluetooth continua pendente.
+Na rodada seguinte, o dono confirmou o Switch Pro por Bluetooth e pediu
+correções de minimizar, Início, Desejos, captura e remoção do modo claro.
+Os resultados e o limite da validação por Wine estão no relatório.
 Restante em andamento no plano e no RELATORIO_ESTABILIDADE_0139.md.
 Gates antigos abaixo são históricos.
 

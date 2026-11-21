@@ -98,13 +98,18 @@ def test_three_recent_games_carousel_preserves_every_cover_edge(ui,app,folder):
         assert [game['id'] for game in strip.games]==identities[1:11]
         assert len(list(w.library.sql.execute('SELECT id FROM play_sessions')))==len(identities)
         assert len(strip.tiles)>=2
+        from checkpoint.home_components import HomeSectionHeader
+        header=w.pages[0].findChild(QWidget,'homeRecentSection').findChild(HomeSectionHeader)
+        assert strip.previous.parentWidget() is header and strip.next.parentWidget() is header
+        for button in (strip.previous,strip.next):
+            assert abs(header.title.geometry().center().y()-button.geometry().center().y())<=1
         assert all(first.geometry().right()+10<second.x() for first,second in zip(strip.tiles,strip.tiles[1:]))
         assert not strip.previous.isEnabled() and strip.next.isEnabled()
         for card in strip.tiles:
             art=card.findChild(RecentArtwork);target=art.image_target()
             assert art.rect().contains(target.toAlignedRect())
             assert abs(target.width()/target.height()-2/3)<.01
-            assert target.height()<=210
+            assert 210<target.height()<=230
             frame=art.grab().toImage();x=round(target.center().x());y=round(target.center().y())
             top=frame.pixelColor(x,round(target.top())+2);bottom=frame.pixelColor(x,round(target.bottom())-3)
             left=frame.pixelColor(round(target.left())+2,y);right=frame.pixelColor(round(target.right())-3,y)
@@ -155,6 +160,15 @@ def test_offer_banner_uses_entire_banner_instead_of_cover(ui,app,folder):
             assert frame.pixelColor(1,y).green()>200 and frame.pixelColor(1,y).blue()>200
             assert frame.pixelColor(art.width()-2,y).red()>200 and frame.pixelColor(art.width()-2,y).green()<20
     finally:art.close()
+
+
+def test_official_offer_header_does_not_replace_a_manually_chosen_banner(library):
+    from checkpoint.offer_art import steam_header_identity
+    identity=library.save_game({'title':'God of War Ragnarök','platform':'PC','banner':'minha-arte.jpg'})
+    with library.sql:library.sql.execute("INSERT INTO external_identifiers VALUES (?,'steam','2322010')",(identity,))
+    assert steam_header_identity(library,library.get(identity)) is None
+    library.save_game({'title':'God of War Ragnarök','banner':''},identity)
+    assert steam_header_identity(library,library.get(identity))=='2322010'
 
 
 def test_home_hero_keeps_entire_wide_and_narrow_banners(ui,app,folder):

@@ -23,9 +23,8 @@ class GgDealsConnection(QFrame):
         from .credentials import CredentialVault
         return getattr(self.window,'ggdeals_vault_factory',CredentialVault)()
     def change_offer_details(self,enabled):
-        from .prices import invalidate_prices
-        self.window.library.set_setting('prices.offer_details',enabled)
-        invalidate_prices(self.window.library)
+        from .prices import set_offer_details
+        set_offer_details(self.window.library,enabled)
     def update_state(self):
         configured=self.window.integration_status('GG.deals').startswith('Credencial salva')
         self.state.setText('Configurado' if configured else 'Não configurado')

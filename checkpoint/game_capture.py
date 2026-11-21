@@ -1,4 +1,4 @@
-"""Captura somente a janela em primeiro plano de uma sessão elegível."""
+"""Captura da sessão seguida por gravação em segundo plano."""
 import sys
 from collections import deque
 from pathlib import Path
@@ -19,7 +19,60 @@ class WindowsCapture:
         self.user.IsWindowVisible.argtypes = [wintypes.HWND]
         self.user.IsIconic.argtypes = [wintypes.HWND]
         self.user.IsWindow.argtypes = [wintypes.HWND]
+        self.user.GetWindow.argtypes = [wintypes.HWND,wintypes.UINT]
+        self.user.GetWindow.restype = wintypes.HWND
+        self.user.GetWindowRect.argtypes = [wintypes.HWND,ctypes.POINTER(wintypes.RECT)]
+        self.enumerator = ctypes.WINFUNCTYPE(wintypes.BOOL,wintypes.HWND,wintypes.LPARAM)
+        self.user.EnumWindows.argtypes = [self.enumerator,wintypes.LPARAM]
+        self.dwm = ctypes.WinDLL('dwmapi',use_last_error=True)
+        self.dwm.DwmGetWindowAttribute.argtypes = [wintypes.HWND,wintypes.DWORD,ctypes.c_void_p,wintypes.DWORD]
         self.handle = None
+
+    def visible_owner(self,hwnd):
+        if not hwnd or not self.user.IsWindow(hwnd) or not self.user.IsWindowVisible(hwnd) or self.user.IsIconic(hwnd):
+            return None
+        cloaked=self.types.DWORD()
+        if self.dwm.DwmGetWindowAttribute(hwnd,14,self.ctypes.byref(cloaked),self.ctypes.sizeof(cloaked))==0 and cloaked.value:
+            return None
+        rect=self.types.RECT()
+        if not self.user.GetWindowRect(hwnd,self.ctypes.byref(rect)) or rect.right<=rect.left or rect.bottom<=rect.top:
+            return None
+        owner=self.types.DWORD()
+        self.user.GetWindowThreadProcessId(hwnd,self.ctypes.byref(owner))
+        return owner.value
+
+    def capture_target(self,sessions):
+        choices={}
+        for process,_,game_id,*_ in sessions:
+            if process.poll() is None:choices.setdefault(process.pid,[]).append((game_id,process))
+        foreground=self.user.GetForegroundWindow()
+        pid=self.visible_owner(foreground)
+        if len(choices.get(pid,()))==1:
+            game_id,process=choices[pid][0]
+            return game_id,lambda:self.read_target(foreground,process)
+        candidates=[]
+        @self.enumerator
+        def visit(hwnd,_data):
+            owner=self.visible_owner(hwnd)
+            if not self.user.GetWindow(hwnd,4) and owner in choices:
+                candidates.extend((hwnd,game_id,process) for game_id,process in choices[owner])
+            return True
+        self.user.EnumWindows(visit,0)
+        if len(candidates)>1:
+            raise ValueError('Há mais de uma janela de jogo aberta. Selecione o jogo desejado antes de capturar.')
+        if not candidates:
+            raise ValueError('Não encontrei uma janela de jogo aberta. Restaure o jogo se ele estiver minimizado.')
+        hwnd,game_id,process=candidates[0]
+        return game_id,lambda:self.read_target(hwnd,process)
+
+    def read_target(self,hwnd,process):
+        from .background_capture import capture_window
+        if process.poll() is not None or self.visible_owner(hwnd)!=process.pid:
+            raise ValueError('A janela do jogo foi fechada ou minimizada.')
+        frame=capture_window(hwnd)
+        if process.poll() is not None or self.visible_owner(hwnd)!=process.pid:
+            raise ValueError('A janela do jogo foi fechada ou minimizada durante a captura.')
+        return frame
 
     def foreground_pid(self):
         hwnd = self.user.GetForegroundWindow()
@@ -117,15 +170,22 @@ class CaptureWriter(QObject):
     def request(self):
         if len(self.waiting)+bool(self.job)>=4:
             raise ValueError('Aguarde as capturas pendentes antes de tentar de novo.')
-        game_id,image=capture_frame(self.window)
-        self.waiting.append((game_id,capture_directory(self.window,game_id),image))
+        adapter=WindowsCapture()
+        if hasattr(adapter,'capture_target'):
+            sessions=list(self.window.launcher.active.values())
+            if not sessions:raise ValueError('Nenhum jogo aberto pelo Checkpoint está em sessão para capturar.')
+            game_id,read=adapter.capture_target(sessions)
+        else:
+            game_id,image=capture_frame(self.window,adapter)
+            read=lambda:image
+        self.waiting.append((game_id,capture_directory(self.window,game_id),read))
         self.start_next()
 
     def start_next(self):
         if self.job is not None or not self.waiting:return
         from .jobs import Job
-        game_id,directory,image=self.waiting.popleft()
-        self.job=Job(lambda:(game_id,save_frame(directory,image)),self)
+        game_id,directory,read=self.waiting.popleft()
+        self.job=Job(lambda:(game_id,save_frame(directory,read())),self)
         self.job.succeeded.connect(self.register,Qt.QueuedConnection)
         self.job.failed.connect(self.failed,Qt.QueuedConnection)
         self.job.finished.connect(self.finish,Qt.QueuedConnection)
