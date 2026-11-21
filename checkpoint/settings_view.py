@@ -63,7 +63,12 @@ def build_settings(window):
     from PySide6.QtWidgets import QKeySequenceEdit
     from PySide6.QtGui import QKeySequence
     frame,inside=card();inside.addWidget(text('Captura da janela do jogo','cardTitle'))
-    shortcut=QKeySequenceEdit(QKeySequence(window.library.setting('capture.shortcut','Ctrl+Shift+S')));shortcut.setObjectName('captureShortcut');shortcut.setAccessibleName('Atalho para capturar jogo');shortcut.editingFinished.connect(lambda:window.set_capture_shortcut(shortcut.keySequence()));inside.addWidget(shortcut)
+    shortcut=QKeySequenceEdit(QKeySequence(window.library.setting('capture.shortcut','Ctrl+Shift+S')));shortcut.setObjectName('captureShortcut');shortcut.setAccessibleName('Atalho para capturar jogo');shortcut.editingFinished.connect(lambda:window.set_capture_shortcut(shortcut.keySequence()))
+    capture_controls=QHBoxLayout();capture_controls.addWidget(shortcut,1)
+    controller=action('Configurar controle',window.controller_capture.configure)
+    controller.setEnabled(window.controller_capture.backend is not None)
+    if not controller.isEnabled():controller.setToolTip('O XInput não está disponível neste sistema.')
+    capture_controls.addWidget(controller);inside.addLayout(capture_controls)
     appearance.addWidget(frame);appearance.addStretch()
     grid=CardGrid(320,max_columns=2);grid.setObjectName('connectionsGrid')
     for provider,callback in [('Steam',window.steam),('Google Drive',window.drive),('SteamGridDB',lambda:window.configure_key('steamgriddb')),('RAWG',lambda:window.configure_key('rawg'))]:

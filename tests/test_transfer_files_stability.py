@@ -118,6 +118,26 @@ def test_unknown_size_has_no_invented_percentage(folder):
     assert progress.snapshot['eta_seconds'] is None
 
 
+def test_remote_change_during_download_never_marks_old_revision_available(library,folder):
+    scanner,row,old=indexed(library)
+    updated='ROM da revisão atual'.encode('utf-8')
+    class Client:
+        def download(self,identity,path):
+            path.write_bytes(old)
+            scanner.record({'id':identity,'name':row['original_name'],'size':str(len(updated)),
+                            'md5Checksum':hashlib.md5(updated,usedforsecurity=False).hexdigest()},'/Switch')
+            library.sql.commit()
+    scanner.client=Client()
+    with pytest.raises(ValueError,match='índice da ROM mudou'):
+        scanner.download(row['id'],folder)
+    changed=library.sql.execute('SELECT * FROM game_files').fetchone()
+    assert changed['size']==len(updated) and changed['available']==0
+    original=folder/row['original_name'];assert original.read_bytes()==old
+    scanner.client=SimpleNamespace(download=lambda identity,path:path.write_bytes(updated))
+    result=scanner.download(row['id'],folder)
+    assert result!=original and result.read_bytes()==updated and original.read_bytes()==old
+
+
 def test_speed_and_eta_require_consistent_observed_progress(monkeypatch):
     clock=[0.0]
     monkeypatch.setattr('checkpoint.transfer_progress.time.monotonic',lambda:clock[0])

@@ -119,7 +119,7 @@ def refresh_prices(library,game_id,provider=None):
         library.set_setting(f'prices.ggdeals.{game_id}',result)
         return 'Preços GG.deals atualizados.'
     except IntegrationError as error:
-        previous.update({'config_version':library.setting('prices.config_version',0),'attempted_at':now(),'state':'unavailable','message':str(error)})
+        previous.update({'config_version':config_version,'attempted_at':now(),'state':'unavailable','message':str(error)})
         library.set_setting(f'prices.ggdeals.{game_id}',previous)
         return str(error)
 

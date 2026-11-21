@@ -5,6 +5,9 @@ from pathlib import Path
 import re
 
 
+REVISION_FIELDS=('drive_id','original_name','size','md5','modified_at','extension','platform')
+
+
 def windows_name(original, extension=''):
     name=re.sub(r'[<>:"/\\|?*\x00-\x1f]', '_', original or '').rstrip(' .')
     if name in ('', '.', '..'):
@@ -44,9 +47,8 @@ def publish_file(partial, target):
 def publish_download(library, row, partial, target, digest):
     """Journal antes do rename: falha posterior do SQLite não exige baixar de novo."""
     key=f'downloads.pending.{row["id"]}'
-    value={'drive_id':row['drive_id'],'original_name':row['original_name'],
-           'size':row['size'],'md5':row['md5'],'partial':str(partial),
-           'target':str(target),'sha256':digest}
+    value={key:row[key] for key in REVISION_FIELDS}
+    value.update(partial=str(partial),target=str(target),sha256=digest)
     library.set_setting(key,value)
     for attempt in range(1000):
         try:
@@ -55,10 +57,21 @@ def publish_download(library, row, partial, target, digest):
             target=free_destination(target.parent,windows_name(row['original_name'],row['extension']))
             value['target']=str(target);library.set_setting(key,value)
     else:raise ValueError('Não foi possível reservar um destino. Parcial preservado.')
-    with library.sql:
-        library.sql.execute('UPDATE game_files SET local_path=?,available=1 WHERE id=?',(str(target),row['id']))
-        library.sql.execute('DELETE FROM settings WHERE key=?',(key,))
+    record_download(library,row,target,key)
     return target
+
+
+def record_download(library,row,target,key):
+    fields=(*REVISION_FIELDS,'local_path','available')
+    expected=' AND '.join(field+' IS ?' for field in fields)
+    with library.sql:
+        current=library.sql.execute(
+            'UPDATE game_files SET local_path=?,available=1 WHERE id=? AND '+expected
+            +" AND review_state NOT IN ('remote_removed','remote_missing','outside_root')",
+            (str(target),row['id'],*(row[field] for field in fields)))
+        if current.rowcount!=1:
+            raise ValueError('O índice da ROM mudou durante o download. A cópia foi preservada. Atualize o índice e confira a versão.')
+        library.sql.execute('DELETE FROM settings WHERE key=?',(key,))
 
 
 def recover_download(library, row, cancel=None):
@@ -66,7 +79,7 @@ def recover_download(library, row, cancel=None):
     key=f'downloads.pending.{row["id"]}'
     journal=library.setting(key,None)
     if not isinstance(journal,dict):return None
-    if any(journal.get(k)!=row[k] for k in ('drive_id','original_name','size','md5')):return None
+    if any(journal.get(k)!=row[k] for k in REVISION_FIELDS):return None
     digest=journal.get('sha256','')
     if not re.fullmatch('[a-f0-9]{64}',digest):return None
     partial=Path(journal.get('partial',''));target=Path(journal.get('target',''))
@@ -79,8 +92,6 @@ def recover_download(library, row, cancel=None):
                 check_cancel(cancel);checksum.update(block)
         if checksum.hexdigest()!=digest:continue
         if source==partial:return publish_download(library,row,partial,target,digest)
-        with library.sql:
-            library.sql.execute('UPDATE game_files SET local_path=?,available=1 WHERE id=?',(str(target),row['id']))
-            library.sql.execute('DELETE FROM settings WHERE key=?',(key,))
+        record_download(library,row,target,key)
         return target
     return None

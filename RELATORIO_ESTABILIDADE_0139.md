@@ -314,6 +314,70 @@ com transferência simulada, verificando geometria, página e barra. Gate de
 7 aprovados no Qt offscreen. O resultado não reproduz a composição do desktop
 Windows, diferentes monitores ou DPI. O defeito permanece aberto.
 
+## Unidade 10 — Controle, preços e integridade do download
+
+**Item 10.** Captura pelo controle tem opção para botões digitais expostos pelo
+Windows via XInput. Os seletores de dispositivo e comando usam a mesma fonte,
+largura e altura, com 12 px de separação e setas. Gravar comando permite
+pressionar e soltar uma combinação. Um acionamento chama o serviço da captura
+pelo teclado. Segurar a combinação não repete. Após desconexão, a posição
+selecionada permanece e uma soltura é exigida antes de disparar novamente.
+XInput identifica a posição 1–4, que pode mudar quando os controles são
+reconectados em outra ordem. Reconhecer Switch Pro por USB ou Bluetooth
+e o botão dedicado requer verificar o dispositivo real. Ao usar Steam Input,
+o app tem acesso apenas ao que for efetivamente exposto ao XInput.
+[Documentação XInputGetState](https://learn.microsoft.com/en-us/windows/win32/api/xinput/nf-xinput-xinputgetstate)
+[Botões digitais XINPUT_GAMEPAD](https://learn.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_gamepad)
+
+Gate de 44 aprovados, exit 0, cobre folha de configuração, escolha de botão,
+captura de combinação, reconexão simulada, segundo dispositivo, fonte e
+espaçamento. Captura Qt com um dispositivo simulado. Validação física no
+Windows pendente.
+
+**Item 19.** Consultas públicas em BRL, sem chave, registram as ofertas de
+Cyberpunk 2077, Hades, Hades II e God of War Ragnarök para PC. Para God of War
+a oferta oficial trouxe R$ 249,90 original e R$ 142,30 atual, diferença de
+43% após arredondamento. As demais respostas não confirmaram valor original
+maior para a oferta oficial selecionada. A API do app consulta por Steam ID
+e separa preço atual e histórico. Ofertas de console continuam sem uma fonte
+confirmada por edição. O complemento aprovado continua opcional.
+
+Corrigido um caso de cache: consulta que falha depois de mudar a configuração
+grava a revisão da configuração com que começou. Assim o resultado anterior
+não impede nova consulta pela configuração atual. Gate de 63 aprovados,
+exit 0, incluindo identidade, preço e regra de oficiais por padrão.
+
+**Itens 5 e 15.** O registro da disponibilidade exige que a revisão no
+índice e o caminho anterior permaneçam os mesmos. Se mudarem durante a
+transferência, a cópia verificada é preservada sem ficar disponível como
+a revisão nova. Gate de 50 aprovados, exit 0.
+
+## Pendências técnicas desta rodada
+
+- **6B.** O teste Qt local passou, e a captura do dono permanece a evidência
+  do defeito gráfico. A reprodução em desktop Windows com o caminho de
+  minimizar/restaurar e, se possível, duas telas/DPI diferentes ainda é
+  necessária. A correção do diálogo do item 6A está validada separadamente.
+- **9.** Windows Graphics Capture oferece seleção de uma janela por HWND.
+  A biblioteca candidata windows-capture 2.0.1 tem wheel Windows AMD64 e
+  dependências NumPy/OpenCV. Validar alvo, oclusão, conteúdo, segurança na
+  falha, versão do Windows e empacotamento exige execução nativa. O backend
+  de primeiro plano existente permanece; a gravação de PNG já saiu da GUI.
+  [API de captura por HWND](https://learn.microsoft.com/en-us/windows/win32/api/windows.graphics.capture.interop/nf-windows-graphics-capture-interop-igraphicscaptureiteminterop-createforwindow)
+- **14.** A opção de mover a ROM local continua pendente. O perfil atual
+  descreve execução por argumentos/extensões, sem contrato sobre onde o
+  emulador grava saves. A movimentação precisa comprovar o comportamento
+  dos saves adjacentes, verificar destino e recuperação entre volumes e
+  preservar o vínculo anterior em falha. O fluxo de usar no local escolhido
+  segue disponível.
+- **16.** O cadastro manual e a pré-seleção do catálogo em métodos protegidos
+  ainda exigem autorização específica para a proposta da unidade 6.
+- **18.** Sem identificação do emulador/versão e interface documentada de
+  instalação, o app não classifica NSP/XCI por nome ou extensão e não
+  instala update/DLC. A execução atual passa a ROM ao perfil configurado e
+  acompanha o processo. Uma futura integração precisa comprovar identificadores
+  de conteúdo, compatibilidade, lista instalada e resultado por etapa.
+
 ## Commits locais já preparados
 
 - f0b43c0: plano/base confirmados e diagnóstico inicial.
@@ -329,3 +393,4 @@ Windows, diferentes monitores ou DPI. O defeito permanece aberto.
 - c9a3a4b: logos proporcionais no gerenciador de listas.
 - 5e63960: codificar e gravar capturas em segundo plano.
 - bd92ddf: organização e indexação de arquivos nas pastas de Memórias.
+- 747fdcb: preservar cadastro do gerenciador Drive e corrigir falhas da suíte inicial.

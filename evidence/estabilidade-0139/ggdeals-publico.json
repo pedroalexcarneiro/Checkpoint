@@ -1,0 +1,356 @@
+{
+  "checked_at": "2026-11-21T12:19:34.989556+00:00",
+  "source": "GG.deals público, Steam App IDs de catálogo, BRL",
+  "rows": [
+    {
+      "steam_id": "1091500",
+      "title": "Cyberpunk 2077",
+      "retail": 19990,
+      "keyshop": 16510,
+      "original": 19990,
+      "offers": [
+        {
+          "shop": "GAMIVO",
+          "cents": 16510,
+          "original": 19990,
+          "discount": 17,
+          "url": "https://gg.deals/br/redirect/4513f28ddafad1953fdbfb6c22959442d7bffc02/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "GOG",
+          "game_slug": "cyberpunk-2077"
+        },
+        {
+          "shop": "Gog.com",
+          "cents": 19990,
+          "original": null,
+          "discount": null,
+          "url": "https://gg.deals/br/redirect/64d214fcb836acadcfb0ac4d3cae0f05009ac1e4/?utm_source=games%2Fsingle",
+          "kind": "retail",
+          "drm": "GOG",
+          "game_slug": "cyberpunk-2077"
+        },
+        {
+          "shop": "Epic Games Store",
+          "cents": 19990,
+          "original": null,
+          "discount": null,
+          "url": "https://gg.deals/br/redirect/35b99799459f691b68b96d66477bb94fd29719e9/?utm_source=games%2Fsingle",
+          "kind": "retail",
+          "drm": "Epic Games Launcher",
+          "game_slug": "cyberpunk-2077"
+        }
+      ],
+      "url": "https://gg.deals/br/game/cyberpunk-2077/"
+    },
+    {
+      "steam_id": "1145360",
+      "title": "Hades",
+      "retail": 7399,
+      "keyshop": 5660,
+      "original": 7399,
+      "offers": [
+        {
+          "shop": "K4G.com",
+          "cents": 5660,
+          "original": 7399,
+          "discount": 24,
+          "url": "https://gg.deals/br/redirect/2befa50763a14af38df2141737a5c83724455578/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "Steam",
+          "game_slug": "hades"
+        },
+        {
+          "shop": "GAMIVO",
+          "cents": 5732,
+          "original": 7399,
+          "discount": 23,
+          "url": "https://gg.deals/br/redirect/fa951ba9b30418c4d8febf3d5fd766702739adce/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "Steam",
+          "game_slug": "hades"
+        },
+        {
+          "shop": "Epic Games Store",
+          "cents": 7399,
+          "original": null,
+          "discount": null,
+          "url": "https://gg.deals/br/redirect/018f3582f438614f4cbb674e2b58b16ed9fc3939/?utm_source=games%2Fsingle",
+          "kind": "retail",
+          "drm": "Epic Games Launcher",
+          "game_slug": "hades"
+        },
+        {
+          "shop": "Steam",
+          "cents": 7399,
+          "original": null,
+          "discount": null,
+          "url": "https://gg.deals/br/redirect/b2af361b9d0e731e6654b6d83a03a419f01828f1/?utm_source=games%2Fsingle",
+          "kind": "retail",
+          "drm": "Steam",
+          "game_slug": "hades"
+        },
+        {
+          "shop": "G2A",
+          "cents": 8448,
+          "original": null,
+          "discount": null,
+          "url": "https://gg.deals/br/redirect/9912b23bc2079bc0d1a8c3cffecd7ee9c00d50e0/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "Steam",
+          "game_slug": "hades"
+        },
+        {
+          "shop": "Difmark",
+          "cents": 11984,
+          "original": null,
+          "discount": null,
+          "url": "https://gg.deals/br/redirect/05f5ccfbab6e3a024c832d1107ef88ca8ee929f6/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "Steam",
+          "game_slug": "hades"
+        }
+      ],
+      "url": "https://gg.deals/br/game/hades/"
+    },
+    {
+      "steam_id": "1145350",
+      "title": "Hades II",
+      "retail": 8899,
+      "keyshop": 10191,
+      "original": null,
+      "offers": [
+        {
+          "shop": "Epic Games Store",
+          "cents": 8899,
+          "original": null,
+          "discount": null,
+          "url": "https://gg.deals/br/redirect/019f659760b7b7d5a62fd9d597285ac865f0657e/?utm_source=games%2Fsingle",
+          "kind": "retail",
+          "drm": "Epic Games Launcher",
+          "game_slug": "hades-ii"
+        },
+        {
+          "shop": "Steam",
+          "cents": 8899,
+          "original": null,
+          "discount": null,
+          "url": "https://gg.deals/br/redirect/f46bec1a2a820806cb82cf503722b2c28a39f7a5/?utm_source=games%2Fsingle",
+          "kind": "retail",
+          "drm": "Steam",
+          "game_slug": "hades-ii"
+        },
+        {
+          "shop": "Kinguin",
+          "cents": 10191,
+          "original": null,
+          "discount": null,
+          "url": "https://gg.deals/br/redirect/301a3a6821742f73ac25eee35ca91aed0e5d9f96/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "Steam",
+          "game_slug": "hades-ii"
+        },
+        {
+          "shop": "K4G.com",
+          "cents": 11270,
+          "original": null,
+          "discount": null,
+          "url": "https://gg.deals/br/redirect/ef64e9c5ef1b9ce86a2ae2d36c93e5d04f9c5332/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "Steam",
+          "game_slug": "hades-ii"
+        },
+        {
+          "shop": "GAMIVO",
+          "cents": 11470,
+          "original": null,
+          "discount": null,
+          "url": "https://gg.deals/br/redirect/feef035162f1f128d6e95add2cd9b3e75112aba1/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "Steam",
+          "game_slug": "hades-ii"
+        },
+        {
+          "shop": "Difmark",
+          "cents": 12954,
+          "original": null,
+          "discount": null,
+          "url": "https://gg.deals/br/redirect/05549438247027914bcf0c2dc33aed2e3a94f7c4/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "Steam",
+          "game_slug": "hades-ii"
+        }
+      ],
+      "url": "https://gg.deals/br/game/hades-ii/"
+    },
+    {
+      "steam_id": "2322010",
+      "title": "God of War Ragnarök",
+      "retail": 14230,
+      "keyshop": 16913,
+      "original": 24990,
+      "offers": [
+        {
+          "shop": "Nuuvem",
+          "cents": 14230,
+          "original": 24990,
+          "discount": 43,
+          "url": "https://gg.deals/br/redirect/7a30abd610d325faac90fb36fc183074fd0b8d01/?utm_source=games%2Fsingle",
+          "kind": "retail",
+          "drm": "Steam",
+          "game_slug": "god-of-war-ragnarok"
+        },
+        {
+          "shop": "GamersGate",
+          "cents": 16743,
+          "original": 24990,
+          "discount": 33,
+          "url": "https://gg.deals/br/redirect/1709603420e9edcf644c00acb1196f7c7c595ee1/?utm_source=games%2Fsingle",
+          "kind": "retail",
+          "drm": "Steam",
+          "game_slug": "god-of-war-ragnarok"
+        },
+        {
+          "shop": "JoyBuggy",
+          "cents": 16743,
+          "original": 24990,
+          "discount": 33,
+          "url": "https://gg.deals/br/redirect/7ade572212f884ef5b4aa94bdc712e7f09a7103b/?utm_source=games%2Fsingle",
+          "kind": "retail",
+          "drm": "Steam",
+          "game_slug": "god-of-war-ragnarok"
+        },
+        {
+          "shop": "Steam",
+          "cents": 16743,
+          "original": 24990,
+          "discount": 33,
+          "url": "https://gg.deals/br/redirect/be3745a3932962acdc452fba02997df903cb9833/?utm_source=games%2Fsingle",
+          "kind": "retail",
+          "drm": "Steam",
+          "game_slug": "god-of-war-ragnarok"
+        },
+        {
+          "shop": "Driffle",
+          "cents": 16913,
+          "original": 24990,
+          "discount": 32,
+          "url": "https://gg.deals/br/redirect/dd772bb0520701b0bd7a6d185a5a5fcfa83f3557/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "Steam",
+          "game_slug": "god-of-war-ragnarok"
+        },
+        {
+          "shop": "GAMESEAL",
+          "cents": 17796,
+          "original": 24990,
+          "discount": 29,
+          "url": "https://gg.deals/br/redirect/700303e136aa5e22dd3abddea10b26cc0c3b9ae5/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "Steam",
+          "game_slug": "god-of-war-ragnarok"
+        },
+        {
+          "shop": "Kinguin",
+          "cents": 17868,
+          "original": 24990,
+          "discount": 28,
+          "url": "https://gg.deals/br/redirect/8246759eea911a2113de3a3a7803411f7f781bbb/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "Steam",
+          "game_slug": "god-of-war-ragnarok"
+        },
+        {
+          "shop": "G2Play",
+          "cents": 17868,
+          "original": 24990,
+          "discount": 28,
+          "url": "https://gg.deals/br/redirect/0ed35baf99b6562d3ad0be9fd68bf444b1dbcfb3/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "Steam",
+          "game_slug": "god-of-war-ragnarok"
+        },
+        {
+          "shop": "Driffle",
+          "cents": 19525,
+          "original": 24990,
+          "discount": 22,
+          "url": "https://gg.deals/br/redirect/5f57728b8184073ee441d71ccfb9682b7ad6acc5/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "Steam",
+          "game_slug": "god-of-war-ragnarok"
+        },
+        {
+          "shop": "Kinguin",
+          "cents": 20120,
+          "original": 24990,
+          "discount": 19,
+          "url": "https://gg.deals/br/redirect/7c2981a871458fcdd1705b304584135ba77a13ad/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "Steam",
+          "game_slug": "god-of-war-ragnarok"
+        },
+        {
+          "shop": "G2Play",
+          "cents": 20120,
+          "original": 24990,
+          "discount": 19,
+          "url": "https://gg.deals/br/redirect/8dba1b32bc2b82158878d11ac3d566d6da385733/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "Steam",
+          "game_slug": "god-of-war-ragnarok"
+        },
+        {
+          "shop": "Kinguin",
+          "cents": 21465,
+          "original": 24990,
+          "discount": 14,
+          "url": "https://gg.deals/br/redirect/589474dec0c8dd4bece648668398cfe3e26fb427/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "Steam",
+          "game_slug": "god-of-war-ragnarok"
+        },
+        {
+          "shop": "G2Play",
+          "cents": 21465,
+          "original": 24990,
+          "discount": 14,
+          "url": "https://gg.deals/br/redirect/d65efd967c6981a62c17b887ff074712637b1e17/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "Steam",
+          "game_slug": "god-of-war-ragnarok"
+        },
+        {
+          "shop": "Kinguin",
+          "cents": 23658,
+          "original": 24990,
+          "discount": 5,
+          "url": "https://gg.deals/br/redirect/e8a9e8e664347634f3bbfc74e9e8d84a21e677d9/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "Steam",
+          "game_slug": "god-of-war-ragnarok"
+        },
+        {
+          "shop": "G2Play",
+          "cents": 23658,
+          "original": 24990,
+          "discount": 5,
+          "url": "https://gg.deals/br/redirect/67c99d4a65be6ff083b1e269f7edb9dce3732916/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "Steam",
+          "game_slug": "god-of-war-ragnarok"
+        },
+        {
+          "shop": "Driffle",
+          "cents": 38727,
+          "original": null,
+          "discount": null,
+          "url": "https://gg.deals/br/redirect/82f5de4510cb8e89463d6073917624807c20a551/?utm_source=games%2Fsingle",
+          "kind": "keyshop",
+          "drm": "Steam",
+          "game_slug": "god-of-war-ragnarok"
+        }
+      ],
+      "url": "https://gg.deals/br/game/god-of-war-ragnarok/"
+    }
+  ]
+}

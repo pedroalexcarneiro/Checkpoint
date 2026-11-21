@@ -4,6 +4,21 @@ from PySide6.QtWidgets import QLabel
 from checkpoint.prices import selected_quote,refresh_prices,wishlist_order
 from checkpoint.price_view import comparison
 
+
+def test_failed_query_cannot_mark_new_configuration_as_current(library):
+    from checkpoint.integrations import IntegrationError
+    from checkpoint.prices import invalidate_prices,needs_update,snapshot
+    identity=library.save_game({'title':'Portal 2','platform':'PC'})
+    with library.sql:library.sql.execute("INSERT INTO external_identifiers VALUES(?,'steam','620')",(identity,))
+    class Provider:
+        def prices(self,*args,**kwargs):
+            invalidate_prices(library)
+            raise IntegrationError('Conexão indisponível')
+    assert refresh_prices(library,identity,Provider())=='Conexão indisponível'
+    assert snapshot(library,identity)['config_version']==0
+    assert library.setting('prices.config_version')==1
+    assert needs_update(library,identity)
+
 @pytest.mark.parametrize('title,platform',[('Zelda Phantom Hourglass','Nintendo DS'),('Metroid Dread','Nintendo Switch')])
 def test_non_pc_never_uses_steam_cache_or_calls_pc_provider(library,title,platform):
     i=library.save_game({'title':title,'platform':platform})

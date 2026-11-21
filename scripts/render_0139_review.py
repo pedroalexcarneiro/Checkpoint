@@ -225,6 +225,20 @@ def main():
         for n in range(24):lib.save_game({'title':f'Jogo extra de teste {n}'})
         window.showNormal();window.resize(1280,800);window.navigate(1);window.view.setCurrentIndex(1)
         capture('biblioteca-lista-rolagem')
+    if 'controller' in selected:
+        from checkpoint.controller_capture import PREFERENCE
+        from PySide6.QtCore import QTimer
+        from types import SimpleNamespace
+        controller=window.controller_capture
+        controller.backend=SimpleNamespace(buttons=lambda slot:0 if slot==1 else None)
+        lib.set_setting(PREFERENCE,{'slot':1,'buttons':0x1100});controller.load()
+        window.navigate(5);window.settings_tabs.setCurrentIndex(0)
+        def capture_controller():
+            dialog=QApplication.activeModalWidget()
+            try:capture('captura-controle',dialog)
+            finally:dialog.reject()
+        QTimer.singleShot(0,capture_controller)
+        controller.configure()
     if 'lists' in selected:
         from checkpoint.library_lists import LibraryLists,manage_lists
         from PySide6.QtCore import QTimer

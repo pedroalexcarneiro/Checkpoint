@@ -122,6 +122,8 @@ class MainWindow(QMainWindow):
         self.capture_shortcut=GlobalCaptureHotkey(self,self.capture_game_window,None)
         configured=self.library.setting('capture.shortcut','Ctrl+Shift+S')
         self.guard(lambda:self.capture_shortcut.setKey(configured))
+        from .controller_capture import ControllerCapture
+        self.controller_capture=ControllerCapture(self)
         self.timer = QTimer(self); self.timer.timeout.connect(self.poll_sessions); self.timer.start(1000)
         self.statusBar().setSizeGripEnabled(False);self.statusBar().showMessage('');self.statusBar().hide()
         from .window_controls import WindowControls
@@ -989,6 +991,6 @@ class MainWindow(QMainWindow):
         if self.launcher.active and not self.system_shutdown:
             if QMessageBox.question(self,'Sessões ativas','Fechar o Checkpoint? O jogo continuará aberto. O tempo acompanhado será salvo; o período com o Checkpoint fechado não será contado.')!=QMessageBox.Yes:
                 event.ignore(); return
-        self.capture_shortcut.close();self.media_index.stop();self.price_queue.stop();self.timer.stop();self.status_timer.stop();self.download_manager.timer.stop();self.launcher.interrupt(reason='shutdown' if self.system_shutdown else 'closed');event.accept()
+        self.capture_shortcut.close();self.controller_capture.timer.stop();self.media_index.stop();self.price_queue.stop();self.timer.stop();self.status_timer.stop();self.download_manager.timer.stop();self.launcher.interrupt(reason='shutdown' if self.system_shutdown else 'closed');event.accept()
 
 from .dialog_style import AppMessages as QMessageBox, AppInputs as QInputDialog
