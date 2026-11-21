@@ -1,5 +1,7 @@
-from PySide6.QtCore import Qt,QTimer
-from PySide6.QtWidgets import QComboBox,QLineEdit,QListWidget,QPushButton
+from PySide6.QtCore import Qt,QSize,QTimer
+from PySide6.QtGui import QColor,QImage
+from PySide6.QtTest import QTest
+from PySide6.QtWidgets import QComboBox,QLineEdit,QListWidget,QPushButton,QStyleOptionViewItem
 
 from checkpoint.database import Database
 from checkpoint.library import Library
@@ -44,10 +46,12 @@ def test_list_filters_combine_in_both_views_and_persist(ui,folder):
     finally:reopened.close()
 
 
-def test_new_list_manager_saves_checked_games_and_rejects_duplicate(ui,app):
+def test_new_list_manager_saves_checked_games_and_rejects_duplicate(ui,app,folder):
     window,first=ui
     lib=window.library
-    second=lib.save_game({'title':'Jogo B','platform':'Nintendo Switch'})
+    logo=folder/'logo-b.png'
+    image=QImage(160,40,QImage.Format_RGB32);image.fill(QColor('#d1376a'));assert image.save(str(logo))
+    second=lib.save_game({'title':'Jogo B','platform':'Nintendo Switch','logo':str(logo)})
     def interact(dialog):
         name=dialog.findChild(QLineEdit)
         games=dialog.findChild(QListWidget)
@@ -57,6 +61,14 @@ def test_new_list_manager_saves_checked_games_and_rejects_duplicate(ui,app):
             item=games.item(i)
             if item.data(Qt.UserRole)==second:
                 assert item.text()=='Jogo B'
+                delegate=games.itemDelegate();index=games.indexFromItem(item)
+                for _ in range(300):
+                    option=QStyleOptionViewItem();delegate.initStyleOption(option,index)
+                    pixmap=option.icon.pixmap(QSize(64,30))
+                    if pixmap.size()==QSize(64,16):break
+                    QTest.qWait(5)
+                assert pixmap.size()==QSize(64,16)
+                assert pixmap.toImage().pixelColor(2,2)==QColor('#d1376a')
                 item.setCheckState(Qt.Checked)
         save.click()
         identity=dialog.findChild(QComboBox).currentData()

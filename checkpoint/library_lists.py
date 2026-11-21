@@ -36,10 +36,14 @@ class LibraryLists:
 
 
 def manage_lists(window,selected=None,*,create=False):
-    from PySide6.QtCore import Qt
-    from PySide6.QtWidgets import QComboBox,QDialog,QFormLayout,QHBoxLayout,QLineEdit,QListWidget,QListWidgetItem,QVBoxLayout
-    from .design_system import dialog_heading
+    from PySide6.QtCore import Qt,QSize
+    from PySide6.QtGui import QIcon
+    from PySide6.QtWidgets import (QComboBox,QDialog,QFormLayout,QHBoxLayout,QLineEdit,
+                                  QListWidget,QListWidgetItem,QStyledItemDelegate,QStyleOptionViewItem,QVBoxLayout)
+    from .artwork_cache import ArtworkCache
+    from .design_system import colors,dialog_heading
     from .dialog_style import AppMessages,prepare_dialog
+    from .icons import lucide_icon
     from .ui_components import action,text
 
     lists=LibraryLists(window.library)
@@ -54,9 +58,24 @@ def manage_lists(window,selected=None,*,create=False):
     layout.addLayout(fields)
     layout.addWidget(text('Jogos','cardTitle'))
     games=QListWidget();games.setAccessibleName('Jogos da lista');layout.addWidget(games,1)
+    cache=ArtworkCache(4*1024*1024,asynchronous=True,parent=games)
+    cache.setObjectName('listPickerLogoCache');cache.ready.connect(games.viewport().update)
+    fallback=lucide_icon('library',colors()['muted'],22)
+
+    class GameLogoDelegate(QStyledItemDelegate):
+        def initStyleOption(self,option,index):
+            super().initStyleOption(option,index)
+            logo=cache.load(index.data(Qt.UserRole+1),64,30,trim=True)
+            option.icon=fallback if logo.isNull() else QIcon(logo)
+            option.decorationSize=QSize(64,30)
+            option.features|=QStyleOptionViewItem.HasDecoration
+
+    games.setItemDelegate(GameLogoDelegate(games));games.setUniformItemSizes(True)
     status=text('','muted');layout.addWidget(status)
     for game in window.library.owned_games():
         item=QListWidgetItem(game['title']);item.setData(Qt.UserRole,game['id'])
+        item.setData(Qt.UserRole+1,game['logo'])
+        item.setSizeHint(QSize(0,44))
         if game['platform']:item.setToolTip(game['platform'])
         item.setFlags(item.flags()|Qt.ItemIsUserCheckable);item.setCheckState(Qt.Unchecked)
         games.addItem(item)
