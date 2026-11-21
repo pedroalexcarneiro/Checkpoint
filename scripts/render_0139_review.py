@@ -220,6 +220,21 @@ def main():
         for n in range(24):lib.save_game({'title':f'Jogo extra de teste {n}'})
         window.showNormal();window.resize(1280,800);window.navigate(1);window.view.setCurrentIndex(1)
         capture('biblioteca-lista-rolagem')
+    if 'lists' in selected:
+        from checkpoint.library_lists import LibraryLists,manage_lists
+        from PySide6.QtCore import QTimer
+        lists=LibraryLists(lib)
+        identity=lists.save(None,'Para o fim de semana',ids[:3])
+        lists.save(None,'Favoritos do ano',ids[1:4])
+        window.showNormal();window.resize(1280,800);window.navigate(1);window.view.setCurrentIndex(1)
+        window.update_custom_lists();window.select_custom_list(window.custom_lists.findData(identity))
+        capture('biblioteca-lista-personalizada')
+        def capture_lists():
+            dialog=QApplication.activeModalWidget()
+            try:capture('biblioteca-gerenciar-listas',dialog)
+            finally:dialog.reject()
+        QTimer.singleShot(0,capture_lists)
+        manage_lists(window,identity)
     if 'dialogs' in selected:
         from checkpoint.local_rom_dialog import RomSourceDialog, LocalRomDialog
         from checkpoint.emulator_dialog import EmulatorDialog

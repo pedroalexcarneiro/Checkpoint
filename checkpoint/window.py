@@ -102,6 +102,7 @@ class MainWindow(QMainWindow):
         self.header.insertWidget(2,self.search);self.header.setSpacing(12)
         self.search.returnPressed.connect(self.search_library)
         self.library_filters.removeWidget(self.platform);self.library_options.insertWidget(1,self.platform)
+        self.library_options.insertWidget(2,self.custom_lists)
         self.platform.setObjectName('libraryPlatform');self.sort.setObjectName('librarySort');self.platform.setFixedWidth(165);self.sort.setFixedWidth(200)
         from .design_system import IconButton
         self.view_buttons=[]
@@ -228,6 +229,11 @@ class MainWindow(QMainWindow):
         filter_button=QPushButton();filter_button.setIcon(nav_icon('filter',self.theme.colors['muted']));filter_button.setFixedSize(32,32);filter_button.setToolTip('Mais filtros');filter_button.setAccessibleName('Mais filtros');filter_button.setCheckable(True);filter_button.toggled.connect(self.extra_filters.setVisible);options.addWidget(filter_button)
         self.sort = QComboBox(); self.sort.addItem('Alfabeticamente','title'); self.sort.addItem('Adicionados recentemente','recent'); self.sort.addItem('Maior nota','rating')
         self.sort.currentIndexChanged.connect(self.refresh_library); options.addWidget(self.sort)
+        self.custom_lists=QComboBox();self.custom_lists.setObjectName('libraryLists');self.custom_lists.setAccessibleName('Listas da Biblioteca')
+        self.custom_lists.setSizeAdjustPolicy(QComboBox.AdjustToMinimumContentsLengthWithIcon);self.custom_lists.setMinimumContentsLength(15)
+        self.library_list_id=self.library.setting('library.selected_list',None)
+        self.update_custom_lists()
+        self.custom_lists.activated.connect(self.select_custom_list)
         self.view = QComboBox(); self.view.addItems(['Galeria','Lista']); self.view.currentIndexChanged.connect(self.refresh_library); self.view.hide()
         layout.addLayout(options);layout.addWidget(self.extra_filters);self.extra_filters.hide()
         from .cover_grid import CoverGrid
@@ -258,6 +264,29 @@ class MainWindow(QMainWindow):
         self.status.setCurrentIndex(max(0,self.status.findData(status)))
         self.favorites.blockSignals(False);self.status.blockSignals(False);self.refresh_library()
 
+    def update_custom_lists(self):
+        from .library_lists import LibraryLists
+        records=LibraryLists(self.library).all()
+        self.custom_lists.clear();self.custom_lists.addItem('Todos os jogos',None)
+        for identity,row in sorted(records.items(),key=lambda entry:entry[1]['name'].casefold()):
+            self.custom_lists.addItem(row['name'],identity)
+        self.custom_lists.addItem('Criar lista…','create')
+        self.custom_lists.addItem('Gerenciar listas…','manage')
+        if self.library_list_id not in records:self.library_list_id=None
+        self.custom_lists.setCurrentIndex(max(0,self.custom_lists.findData(self.library_list_id)))
+
+    @Slot(int)
+    def select_custom_list(self,index):
+        identity=self.custom_lists.itemData(index)
+        if identity in ('create','manage'):
+            from .library_lists import manage_lists
+            self.custom_lists.setCurrentIndex(max(0,self.custom_lists.findData(self.library_list_id)))
+            identity=manage_lists(self,self.library_list_id,create=identity=='create')
+        self.library_list_id=identity
+        self.update_custom_lists()
+        self.library.set_setting('library.selected_list',self.library_list_id)
+        self.refresh_library()
+
     def refresh_library(self,*args):
         if not hasattr(self,'gallery'): return
         from .local_rom import canonical_platform
@@ -276,6 +305,12 @@ class MainWindow(QMainWindow):
         if self.platform.currentIndex()>0:
             selected=self.platform.currentData() or ''
             games=[game for game in games if canonical_platform(game['platform'])==selected]
+        if self.library_list_id:
+            from .library_lists import LibraryLists
+            row=LibraryLists(self.library).all().get(self.library_list_id)
+            if row is not None:
+                members=set(row['games'])
+                games=[game for game in games if game['id'] in members]
         from .card_layout import cover_size,nearest_cover_choice
         self.gallery.theme=self.theme;self.gallery.set_cover_size(nearest_cover_choice(cover_size(self.library)))
         self.count.setText(count_text(len(games),'jogo'))
@@ -311,13 +346,24 @@ class MainWindow(QMainWindow):
     def update_library_empty(self):
         owned=self.library.owned_games();tab=self.library_tabs.currentIndex()
         extra=bool(self.search.text().strip() or self.platform.currentIndex()>0 or self.genre.currentData() or self.status.currentText()!=({2:'Jogando',3:'Concluído'}.get(tab,'Todos os status')))
-        if not owned:title='Biblioteca vazia';caption='Adicionar jogo';callback=self.add_library_game
+        description=''
+        if not owned:
+            title='Biblioteca vazia';caption='Adicionar jogo';callback=self.add_library_game
+            description='Adicione um jogo à biblioteca.'
+        elif self.library_list_id:
+            from .library_lists import LibraryLists
+            stored=LibraryLists(self.library).all().get(self.library_list_id,{})
+            members=set(stored.get('games',[]))
+            if any(game['id'] in members for game in owned):
+                title='Nenhum jogo da lista corresponde aos filtros';caption='Limpar filtros';callback=self.clear_library_filters
+            else:
+                title='Lista vazia';caption='Adicionar jogos'
+                callback=lambda:self.select_custom_list(self.custom_lists.findData('manage'))
         elif extra:title='Nenhum resultado para esta busca';caption='Limpar filtros';callback=self.clear_library_filters
         elif tab in (1,2,3):
             title={1:'Nenhum favorito ainda',2:'Nenhum jogo em andamento',3:'Nenhum jogo concluído ainda'}[tab];caption='Ver todos os jogos';callback=self.clear_library_filters
         else:title='Nenhum resultado';caption='Limpar filtros';callback=self.clear_library_filters
         self.library_empty.findChild(QLabel,'sectionTitle').setText(title)
-        description='Adicione um jogo à biblioteca.' if not owned else 'Altere a busca ou limpe os filtros.'
         self.library_empty.findChild(QLabel,'emptyDescription').setText(description)
         action_button=self.library_empty.findChild(QPushButton);action_button.setText(caption)
         try:action_button.clicked.disconnect()

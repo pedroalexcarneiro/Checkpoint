@@ -227,6 +227,20 @@ possibilidade; tornar a escolha explícita quando houver várias.
 GameDialog.load_drive_file, cadastro de ROM pelo Drive e suas asserções
 ficam fora dessa proposta. O default da tabela é legado e foi mantido.
 
+## Unidade 7 — Listas da Biblioteca (item 13)
+
+O seletor combina listas lógicas com busca, plataforma, favoritos, ordenação,
+formato de lista e grade. Criar lista e Gerenciar listas abrem o mesmo editor,
+onde é possível renomear e marcar jogos. Cada lista tem ID estável e guarda
+apenas IDs de jogos. Jogos podem estar em mais de uma lista. O último filtro
+selecionado é salvo. Excluir a lista ou desmarcar um jogo não altera arquivos,
+cadastros, sessões, notas ou saves. Ações de estado vazio abrem a gestão da
+lista ou limpam os demais filtros.
+
+Gate local: 19 testes aprovados, exit 0. Inclui dois jogos diferentes,
+gerenciamento pelo diálogo, nomes duplicados, filtro nos dois modos, dados
+preservados e reabertura da base. As duas capturas da Biblioteca usam fixtures.
+
 ## Commits locais já preparados
 
 - f0b43c0: plano/base confirmados e diagnóstico inicial.
@@ -236,3 +250,4 @@ ficam fora dessa proposta. O default da tabela é legado e foi mantido.
 - 0b0734e: fila de transferências, progresso e verificação.
 - d5ddedc: mostrar o progresso da transferência na aba Arquivos da ficha.
 - c0b56e4: destacar o último jogo iniciado no Início e manter histórico acessível.
+- 76e9241: perfis por formatos declarados e apresentação sem presumir PC nos fluxos alterados.
