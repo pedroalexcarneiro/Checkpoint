@@ -2,11 +2,27 @@
 from pathlib import Path
 from .cover_art import CoverArtwork
 from .visual_tokens import SPACE
-from .design_system import CardSurface
+from .design_system import CardSurface,colors
 from PySide6.QtCore import Qt,QSize,QTimer
+from PySide6.QtGui import QPainter
 from PySide6.QtWidgets import QLabel,QWidget,QVBoxLayout,QHBoxLayout,QBoxLayout,QTabWidget,QFrame,QSizePolicy,QPushButton,QComboBox,QCheckBox
 from .ui_components import text,action,card,GameTile,relative_date,ElidedAction
 from .design_system import CardGrid,page_scroll,empty_state,IconButton,ArtworkButton,Badge
+from .icons import lucide_icon
+
+
+class WishFilterCombo(QComboBox):
+    def __init__(self):
+        super().__init__()
+        self.setStyleSheet('QComboBox::down-arrow { image: none; }')
+        self.currentTextChanged.connect(self.setToolTip)
+
+    def paintEvent(self,event):
+        super().paintEvent(event)
+        painter=QPainter(self)
+        arrow=lucide_icon('chevron',colors()['muted'],16).pixmap(16,16)
+        painter.drawPixmap(self.width()-24,(self.height()-16)//2,arrow)
+        painter.end()
 
 
 class WishLogo(CoverArtwork):
@@ -96,7 +112,7 @@ def build_wishlist(window):
     from .locale import count_text
     top=QHBoxLayout();top.addWidget(text(count_text(len(rows),'jogo'),'muted'));top.addStretch();top.addWidget(action('+ Adicionar desejo',window.add_game,True));inside.addLayout(top)
     from .wish_platforms import options,selected
-    filters=QHBoxLayout();filters.setSpacing(10);platform=QComboBox();platform.setObjectName('wishlistPlatform');platform.setAccessibleName('Plataforma dos desejos')
+    filters=QHBoxLayout();filters.setSpacing(10);platform=WishFilterCombo();platform.setObjectName('wishlistPlatform');platform.setAccessibleName('Plataforma dos desejos')
     platform.setMaximumWidth(118)
     choices=options(rows)
     for caption,key in choices:platform.addItem(caption,key)
@@ -111,7 +127,7 @@ def build_wishlist(window):
     from .prices import set_offer_details,wishlist_order
     selected_order=window.library.setting('wishlist.order','name')
     if selected_order not in ('name','price','discount'):selected_order='name';window.library.set_setting('wishlist.order',selected_order)
-    order=QComboBox();order.setObjectName('wishlistOrder');order.addItem('Alfabeticamente','name');order.addItem('Menor preço','price');order.addItem('Maior desconto','discount');order.setCurrentIndex(max(0,order.findData(selected_order)))
+    order=WishFilterCombo();order.setObjectName('wishlistOrder');order.addItem('Alfabeticamente','name');order.addItem('Menor preço','price');order.addItem('Maior desconto','discount');order.setCurrentIndex(max(0,order.findData(selected_order)))
     order.setMaximumWidth(174)
     from .price_view import attribution_link
     filters.addWidget(attribution_link())

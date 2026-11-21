@@ -115,26 +115,26 @@ def test_recent_art_has_rounded_transparent_corners_without_losing_edges(ui, app
         art.close()
 
 
-def test_offer_banner_rounds_four_corners_and_never_overlaps_text(ui, app, folder):
+def test_offer_cover_rounds_four_corners_and_never_overlaps_text(ui, app, folder):
     from PySide6.QtGui import QImage, QColor
-    from checkpoint.home_components import HomeOfferRow, OfferBanner
+    from checkpoint.home_components import HomeOfferRow, OfferCover
     from checkpoint.ui_components import ElidedAction
     w, identity = ui
-    path = folder / 'offer-banner.png'
-    image = QImage(300, 120, QImage.Format_RGB32)
+    path = folder / 'offer-cover.png'
+    image = QImage(300, 400, QImage.Format_RGB32)
     image.fill(QColor('#f0a030'))
     assert image.save(str(path))
-    game = {**w.library.get(identity), 'banner': str(path), 'quote': {'current_kind': 'retail', 'lowest': 3000}}
+    game = {**w.library.get(identity), 'cover': str(path), 'quote': {'current_kind': 'retail', 'lowest': 3000}}
     row = HomeOfferRow(w, game)
     row.resize(400, row.sizeHint().height())
     row.show()
     settle(app)
     try:
-        thumbnail = row.findChild(OfferBanner)
+        thumbnail = row.findChild(OfferCover)
         title = row.findChild(ElidedAction)
         assert thumbnail.geometry().right() + 10 <= title.x()
         target = thumbnail.image_target()
-        assert abs(target.width()/target.height()-300/120) < .01
+        assert abs(target.width()/target.height()-300/400) < .01
         pixels = thumbnail.grab().toImage()
         for x, y in ((target.left(), target.top()), (target.right()-1, target.top()), (target.left(), target.bottom()-1), (target.right()-1, target.bottom()-1)):
             assert pixels.pixelColor(round(x), round(y)).name() != '#f0a030'

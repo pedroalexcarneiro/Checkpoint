@@ -6,7 +6,9 @@ from .visual_tokens import SPACE,HEIGHT
 
 def style_add_dialog(dialog):
     quick=dialog.quick_add
-    dialog.setMinimumSize(680,600);dialog.resize(760,640)
+    screen_height=dialog.screen().availableGeometry().height()
+    dialog.setMinimumSize(680,min(660,screen_height))
+    dialog.resize(760,min(700,screen_height))
     dialog.layout().setContentsMargins(22,SPACE['lg'],22,SPACE['lg']);dialog.layout().setSpacing(SPACE['sm'])
     quick.query.setFixedHeight(48)
     quick.sources.setExpanding(True);quick.sources.setDrawBase(False)
@@ -61,3 +63,4 @@ def arrange_results(dialog):
     scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
     scroll.setWidget(body)
     outer.insertWidget(first,scroll,1)
+    quick.sources.currentChanged.connect(lambda index:scroll.setVisible(index!=2))

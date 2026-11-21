@@ -209,34 +209,26 @@ def test_offers_show_only_same_offer_original_discount_and_current(ui,app):
     assert wish_offers(w.library)[0]['quote']['lowest']==3000
 
 
-def test_offer_banner_uses_entire_banner_instead_of_cover(ui,app,folder):
-    from checkpoint.home_components import OfferBanner
-    from PySide6.QtGui import QImage,QColor,QPainter
-    w,i=ui;image=QImage(1200,320,QImage.Format_RGB32);image.fill(QColor('blue'));p=QPainter(image)
-    p.fillRect(0,0,1200,20,QColor('yellow'));p.fillRect(0,300,1200,20,QColor('magenta'))
-    p.fillRect(0,20,20,280,QColor('cyan'));p.fillRect(1180,20,20,280,QColor('red'));p.end()
-    path=folder/'banner.png';assert image.save(str(path))
-    art=OfferBanner({**w.library.get(i),'banner':str(path),'cover':'capa-que-nao-deve-ser-usada.png'},w);art.show()
-    try:
-        for width in (300,480,680,300):
-            art.resize(width,art.height())
-            for _ in range(6):app.processEvents()
-            assert abs(art.width()/art.height()-1200/320)<.03
-            frame=art.grab().toImage();x=art.width()//2;y=art.height()//2
-            assert frame.pixelColor(x,1).green()>200 and frame.pixelColor(x,1).red()>200
-            assert frame.pixelColor(x,art.height()-2).blue()>200 and frame.pixelColor(x,art.height()-2).red()>200
-            assert frame.pixelColor(1,y).green()>200 and frame.pixelColor(1,y).blue()>200
-            assert frame.pixelColor(art.width()-2,y).red()>200 and frame.pixelColor(art.width()-2,y).green()<20
-    finally:art.close()
-
-
-def test_official_offer_header_does_not_replace_a_manually_chosen_banner(library):
-    from checkpoint.offer_art import steam_header_identity
-    identity=library.save_game({'title':'God of War Ragnarök','platform':'PC','banner':'minha-arte.jpg'})
-    with library.sql:library.sql.execute("INSERT INTO external_identifiers VALUES (?,'steam','2322010')",(identity,))
-    assert steam_header_identity(library,library.get(identity)) is None
-    library.save_game({'title':'God of War Ragnarök','banner':''},identity)
-    assert steam_header_identity(library,library.get(identity))=='2322010'
+def test_offer_uses_cover_even_when_banner_exists(ui,app,folder):
+    from checkpoint.home_components import OfferCover
+    from PySide6.QtGui import QImage,QColor
+    window,identity=ui
+    cover=QImage(90,120,QImage.Format_RGB32);cover.fill(QColor('cyan'))
+    banner=QImage(120,40,QImage.Format_RGB32);banner.fill(QColor('red'))
+    cover_path=folder/'cover.png';banner_path=folder/'banner.png'
+    assert cover.save(str(cover_path)) and banner.save(str(banner_path))
+    game={**window.library.get(identity),'cover':str(cover_path),'banner':str(banner_path)}
+    for candidate,expected in ((game,'cyan'),({**game,'cover':''},None)):
+        art=OfferCover(candidate,window);art.show();app.processEvents()
+        try:
+            assert art.size().width()==42 and art.size().height()==56
+            if expected:
+                assert art.image_target().toAlignedRect()==art.rect()
+                assert art.grab().toImage().pixelColor(21,28)==QColor(expected)
+            else:
+                assert art.pixmap.isNull()
+        finally:
+            art.close()
 
 
 def test_home_hero_keeps_entire_wide_and_narrow_banners(ui,app,folder):

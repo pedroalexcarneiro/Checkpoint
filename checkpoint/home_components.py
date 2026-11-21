@@ -218,34 +218,16 @@ class RecentGameCard(CardSurface):
         else:super().mouseReleaseEvent(event)
 
 
-class OfferBanner(RecentArtwork):
+class OfferCover(RecentArtwork):
     def __init__(self,game,window):
-        super().__init__({**game,'cover':'','logo':''},window)
-        self.setObjectName('homeOfferBanner')
-        self.steam_identity=None
-        if window.isVisible() and window.library.setting('artwork.auto',True):
-            from .offer_art import OfferArt,steam_header_identity
-            self.steam_identity=steam_header_identity(window.library,game)
-            if self.steam_identity:
-                if not hasattr(window,'offer_art'):
-                    window.offer_art=OfferArt(window.library.db.path.parent,window)
-                window.offer_art.available.connect(self.header_available)
-                cached=window.offer_art.request(self.steam_identity)
-                if cached:self.header_available(self.steam_identity,cached)
+        super().__init__({**game,'banner':''},window)
+        self.setObjectName('homeOfferCover')
+        self.setSizePolicy(QSizePolicy.Fixed,QSizePolicy.Fixed)
+        self.setFixedSize(42,56)
 
-    def header_available(self,identity,path):
-        if identity!=self.steam_identity:return
-        pixmap=QPixmap(path)
-        if pixmap.isNull():return
-        self.pixmap=pixmap
-        self.setFixedHeight(min(42,max(1,round(self.width()*pixmap.height()/pixmap.width()))))
-        self.update()
-    def sizeHint(self):return QSize(136,40)
     def resizeEvent(self,event):
-        if self.pixmap.isNull():
-            QPushButton.resizeEvent(self,event)
-            self.setFixedHeight(40)
-        else:super().resizeEvent(event)
+        QPushButton.resizeEvent(self,event)
+
 
 
 class HomeSectionHeader(QWidget):
@@ -277,9 +259,7 @@ class HomeOfferRow(QWidget):
         super().__init__();self.setObjectName('homeOfferRow');self.setMinimumWidth(0)
         self.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
         row=QHBoxLayout(self);row.setContentsMargins(0,6,0,6);row.setSpacing(12)
-        self.banner=OfferBanner(game,window);self.banner.setFixedWidth(112);self.banner.maximum_art_height=42
-        self.banner.setSizePolicy(QSizePolicy.Fixed,QSizePolicy.Fixed)
-        row.addWidget(self.banner,0,Qt.AlignVCenter)
+        row.addWidget(OfferCover(game,window),0,Qt.AlignVCenter)
         words=QVBoxLayout();words.setContentsMargins(0,0,0,0);words.setSpacing(4)
         title=ElidedAction(game['title'],lambda:window.detail(game['id']));title.setObjectName('activityLink');words.addWidget(title)
         quote=game['quote'];offer=quote.get('selected_offer',{})
@@ -300,10 +280,6 @@ class HomeOfferRow(QWidget):
         price=source_link(window.library,game,money(quote['lowest']));price.setProperty('homeOfferPrice',True)
         price.setStyleSheet('color: '+window.theme.colors['accent']+'; font-weight: 600; text-align: right;')
         prices.addWidget(price,0,Qt.AlignRight);row.addLayout(prices)
-
-    def resizeEvent(self,event):
-        super().resizeEvent(event)
-        self.banner.setFixedWidth(max(64,min(112,event.size().width()-192)))
 
 
 class GameStrip(QWidget):

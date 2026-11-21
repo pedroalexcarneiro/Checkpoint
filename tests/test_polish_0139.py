@@ -15,8 +15,9 @@ def test_two_wishes_remain_compact_and_wide_window_adds_columns(ui, app):
     from checkpoint.collection_views import WishGrid, WishLogo
     w, identity = ui
     other = w.library.save_game({'title': 'Metroid Fusion', 'platform': 'GBA'})
+    extra = [w.library.save_game({'title': title, 'platform': 'PlayStation 5'}) for title in ('Hades', 'Hollow Knight')]
     with w.library.sql:
-        for game_id in (identity, other):
+        for game_id in (identity, other, *extra):
             w.library.sql.execute('INSERT INTO wishlist(game_id) VALUES(?)', (game_id,))
     columns = []
     for size in ((1000, 700), (1280, 800), (1920, 1080)):
@@ -30,8 +31,16 @@ def test_two_wishes_remain_compact_and_wide_window_adds_columns(ui, app):
             art = card.findChild(WishLogo)
             assert art.width() == art.height()
             assert card.rect().contains(art.geometry())
+            viewport=w.wishlist_scroll.viewport()
+            assert card.mapTo(viewport,card.rect().topRight()).x()<viewport.width()
         assert w.wishlist_scroll.widget().width()<=w.wishlist_scroll.viewport().width()
     assert columns[0]==3 and columns[2] > columns[1]
+    from checkpoint.collection_views import WishFilterCombo
+    for name in ('wishlistPlatform','wishlistOrder'):
+        combo=w.pages[2].findChild(WishFilterCombo,name)
+        QTest.mouseClick(combo,Qt.LeftButton,pos=QPoint(combo.width()-12,combo.height()//2))
+        assert combo.view().isVisible()
+        combo.hidePopup()
 
 
 def test_diary_only_is_compact_and_mixed_cards_align(ui, app):

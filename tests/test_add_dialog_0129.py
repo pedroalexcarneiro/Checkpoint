@@ -24,6 +24,7 @@ def test_add_dialog_has_one_internal_close_and_no_local_automation_option(librar
 def test_advanced_options_leave_preview_and_actions_in_order(library,app):
     from PySide6.QtWidgets import QScrollArea
     dialog=GameDialog(library=library)
+    assert dialog.height()==min(700,dialog.screen().availableGeometry().height())
     dialog.resize(680,600);dialog.show()
     quick=dialog.quick_add
     try:
@@ -40,5 +41,9 @@ def test_advanced_options_leave_preview_and_actions_in_order(library,app):
             assert scroll.geometry().bottom()<quick.advanced.y()
             assert quick.platform.isVisible()==expanded
             assert quick.save.isVisible()
+        quick.sources.setCurrentIndex(2);app.processEvents()
+        assert scroll.isHidden() and quick.steam_panel.isVisible()
+        quick.sources.setCurrentIndex(1);app.processEvents()
+        assert scroll.isVisible()
     finally:
         dialog.reject();dialog.deleteLater()
