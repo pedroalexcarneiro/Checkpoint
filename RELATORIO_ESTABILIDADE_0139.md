@@ -587,6 +587,7 @@ offscreen.
   conferência das 882 entradas, extração, abertura e smoke test de seis
   telas com SQLite, no Wine. O comportamento em uma instalação Windows
   física continua pendente de teste.
+  A suíte completa do primeiro pacote aprovou 907 testes em 653,40 s.
 - `Checkpoint-teste-Windows-x64.zip` (80.108.523 bytes), SHA-256
   `e6d7021aede1e88922004fa2bc8878afc77cf0e17a056f232d2dbcfe0ee50504`.
 - A revisão com o cadastro vertical passou em 60 testes de interface e
