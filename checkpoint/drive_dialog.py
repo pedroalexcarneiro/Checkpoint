@@ -160,8 +160,12 @@ class DriveDialog(QDialog):
         directory=self.library.setting('downloads')
         if not directory:
             QMessageBox.information(self,'Downloads','Configure a pasta de downloads primeiro.'); return
-        from .worker import run_isolated
-        self.run(lambda lib:run_isolated('download',lib.db.path,file_id=file['id'],directory=directory))
+        from .transfers import manager_for
+        manager=manager_for(self.library,self.parentWidget())
+        try:manager.start(file['id'],directory=directory)
+        except ValueError as error:
+            QMessageBox.warning(self,'Downloads',str(error));return
+        self.accept()
     def recognize_platforms(self):
         self.run(lambda lib: f'{DriveScanner(lib,None).recognize_platforms()} plataformas reconhecidas. Nenhuma ROM foi baixada.')
     def import_dat(self):

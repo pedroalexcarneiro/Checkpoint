@@ -136,12 +136,36 @@ class GoogleDriveClient:
         return self.service.changes().list(pageToken=token,pageSize=1000,
             fields=f'nextPageToken,newStartPageToken,changes(fileId,removed,file({FILE_FIELDS}))').execute(num_retries=3)
 
-    def download(self,file_id,target):
+    def download(self,file_id,target,*,progress=None,cancel=None):
         from googleapiclient.http import MediaIoBaseDownload
-        with open(target,'wb') as stream:
+        from googleapiclient.errors import HttpError
+        import httplib2
+        import time
+        from ..transfer_progress import check_cancel
+        check_cancel(cancel)
+        with open(target,'xb') as stream:
             downloader = MediaIoBaseDownload(stream,self.service.files().get_media(fileId=validate_id(file_id)),chunksize=4*1024*1024)
             done = False
-            while not done: _,done = downloader.next_chunk(num_retries=3)
+            while not done:
+                check_cancel(cancel)
+                for attempt in range(4):
+                    check_cancel(cancel)
+                    try:
+                        status,done = downloader.next_chunk(num_retries=0)
+                        break
+                    except (HttpError,httplib2.HttpLib2Error,OSError) as error:
+                        check_cancel(cancel)
+                        if isinstance(error,HttpError) and getattr(error.resp,'status',0) not in (408,429,500,502,503,504):
+                            raise IntegrationError('O Drive recusou o download. Confira o acesso ao arquivo e tente novamente.') from None
+                        if attempt==3:raise IntegrationError('Download interrompido após quatro tentativas. Verifique a conexão e tente novamente; parcial preservado.') from None
+                        if progress:progress({'stage':'waiting','received':stream.tell(),'attempt':attempt+2})
+                        stop=time.monotonic()+2**attempt
+                        while time.monotonic()<stop:
+                            check_cancel(cancel);time.sleep(min(.1,max(0,stop-time.monotonic())))
+                if progress:
+                    progress({'stage':'downloading','received':stream.tell(),
+                              'total':getattr(status,'total_size',None)})
+                check_cancel(cancel)
 
 class DriveScanner:
     def __init__(self,library,client):
@@ -294,23 +318,48 @@ class DriveScanner:
         from ..rom_link import bind
         bind(self.library,file_id,game_id)
 
-    def download(self,file_id,directory):
+    def download(self,file_id,directory,*,progress=None,cancel=None):
+        from ..transfer_files import windows_name,free_destination,publish_download,recover_download
+        from ..transfer_progress import check_cancel
         row = self.library.sql.execute('SELECT * FROM game_files WHERE id=?',(file_id,)).fetchone()
         if not row: raise ValueError('Arquivo não encontrado.')
+        if not row['drive_id']:raise ValueError('Este arquivo não tem origem no Drive.')
+        from ..rom_link import verify
+        if row['available'] and verify(dict(row)):
+            raise ValueError('Esta ROM já foi baixada. O arquivo existente foi preservado.')
+        check_cancel(cancel)
+        recovered=recover_download(self.library,row,cancel)
+        if recovered:
+            if progress:progress({'stage':'downloaded','received':recovered.stat().st_size,
+                                  'total':row['size'],'local_path':str(recovered)})
+            return recovered
         directory = Path(directory).resolve(); directory.mkdir(parents=True,exist_ok=True)
-        # Nome local por ID; nome original é preservado no banco.
-        target = directory/(validate_id(row['drive_id'])+row['extension'])
-        if target.exists(): raise ValueError('Arquivo local já existe; nenhum arquivo foi substituído.')
-        partial = target.with_name(target.name+'.'+uuid4().hex+'.partial')
-        self.client.download(row['drive_id'],partial)
+        name=windows_name(row['original_name'],row['extension'])
+        target = free_destination(directory,name)
+        partial = target.with_name(target.stem[:80]+'.'+uuid4().hex+'.partial')
+        def report(values):
+            if progress:
+                data={'file_id':file_id,'file_name':target.name,'partial_path':str(partial),**values}
+                if row['size'] is not None:data['total']=row['size']
+                progress(data)
+        report({'stage':'downloading','received':0,'transfer_state':'running','verification_state':'not_started'})
+        if progress is not None or cancel is not None:
+            self.client.download(row['drive_id'],partial,progress=report,cancel=cancel)
+        else:self.client.download(row['drive_id'],partial)
+        report({'stage':'received','received':partial.stat().st_size,'transfer_state':'completed'})
+        check_cancel(cancel)
+        report({'stage':'verifying','received':partial.stat().st_size,'verification_state':'running'})
+        if not partial.stat().st_size:raise IntegrationError('A transferência retornou um arquivo vazio. Parcial preservado para diagnóstico.')
         if row['size'] is not None and partial.stat().st_size!=row['size']:
             raise IntegrationError('Tamanho divergente; download parcial preservado para diagnóstico.')
-        if row['md5']:
-            checksum = hashlib.md5(usedforsecurity=False)
-            with partial.open('rb') as stream:
-                for block in iter(lambda:stream.read(1024*1024),b''): checksum.update(block)
-            if checksum.hexdigest()!=row['md5']: raise IntegrationError('MD5 divergente. Arquivo não disponibilizado.')
-        partial.replace(target)
-        with self.library.sql:
-            self.library.sql.execute('UPDATE game_files SET local_path=?,available=1 WHERE id=?',(str(target),file_id))
+        checksum = hashlib.md5(usedforsecurity=False);digest=hashlib.sha256();verified=0
+        with partial.open('rb') as stream:
+            for block in iter(lambda:stream.read(1024*1024),b''):
+                check_cancel(cancel);checksum.update(block);digest.update(block);verified+=len(block)
+                report({'stage':'verifying','verified_bytes':verified})
+        if row['md5'] and checksum.hexdigest()!=row['md5']: raise IntegrationError('MD5 divergente. Arquivo não disponibilizado.')
+        check_cancel(cancel)
+        report({'stage':'registering','local_path':str(target),'verification_state':'completed','registration_state':'running'})
+        target=publish_download(self.library,row,partial,target,digest.hexdigest())
+        report({'stage':'downloaded','received':target.stat().st_size,'local_path':str(target),'registration_state':'completed'})
         return target

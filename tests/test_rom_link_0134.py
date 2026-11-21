@@ -62,7 +62,7 @@ def test_files_dialog_click_runs_and_finishes(app,library,rom,monkeypatch):
     from checkpoint.database import Database
     from checkpoint.library import Library
     from checkpoint.rom_link_dialog import RomLinkDialog
-    def worker(database,file_id,game_id):
+    def worker(database,file_id,game_id,**progress_options):
         db=Database(database)
         try:return perform(Library(db),rom)
         finally:db.close()
@@ -79,7 +79,7 @@ def test_files_dialog_click_runs_and_finishes(app,library,rom,monkeypatch):
 
 def test_failed_link_exposes_cause_and_retry(app,library,rom,monkeypatch):
     from checkpoint.rom_link_dialog import RomLinkDialog
-    def unavailable(*args):raise IntegrationError('Conexão indisponível (fonte controlada).')
+    def unavailable(*args,**progress_options):raise IntegrationError('Conexão indisponível (fonte controlada).')
     monkeypatch.setattr('checkpoint.rom_link_dialog.run_link',unavailable)
     d=RomLinkDialog(library,rom[0]);d.show();app.processEvents()
     QTest.mouseClick(d.results.viewport(),Qt.LeftButton,pos=d.results.visualItemRect(d.results.item(0)).center())

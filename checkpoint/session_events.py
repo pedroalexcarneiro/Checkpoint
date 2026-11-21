@@ -5,13 +5,15 @@ import sqlite3
 
 
 class SessionEvents:
-    def __init__(self, launcher):
+    def __init__(self, launcher,on_shutdown=None):
         self.launcher = launcher
+        self.on_shutdown=on_shutdown
 
     def handle_code(self, code, value):
         if code == 0x11:  # WM_QUERYENDSESSION: desligamento ainda pode ser cancelado.
             self.launcher.checkpoint(force=True, reason='shutdown_query')
         elif code == 0x16 and value:  # WM_ENDSESSION confirmado.
+            if self.on_shutdown:self.on_shutdown()
             self.launcher.interrupt(reason='shutdown')
         elif code == 0x218:  # WM_POWERBROADCAST
             if value == 4:  # PBT_APMSUSPEND

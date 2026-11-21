@@ -103,8 +103,13 @@ class RomSourceDialog(QDialog):
         if dialog.file and dialog.exec()==QDialog.Accepted:
             self.game_id=dialog.game_id;self.outcome={'game_id':dialog.game_id,'file_id':dialog.file_id,'message':'ROM local vinculada.'};self.accept()
     def drive(self):
-        from .rom_link_dialog import RomLinkDialog
-        dialog=RomLinkDialog(self.library,self.game_id,self)
-        if dialog.exec()==QDialog.Accepted:
-            self.outcome=dialog.outcome;self.game_id=dialog.game_id;self.accept()
+        parent=self.parentWidget()
+        if parent and hasattr(parent,'link_drive_rom'):
+            parent.link_drive_rom(self.game_id)
+            self.reject()
+        else:
+            from .rom_link_dialog import RomLinkDialog
+            self.drive_dialog=RomLinkDialog(self.library,self.game_id,parent)
+            self.drive_dialog.show()
+            self.reject()
 from .dialog_style import AppInputs as QInputDialog

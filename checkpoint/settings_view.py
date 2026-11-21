@@ -84,6 +84,8 @@ def build_settings(window):
         window.library.set_setting('prices.public_fallback',value);invalidate_prices(window.library)
     fallback.toggled.connect(public_changed)
     disclosure('Avançado',extra,connections);connections.addStretch()
+    from .transfer_view import TransferList
+    downloads.addWidget(text('Transferências','sectionTitle'));downloads.addWidget(TransferList(window.download_manager))
     for key,title in [('downloads','ROMs baixadas'),('captures','Capturas'),('save_backups','Backups de saves')]:downloads.addWidget(folder_row(window,key,title))
     downloads.addStretch()
     grid=CardGrid(330,max_columns=2)

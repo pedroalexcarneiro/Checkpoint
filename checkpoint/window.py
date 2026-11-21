@@ -31,7 +31,8 @@ class MainWindow(QMainWindow):
     def __init__(self,library):
         super().__init__(); self.library = library; self.launcher = Launcher(library)
         from .session_events import SessionEvents
-        self.session_events=SessionEvents(self.launcher)
+        self.system_shutdown=False
+        self.session_events=SessionEvents(self.launcher,self.system_shutdown_requested)
         from PySide6.QtWidgets import QApplication
         from .theme import apply_theme,DEFAULT_THEME
         self.theme=apply_theme(QApplication.instance(),library.setting('appearance.theme',DEFAULT_THEME),library.setting('appearance.mode','dark'))
@@ -49,6 +50,14 @@ class MainWindow(QMainWindow):
         self.status_timer=QTimer(self);self.status_timer.setSingleShot(True);self.status_timer.setInterval(6000)
         self.status_timer.timeout.connect(self.statusBar().clearMessage)
         self.statusBar().messageChanged.connect(self.status_message_changed)
+        from .transfers import TransferManager
+        self.download_manager=TransferManager(library,self)
+        self.download_button=button('Downloads',self.open_downloads);self.download_button.hide()
+        self.statusBar().addPermanentWidget(self.download_button)
+        self.download_manager.updated.connect(self.download_updated)
+        self.download_manager.completed.connect(self.download_completed)
+        self.download_manager.idle.connect(self.downloads_idle)
+        self.rom_dialogs={};self.close_after_downloads=False
         from .price_queue import PriceQueue
         self.price_queue=PriceQueue(library,self);self.price_queue.updated.connect(self.prices_updated)
         self.hero_upgrade_attempted=set();self.description_upgrade_attempted=set();self.current_page = 0; self.current_game = None; self.last_deleted = None; self.save_jobs = {}
@@ -558,14 +567,44 @@ class MainWindow(QMainWindow):
 
     @Slot(str)
     def status_message_changed(self,message):
-        busy=self.completion_queue.active is not None or bool(self.completion_queue.pending)
+        busy=self.completion_queue.active is not None or bool(self.completion_queue.pending) or self.download_manager.busy
         self.statusBar().setVisible(bool(message) or busy)
         if message:self.status_timer.start()
 
     @Slot(int)
     def completion_busy(self,count):
         self.task_status.set_count(count)
-        self.statusBar().setVisible(count>0 or bool(self.statusBar().currentMessage()))
+        self.statusBar().setVisible(count>0 or self.download_manager.busy or bool(self.statusBar().currentMessage()))
+
+    def open_downloads(self):
+        self.navigate(5);self.settings_tabs.setCurrentIndex(2)
+
+    def download_updated(self,task):
+        count=sum(item.active for item in self.download_manager.tasks.values())
+        self.download_button.setText('Downloads ('+str(count)+')')
+        self.download_button.setVisible(count>0)
+        self.statusBar().setVisible(count>0 or bool(self.statusBar().currentMessage()) or self.completion_queue.active is not None)
+
+    def download_completed(self,task):
+        from PySide6.QtWidgets import QApplication
+        self.statusBar().showMessage(task.outcome.get('message','Transferência encerrada.'))
+        QApplication.alert(self)
+        self.refresh_library()
+        row=self.library.sql.execute('SELECT game_id FROM game_files WHERE id=?',(task.file_id,)).fetchone()
+        game_id=task.game_id or (row[0] if row else None)
+        if game_id and self.current_game==game_id and self.stack.currentWidget()==getattr(self,'detail_page',None):self.detail(game_id)
+
+    def downloads_idle(self):
+        if self.close_after_downloads:
+            self.close_after_downloads=False;QTimer.singleShot(0,self.close)
+
+    def system_shutdown_requested(self):
+        self.system_shutdown=True
+        manager=getattr(self,'download_manager',None)
+        if manager:
+            manager.closing=True
+            try:manager.cancel_all()
+            except ValueError:logging.exception('Não foi possível registrar cancelamento no desligamento.')
 
     def set_theme(self,key):
         from PySide6.QtWidgets import QApplication
@@ -686,9 +725,13 @@ class MainWindow(QMainWindow):
 
     def link_drive_rom(self,game_id):
         from .rom_link_dialog import RomLinkDialog
-        dialog=RomLinkDialog(self.library,game_id,self);dialog.exec()
-        self.refresh_library();self.detail(dialog.game_id)
-        if dialog.outcome:self.statusBar().showMessage(dialog.outcome.get('message','ROM vinculada.'))
+        existing=self.rom_dialogs.get(game_id)
+        if existing:
+            existing.show();existing.raise_();existing.activateWindow();return existing
+        dialog=RomLinkDialog(self.library,game_id,self)
+        self.rom_dialogs[game_id]=dialog;dialog.setAttribute(Qt.WA_DeleteOnClose)
+        dialog.finished.connect(lambda result:self.rom_dialogs.pop(game_id,None))
+        dialog.show();return dialog
 
     def drive(self):
         from .drive_dialog import DriveDialog
@@ -823,13 +866,28 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self,event):
         from .jobs import Job
+        if self.download_manager.busy and not self.system_shutdown:
+            answer=QMessageBox.question(self,'Downloads ativos','Cancelar as transferências e fechar o Checkpoint? Arquivos existentes serão preservados.',
+                QMessageBox.Yes|QMessageBox.No,QMessageBox.No,
+                {QMessageBox.Yes:'Cancelar downloads e fechar',QMessageBox.No:'Voltar'})
+            if answer==QMessageBox.Yes:
+                self.close_after_downloads=True;self.download_manager.closing=True
+                try:self.download_manager.cancel_all()
+                except ValueError as error:
+                    self.close_after_downloads=False;self.download_manager.closing=False
+                    QMessageBox.warning(self,'Downloads',str(error))
+                if self.download_manager.busy:self.statusBar().showMessage('Aguardando o cancelamento para fechar.')
+                elif self.close_after_downloads:
+                    self.close_after_downloads=False;QTimer.singleShot(0,self.close)
+            event.ignore();return
         if any(job.isRunning() for job in self.findChildren(Job)):
+            if self.system_shutdown:event.ignore();return
             QMessageBox.information(self,'Operação em andamento','Aguarde a operação terminar antes de fechar o Checkpoint.');event.ignore();return
-        if self.save_jobs:
+        if self.save_jobs and not self.system_shutdown:
             QMessageBox.information(self,'Saves','Aguarde a operação de saves terminar antes de fechar.'); event.ignore(); return
-        if self.launcher.active:
+        if self.launcher.active and not self.system_shutdown:
             if QMessageBox.question(self,'Sessões ativas','Fechar o Checkpoint? O jogo continuará aberto. O tempo acompanhado será salvo; o período com o Checkpoint fechado não será contado.')!=QMessageBox.Yes:
                 event.ignore(); return
-        self.capture_shortcut.close();self.price_queue.stop();self.timer.stop();self.status_timer.stop();self.launcher.interrupt();event.accept()
+        self.capture_shortcut.close();self.price_queue.stop();self.timer.stop();self.status_timer.stop();self.download_manager.timer.stop();self.launcher.interrupt(reason='shutdown' if self.system_shutdown else 'closed');event.accept()
 
 from .dialog_style import AppMessages as QMessageBox, AppInputs as QInputDialog

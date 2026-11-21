@@ -131,8 +131,35 @@ monitores/DPI e flicker do vídeo ainda não homologados. Corrupção da janela
 principal ao minimizar/restaurar (6B) permanece separada e não reproduzida;
 a correção do modal não é apresentada como solução desse outro defeito.
 
+## Unidade 4 — Downloads da ficha e do gerenciador (itens 5 e 15)
+
+O vídeo de 23:31 mostra o aviso que bloqueava o fechamento e a janela voltando
+ao centro ao mover. A duração de mais de uma hora foi relatada pelo dono.
+O fluxo de download e vínculo na ficha agora abre tarefa em processo separado,
+com fila visível em Configurações > Downloads, navegação livre e cancelamento
+cooperativo. A etapa em andamento mostra bytes, percentual e previsão quando
+o total é informado. Fechar a janela do Checkpoint durante a transferência
+oferece voltar ou cancelar e aguardar a interrupção segura.
+
+O arquivo fica como parcial até passar pela verificação disponível. O destino
+final preserva nome e extensão reconhecíveis, trata nomes reservados do
+Windows e usa numeração quando há colisão. O vínculo anterior persiste até
+a confirmação da gravação. Falhas de metadados ficam separadas da disponibilidade
+da ROM. A etapa de publicação tem registro para recuperar o destino verificado
+se o processo falhar entre a gravação do arquivo e o SQLite. A4 mantém seu
+fluxo de cadastro e seus arquivos protegidos.
+
+Gate direcionado: 76 testes aprovados, exit 0. Inclui fila, cancelamento,
+arquivos inválidos/colisões, abertura do processo isolado e regressões de
+vínculo. Capturas Qt em 1000×700, 1280×800 e 1920×1080 usam dados sintéticos.
+O cancelamento é observado entre blocos/retries. Uma chamada HTTP em andamento
+pode chegar ao próprio timeout antes de ceder. Parciais são preservados para
+diagnóstico; a retomada automática de parciais não foi implementada. Não houve
+Drive autenticado nem teste Windows com o ambiente pessoal.
+
 ## Commits locais já preparados
 
 - f0b43c0: plano/base confirmados e diagnóstico inicial.
 - e161dd5: Memórias progressivas/filtros/grade/medição.
 - 45208e6: checkpoints de tempo e dispensa por sessão.
+- 0732989: manter posição dos diálogos ao redimensionar.
