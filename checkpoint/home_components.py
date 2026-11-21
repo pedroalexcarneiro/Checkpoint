@@ -366,9 +366,6 @@ class MemoryCarousel(CardSurface):
     def __init__(self,window,records):
         super().__init__();self.host_window=window;self.records=records;self.offset=0;self.visible_count=3;self.setObjectName('homeMemories')
         self.setFocusPolicy(Qt.StrongFocus);self.setMinimumWidth(0);self.card_width=300;self.cards=[]
-        if self.records:
-            count=min(8,len(self.records))
-            self.setMaximumWidth(32+count*self.card_width+(count-1)*14)
         layout=QVBoxLayout(self);layout.setContentsMargins(16,16,16,16);layout.setSpacing(14)
         head=QHBoxLayout();head.addWidget(text('Memórias recentes','sectionTitle'),1)
         head.addWidget(action('Ver todas',lambda:window.navigate(3)))
@@ -385,6 +382,8 @@ class MemoryCarousel(CardSurface):
                 widget=item.widget();widget.hide();widget.setParent(None);widget.deleteLater()
         if not self.records:
             self.row.addWidget(action('Adicionar memória',self.host_window.first_memory,True))
+        elif len(self.records)<=self.visible_count:
+            self.row.addStretch(1)
         for record in self.records[self.offset:self.offset+self.visible_count]:
             frame=CardSurface();frame.setObjectName('homeMemoryCard');frame.setSizePolicy(QSizePolicy.Fixed,QSizePolicy.Preferred)
             inside=QVBoxLayout(frame);inside.setContentsMargins(12,12,12,12);inside.setSpacing(8)
@@ -402,7 +401,7 @@ class MemoryCarousel(CardSurface):
             title=ElidedAction(record['title'],callback);title.setObjectName('activityLink');inside.addWidget(title)
             inside.addWidget(text('Diário' if record['kind']=='diary' else 'Vídeo' if record['kind']=='video' else 'Captura','caption'))
             inside.addWidget(text(datetime_display(record['created_at']),'caption'));frame.setFixedWidth(min(self.card_width,max(1,self.width()-32)));self.cards.append(frame);self.row.addWidget(frame);frame.show()
-        self.row.addStretch()
+        self.row.addStretch(1)
         self.previous.setVisible(len(self.records)>self.visible_count)
         self.next.setVisible(len(self.records)>self.visible_count)
         self.previous.setEnabled(self.offset>0);self.next.setEnabled(self.offset+self.visible_count<len(self.records))

@@ -73,15 +73,19 @@ def test_memory_carousel_bounds_keyboard_and_no_data_changes(ui,app):
     assert [tuple(r) for r in w.library.sql.execute('SELECT * FROM diary_entries')]==before
 
 
-def test_recent_memories_fit_two_standard_cards(ui,app):
+def test_recent_memories_fill_panel_with_two_centered_standard_cards(ui,app):
+    from PySide6.QtWidgets import QScrollArea
     w,game=ui
     for note in ('Primeira nota','Segunda nota'):w.library.add_diary(game,note)
     w.resize(1280,800);w.navigate(0)
     for _ in range(8):app.processEvents()
     page=w.pages[0];carousel=page.findChild(MemoryCarousel)
     assert [card.width() for card in carousel.cards]==[300,300]
-    assert carousel.width()==646
+    body=page.findChild(QScrollArea,'homeScroll').widget()
+    assert carousel.width()==body.width()-body.layout().contentsMargins().right()
     assert carousel.mapTo(page,QPoint()).x()==page.findChild(QWidget,'homeRecentSection').mapTo(page,QPoint()).x()
+    first,last=carousel.cards
+    assert abs(first.x()-(carousel.body.width()-last.geometry().right()-1))<=1
     assert not carousel.previous.isVisible() and not carousel.next.isVisible()
 
 

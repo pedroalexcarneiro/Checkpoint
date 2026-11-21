@@ -55,10 +55,7 @@ def build_home(window):
     left.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
     right.setSizePolicy(QSizePolicy.Expanding,QSizePolicy.Maximum)
     layout.addWidget(columns)
-    memories=QHBoxLayout()
-    memories.addWidget(MemoryCarousel(window,recent_memories(window.library)),1)
-    memories.addStretch()
-    layout.addLayout(memories)
+    layout.addWidget(MemoryCarousel(window,recent_memories(window.library)))
     from .session_tracking import pending_reviews
     interrupted=len(pending_reviews(window.library))
     if interrupted:
