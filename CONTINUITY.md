@@ -21,6 +21,15 @@ janela do jogo acompanhado. A sessão termina quando o processo sai. O
 Windows fica responsável por desenhar os controles da janela principal.
 Os filtros compactos, a rolagem em Estatísticas e o seletor de ROM foram
 ajustados na mesma rodada.
+Últimas sessões e Memórias recentes agora deslizam horizontalmente pelas
+setas e pelo teclado. O viewport mostra parte do próximo card quando há
+espaço na borda. Desejos usa cards mais compactos. Na ficha e no Diário,
+as ações ficam agrupadas à direita. O botão do banner cresce em janelas largas.
+Em Adicionar jogo, a prévia ganha uma área rolável e as ações ficam juntas
+acima de Opções avançadas. As mensagens temporárias entram e saem por
+uma caixa no canto inferior esquerdo da janela principal.
+As Ofertas do Início voltaram a mostrar capas verticais. Os filtros de
+Desejos mostram setas e cabem na largura útil da janela menor.
 Os resultados e o limite da validação por Wine estão no relatório.
 Restante em andamento no plano e no RELATORIO_ESTABILIDADE_0139.md.
 Gates antigos abaixo são históricos.

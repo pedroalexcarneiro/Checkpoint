@@ -526,6 +526,30 @@ baixada pelo link temporário teve o mesmo SHA-256 do pacote de
 80.107.189 bytes. O SHA-256 é
 `2725e89ede70995c73744717681976ea8e99775c2c28c60756365d0005e6d062`.
 
+### Rolagem lateral, filtros e mensagens
+
+Últimas sessões e Memórias recentes têm rolagem contínua. O próximo card
+aparece na borda quando há espaço e as setas animam a faixa. A roda vertical
+continua rolando o Início. Memórias recentes monta lotes de 24 cards e
+reutiliza os já visíveis. Ofertas voltou a usar capas verticais inteiras.
+O botão Continuar cresce até cerca de 200×52 px em janela larga.
+
+Desejos mantém três cards completos em 1000×700 lógicos, com rolagem
+vertical e setas nos filtros. Na ficha, plataforma e origem aparecem acima
+das ações. Os botões da ficha e do diário ficam agrupados à direita.
+Adicionar jogo abre mais alto e separa a prévia rolável dos botões e das
+opções avançadas. As mensagens temporárias entram e saem pelo canto
+inferior esquerdo da janela principal.
+
+O Qt para Windows em Wine passou pelo clique nas setas de ambas as
+faixas, três cards completos em Desejos, entrada e saída da notificação
+e expansão de Opções avançadas. A revisão `9918927` passou em 119 testes
+focados. O primeiro ensaio da suíte integral terminou numa falha nativa
+do Qt ao criar a caixa de botões de Vincular ROM local. A repetição
+isolada de cadastro e ROM local passou em 27 testes. A nova execução
+integral de `9918927` passou em 903 testes em 578,49 s em Linux Qt
+offscreen.
+
 - **6B.** O teste Qt local passou, e a captura do dono permanece a evidência
   do defeito gráfico. A reprodução em desktop Windows com o caminho de
   minimizar/restaurar e, se possível, duas telas/DPI diferentes ainda é

@@ -14,6 +14,14 @@ até a entrada da imagem, com uma transição curva.
 O botão Finalizar solicita o fechamento da janela do jogo iniciado pelo
 Checkpoint. O app salva a sessão após a saída do processo. A moldura
 nativa e o fechamento do jogo de teste foram conferidos em Wine.
+No Início, as faixas de sessões e memórias deslizam pelo viewport. Em
+Desejos, cabem três cards na janela de 1000×700. Os botões de Sobre o
+jogo e Diário de jogo estão em linhas à direita.
+No cadastro, prévia e resultados têm rolagem própria. As ações relacionadas
+ao resultado ficam na mesma linha. Avisos temporários da janela principal
+deslizam no canto inferior esquerdo.
+As ofertas no Início exibem capas verticais. Desejos rola na vertical,
+com os filtros e cards dentro da largura útil.
 PLANO_ESTABILIDADE_0139.md e RELATORIO_ESTABILIDADE_0139.md registram andamento.
 
 Revisão local em fix/pos-0139-layout, sem nova publicação: Início sem jogos
