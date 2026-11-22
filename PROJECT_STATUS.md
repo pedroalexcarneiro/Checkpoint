@@ -1,4 +1,13 @@
-# Estado atual — Checkpoint 0.1.40 em publicação
+# Estado atual — Checkpoint 0.1.40 publicada
+
+Pré-release 0.1.40 publicada em `242c731`, execução Windows 44962627890 aprovada.
+909 testes Linux e 909 Windows aprovados. Fonte, pacote extraído e atualizador
+validados. Dez arquivos públicos baixados e conferidos por tamanho/SHA-256,
+CRC dos ZIPs aprovado. Relatório atualizado em RELATORIO_CONTINUIDADE_CHECKPOINT.md.
+A suíte Windows usa lotes em processos separados para renovar a tela virtual,
+incluindo o módulo de testes de encerramento em processo próprio. Renomeação
+de ROMs legadas ficou para a próxima rodada. Homologação pessoal segue pendente.
+
 
 O envio desta revisão foi autorizado após o [relatório de continuidade](RELATORIO_CONTINUIDADE_CHECKPOINT.md).
 Aparência aplica o destaque da paleta à opção de tamanho de capa selecionada.

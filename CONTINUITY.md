@@ -1,5 +1,14 @@
 # Continuidade do Checkpoint
 
+Pré-release 0.1.40 publicada em `242c731`, execução Windows 44962627890 aprovada.
+909 testes Linux e 909 Windows aprovados. Fonte, pacote extraído e atualizador
+validados. Dez arquivos públicos baixados e conferidos por tamanho/SHA-256,
+CRC dos ZIPs aprovado. Relatório atualizado em RELATORIO_CONTINUIDADE_CHECKPOINT.md.
+A suíte Windows usa lotes em processos separados para renovar a tela virtual,
+incluindo o módulo de testes de encerramento em processo próprio. Renomeação
+de ROMs legadas ficou para a próxima rodada. Homologação pessoal segue pendente.
+
+
 Para retomar em uma nova conversa, leia o [relatório de continuidade](RELATORIO_CONTINUIDADE_CHECKPOINT.md).
 
 ## Revisão 0.1.40 — envio autorizado em 21/11/2026

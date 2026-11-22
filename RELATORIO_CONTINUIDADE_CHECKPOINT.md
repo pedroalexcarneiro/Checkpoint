@@ -1,6 +1,6 @@
 # Checkpoint — relatório de continuidade para uma nova conversa
 
-**Atualizado em 21/11/2026.** Este documento reúne o histórico disponível no projeto e nesta conversa, as preferências do dono sobre o Checkpoint, as decisões que ainda valem, a arquitetura, os incidentes, as verificações e as pendências. Os planos, changelogs e relatórios referenciados preservam os pormenores e a evidência de cada rodada. Quando dois registros discordarem, conferir a decisão mais recente e o código da versão em questão.
+**Atualizado em 22/11/2026.** Este documento reúne o histórico disponível no projeto e nesta conversa, as preferências do dono sobre o Checkpoint, as decisões que ainda valem, a arquitetura, os incidentes, as verificações e as pendências. Os planos, changelogs e relatórios referenciados preservam os pormenores e a evidência de cada rodada. Quando dois registros discordarem, conferir a decisão mais recente e o código da versão em questão.
 
 ## Como retomar
 
@@ -94,3 +94,16 @@ Histórico integral por versão e versões de desenvolvimento em [CHANGELOG.md](
 - Quando alguém pedir “continue” ou status, mantenha as decisões já tomadas, informe etapa e bloqueio reais e prossiga. Ao entregar, diga o que mudou, qual pacote corresponde ao código, o que foi testado e o que só poderá ser confirmado no PC do dono. Use links de download verificáveis.
 
 **Referências de trabalho.** [DESIGN.md](DESIGN.md) · [INTEGRATIONS.md](INTEGRATIONS.md) · [CLOUD_SETUP.md](CLOUD_SETUP.md) · [PLANO_POS_0139.md](PLANO_POS_0139.md) · [PLANO_ESTABILIDADE_0139.md](PLANO_ESTABILIDADE_0139.md) · [CHANGELOG.md](CHANGELOG.md) · [Evidências da rodada de estabilidade](evidence/estabilidade-0139).
+
+## Publicação 0.1.40 confirmada
+
+A pré-release foi publicada em 21/11/2026 às 20h42 de Brasília e conferida novamente em 22/11/2026. Fonte e tag apontam para `242c731df14eab23904693b9f1e86cae8bb9ad57`. Build e publicação tiveram sucesso na [execução Windows 44962627890](https://github.com/pedroalexcarneiro/Checkpoint/actions/runs/44962627890). A documentação de fechamento foi adicionada posteriormente à branch e preserva a tag do pacote.
+
+- Linux aprovou 909 testes em 606,64 s, além do smoke de seis páginas e integridade SQLite. Windows/Python 3.12.10 aprovou os mesmos 909 testes, zero falhas, erros ou skips. Fonte e executável extraído passaram por abertura normal nativa, seis páginas, cadastro completo, auxiliar, atualizador e SQLite.
+- As tentativas iniciais da suíte Windows encerraram com código nativo 0xC0000409. O diagnóstico em branch própria registrou a mensagem Qt **Cannot create window: no screens available** depois dos testes de encerramento de janelas/processos. A suíte Windows agora usa processos independentes por lote, com o módulo de operações isoladas em seu próprio processo. A coleta foi comparada com a suíte integral e inclui exatamente os 909 casos. Os workflows de diagnóstico permanecem históricos e não são a branch do produto.
+- O script de execução e reunião JUnit é `scripts/run_windows_tests.py`. O workflow publicador chama esse script e só prossegue quando todos os lotes aprovam. A suíte integral Linux continua disponível pelo comando original.
+- Os dez arquivos públicos da release foram baixados e conferidos contra tamanho e SHA-256 informados pelo GitHub. Os dois ZIPs passaram na verificação CRC. O ZIP Windows mede 85.849.174 bytes e tem SHA-256 `be237aa616e0f3d2628fd2603bf3d5709d7f355fdb7e6d4b830a434c69375c8a`.
+- O relatório público de validação confirma os 909 testes Windows. A tentativa adicional de baixar o artefato JUnit privado via CLI recebeu Forbidden no armazenamento de Actions. A verificação pública dos arquivos e do relatório da release concluiu com sucesso.
+- O runner já elevado não homologa consentimento UAC, contas ou cofre pessoais. Captura real em jogos, outros monitores/DPIs e os demais itens da tabela de pendências continuam dependentes de comprovação. A recuperação dos nomes físicos de ROMs antigas permanece para a próxima rodada, conforme a escolha do dono.
+
+[Download Windows x64](https://github.com/pedroalexcarneiro/Checkpoint/releases/download/v0.1.40/Checkpoint-0.1.40-windows-x64.zip) · [Release e arquivos](https://github.com/pedroalexcarneiro/Checkpoint/releases/tag/v0.1.40) · [Validação pública](https://github.com/pedroalexcarneiro/Checkpoint/releases/download/v0.1.40/Checkpoint-0.1.40-validation.txt)
